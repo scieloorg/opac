@@ -1,0 +1,159 @@
+{% extends "collection/base.html" %}
+
+{% block main_content %}
+
+  <section class="collection collectionList">
+    <div class="container">
+        <div class="row sectionTitle">
+            <h1 class="col-md-8 col-sm-7">Lista temática de periódicos</h1>
+            <div class="col-md-4 col-sm-5 share">
+                <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
+                <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
+                <span class="divisor"></span>
+                Compartilhe
+                <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
+                <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
+                <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
+                <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-header">Outras redes sociais</li>
+                    <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
+                    <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
+                    <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
+                    <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
+                    <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
+                    <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#areasConhecimento" data-toggle="tab">Grandes áreas do conhecimento</a></li>
+            <li role="presentation"><a href="#temasWoS" data-toggle="tab">Áreas temáticas do Web of Science</a></li>
+        </ul>
+
+        <div class="tab-content">
+
+            <!-- first tab -->
+            <div class="tab-pane active collectionListStart" data-action="../static/php/colecaoFinder.php" data-method="theme" data-perpage="20" data-labels="números;Último:;Volume;Nº;Suppl.;Homepage;Submissão de manuscritos;Instruções aos autores;Sobre o periódico;Contato;(inativo);(total {totalTheme} temas / {total} periódicos);Título;Ações" id="areasConhecimento">
+                <input type="hidden" name="currentPage" value="1" class="collectionCurrentPage" />
+                <input type="hidden" name="totalPages" value="" class="collectionTotalPages" />
+
+                <div class="row collectionListSearch">
+                    <div class="col-md-5 col-sm-6">
+                        <input type="text" name="query" value="" class="form-control collectionSearch" placeholder="Digite uma ou mais palavras para filtrar a lista" />
+                    </div>
+                </div>
+
+                <div class="row collectionListTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="col-xs-6">
+                                        Título <small class="collectionListTotalInfo">(Total {{ objects_by_area.objects|length }} temas / {{ objects_by_area.meta.total }} periódicos)</small>
+                                    </div>
+                                    <div class="col-xs-6 right download">
+                                        download da lista
+                                        <a href="" class="collectionListDownloadXLS showTooltip" title="Lista em arquivo para Excel"><span class="glyphBtn downloadXLS"></span></a>
+                                        <a href="" class="collectionListDownloadCSV showTooltip" title="Lista em arquivo CSV"><span class="glyphBtn downloadCSV"></span></a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <ul>
+                                    {% for area, item in objects_by_area.objects.iteritems() %}
+                                        <li>
+                                            <h2>{{ area }} ({{ item|length }})</h2>
+                                            <ul>
+                                                {% for subarea, subitem in item.iteritems() %}
+                                                    {% if subitem %}
+                                                        <li>
+                                                            <h3>{{ subarea }} ({{ subitem|length }})</h3>
+                                                            <ul>
+                                                                {% for journal in subitem %}
+                                                                  <table>
+                                                                    {% include "includes/format_journal_row.html" %}
+                                                                  </table>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                            </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="collectionListLoading" style="display: none;"></div>
+                </div>
+            </div>
+            <!-- first tab -->
+
+            <!-- second tab -->
+            <div class="tab-pane collectionListStart" data-action="../static/php/colecaoFinder.php?WoS=true" data-method="theme" data-perpage="20" data-labels="números;Último:;Volume;Nº;Suppl.;Homepage;Submissão de manuscritos;Instruções aos autores;Sobre o periódico;Contato;(inativo);(total {totalTheme} temas / {total} periódicos);Título;Ações" id="temasWoS">
+                <input type="hidden" name="currentPage" value="1" class="collectionCurrentPage" />
+                <input type="hidden" name="totalPages" value="" class="collectionTotalPages" />
+
+                <div class="row collectionListSearch">
+                    <div class="col-md-5 col-sm-6">
+                        <input type="text" name="query" value="" class="form-control collectionSearch" placeholder="Digite uma ou mais palavras para filtrar a lista" />
+                    </div>
+                </div>
+
+                <div class="row collectionListTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="col-xs-6">
+                                        Título <small class="collectionListTotalInfo">(Total {{ objects_by_indexed.objects|length }} temas / {{ objects_by_indexed.meta.total }} periódicos)</small>
+                                    </div>
+                                    <div class="col-xs-6 right download">
+                                        download da lista
+                                        <a href="" class="collectionListDownloadXLS showTooltip" title="Lista em arquivo para Excel"><span class="glyphBtn downloadXLS"></span></a>
+                                        <a href="" class="collectionListDownloadCSV showTooltip" title="Lista em arquivo CSV"><span class="glyphBtn downloadCSV"></span></a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <ul>
+                                    {% for index, journals in objects_by_indexed.objects.iteritems() %}
+                                        <li>
+                                          <h2>{{ index }} ({{ journals|length }})</h2>
+                                          <ul>
+                                            {% for journal in journals %}
+                                            <table>
+                                                  {% include "includes/format_journal_row.html" %}
+                                            </table>
+                                            {% endfor %}
+                                          </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="collectionListLoading" style="display: none;"></div>
+                </div>
+            </div>
+            <!-- second tab -->
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+  </section>
+
+{% endblock %}

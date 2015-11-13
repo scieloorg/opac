@@ -1,0 +1,38 @@
+<section class="journalContacts">
+  <div class="container">
+    <div class="col-md-5 col-sm-5 journalAddress">
+      <div class="col-md-1 col-sm-2">
+        <span class="glyphBtn pin"></span>
+      </div>
+      <div class="col-md-10 col-sm-9">
+        <strong>{{ journal['publisher_name'] }}</strong>
+        {% if journal['publisher_address'] %}
+          {{ journal['publisher_address'] }} -
+        {% endif %}
+        {% if journal['publisher_city'] %}
+          {{ journal['publisher_city'] }} -
+        {% endif %}
+        {% if journal['publisher_state'] %}
+           {{ journal['publisher_state'] }} -
+        {% endif %}
+        {% if journal['publisher_country'] %}
+           {{ journal['publisher_country'] }} <br/>
+        {% endif %}
+        {% if journal['publisher_telephone'] %}
+          Tel/Fax: {{ journal['publisher_telephone'] }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-4 journalLinks">
+      <a href="#" class="showTooltip" title="Facebook"><span class="glyphBtn bigFacebook"></span></a>
+      <a href="#" class="showTooltip" title="Twitter"><span class="glyphBtn bigTwitter"></span></a>
+      <a href="#" class="showTooltip" title="Google+"><span class="glyphBtn bigGooglePlus"></span></a>
+      <span class="text">Siga este periódico nas redes sociais</span>
+    </div>
+    <div class="col-md-3 col-sm-3 journalLinks">
+      <a href="" class="showTooltip" title="RSS"><span class="glyphBtn bigRSS"></span></a>
+      <span class="text" style="width: 70%;">Acompanhe os números deste periódico no seu leitor de RSS</span>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</section>
