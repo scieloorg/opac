@@ -6,7 +6,7 @@ import json
 from pprint import pprint
 
 ES_HOSTS = ['127.0.0.1', ]
-COLLECTION = "esp"
+COLLECTION = "spa"
 INDEX = 'iopac3'
 connections.create_connection(hosts=ES_HOSTS)
 

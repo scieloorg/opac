@@ -9,7 +9,7 @@
       <div class="btn-group">
         <a href="{{ url_for('issue_grid', journal_id=journal.jid) }}" class="btn group">todos</a>
         <a href="homepage.html" class="btn group">« anterior</a>
-        <a href="atual.html" class="btn group">atual</a>
+        <a href="{{ url_for('issue_toc', issue_id=journal.last_issue.iid) }}" class="btn group">atual</a>
         <a href="homepage.html" class="btn group disabled">próximo »</a>
       </div>
     </div>
