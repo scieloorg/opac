@@ -1,0 +1,48 @@
+<section class="levelMenu">
+    <div class="container">
+        <div class="col-md-2 col-sm-2">
+            <h2>&#160;</h2>
+            <a href="{{ url_for('journal_detail', journal_id=article.journal_jid) }}" class="btn single"><span class="glyphBtn home"></span> home</a>
+        </div>
+        <div class="col-md-5 col-sm-5">
+            <h2><span class="glyphBtn articles"></span> Artigos do Ano {{ issue.year }}, Volume {{ issue.volume }} Número {{ issue.number }}</h2>
+            <div class="btn-group">
+                <a href="{{ url_for('issue_grid', journal_id=article.journal_jid) }}" class="btn group">sumário</a>
+                <a href="javascript:;" class="btn group">« anterior</a>
+                <a href="{{ url_for('article_detail', article_id=article.aid) }}" class="btn group selected">atual</a>
+                <a href="javascript:;" class="btn group">próximo »</a>
+            </div>
+        </div>
+        <p>{{ journal }}</p>
+        <div class="col-md-5 col-sm-5 downloadOptions">
+            <h2><span class="glyphBtn articleDownload"></span> Outras versões deste artigo</h2>
+            <div class="btn-group">
+                <ul>
+                    <li class="group" style="width: 25%;">
+                        <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span> PDF</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="">Espanhol</a></li>
+                            <li><a href="">Inglês</a></li>
+                            <li><a href="">Português</a></li>
+                        </ul>
+                    </li>
+                    <li class="group" style="width: 25%;">
+                        <a href="javascript:;" class="btn group"><span class="glyphBtn epubDownload"></span> ePUB</a>
+                    </li>
+                    <li class="group" style="width: 25%;">
+                        <a href="javascript:;" class="btn group"><span class="glyphBtn readcubeView"></span> readcube</a>
+                    </li>
+                    <li class="group" style="width: 25%;">
+                        <a href="javascript:;" class="btn group"><span class="glyphBtn xmlDownload"></span> XML</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="">Espanhol</a></li>
+                            <li><a href="">Inglês</a></li>
+                            <li><a href="">Português</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

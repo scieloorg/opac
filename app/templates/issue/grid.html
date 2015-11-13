@@ -1,0 +1,89 @@
+{% extends "issue/base.html" %}
+
+{% block main_content %}
+
+  <section class="journalContent">
+    <div class="container">
+      <div class="col-md-4 col-md-offset-8 share">
+        <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
+        <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
+        <span class="divisor"></span>
+        Compartilhe
+        <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
+        <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
+        <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
+        <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">Outras redes sociais</li>
+          <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
+          <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
+          <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
+          <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
+          <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
+          <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
+        </ul>
+      </div>
+      <div class="col-md-12 content issueList" id="issueList">
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <h1>Todos os números</h1>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <td class="col-xs-1">Ano</td>
+              <th class="col-xs-1">Volume</th>
+              <td class="col-xs-10 left">Número</td>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for year,v in result_dict.iteritems() %}
+              {% for volume, issue_list in v.iteritems() %}
+                <tr>
+                  <td>{{year}}</td>
+                  <th>{{volume}}</th>
+                  <td class="left">
+                    {% for issue in issue_list|sort(attribute='order') %}
+                      {% if issue.is_aop %}
+                        <a href="{{ url_for('issue_toc', issue_id=issue.iid) }}" class="btn">ahead of print</a>
+                      {% elif issue.type == 'special' %}
+                        <a href="{{ url_for('issue_toc', issue_id=issue.iid) }}" class="btn">spe.{{issue.suppl_text}}</a>
+                      {% elif issue.type == 'supplement' %}
+                        <a href="{{ url_for('issue_toc', issue_id=issue.iid) }}" class="btn">suppl.{{issue.suppl_text}}</a>
+                      {% else %} {# issue.type == 'regular' #}
+                        <a href="{{ url_for('issue_toc', issue_id=issue.iid) }}" class="btn">{{issue.number}}</a>
+                      {% endif %}
+                    {% endfor %}
+                  </td>
+                </tr>
+              {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="col-md-12">
+          <h2>Histórico deste periódico na coleção</h2>
+          <ul>
+            {% for event in journal.timeline %}
+              {% if event.status == 'current'%}
+                <li>Em {{ event.since[:10]}} admitido na coleção da SciELO</li>
+              {% elif event.status == 'rejected' %}
+                <li>Em {{ event.since[:10]}} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
+              {% elif event.status == 'suspended' %}
+                <li>Em {{ event.since[:10]}} suspenso da coleção da SciELO (motivo: {{ event.reason }}).</li>
+              {% elif event.status == 'deceased' %}
+                <li>Em {{ event.since[:10]}} descontinuado da coleção da SciELO (motivo: {{ event.reason }}).</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </section>
+
+  {% include "issue/includes/license_footer.html" %}
+  {% include "journal/includes/contact_footer.html" %}
+
+{% endblock %}

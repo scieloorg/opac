@@ -1,0 +1,85 @@
+<header>
+  <div class="container">
+    <div class="topFunction">
+      <div class="col-md-2 col-sm-3 mainNav">
+        <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">Abrir menu</a>
+        <h2><a href="{{ url_for('index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png') }}" alt="SciELO Brasil"></a></h2>
+        <div class="mainMenu" id="mainMenu">
+          <div class="row">
+            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
+              <img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png')}}" alt="SciELO Brasil">
+            </div>
+          </div>
+          <nav>
+            <ul>
+              <li>
+                <a href="{{ url_for('index') }}"><strong>SciELO Brasil</strong></a>
+                <ul>
+                  <li><a href="{{ url_for('collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
+                  <li><a href="{{ url_for('collection_list_theme') }}">Lista temática de periódicos</a></li>
+                  <li><a href="/Colecao/edit.html">Lista de periódicos por editoras</a></li>
+                  <li><a href="/Colecao/buscar.html">Busca</a></li>
+                  <li><a href="/Colecao/metricas.html">Métricas</a></li>
+                  <li><a href="/Colecao/sobre.html">Sobre o SciELO Brasil</a></li>
+                  <li><a href="/Colecao/contatos.html">Contatos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/Rede/"><strong>SciELO.org - Rede SciELO</strong></a>
+                <ul>
+                  <li><a href="http://www.scielo.org/php/index.php">Coleções nacionais e temáticas</a></li>
+                  <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">Lista alfabética de periódicos</a></li>
+                  <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">Lista de periódicos por assunto</a></li>
+                  <li><a href="/Colecao/buscar.html">Busca</a></li>
+                  <li><a href="http://www.scielo.org/applications/scielo-org/php/siteUsage.php">Métricas</a></li>
+                  <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">Acesso OAI e RSS</a></li>
+                  <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">Sobre a Rede SciELO</a></li>
+                  <li><a href="#">Contatos</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#"><strong>Portal do Autor</strong></a>
+              </li>
+              <li>
+                <a href="http://blog.scielo.org/"><strong>Blog SciELO em Perspectiva</strong></a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-8 col-sm-6 brandLogo">
+        <div class="row">
+          <div class="col-md-3 hidden-sm">
+            <img src="../static/trash/logo-boletim-emilio-goeldi.jpg" alt="Logomarca do Boletim do Museu Paraense Emílio Goeldi" />
+          </div>
+          <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
+            <span class="theme">{{ journal.study_areas|join(', ') }}</span>
+            <h1>{{ journal.title }}</h1>
+            <span class="publisher">Publicação de <strong>{{ journal.publisher_name}}</strong></span>
+            <span class="issn">
+              ISSN
+              {% if journal.eletronic_issn %}
+                {{ journal.eletronic_issn }}
+              {% else %}
+                {{ journal.print_issn }}
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-3 journalMenu">
+        <div class="language">
+          <a href="index.en.html" class="lang-en" lang="en">English</a>
+          <a href="index.es.html" class="lang-es" lang="es">Español</a>
+        </div>
+        <ul>
+          <li><a href="secundaria.html"><span class="glyphBtn submission"></span> Submissão de manuscritos</a></li>
+          <li><a href="secundaria.html"><span class="glyphBtn authorInstructions"></span> Instruções aos autores</a></li>
+          <li><a href="secundaria.html"><span class="glyphBtn about"></span> Sobre o periódico</a></li>
+          <li><a href="secundaria.html"><span class="glyphBtn contact"></span> Contato</a></li>
+        </ul>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>

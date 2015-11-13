@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body_class %}journal article{% endblock %}
+{% block content %}
+  {% include "journal/includes/header.html" %}
+
+  <!-- alterar o levelmenu -->
+  {% include "article/includes/levelMenu.html" %}
+
+  {% block main_content %}{% endblock %}
+
+  {% include "includes/footer.html" %}
+
+  {% include "article/includes/alternative_header.html" %}
+{% endblock %}
