@@ -2,3 +2,4 @@ Flask==0.10.1
 elasticsearch==2.1.0
 elasticsearch-dsl==0.0.9
 Flask-DebugToolbar==0.10.0
+mongoengine==0.10.0
