@@ -2,6 +2,7 @@
 from flask import render_template, abort
 from app import app
 import controllers
+import mongodb_controllers
 from pprint import pprint
 from collections import OrderedDict
 
@@ -10,6 +11,17 @@ from collections import OrderedDict
 def index():
     context = {}
     return render_template("collection/index.html", **context)
+
+@app.route('/test/mongo')
+def test_mongo():
+    data = mongodb_controllers.get_all_pages()
+    if not data:
+        mongodb_controllers.create_dummy_pages()
+        data = mongodb_controllers.get_all_pages()
+    context = {
+        'data': data
+    }
+    return render_template("test/mongo.html", **context)
 
 
 @app.route('/journals')
