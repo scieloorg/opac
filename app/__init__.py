@@ -15,7 +15,7 @@ app.debug = True
 app.config['SECRET_KEY'] = 'scielo'
 # app.config.from_pyfile('mongodb.cfg')
 app.config['MONGODB_SETTINGS'] = {
-    'db': 'opac_mongodb',
+    'db': 'manager2mongo',
     # 'host': '192.168.1.35',
     # 'port': 12345
 }

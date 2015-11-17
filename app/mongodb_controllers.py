@@ -1,17 +1,17 @@
-from mongoengine import Document, StringField, ReferenceField, DateTimeField
 import datetime
+from mongoengine import *
+from documents_definitions import DJournal
 
 
-class Page(Document):
-    title = StringField(max_length=200, required=True)
-    date_modified = DateTimeField(default=datetime.datetime.now)
+def get_journal_by_jid(jid, page_from=0, page_size=1000):
 
+    # search = Search(index=INDEX).query("match", jid=jid)
+    # search = search[page_from:page_size]
+    # search_response = search.execute()
 
-def create_dummy_pages():
-    for i in xrange(1, 10):
-        page = Page(title='foo %s' % i)
-        page.save()
-
-
-def get_all_pages():
-    return [page for page in Page.objects]
+    # if search_response.success() and search_response.hits.total > 0:
+    #     journal = search_response[0]
+    #     return journal
+    # else:
+    #     return None
+    return DJournal.objects(jid=jid).first()

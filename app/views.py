@@ -56,7 +56,8 @@ def collection_list_institution():
 @app.route('/journals/<string:journal_id>')
 def journal_detail(journal_id):
 
-    journal = controllers.get_journal_by_jid(journal_id)
+    # journal = controllers.get_journal_by_jid(journal_id)
+    journal = mongodb_controllers.get_journal_by_jid(journal_id)
 
     if not journal:
         abort(404, 'Journal not found')
