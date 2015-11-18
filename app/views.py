@@ -12,6 +12,7 @@ def index():
     context = {}
     return render_template("collection/index.html", **context)
 
+
 @app.route('/test/mongo')
 def test_mongo():
     data = mongodb_controllers.get_all_pages()
@@ -70,12 +71,12 @@ def journal_detail(journal_id):
 @app.route('/journals/<string:journal_id>/issues')
 def issue_grid(journal_id):
 
-    journal = controllers.get_journal_by_jid(journal_id)
+    journal = mongodb_controllers.get_journal_by_jid(journal_id)
 
     if not journal:
         abort(404, 'Journal not found')
 
-    issues = controllers.get_issues_by_jid(journal_id)
+    issues = mongodb_controllers.get_issues_by_jid(journal_id)
 
     result_dict = OrderedDict()
     for issue in issues:
@@ -93,9 +94,10 @@ def issue_grid(journal_id):
 
 @app.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
-    issue = controllers.get_issue_by_iid(issue_id)
-    journal = controllers.get_journal_by_jid(issue.journal_jid)
-    articles = controllers.get_articles_by_iid(issue.iid)
+    issue = mongodb_controllers.get_issue_by_iid(issue_id)
+    journal = issue.journal_jid
+    # articles = controllers.get_articles_by_iid(issue.iid)
+    articles = []
 
     context = {'journal': journal,
                'issue': issue,

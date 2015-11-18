@@ -74,6 +74,24 @@ class DLastIssue(EmbeddedDocument):
     }
 
 
+class DSubject(EmbeddedDocument):
+    name = StringField()
+    language = StringField()
+
+    meta = {
+        'collection': 'subjects'
+    }
+
+
+class DSection(EmbeddedDocument):
+    order = IntField()
+    subjects = EmbeddedDocumentListField(DSubject)
+
+    meta = {
+        'collection': 'sections'
+    }
+
+
 class DJournal(Document):
     _id = StringField(max_length=32, primary_key=True, required=True, unique=True)
     jid = StringField(max_length=32, required=True, unique=True, )
@@ -122,6 +140,37 @@ class DJournal(Document):
 
     meta = {
         'collection': 'journal'
+    }
+
+
+class DIssue(Document):
+
+    _id = StringField(max_length=32, primary_key=True, required=True, unique=True)
+    iid = StringField(max_length=32, required=True, unique=True)
+    journal_jid = ReferenceField(DJournal, reverse_delete_rule=CASCADE)
+
+    sections = EmbeddedDocumentListField(DSection)
+    use_licenses = EmbeddedDocumentField(DUseLicense)
+
+    cover_url = StringField()
+
+    volume = StringField()
+    number = StringField()
+    created = DateTimeField()
+    updated = DateTimeField()
+
+    type = StringField()
+    suppl_text = StringField()
+    spe_text = StringField()
+    start_month = IntField()
+    end_month = IntField()
+    year = IntField()
+    label = StringField()
+    order = IntField()
+    bibliographic_legend = StringField()
+
+    meta = {
+        'collection': 'issue'
     }
 
 
@@ -278,5 +327,61 @@ def journal_to_djournal(model_instance):
         'sponsors': list_of_sponsor,
         'last_issue': last_issue,
         'issue_count': issue_count
+    }
+    return result
+
+
+def issue_to_dissue(model_instance):
+    issue_sections = []
+    for section in model_instance.section.all():
+        subjects = []
+        for subject in section.titles.all():
+            subjects.append({
+                "name": subject.title,
+                "language": subject.language.iso_code,
+            })
+
+        issue_sections.append({
+            # "order": section.order, FIX
+            "subjects": subjects
+        })
+
+    issue_use_licenses = None
+    if model_instance.use_license:
+        issue_use_licenses = {
+            "license_code": model_instance.use_license.license_code,
+            "reference_url": model_instance.use_license.reference_url,
+            "disclaimer": model_instance.use_license.disclaimer
+        }
+
+    issue_cover_url = None
+    if model_instance.cover:
+        issue_cover_url = model_instance.cover.url
+
+    if model_instance.journal:
+        journal_jid = model_instance.journal.jid
+    else:
+        journal_jid = None
+
+    result = {
+        "_id": model_instance.iid,
+        "iid": model_instance.iid,
+        "journal_jid": journal_jid,
+        "sections": issue_sections,
+        "type": model_instance.type,
+        "suppl_text": model_instance.suppl_text,
+        "spe_text": model_instance.spe_text,
+        "volume": model_instance.volume,
+        "number": model_instance.number,
+        "created": model_instance.created,
+        "updated": model_instance.updated,
+        "start_month": model_instance.publication_start_month,
+        "end_month": model_instance.publication_end_month,
+        "year": model_instance.publication_year,
+        "use_licenses": issue_use_licenses,
+        "cover_url": issue_cover_url,
+        "label": model_instance.label,
+        "order": model_instance.order,
+        "bibliographic_legend": model_instance.bibliographic_legend,
     }
     return result

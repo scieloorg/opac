@@ -67,13 +67,13 @@
           <ul>
             {% for event in journal.timeline %}
               {% if event.status == 'current'%}
-                <li>Em {{ event.since[:10]}} admitido na coleção da SciELO</li>
+                <li>Em {{ event.since }} admitido na coleção da SciELO</li>
               {% elif event.status == 'rejected' %}
-                <li>Em {{ event.since[:10]}} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
+                <li>Em {{ event.since }} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
               {% elif event.status == 'suspended' %}
-                <li>Em {{ event.since[:10]}} suspenso da coleção da SciELO (motivo: {{ event.reason }}).</li>
+                <li>Em {{ event.since }} suspenso da coleção da SciELO (motivo: {{ event.reason }}).</li>
               {% elif event.status == 'deceased' %}
-                <li>Em {{ event.since[:10]}} descontinuado da coleção da SciELO (motivo: {{ event.reason }}).</li>
+                <li>Em {{ event.since }} descontinuado da coleção da SciELO (motivo: {{ event.reason }}).</li>
               {% endif %}
             {% endfor %}
           </ul>
