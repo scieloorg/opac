@@ -27,7 +27,8 @@ def test_mongo():
 
 @app.route('/journals')
 def collection_list_alpha():
-    journals = controllers.get_journals_by_collection_alpha('esp')
+    # journals = controllers.get_journals_by_collection_alpha('esp')
+    journals = mongodb_controllers.get_journals_by_collection_alpha('esp')
     context = {
         'journals': journals,
     }
@@ -96,8 +97,7 @@ def issue_grid(journal_id):
 def issue_toc(issue_id):
     issue = mongodb_controllers.get_issue_by_iid(issue_id)
     journal = issue.journal_jid
-    # articles = controllers.get_articles_by_iid(issue.iid)
-    articles = []
+    articles = mongodb_controllers.get_articles_by_iid(issue.iid)
 
     context = {'journal': journal,
                'issue': issue,
@@ -108,19 +108,21 @@ def issue_toc(issue_id):
 
 @app.route('/articles/<string:article_id>')
 def article_detail(article_id):
-    article = controllers.get_article_by_aid(article_id)
+    # article = controllers.get_article_by_aid(article_id)
+    article = mongodb_controllers.get_article_by_aid(article_id)
 
     context = {
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': article.journal_jid,
+        'issue': article.issue_iid
     }
     return render_template("article/detail.html", **context)
 
 
 @app.route('/articles/html/<string:article_id>')
 def article_html_by_aid(article_id):
-    article = controllers.get_article_by_aid(article_id)
+    # article = controllers.get_article_by_aid(article_id)
+    article = mongodb_controllers.get_article_by_aid(article_id)
 
     article_html = article.htmls[0].source
 
@@ -129,11 +131,11 @@ def article_html_by_aid(article_id):
 
 @app.route('/abstract/<string:article_id>')
 def abstract_detail(article_id):
-    article = controllers.get_article_by_aid(article_id)
-
+    # article = controllers.get_article_by_aid(article_id)
+    article = mongodb_controllers.get_article_by_aid(article_id)
     context = {
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': article.journal_jid,
+        'issue': article.issue_iid
     }
     return render_template("article/abstract.html", **context)
