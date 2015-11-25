@@ -7,7 +7,7 @@
         <div class="col-md-5 col-sm-5">
             <h2><span class="glyphBtn articles"></span> Artigos do Ano {{ issue.year }}, Volume {{ issue.volume }} Número {{ issue.number }}</h2>
             <div class="btn-group">
-                <a href="{{ url_for('issue_grid', journal_id=article.journal_jid) }}" class="btn group">sumário</a>
+                <a href="{{ url_for('issue_grid', journal_id=article.journal_jid.jid) }}" class="btn group">sumário</a>
                 <a href="javascript:;" class="btn group">« anterior</a>
                 <a href="{{ url_for('article_detail', article_id=article.aid) }}" class="btn group selected">atual</a>
                 <a href="javascript:;" class="btn group">próximo »</a>

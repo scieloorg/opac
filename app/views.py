@@ -1,15 +1,29 @@
 # coding: utf-8
-from flask import render_template, abort
-from app import app
-import controllers
-from pprint import pprint
+
 from collections import OrderedDict
+
+from app import app
+from flask import render_template, abort
+
+import controllers
 
 
 @app.route('/')
 def index():
     context = {}
     return render_template("collection/index.html", **context)
+
+
+@app.route('/test/mongo')
+def test_mongo():
+    data = controllers.get_all_pages()
+    if not data:
+        controllers.create_dummy_pages()
+        data = controllers.get_all_pages()
+    context = {
+        'data': data
+    }
+    return render_template("test/mongo.html", **context)
 
 
 @app.route('/journals')
@@ -43,7 +57,6 @@ def collection_list_institution():
 
 @app.route('/journals/<string:journal_id>')
 def journal_detail(journal_id):
-
     journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
@@ -56,7 +69,6 @@ def journal_detail(journal_id):
 
 @app.route('/journals/<string:journal_id>/issues')
 def issue_grid(journal_id):
-
     journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
@@ -81,7 +93,7 @@ def issue_grid(journal_id):
 @app.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
     issue = controllers.get_issue_by_iid(issue_id)
-    journal = controllers.get_journal_by_jid(issue.journal_jid)
+    journal = issue.journal_jid
     articles = controllers.get_articles_by_iid(issue.iid)
 
     context = {'journal': journal,
@@ -97,8 +109,8 @@ def article_detail(article_id):
 
     context = {
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': article.journal_jid,
+        'issue': article.issue_iid
     }
     return render_template("article/detail.html", **context)
 
@@ -115,10 +127,9 @@ def article_html_by_aid(article_id):
 @app.route('/abstract/<string:article_id>')
 def abstract_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
-
     context = {
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': article.journal_jid,
+        'issue': article.issue_iid
     }
     return render_template("article/abstract.html", **context)
