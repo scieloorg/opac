@@ -1,10 +1,11 @@
 # coding: utf-8
-from flask import render_template, abort
-from app import app
-import controllers
-import mongodb_controllers
-from pprint import pprint
+
 from collections import OrderedDict
+
+from app import app
+from flask import render_template, abort
+
+import controllers
 
 
 @app.route('/')
@@ -15,10 +16,10 @@ def index():
 
 @app.route('/test/mongo')
 def test_mongo():
-    data = mongodb_controllers.get_all_pages()
+    data = controllers.get_all_pages()
     if not data:
-        mongodb_controllers.create_dummy_pages()
-        data = mongodb_controllers.get_all_pages()
+        controllers.create_dummy_pages()
+        data = controllers.get_all_pages()
     context = {
         'data': data
     }
@@ -27,8 +28,7 @@ def test_mongo():
 
 @app.route('/journals')
 def collection_list_alpha():
-    # journals = controllers.get_journals_by_collection_alpha('esp')
-    journals = mongodb_controllers.get_journals_by_collection_alpha('esp')
+    journals = controllers.get_journals_by_collection_alpha('esp')
     context = {
         'journals': journals,
     }
@@ -57,9 +57,7 @@ def collection_list_institution():
 
 @app.route('/journals/<string:journal_id>')
 def journal_detail(journal_id):
-
-    # journal = controllers.get_journal_by_jid(journal_id)
-    journal = mongodb_controllers.get_journal_by_jid(journal_id)
+    journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
         abort(404, 'Journal not found')
@@ -71,13 +69,12 @@ def journal_detail(journal_id):
 
 @app.route('/journals/<string:journal_id>/issues')
 def issue_grid(journal_id):
-
-    journal = mongodb_controllers.get_journal_by_jid(journal_id)
+    journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
         abort(404, 'Journal not found')
 
-    issues = mongodb_controllers.get_issues_by_jid(journal_id)
+    issues = controllers.get_issues_by_jid(journal_id)
 
     result_dict = OrderedDict()
     for issue in issues:
@@ -95,9 +92,9 @@ def issue_grid(journal_id):
 
 @app.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
-    issue = mongodb_controllers.get_issue_by_iid(issue_id)
+    issue = controllers.get_issue_by_iid(issue_id)
     journal = issue.journal_jid
-    articles = mongodb_controllers.get_articles_by_iid(issue.iid)
+    articles = controllers.get_articles_by_iid(issue.iid)
 
     context = {'journal': journal,
                'issue': issue,
@@ -108,8 +105,7 @@ def issue_toc(issue_id):
 
 @app.route('/articles/<string:article_id>')
 def article_detail(article_id):
-    # article = controllers.get_article_by_aid(article_id)
-    article = mongodb_controllers.get_article_by_aid(article_id)
+    article = controllers.get_article_by_aid(article_id)
 
     context = {
         'article': article,
@@ -121,8 +117,7 @@ def article_detail(article_id):
 
 @app.route('/articles/html/<string:article_id>')
 def article_html_by_aid(article_id):
-    # article = controllers.get_article_by_aid(article_id)
-    article = mongodb_controllers.get_article_by_aid(article_id)
+    article = controllers.get_article_by_aid(article_id)
 
     article_html = article.htmls[0].source
 
@@ -131,8 +126,7 @@ def article_html_by_aid(article_id):
 
 @app.route('/abstract/<string:article_id>')
 def abstract_detail(article_id):
-    # article = controllers.get_article_by_aid(article_id)
-    article = mongodb_controllers.get_article_by_aid(article_id)
+    article = controllers.get_article_by_aid(article_id)
     context = {
         'article': article,
         'journal': article.journal_jid,
