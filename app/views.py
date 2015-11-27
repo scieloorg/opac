@@ -10,13 +10,12 @@ import controllers
 
 @app.route('/')
 def index():
-    context = {}
-    return render_template("collection/index.html", **context)
+    return render_template("collection/index.html")
 
 
 @app.route('/journals')
 def collection_list_alpha():
-    journals = controllers.get_journals_by_collection_alpha('esp')
+    journals = controllers.get_journals_alpha()
     context = {
         'journals': journals,
     }
@@ -25,8 +24,8 @@ def collection_list_alpha():
 
 @app.route('/journals/theme')
 def collection_list_theme():
-    objects_by_area = controllers.get_journals_by_collection_theme('esp')
-    objects_by_indexed = controllers.get_journals_by_collection_indexed('esp')
+    objects_by_area = controllers.get_journals_theme()
+    objects_by_indexed = controllers.get_journals_indexed()
 
     context = {
         'objects_by_area': objects_by_area,
@@ -38,7 +37,7 @@ def collection_list_theme():
 
 @app.route('/journals/institution')
 def collection_list_institution():
-    context = controllers.get_journals_by_collection_institution('esp')
+    context = controllers.get_journals_institution()
 
     return render_template("collection/list_institution.html", **context)
 

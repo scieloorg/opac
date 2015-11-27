@@ -15,3 +15,6 @@ MONGODB_SETTINGS = {
     # 'host': '127.0.0.1',
     # 'port': 27017
 }
+
+# OPAC Collection
+OPAC_COLLECTION = ''
