@@ -3,3 +3,7 @@ Flask-DebugToolbar==0.10.0
 mongoengine==0.10.0
 flask-mongoengine==0.7.4
 -e git+git@github.com:scieloorg/opac_schema.git#egg=opac_schema
+Flask-Assets==0.11
+jsmin==2.1.6
+cssmin==0.2.0
+webassets==0.11.1

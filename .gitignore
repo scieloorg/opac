@@ -5,6 +5,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Bundle CSS and JS
+bundle.js
+bundle.css
+.webassets-cache
+
 # Distribution / packaging
 .Python
 env/

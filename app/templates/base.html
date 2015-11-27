@@ -9,10 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
 
     <title>SciELO Brasil</title>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-portal.css') }}">
+    {% assets "css_all" %}
+      <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" />
+    {% endassets %}
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-print.css') }}" media="print">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -24,11 +25,9 @@
   </head>
   <body class="{% block body_class %}{% endblock %}">
     {% block content %}{% endblock %}
-    <script src="{{ url_for('static', filename='js/vendor/jquery-1.11.0.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/vendor/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/vendor/jquery-ui.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/plugins.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% assets "js_all" %}
+      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
     {% block extra_js %}{% endblock %}
   </body>
 </html>
