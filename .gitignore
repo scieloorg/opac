@@ -10,6 +10,9 @@ bundle.js
 bundle.css
 .webassets-cache
 
+# Flask config
+instance/config.py
+
 # Distribution / packaging
 .Python
 env/

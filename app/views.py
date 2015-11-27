@@ -14,18 +14,6 @@ def index():
     return render_template("collection/index.html", **context)
 
 
-@app.route('/test/mongo')
-def test_mongo():
-    data = controllers.get_all_pages()
-    if not data:
-        controllers.create_dummy_pages()
-        data = controllers.get_all_pages()
-    context = {
-        'data': data
-    }
-    return render_template("test/mongo.html", **context)
-
-
 @app.route('/journals')
 def collection_list_alpha():
     journals = controllers.get_journals_by_collection_alpha('esp')

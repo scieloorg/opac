@@ -1,0 +1,14 @@
+# Instance configuration
+
+# Debug
+DEBUG = True
+
+# Assets
+ASSETS_DEBUG = DEBUG
+
+# Mongo
+MONGODB_SETTINGS = {
+    'db': 'manager2mongo',
+    # 'host': '127.0.0.1',
+    # 'port': 27017
+}

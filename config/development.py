@@ -1,4 +1,6 @@
-# from config import default
+# Default configuration
 
 DEBUG = True
-ES_HOSTS = ['127.0.0.1', ]
+
+# Assets
+ASSETS_DEBUG = DEBUG
