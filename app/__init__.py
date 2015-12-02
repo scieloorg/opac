@@ -8,7 +8,7 @@ from flask.ext.login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import flask_admin
 
-from app.admin.views import AdminIndexView
+from opac_schema.v1.models import Journal, Issue, Article
 
 assets = Environment()
 toolbar = DebugToolbarExtension()
@@ -54,8 +54,18 @@ def create_app(config_name=None):
     dbmongo.init_app(app)
     # SQLAlchemy
     dbsql.init_app(app)
-    # Admin
-    admin = flask_admin.Admin(app, 'OPAC admin', index_view=AdminIndexView(), template_mode='bootstrap3')
+
+    # Admin Views
+    from .models import User
+    from app.admin import views
+    admin = flask_admin.Admin(
+        app, 'OPAC admin',
+        index_view=views.AdminIndexView(), template_mode='bootstrap3',
+        base_template="admin/opac_base.html")
+    admin.add_view(views.JournalAdminView(Journal))
+    admin.add_view(views.IssueAdminView(Issue))
+    admin.add_view(views.ArticleAdminView(Article))
+    admin.add_view(views.UserAdminView(User, dbsql.session))
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
