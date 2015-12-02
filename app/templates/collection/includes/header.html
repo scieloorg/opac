@@ -7,10 +7,10 @@
             <nav>
               <ul>
                 <li>
-                  <a href="{{ url_for('index') }}"><strong>SciELO Brasil</strong></a>
+                  <a href="{{ url_for('.index') }}"><strong>SciELO Brasil</strong></a>
                   <ul>
-                      <li><a href="{{ url_for('collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
-                      <li><a href="{{ url_for('collection_list_theme') }}">Lista temática de periódicos</a></li>
+                      <li><a href="{{ url_for('.collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
+                      <li><a href="{{ url_for('.collection_list_theme') }}">Lista temática de periódicos</a></li>
                       <li><a href="/Colecao/edit.html">Lista de periódicos por editoras</a></li>
                       <li><a href="/Colecao/buscar.html">Busca</a></li>
                       <li><a href="/Colecao/metricas.html">Métricas</a></li>
@@ -43,12 +43,12 @@
       </div>
       <div class="col-md-6 col-sm-4 brandLogo">
         <h1>
-          <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/collection/logo-scielo-br-pt.png') }}" alt="SciELO Brazil"></a>
+          <a href="{{ url_for('.index') }}"><img src="{{ url_for('static', filename='img/collection/logo-scielo-br-pt.png') }}" alt="SciELO Brazil"></a>
         </h1>
       </div>
       <div class="col-md-3 col-sm-4 language">
-        <a href="{{ url_for('index') }}" class="lang-en" lang="en">English</a>
-        <a href="{{ url_for('index') }}" class="lang-es" lang="es">Español</a>
+        <a href="{{ url_for('.index') }}" class="lang-en" lang="en">English</a>
+        <a href="{{ url_for('.index') }}" class="lang-es" lang="es">Español</a>
       </div>
       <div class="clearfix"></div>
     </div>

@@ -3,7 +3,7 @@
     <a href="#" class="onlineSubmission"><span class="glyphBtn authorInfo"></span> Portal do Autor</a>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('index') }}" class="btn single"><span class="glyphBtn home"></span> Home</a>
+      <a href="{{ url_for('.index') }}" class="btn single"><span class="glyphBtn home"></span> Home</a>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
@@ -12,9 +12,9 @@
     <div class="col-md-4 col-sm-4">
       <h2><span class="glyphBtn numbers"></span> Lista de Periódicos:</h2>
       <div class="btn-group">
-          <a href="{{ url_for("collection_list_alpha") }}" class="btn group selected">Alfabética</a>
-          <a href="{{ url_for("collection_list_theme") }}" class="btn group">Temática</a>
-          <a href="{{ url_for("collection_list_institution") }}" class="btn group">Por instituição</a>
+          <a href="{{ url_for(".collection_list_alpha") }}" class="btn group selected">Alfabética</a>
+          <a href="{{ url_for(".collection_list_theme") }}" class="btn group">Temática</a>
+          <a href="{{ url_for(".collection_list_institution") }}" class="btn group">Por instituição</a>
       </div>
     </div>
     <div class="col-md-2 col-sm-2">

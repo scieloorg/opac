@@ -2,18 +2,17 @@
 
 from collections import OrderedDict
 
-from app import app
 from flask import render_template, abort
+from . import main
+from app import controllers
 
-import controllers
 
-
-@app.route('/')
+@main.route('/')
 def index():
     return render_template("collection/index.html")
 
 
-@app.route('/journals')
+@main.route('/journals')
 def collection_list_alpha():
     journals = controllers.get_journals_alpha()
     context = {
@@ -22,7 +21,7 @@ def collection_list_alpha():
     return render_template("collection/list_alpha.html", **context)
 
 
-@app.route('/journals/theme')
+@main.route('/journals/theme')
 def collection_list_theme():
     objects_by_area = controllers.get_journals_theme()
     objects_by_indexed = controllers.get_journals_indexed()
@@ -35,14 +34,14 @@ def collection_list_theme():
     return render_template("collection/list_theme.html", **context)
 
 
-@app.route('/journals/institution')
+@main.route('/journals/institution')
 def collection_list_institution():
     context = controllers.get_journals_institution()
 
     return render_template("collection/list_institution.html", **context)
 
 
-@app.route('/journals/<string:journal_id>')
+@main.route('/journals/<string:journal_id>')
 def journal_detail(journal_id):
     journal = controllers.get_journal_by_jid(journal_id)
 
@@ -54,7 +53,7 @@ def journal_detail(journal_id):
     return render_template("journal/detail.html", **context)
 
 
-@app.route('/journals/<string:journal_id>/issues')
+@main.route('/journals/<string:journal_id>/issues')
 def issue_grid(journal_id):
     journal = controllers.get_journal_by_jid(journal_id)
 
@@ -77,7 +76,7 @@ def issue_grid(journal_id):
     return render_template("issue/grid.html", **context)
 
 
-@app.route('/issues/<string:issue_id>')
+@main.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
     issue = controllers.get_issue_by_iid(issue_id)
     journal = issue.journal_jid
@@ -90,7 +89,7 @@ def issue_toc(issue_id):
     return render_template("issue/toc.html", **context)
 
 
-@app.route('/articles/<string:article_id>')
+@main.route('/articles/<string:article_id>')
 def article_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
@@ -102,7 +101,7 @@ def article_detail(article_id):
     return render_template("article/detail.html", **context)
 
 
-@app.route('/articles/html/<string:article_id>')
+@main.route('/articles/html/<string:article_id>')
 def article_html_by_aid(article_id):
     article = controllers.get_article_by_aid(article_id)
 
@@ -111,7 +110,7 @@ def article_html_by_aid(article_id):
     return article_html
 
 
-@app.route('/abstract/<string:article_id>')
+@main.route('/abstract/<string:article_id>')
 def abstract_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
     context = {

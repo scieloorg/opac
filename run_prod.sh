@@ -2,4 +2,4 @@
 
 export OPAC_CONFIG="config.production"
 
-python run.py
+python manager.py runserver

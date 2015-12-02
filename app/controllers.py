@@ -2,16 +2,12 @@
 
 import datetime
 
-from mongoengine import *
-
 from opac_schema.v1.models import Journal, Issue, Article
-
-from . import app
-
-COLLECTION = app.config['OPAC_COLLECTION']
+from flask import current_app
 
 
 def get_journals_alpha():
+    COLLECTION = current_app.config.get('OPAC_COLLECTION')
     return Journal.objects(collections__acronym=COLLECTION).order_by('title')
 
 
@@ -35,3 +31,16 @@ def get_article_by_aid(aid):
 
 def get_articles_by_iid(iid):
     return Article.objects(issue_iid=iid)
+
+
+# -------- SLQALCHEMY --------
+def get_user(email):
+    import models as sql_models
+    from . import dbsql
+    return dbsql.session.query(sql_models.User).filter_by(email=email).first()
+
+
+def get_user_by_id(id):
+    import models as sql_models
+    from . import dbsql
+    return dbsql.session.query(sql_models.User).get(id)

@@ -1,0 +1,49 @@
+{% extends 'admin/opac_base.html' %}
+{% block body %}
+  {{ super() }}
+  <div class="row-fluid">
+
+    <div class="col-md-5 col-md-offset-4">
+
+      {% if current_user.is_authenticated %}
+
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body">
+            You're logged in!
+          </div>
+        </div>
+
+      {% else %}
+
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body">
+            <form method="POST" action="" class="form-horizontal">
+              {{ form.hidden_tag() if form.hidden_tag }}
+              {% for f in form if f.type != 'CSRFTokenField' %}
+                <div class="form-group {% if f.errors %} has-error {% endif %}">
+                  <label for="{{ f.id }}" class="col-md-2 control-label">{{ f.label }}</label>
+                  <div class="col-md-10">
+                    {{ f(class="form-control") }}
+                  </div>
+                  {% if f.errors %}
+                    <ul>
+                      {% for e in f.errors %}
+                        <li>
+                          <span class="help-block">{{ e }}</span>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </div>
+              {% endfor %}
+              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
+
+      {% endif %}
+    </div>
+  </div>
+{% endblock body %}
