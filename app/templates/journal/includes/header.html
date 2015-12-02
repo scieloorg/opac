@@ -3,7 +3,7 @@
     <div class="topFunction">
       <div class="col-md-2 col-sm-3 mainNav">
         <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">Abrir menu</a>
-        <h2><a href="{{ url_for('index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png') }}" alt="SciELO Brasil"></a></h2>
+        <h2><a href="{{ url_for('.index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png') }}" alt="SciELO Brasil"></a></h2>
         <div class="mainMenu" id="mainMenu">
           <div class="row">
             <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
@@ -13,10 +13,10 @@
           <nav>
             <ul>
               <li>
-                <a href="{{ url_for('index') }}"><strong>SciELO Brasil</strong></a>
+                <a href="{{ url_for('.index') }}"><strong>SciELO Brasil</strong></a>
                 <ul>
-                  <li><a href="{{ url_for('collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
-                  <li><a href="{{ url_for('collection_list_theme') }}">Lista temática de periódicos</a></li>
+                  <li><a href="{{ url_for('.collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
+                  <li><a href="{{ url_for('.collection_list_theme') }}">Lista temática de periódicos</a></li>
                   <li><a href="/Colecao/edit.html">Lista de periódicos por editoras</a></li>
                   <li><a href="/Colecao/buscar.html">Busca</a></li>
                   <li><a href="/Colecao/metricas.html">Métricas</a></li>

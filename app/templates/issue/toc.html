@@ -93,14 +93,14 @@
                             <ul class="links">
                                 <li>
                                   Português:
-                                  <a href="{{ url_for('abstract_detail', article_id=article.aid) }}">Resumo</a> |
-                                  <a href="{{ url_for('article_detail', article_id=article.aid) }}">Texto</a> |
+                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">Resumo</a> |
+                                  <a href="{{ url_for('.article_detail', article_id=article.aid) }}">Texto</a> |
                                   <a href="#" target="_blank">PDF</a> |
                                   <a href="#">Press-release</a>
                                 </li>
                                 <li>
                                   English:
-                                  <a href="{{ url_for('abstract_detail', article_id=article.aid) }}">Abstract</a>
+                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">Abstract</a>
                                 </li>
                             </ul>
                         </li>

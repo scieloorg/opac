@@ -2,7 +2,7 @@
   <div class="container">
     <div class="col-md-2 col-sm-3 mainNav">
       <a href="#" class="menu" data-rel="#alternativeMainMenu" title="Abrir menu">Abrir menu</a>
-      <h2><a href="{{ url_for('index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-alternative-brasil.png') }}" alt="SciELO Brasil"></a></h2>
+      <h2><a href="{{ url_for('.index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-alternative-brasil.png') }}" alt="SciELO Brasil"></a></h2>
       <div class="mainMenu" id="alternativeMainMenu">
         <div class="row">
           <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
@@ -18,7 +18,7 @@
     <div class="col-md-6 col-sm-5 journalInfo">
       <ul>
         <li>
-          <a href="{{ url_for('journal_detail', journal_id=journal.jid) }}" class="dropdown-toggle" data-toggle="dropdown">{{ journal['title_iso']}} <span class="glyphBtn grayArrowDown"></span></a>
+          <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="dropdown-toggle" data-toggle="dropdown">{{ journal['title_iso']}} <span class="glyphBtn grayArrowDown"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li class="dropdown-header">Número atual:</li>
             <li><strong>Bol. Mus. Para. Emílio Goeldi. Ciênc. hum. vol.8 no.1 Belém jan./abr. 2013</strong></li>
@@ -33,7 +33,7 @@
           <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn numbers"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li class="dropdown-header">Números</li>
-            <li><a href="{{ url_for('issue_grid', journal_id=journal.id) }}">• todos</a></li>
+            <li><a href="{{ url_for('.issue_grid', journal_id=journal.id) }}">• todos</a></li>
             <li><a href="atual.html">« anterior</a></li>
             <li><a href="atual.html">• atual</a></li>
             <li><a href="atual.html">» próximo</a></li>

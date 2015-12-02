@@ -48,7 +48,7 @@
         {% if journal.last_issue %}
           <div class="block lastIssue">
             <div class="col-md-6 col-sm-6">
-              <a href="{{ url_for('issue_toc', issue_id=journal.last_issue.iid) }}">
+              <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}">
                 {% if journal.last_issue.cover_url %}
                   <img src="{{ latest_issue.cover_url }}" alt="Capa do número mais recente" /> <!-- a imagem é opcional -->
                 {% endif %}
@@ -62,7 +62,7 @@
               <h3>Sumário</h3>
               <ul>
                 {% for section in journal.last_issue.sections %}
-                  <li><a href="{{ url_for('issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                  <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
                 {% endfor %}
               </ul>
             </div>
