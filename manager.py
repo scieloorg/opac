@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 import os
-from app import create_app
+from app import create_app, dbsql, dbmongo, mail
 from app.models import build_sample_db
 from flask.ext.script import Manager, Shell
 
 app = create_app(os.getenv('OPAC_CONFIG'))
 manager = Manager(app)
+
+
+def make_shell_context():
+    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail)
+manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
 @manager.command
