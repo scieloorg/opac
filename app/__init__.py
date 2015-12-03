@@ -7,6 +7,7 @@ from flask.ext.mongoengine import MongoEngine
 from flask.ext.login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import flask_admin
+from flask_mail import Mail
 
 from opac_schema.v1.models import Journal, Issue, Article
 
@@ -14,6 +15,7 @@ assets = Environment()
 toolbar = DebugToolbarExtension()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
+mail = Mail()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -54,6 +56,8 @@ def create_app(config_name=None):
     dbmongo.init_app(app)
     # SQLAlchemy
     dbsql.init_app(app)
+    # Mail
+    mail.init_app(app)
 
     # Admin Views
     from .models import User
