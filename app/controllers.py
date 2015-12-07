@@ -1,9 +1,10 @@
 # coding: utf-8
 
 import datetime
-
 from opac_schema.v1.models import Journal, Issue, Article
 from flask import current_app
+from app import dbsql
+from . import models as sql_models
 
 
 def get_journals_alpha():
@@ -34,13 +35,21 @@ def get_articles_by_iid(iid):
 
 
 # -------- SLQALCHEMY --------
-def get_user(email):
-    import models as sql_models
-    from . import dbsql
+def get_user_by_email(email):
     return dbsql.session.query(sql_models.User).filter_by(email=email).first()
 
 
 def get_user_by_id(id):
-    import models as sql_models
-    from . import dbsql
     return dbsql.session.query(sql_models.User).get(id)
+
+
+def set_user_email_confirmed(user):
+    user.email_confirmed = True
+    dbsql.session.add(user)
+    dbsql.session.commit()
+
+
+def set_user_password(user, password):
+    user.password = password
+    dbsql.session.add(user)
+    dbsql.session.commit()

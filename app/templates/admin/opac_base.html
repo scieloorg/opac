@@ -17,6 +17,7 @@
           {{ current_user.email }} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+          <li><a href="{{ url_for('admin.reset') }}">Reset Password</a></li>
           <li><a href="{{ url_for('admin.logout_view') }}">Log out</a></li>
         </ul>
       </li>

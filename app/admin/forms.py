@@ -1,20 +1,25 @@
-from wtforms import form, fields, validators
-from werkzeug.security import generate_password_hash, check_password_hash
+# coding: utf-8
 
-from app.controllers import get_user
+from wtforms import form, fields, validators
+
+from app.controllers import get_user_by_email
 
 
 class LoginForm(form.Form):
-    email = fields.TextField(validators=[validators.required()])
+    email = fields.TextField('Email', validators=[validators.required(), validators.email()])
     password = fields.PasswordField(validators=[validators.required()])
 
-    def validate_login(self, field):
-        user = get_user(self.email.data)
+    def validate_password(self, field):
+        user = get_user_by_email(self.email.data)
         if user is None:
             raise validators.ValidationError('Invalid user')
-
-        # we're comparing the plaintext pw with the the hash from the db
-        if not check_password_hash(user.password, self.password.data):
-            # to compare plain text passwords use
-            # if user.password != self.password.data:
+        if not user.is_correct_password(self.password.data):
             raise validators.ValidationError('Invalid password')
+
+
+class EmailForm(form.Form):
+    email = fields.TextField('Email', validators=[validators.required(), validators.email()])
+
+
+class PasswordForm(form.Form):
+    password = fields.PasswordField('Password', validators=[validators.required()])

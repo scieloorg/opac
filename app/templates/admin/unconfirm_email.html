@@ -1,0 +1,15 @@
+{% extends 'admin/opac_base.html' %}
+{% block body %}
+  {{ super() }}
+  <div class="row-fluid">
+    <div class="col-md-5 col-md-offset-4">
+        <div class="panel panel-danger">
+          <div class="panel-heading">Unconfirmed email!</div>
+          <div class="panel-body">
+            You <strong>must</strong> have your email confirmed.<br>
+            <strong>Please contact the site administrator.</strong>
+          </div>
+        </div>
+    </div>
+  </div>
+{% endblock body %}

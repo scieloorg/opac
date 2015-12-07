@@ -25,3 +25,5 @@ SQLALCHEMY_ECHO = DEBUG
 
 # OPAC Collection
 OPAC_COLLECTION = ''
+
+TOKEN_MAX_AGE = 86400  # value in seconds: 86400 = 60*60*24 = 1 day

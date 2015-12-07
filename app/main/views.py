@@ -7,6 +7,21 @@ from . import main
 from app import controllers
 
 
+@main.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@main.errorhandler(403)
+def unauthorized(e):
+    return render_template('403.html'), 403
+
+
+@main.errorhandler(500)
+def unauthorized(e):
+    return render_template('500.html'), 500
+
+
 @main.route('/')
 def index():
     return render_template("collection/index.html")

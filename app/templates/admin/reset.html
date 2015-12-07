@@ -5,19 +5,8 @@
 
     <div class="col-md-5 col-md-offset-4">
 
-      {% if current_user.is_authenticated %}
-
         <div class="panel panel-default">
-          <div class="panel-heading">Login</div>
-          <div class="panel-body">
-            You're logged in!
-          </div>
-        </div>
-
-      {% else %}
-
-        <div class="panel panel-default">
-          <div class="panel-heading">Login</div>
+          <div class="panel-heading">Reset Password</div>
           <div class="panel-body">
             <form method="POST" action="" class="form-horizontal">
               {{ form.hidden_tag() if form.hidden_tag }}
@@ -41,12 +30,8 @@
               <button class="btn btn-primary pull-right" type="submit">Submit</button>
             </form>
           </div>
-          <div class="panel-footer">
-            Forgot your password? <a href="{{ url_for('.reset') }}">click here</a>
-          </div>
         </div>
 
-      {% endif %}
     </div>
   </div>
 {% endblock body %}
