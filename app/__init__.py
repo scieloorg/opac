@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 import flask_admin
 from flask_mail import Mail
 
+import errors
 from opac_schema.v1.models import Journal, Issue, Article
 
 assets = Environment()
@@ -58,6 +59,9 @@ def create_app(config_name=None):
     dbsql.init_app(app)
     # Mail
     mail.init_app(app)
+
+    # Register a errorhandler
+    errors.register_errorhandlers(app)
 
     # Admin Views
     from .models import User
