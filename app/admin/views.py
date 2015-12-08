@@ -9,8 +9,8 @@ from flask import current_app
 
 import forms
 from app import models
-from app.controllers import get_user_by_email, set_user_email_confirmed
-from ..utils import get_timed_serializer
+from app import controllers
+from ..utils import get_timed_serializer, rebuild_article_xml
 
 
 class AdminIndexView(admin.AdminIndexView):
@@ -27,7 +27,7 @@ class AdminIndexView(admin.AdminIndexView):
         form = forms.LoginForm(request.form)
         if admin.helpers.validate_form_on_submit(form):
             user_email = form.data['email']
-            user = get_user_by_email(user_email)
+            user = controllers.get_user_by_email(user_email)
             if not user.email_confirmed:
                 return self.render('admin/auth/unconfirm_email.html')
             login.login_user(user)
@@ -54,11 +54,11 @@ class AdminIndexView(admin.AdminIndexView):
             # qualquer exeção invalida a operação de confirmação
             abort(404)  # melhorar mensagem de erro para o usuário
 
-        user = get_user_by_email(email=email)
+        user = controllers.get_user_by_email(email=email)
         if not user:
             abort(404)  # melhorar mensagem de erro para o usuário
 
-        set_user_email_confirmed(user)
+        controllers.set_user_email_confirmed(user)
         flash('Email confimed successfully: %s.' % user.email)
         return redirect(url_for('.index'))
 
@@ -67,7 +67,7 @@ class AdminIndexView(admin.AdminIndexView):
         form = forms.EmailForm(request.form)
 
         if admin.helpers.validate_form_on_submit(form):
-            user = get_user_by_email(email=form.data['email'])
+            user = controllers.get_user_by_email(email=form.data['email'])
             if not user:
                 abort(404)  # melhorar mensagem de erro para o usuário
             if not user.email_confirmed:
@@ -95,7 +95,7 @@ class AdminIndexView(admin.AdminIndexView):
 
         form = forms.PasswordForm(request.form)
         if admin.helpers.validate_form_on_submit(form):
-            user = get_user_by_email(email=email)
+            user = controllers.get_user_by_email(email=email)
             if not user.email_confirmed:
                 return self.render('admin/auth/unconfirm_email.html')
 
@@ -164,7 +164,9 @@ class OpacBaseAdminView(mongoengine.ModelView):
 
 class JournalAdminView(OpacBaseAdminView):
 
-    column_searchable_list = ['_id', 'title']
+    column_searchable_list = [
+        '_id', 'title'
+    ]
     column_exclude_list = [
         '_id', 'timeline', 'use_licenses', 'national_code', 'subject_categories',
         'study_areas', 'social_networks', 'title_iso', 'short_title',
@@ -173,20 +175,45 @@ class JournalAdminView(OpacBaseAdminView):
         'online_submission_url', 'cover_url', 'logo_url', 'previous_journal_id',
         'publisher_name', 'publisher_country', 'publisher_state',
         'publisher_city', 'publisher_address', 'publisher_telephone',
-        'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles']
+        'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles'
+    ]
 
 
 class IssueAdminView(OpacBaseAdminView):
 
-    column_searchable_list = ['iid', 'label']
+    column_searchable_list = [
+        'iid', 'label'
+    ]
     column_exclude_list = [
         '_id', 'use_licenses', 'sections', 'cover_url', 'suppl_text',
         'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
-        'bibliographic_legend']
+        'bibliographic_legend'
+    ]
 
 
 class ArticleAdminView(OpacBaseAdminView):
 
-    column_searchable_list = ['aid', 'title', 'domain_key']
+    column_searchable_list = [
+        'aid', 'title', 'domain_key'
+    ]
     column_exclude_list = [
-        '_id', 'section', 'is_aop', 'htmls', 'domain_key']
+        '_id', 'section', 'is_aop', 'htmls',
+        'domain_key', 'xml'
+    ]
+    column_details_exclude_list = [
+        'xml',
+    ]
+
+    @action('rebuild_html', 'Rebuild HTML', 'Are you sure you want to rebuild the HTMLs for selected articles?')
+    def action_send_confirm_email(self, ids):
+        try:
+            articles = controllers.filter_articles_by_ids(ids)
+            count = 0
+            for article in articles:
+                rebuild_article_xml(article)
+                count += 1
+            flash('%s articles were successfully rebuilt.' % count)
+        except Exception, ex:
+            if not self.handle_view_exception(ex):
+                raise
+            flash('Failed to rebuild articles. %s' % str(ex), 'error')

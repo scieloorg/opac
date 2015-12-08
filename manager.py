@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 from app import create_app, dbsql, dbmongo, mail
+from opac_schema.v1.models import Journal, Issue, Article
 from app.models import build_sample_db
 from flask.ext.script import Manager, Shell
 
@@ -9,7 +10,7 @@ manager = Manager(app)
 
 
 def make_shell_context():
-    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail)
+    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail, Journal=Journal, Issue=Issue, Article=Article)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 

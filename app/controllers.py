@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import datetime
-from opac_schema.v1.models import Journal, Issue, Article
+from opac_schema.v1.models import Journal, Issue, Article, ArticleHTML
 from flask import current_app
 from app import dbsql
 from . import models as sql_models
@@ -53,3 +53,11 @@ def set_user_password(user, password):
     user.password = password
     dbsql.session.add(user)
     dbsql.session.commit()
+
+
+def filter_articles_by_ids(ids):
+    return Article.objects(_id__in=ids)
+
+
+def new_article_html_doc(language, source):
+    return ArticleHTML(language=language, source=source)

@@ -13,3 +13,4 @@ Flask-Security==1.7.4
 Flask-Login==0.3.2
 Flask-Script==2.0.5
 Flask-Mail==0.9.1
+lxml==3.5.0
