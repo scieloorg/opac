@@ -28,6 +28,8 @@ class AdminIndexView(admin.AdminIndexView):
         if admin.helpers.validate_form_on_submit(form):
             user_email = form.data['email']
             user = get_user_by_email(user_email)
+            if not user.email_confirmed:
+                return self.render('admin/auth/unconfirm_email.html')
             login.login_user(user)
 
         if login.current_user.is_authenticated:
@@ -35,7 +37,7 @@ class AdminIndexView(admin.AdminIndexView):
 
         self._template_args['form'] = form
 
-        return self.render('admin/login.html')
+        return self.render('admin/auth/login.html')
 
     @admin.expose('/logout/')
     def logout_view(self):
@@ -69,7 +71,7 @@ class AdminIndexView(admin.AdminIndexView):
             if not user:
                 abort(404)  # melhorar mensagem de erro para o usuário
             if not user.email_confirmed:
-                return self.render('admin/unconfirm_email.html')
+                return self.render('admin/auth/unconfirm_email.html')
 
             was_sent, error_msg = user.send_reset_password_email()
             if was_sent:
@@ -80,7 +82,7 @@ class AdminIndexView(admin.AdminIndexView):
             return redirect(url_for('.index'))
 
         self._template_args['form'] = form
-        return self.render('admin/reset.html')
+        return self.render('admin/auth/reset.html')
 
     @admin.expose('/reset/password/<token>', methods=('GET', 'POST'))
     def reset_with_token(self, token):
@@ -95,7 +97,7 @@ class AdminIndexView(admin.AdminIndexView):
         if admin.helpers.validate_form_on_submit(form):
             user = get_user_by_email(email=email)
             if not user.email_confirmed:
-                return self.render('admin/unconfirm_email.html')
+                return self.render('admin/auth/unconfirm_email.html')
 
             controllers.set_user_password(user, form.password.data)
             flash('New password changed successfully')
@@ -103,7 +105,7 @@ class AdminIndexView(admin.AdminIndexView):
 
         self._template_args['form'] = form
         self._template_args['token'] = token
-        return self.render('admin/reset_with_token.html')
+        return self.render('admin/auth/reset_with_token.html')
 
 
 class UserAdminView(sqla.ModelView):
@@ -114,7 +116,7 @@ class UserAdminView(sqla.ModelView):
     can_delete = True
     edit_modal = True
     create_modal = True
-    # form_excluded_columns = ('password', 'email_confirmed')
+    form_excluded_columns = ('password', 'email_confirmed')
 
     def after_model_change(self, form, model, is_created):
         if is_created:

@@ -1,0 +1,20 @@
+{% extends 'admin/opac_base.html' %}
+{% block body %}
+  {{ super() }}
+  <div class="row-fluid">
+
+    <div class="col-md-5 col-md-offset-4">
+
+        <div class="panel panel-default">
+          <div class="panel-heading">Reset Password</div>
+          <div class="panel-body">
+            <form method="POST" action="" class="form-horizontal">
+              {% include "admin/includes/forms.html" %}
+              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
+
+    </div>
+  </div>
+{% endblock body %}
