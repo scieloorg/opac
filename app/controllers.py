@@ -16,6 +16,18 @@ def get_journal_by_jid(jid):
     return Journal.objects(jid=jid).first()
 
 
+def get_journals_by_jid(jids):
+    return Journal.objects.in_bulk(jids)
+
+
+def set_journal_is_public_bulk(jids, is_public=True):
+    """
+    """
+    for journal in get_journals_by_jid(jids).values():
+        journal.is_public = is_public
+        journal.save()
+
+
 def get_issues_by_jid(jid, sort=None):
     if not sort:
         sort = ["-year", "-volume", "-number"]
@@ -26,8 +38,33 @@ def get_issue_by_iid(iid):
     return Issue.objects(iid=iid).first()
 
 
+def get_issues_by_iid(iids):
+    return Issue.objects.in_bulk(iids)
+
+
+def set_issue_is_public_bulk(iids, is_public=True):
+    """
+    """
+    for issue in get_issues_by_iid(iids).values():
+        issue.is_public = is_public
+        issue.save()
+
+
 def get_article_by_aid(aid):
     return Article.objects(aid=aid).first()
+
+
+def get_articles_by_aid(aids):
+    return Article.objects.in_bulk(aids)
+
+
+def set_article_is_public_bulk(aids, is_public=True):
+    """
+    """
+
+    for article in get_articles_by_aid(aids).values():
+        article.is_public = is_public
+        article.save()
 
 
 def get_articles_by_iid(iid):

@@ -118,6 +118,8 @@ class UserAdminView(sqla.ModelView):
     create_modal = True
     form_excluded_columns = ('password', 'email_confirmed')
 
+    column_filters = ['email']
+
     def after_model_change(self, form, model, is_created):
         if is_created:
             # Now we'll send the email confirmation link
@@ -187,6 +189,36 @@ class JournalAdminView(OpacBaseAdminView):
         scielo_issn=lambda v, c, m, p: '%s\n%s' % (m.print_issn or '', m.eletronic_issn or ''),
     )
 
+    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    def publish(self, ids):
+        try:
+
+            controllers.set_journal_is_public_bulk(ids, True)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Journal(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Journal(s).', 'error')
+
+    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    def unpublish(self, ids):
+        try:
+
+            controllers.set_journal_is_public_bulk(ids, False)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Journal(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Journal(s).', 'error')
+
 
 class IssueAdminView(OpacBaseAdminView):
 
@@ -205,6 +237,36 @@ class IssueAdminView(OpacBaseAdminView):
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
     )
+
+    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    def publish(self, ids):
+        try:
+
+            controllers.set_issue_is_public_bulk(ids, True)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Issue(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Issue(s).', 'error')
+
+    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    def unpublish(self, ids):
+        try:
+
+            controllers.set_issue_is_public_bulk(ids, False)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Issue(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Issue(s).', 'error')
 
 
 class ArticleAdminView(OpacBaseAdminView):
@@ -237,3 +299,33 @@ class ArticleAdminView(OpacBaseAdminView):
             if not self.handle_view_exception(ex):
                 raise
             flash('Failed to rebuild articles. %s' % str(ex), 'error')
+
+    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    def publish(self, ids):
+        try:
+
+            controllers.set_article_is_public_bulk(ids, True)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Issue(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Article(s).', 'error')
+
+    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    def unpublish(self, ids):
+        try:
+
+            controllers.set_article_is_public_bulk(ids, False)
+
+            # Adicionar mais contexto sobre as consequência dessa ação
+            flash('Article(s) was successfully publish.')
+
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash('Failed to publish Article.', 'error')
