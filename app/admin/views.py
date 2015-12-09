@@ -164,8 +164,11 @@ class OpacBaseAdminView(mongoengine.ModelView):
 
 class JournalAdminView(OpacBaseAdminView):
 
+    column_filters = [
+        'current_status', 'acronym'
+    ]
     column_searchable_list = [
-        '_id', 'title'
+        '_id', 'title', 'print_issn', 'eletronic_issn', 'acronym',
     ]
     column_exclude_list = [
         '_id', 'timeline', 'use_licenses', 'national_code', 'subject_categories',
@@ -175,12 +178,21 @@ class JournalAdminView(OpacBaseAdminView):
         'online_submission_url', 'cover_url', 'logo_url', 'previous_journal_id',
         'publisher_name', 'publisher_country', 'publisher_state',
         'publisher_city', 'publisher_address', 'publisher_telephone',
-        'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles'
+        'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles',
+        'print_issn', 'eletronic_issn',
     ]
+    column_formatters = dict(
+        created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+        updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+        scielo_issn=lambda v, c, m, p: '%s\n%s' % (m.print_issn or '', m.eletronic_issn or ''),
+    )
 
 
 class IssueAdminView(OpacBaseAdminView):
 
+    column_filters = [
+        'label', 'volume', 'number',
+    ]
     column_searchable_list = [
         'iid', 'label'
     ]
@@ -189,6 +201,10 @@ class IssueAdminView(OpacBaseAdminView):
         'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
         'bibliographic_legend'
     ]
+    column_formatters = dict(
+        created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+        updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+    )
 
 
 class ArticleAdminView(OpacBaseAdminView):
@@ -203,6 +219,10 @@ class ArticleAdminView(OpacBaseAdminView):
     column_details_exclude_list = [
         'xml',
     ]
+    column_formatters = dict(
+        created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+        updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+    )
 
     @action('rebuild_html', 'Rebuild HTML', 'Are you sure you want to rebuild the HTMLs for selected articles?')
     def action_send_confirm_email(self, ids):
