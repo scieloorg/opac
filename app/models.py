@@ -43,17 +43,3 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-def build_sample_db():
-    """
-    Populate a small db with some example entries.
-    """
-    db.drop_all()
-    db.create_all()
-    # passwords are hashed, to use plaintext passwords instead:
-    test_user = User(email="test@test.com", password="test")
-    db.session.add(test_user)
-
-    db.session.commit()
-    return
