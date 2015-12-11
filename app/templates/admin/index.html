@@ -15,7 +15,7 @@
             <h1>{{counts.journals_public_count}} <small>Publicados</small></h1>
             <h2>{{counts.journals_total_count}} <small>Total</small></h2>
           </div>
-          {% if journals_total_count > 0 %}
+          {% if counts.journals_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{counts.journals_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.journals_public_count / counts.journals_total_count)|round(2, 'floor') }}%;">
@@ -35,7 +35,7 @@
             <h1>{{counts.issues_public_count}} <small>Publicados</small></h1>
             <h2>{{counts.issues_total_count}} <small>Total</small></h2>
           </div>
-          {% if issues_total_count > 0 %}
+          {% if counts.issues_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{counts.issues_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.issues_public_count / counts.issues_total_count)|round(2, 'floor') }}%;">
@@ -55,7 +55,7 @@
             <h1>{{counts.articles_public_count}} <small>Publicados</small></h1>
             <h2>{{counts.articles_total_count}} <small>Total</small></h2>
           </div>
-          {% if articles_total_count > 0 %}
+          {% if counts.articles_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{counts.articles_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.articles_public_count / counts.articles_total_count)|round(2, 'floor') }}%;">
