@@ -43,8 +43,6 @@ def rebuild_article_xml(article):
         try:
             htmls = []
             xml_etree = etree.ElementTree(etree.XML(article.xml.encode('utf-8')))
-            # xml_etree = etree.XML(article.xml.encode('utf-8'))
-            # xml_string = StringIO(article.xml.encode('utf-8'))
             html_iterator = packtools.HTMLGenerator(xml_etree, valid_only=False, css=CSS)
             for lang, output in html_iterator:
                 article_html_doc = controllers.new_article_html_doc(**{
