@@ -19,6 +19,15 @@ class AdminIndexView(admin.AdminIndexView):
     def index(self):
         if not login.current_user.is_authenticated:
             return redirect(url_for('.login_view'))
+        counts = {
+            'journals_total_count': controllers.count_elements_by_type_and_visibility('journal', public_only=False),
+            'journals_public_count': controllers.count_elements_by_type_and_visibility('journal', public_only=True),
+            'issues_total_count': controllers.count_elements_by_type_and_visibility('issue', public_only=False),
+            'issues_public_count': controllers.count_elements_by_type_and_visibility('issue', public_only=True),
+            'articles_total_count': controllers.count_elements_by_type_and_visibility('article', public_only=False),
+            'articles_public_count': controllers.count_elements_by_type_and_visibility('article', public_only=True),
+        }
+        self._template_args['counts'] = counts
         return super(AdminIndexView, self).index()
 
     @admin.expose('/login/', methods=('GET', 'POST'))
