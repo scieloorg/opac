@@ -72,7 +72,7 @@ def create_superuser():
         email_confirmed = True
     else:
         email_confirmed = False
-        print u'Debe enviar o email de confirmação pelo admin'
+        print u'Deve enviar o email de confirmação pelo admin'
 
     # cria usuario
     utils.create_user(user_email, user_password, email_confirmed)
