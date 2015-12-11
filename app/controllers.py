@@ -186,3 +186,33 @@ def filter_articles_by_ids(ids):
 
 def new_article_html_doc(language, source):
     return ArticleHTML(language=language, source=source)
+
+
+def count_elements_by_type_and_visibility(type, public_only=False):
+    """
+    Retorna a quantidade de registros indicado pelo @type.
+    @params:
+        ``type``:
+            deve ser "journal" ou "issue" ou "article".
+        ``public_only``:
+            Se for True, filtra na contagem somente os registros com atributo "is_public"==True.
+            Se for False, ignora o atributo "is_public".
+    """
+
+    if type == 'journal':
+        if public_only:
+            return Journal.objects(is_public=True).count()
+        else:
+            return Journal.objects.count()
+    elif type == 'issue':
+        if public_only:
+            return Issue.objects(is_public=True).count()
+        else:
+            return Issue.objects.count()
+    elif type == 'article':
+        if public_only:
+            return Article.objects(is_public=True).count()
+        else:
+            return Article.objects.count()
+    else:
+        raise ValueError(u'type errado, tente: "journal" ou "issue" ou "article".')
