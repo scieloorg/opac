@@ -79,7 +79,11 @@ def issue_grid(journal_id):
 @main.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
     issue = controllers.get_issue_by_iid(issue_id)
-    journal = issue.journal_jid
+
+    if not issue:
+        abort(404, 'Issue not found')
+
+    journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid)
 
     context = {'journal': journal,
@@ -93,10 +97,13 @@ def issue_toc(issue_id):
 def article_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
+    if not article:
+        abort(404, 'Article not found')
+
     context = {
         'article': article,
-        'journal': article.journal_jid,
-        'issue': article.issue_iid
+        'journal': article.journal,
+        'issue': article.issue
     }
     return render_template("article/detail.html", **context)
 
@@ -104,6 +111,9 @@ def article_detail(article_id):
 @main.route('/articles/html/<string:article_id>')
 def article_html_by_aid(article_id):
     article = controllers.get_article_by_aid(article_id)
+
+    if not article:
+        abort(404, 'Article not found')
 
     article_html = article.htmls[0].source
 
@@ -113,9 +123,13 @@ def article_html_by_aid(article_id):
 @main.route('/abstract/<string:article_id>')
 def abstract_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
+
+    if not article:
+        abort(404, 'Article not found')
+
     context = {
         'article': article,
-        'journal': article.journal_jid,
-        'issue': article.issue_iid
+        'journal': article.journal,
+        'issue': article.issue
     }
     return render_template("article/abstract.html", **context)
