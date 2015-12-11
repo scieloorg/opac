@@ -1,10 +1,10 @@
 # coding: utf-8
 import os
 from flask import Flask
-from flask.ext.assets import Environment, Bundle
+from flask_assets import Environment, Bundle
 from flask_debugtoolbar import DebugToolbarExtension
-from flask.ext.mongoengine import MongoEngine
-from flask.ext.login import LoginManager
+from flask_mongoengine import MongoEngine
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import flask_admin
 from flask_mail import Mail
@@ -31,7 +31,7 @@ def create_app(config_name=None):
     # Config
     app.config.from_object('config.default')  # Get all basic configuration
     app.config.from_object(config_name)  # Get enviroment configuration
-    app.config.from_pyfile('config.py')  # Get unversioned secret keys
+    app.config.from_pyfile('config.py')  # Get unversioned local configuration
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
@@ -68,7 +68,8 @@ def create_app(config_name=None):
     from app.admin import views
     admin = flask_admin.Admin(
         app, 'OPAC admin',
-        index_view=views.AdminIndexView(), template_mode='bootstrap3',
+        index_view=views.AdminIndexView(),
+        template_mode='bootstrap3',
         base_template="admin/opac_base.html")
     admin.add_view(views.JournalAdminView(Journal))
     admin.add_view(views.IssueAdminView(Issue))
