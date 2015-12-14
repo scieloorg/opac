@@ -38,8 +38,8 @@ def send_reset_password_email(recipient_email):
      - (Flase, '<MSG/EXCEPTION ERROR>') em caso de exceção/erro
     """
     try:
-        ts = get_timed_serializer()
-        token = ts.dumps(user.email, salt='recover-key')
+        ts = utils.get_timed_serializer()
+        token = ts.dumps(recipient_email, salt='recover-key')
     except Exception, e:
         return (False, 'Invalid Token: %s' % str(e))
     else:

@@ -98,8 +98,8 @@ class AdminIndexView(admin.AdminIndexView):
         try:
             ts = get_timed_serializer()
             email = ts.loads(token, salt="recover-key",
-                             max_age=current_app.config['CONFIRM_EMAIL_TOKEN_MAX_AGE'])
-        except:
+                             max_age=current_app.config['TOKEN_MAX_AGE'])
+        except Exception as e:
             abort(404)
 
         form = forms.PasswordForm(request.form)
@@ -132,7 +132,7 @@ class UserAdminView(sqla.ModelView):
     def after_model_change(self, form, model, is_created):
         if is_created:
             # Now we'll send the email confirmation link
-            was_sent, error_msg = user.send_confirmation_email()
+            was_sent, error_msg = model.send_confirmation_email()
             if was_sent:
                 flash('Confirmation email sent to: %s.' % model.email)
             else:
