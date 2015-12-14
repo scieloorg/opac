@@ -14,7 +14,7 @@ def index():
 
 @main.route('/journals')
 def collection_list_alpha():
-    journals = controllers.get_journals_alpha()
+    journals = controllers.get_journals()
     context = {
         'journals': journals,
     }
@@ -23,12 +23,12 @@ def collection_list_alpha():
 
 @main.route('/journals/theme')
 def collection_list_theme():
-    objects_by_area = controllers.get_journals_theme()
-    objects_by_indexed = controllers.get_journals_indexed()
+    objects_by_area = controllers.get_journals_by_study_area()
+    objects_by_indexer = controllers.get_journals_by_indexer()
 
     context = {
         'objects_by_area': objects_by_area,
-        'objects_by_indexed': objects_by_indexed
+        'objects_by_indexer': objects_by_indexer
     }
 
     return render_template("collection/list_theme.html", **context)
@@ -36,7 +36,7 @@ def collection_list_theme():
 
 @main.route('/journals/institution')
 def collection_list_institution():
-    context = controllers.get_journals_institution()
+    context = controllers.get_journals_by_sponsor()
 
     return render_template("collection/list_institution.html", **context)
 

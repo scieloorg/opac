@@ -9,13 +9,13 @@ from . import models as sql_models
 
 # -------- JOURNAL --------
 
-def get_journals_alpha(collection=None, is_public=True, order_by="title"):
+def get_journals(collection=None, is_public=True, order_by="title"):
     """
     Retorna uma coleção de periódicos considerando os atributos ``collection``,
     ``is_public``, ordenado pelo parâmetro ``order_by``.
 
-    @param collection: string, caso None utiliza o valor do arquivo de configuraçõa
-    OPAC_COLLECTION.
+    @param collection: string, caso None utiliza o valor do arquivo de
+    configuração OPAC_COLLECTION.
     @param is_public: boolean, filtra por público e não público.
     @param order_by: string, atributo para ordenar.
     """
@@ -24,6 +24,87 @@ def get_journals_alpha(collection=None, is_public=True, order_by="title"):
 
     return Journal.objects(collections__acronym=collection,
                            is_public=is_public).order_by(order_by)
+
+
+def get_journals_by_study_area():
+    """
+    Retorna dicionário de periódicos agrupados pela área de conhecimento.
+
+    @return: {
+               'meta': {'total':58},
+               'objects': {
+                    'Health Sciences': [<Journal: aiss>, <Journal: bwho>],
+                    'Engineering': [<Journal: ICSE>, <Journal: csp>]
+                    }
+             }
+    """
+    journals = get_journals()
+
+    dict_journals = {}
+
+    meta = {
+        'total': len(journals),
+    }
+
+    for journal in journals:
+        for area in journal.study_areas:
+            dict_journals.setdefault(area, []).append(journal)
+
+    return {'meta': meta, 'objects': dict_journals}
+
+
+def get_journals_by_indexer():
+    """
+    Retorna dicionário de periódicos agrupados pelo indexador.
+
+    @return: {
+               'meta': {'total':56},
+               'objects': {
+                   'SCIE': [<Journal: aiss>, <Journal: bwho>],
+                   'SSCI': [<Journal: ICSE>, <Journal: csp>]
+                   }
+             }
+    """
+    journals = get_journals()
+
+    dict_journals = {}
+
+    meta = {
+        'total': len(journals),
+    }
+
+    for journal in journals:
+        for indexer in journal.index_at:
+            dict_journals.setdefault(indexer, []).append(journal)
+
+    return {'meta': meta, 'objects': dict_journals}
+
+
+def get_journals_by_sponsor():
+    """
+    Retorna dicionário de periódicos agrupados pelo patrocinador.
+
+    @return: {
+               'meta': {'total':39},
+               'objects': {
+                   'World Health Organization': [<Journal: aiss>, <Journal: bwho>],
+                   'The Atlantic Philanthropies': [<Journal: ICSE>, <Journal: csp>]
+                   }
+             }
+    """
+    journals = get_journals()
+
+    dict_journals = {}
+
+    meta = {
+        'total': len(journals),
+    }
+
+    for journal in journals:
+        for indexer in journal.sponsors:
+            dict_journals.setdefault(indexer, []).append(journal)
+
+    return {'meta': meta, 'objects': dict_journals}
 
 
 def get_journal_by_jid(jid, is_public=True):
@@ -195,7 +276,8 @@ def count_elements_by_type_and_visibility(type, public_only=False):
         ``type``:
             deve ser "journal" ou "issue" ou "article".
         ``public_only``:
-            Se for True, filtra na contagem somente os registros com atributo "is_public"==True.
+            Se for True, filtra na contagem somente os registros com atributo
+            "is_public"==True.
             Se for False, ignora o atributo "is_public".
     """
 
