@@ -69,25 +69,19 @@
                                         <li>
                                             <h2>{{ area }} ({{ item|length }})</h2>
                                             <ul>
-                                                {% for subarea, subitem in item.iteritems() %}
-                                                    {% if subitem %}
-                                                        <li>
-                                                            <h3>{{ subarea }} ({{ subitem|length }})</h3>
-                                                            <ul>
-                                                                {% for journal in subitem %}
-                                                                  <table>
-                                                                    {% include "includes/format_journal_row.html" %}
-                                                                  </table>
-                                                                {% endfor %}
-                                                            </ul>
-                                                        </li>
-                                                    {% endif %}
-                                                {% endfor %}
+                                                <li>
+                                                    <ul>
+                                                        {% for journal in item %}
+                                                          <table>
+                                                            {% include "includes/format_journal_row.html" %}
+                                                          </table>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
                                             </ul>
-                                            </li>
+                                        </li>
                                     {% endfor %}
                                 </ul>
-
                             </td>
                         </tr>
                         </tbody>
@@ -114,7 +108,7 @@
                             <tr>
                                 <th>
                                     <div class="col-xs-6">
-                                        Título <small class="collectionListTotalInfo">(Total {{ objects_by_indexed.objects|length }} temas / {{ objects_by_indexed.meta.total }} periódicos)</small>
+                                        Título <small class="collectionListTotalInfo">(Total {{ objects_by_indexer.objects|length }} temas / {{ objects_by_indexer.meta.total }} periódicos)</small>
                                     </div>
                                     <div class="col-xs-6 right download">
                                         download da lista
@@ -128,7 +122,7 @@
                         <tr>
                             <td>
                                 <ul>
-                                    {% for index, journals in objects_by_indexed.objects.iteritems() %}
+                                    {% for index, journals in objects_by_indexer.objects.iteritems() %}
                                         <li>
                                           <h2>{{ index }} ({{ journals|length }})</h2>
                                           <ul>

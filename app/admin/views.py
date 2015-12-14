@@ -176,7 +176,7 @@ class OpacBaseAdminView(mongoengine.ModelView):
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'current_status', 'acronym'
+        'current_status', 'acronym', 'is_public'
     ]
     column_searchable_list = [
         '_id', 'title', 'print_issn', 'eletronic_issn', 'acronym',
@@ -232,7 +232,7 @@ class JournalAdminView(OpacBaseAdminView):
 class IssueAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'label', 'volume', 'number',
+        'label', 'volume', 'number', 'is_public'
     ]
     column_searchable_list = [
         'iid', 'label'
