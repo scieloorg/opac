@@ -1,15 +1,16 @@
-# Default configuration
+# coding: utf-8
+
+"""
+    Configuração padrão, não depende do ambiente (produção, development, etc)
+"""
 
 DEBUG = False
 MAIL_FROM_EMAIL = "default@scielo.org"
 
-# Secret
 SECRET_KEY = '02ee54614563e5946b1497b0ba07c24a'
 
-# Assets
 ASSETS_DEBUG = False
 
-# Mongo
 MONGODB_SETTINGS = {
     'db': 'opac',
     # 'host': '127.0.0.1',
@@ -23,7 +24,8 @@ DATABASE_PATH = '%s/%s' % (DATABASE_DIR, DATABASE_FILE)
 SQLALCHEMY_DATABASE_URI = 'sqlite:////%s' % DATABASE_PATH
 SQLALCHEMY_ECHO = DEBUG
 
-# OPAC Collection
+# Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
 OPAC_COLLECTION = ''
 
-TOKEN_MAX_AGE = 86400  # value in seconds: 86400 = 60*60*24 = 1 day
+# Tempo de expiração para os tokens
+TOKEN_MAX_AGE = 86400  # valor en segundos: 86400 = 60*60*24 = 1 dia

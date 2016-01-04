@@ -19,12 +19,12 @@
           {{ current_user.email }} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="{{ url_for('admin.reset') }}">Reset Password</a></li>
-          <li><a href="{{ url_for('admin.logout_view') }}">Log out</a></li>
+          <li><a href="{{ url_for('admin.reset') }}">Recuperar a senha</a></li>
+          <li><a href="{{ url_for('admin.logout_view') }}">Terminar sessão</a></li>
         </ul>
       </li>
     {% else %}
-      <li><a href="{{ url_for('admin.login_view') }}">Log in</a></li>
+      <li><a href="{{ url_for('admin.login_view') }}">Iniciar sessão</a></li>
     {% endif %}
   </ul>
 {% endblock %}

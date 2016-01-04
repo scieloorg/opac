@@ -6,11 +6,11 @@
     <div class="col-md-5 col-md-offset-4">
 
         <div class="panel panel-default">
-          <div class="panel-heading">Reset Password</div>
+          <div class="panel-heading">Recuperar a senha</div>
           <div class="panel-body">
             <form method="POST" action="{{ url_for('.reset_with_token', token=token) }}" class="form-horizontal">
               {% include "admin/includes/forms.html" %}
-              <button class="btn btn-primary pull-right" type="submit">Submit</button>
+              <button class="btn btn-primary pull-right" type="submit">Enviar</button>
             </form>
           </div>
         </div>
