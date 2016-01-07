@@ -8,6 +8,8 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import flask_admin
 from flask_mail import Mail
+from flask_babelex import Babel
+from flask_babelex import lazy_gettext
 
 import errors
 from opac_schema.v1.models import Journal, Issue, Article
@@ -17,6 +19,7 @@ toolbar = DebugToolbarExtension()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
 mail = Mail()
+babel = Babel()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -28,7 +31,7 @@ def create_app(config_name=None):
                 static_url_path='/static',
                 static_folder='static',
                 instance_relative_config=True)
-    # Config
+    # Configurações
     app.config.from_object('config.default')  # Configuração basica
     app.config.from_object(config_name)  # Configuração dependente do ambiente
     app.config.from_pyfile('config.py')  # Configuração local não versionada (chaves, segredos, senhas etc.)
@@ -48,7 +51,8 @@ def create_app(config_name=None):
     assets.register('js_all', js)
     assets.register('css_all', css)
     assets.init_app(app)
-
+    # i18n
+    babel.init_app(app)
     # login
     login_manager.init_app(app)
     # Toolbar
@@ -66,15 +70,17 @@ def create_app(config_name=None):
     # Vistas do admin
     from .models import User
     from app.admin import views
+
     admin = flask_admin.Admin(
         app, 'OPAC admin',
         index_view=views.AdminIndexView(),
         template_mode='bootstrap3',
         base_template="admin/opac_base.html")
-    admin.add_view(views.JournalAdminView(Journal))
-    admin.add_view(views.IssueAdminView(Issue))
-    admin.add_view(views.ArticleAdminView(Article))
-    admin.add_view(views.UserAdminView(User, dbsql.session))
+
+    admin.add_view(views.JournalAdminView(Journal, name=lazy_gettext(u'Periódico')))
+    admin.add_view(views.IssueAdminView(Issue, name=lazy_gettext(u'Fascículo')))
+    admin.add_view(views.ArticleAdminView(Article, name=lazy_gettext(u'Artigo')))
+    admin.add_view(views.UserAdminView(User, dbsql.session, name=lazy_gettext(u'Usuário')))
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)

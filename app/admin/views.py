@@ -1,4 +1,6 @@
 # coding: utf-8
+from flask_babelex import gettext as _
+from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
 import flask_login as login
@@ -11,6 +13,12 @@ import forms
 from app import models
 from app import controllers
 from ..utils import get_timed_serializer, rebuild_article_xml
+
+
+ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
+ACTION_UNPUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer despublicar os itens selecionados?')
+ACTION_REBUILD_CONFIRMATION_MSG = _(u'Tem certeza que quer reconstruir os artigos selecionados?')
+ACTION_SEND_EMAIL_CONFIRMATION_MSG = _(u'Tem certeza que quer enviar email de confirmação aos usuários selecionados?')
 
 
 class AdminIndexView(admin.AdminIndexView):
@@ -65,10 +73,10 @@ class AdminIndexView(admin.AdminIndexView):
 
         user = controllers.get_user_by_email(email=email)
         if not user:
-            abort(404)  # melhorar mensagem de erro para o usuário
+            abort(404, _(u'Usuário não encontrado'))
 
         controllers.set_user_email_confirmed(user)
-        flash('Email confimed successfully: %s.' % user.email)
+        flash(_(u'Email: %(email)s confirmado com sucesso!', email=user.email))
         return redirect(url_for('.index'))
 
     @admin.expose('/reset/password', methods=('GET', 'POST'))
@@ -78,15 +86,19 @@ class AdminIndexView(admin.AdminIndexView):
         if admin.helpers.validate_form_on_submit(form):
             user = controllers.get_user_by_email(email=form.data['email'])
             if not user:
-                abort(404)  # melhorar mensagem de erro para o usuário
+                abort(404, _(u'Usuário não encontrado'))
             if not user.email_confirmed:
                 return self.render('admin/auth/unconfirm_email.html')
 
             was_sent, error_msg = user.send_reset_password_email()
             if was_sent:
-                flash('Instructions to recovery password was sent to: %s.' % user.email)
+                flash(_(u'Enviamos as instruções para recuperar a senha para: %(email)s',
+                        email=user.email))
             else:
-                flash(error_msg, 'error')
+                flash(_(u'Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: %(error)s',
+                        email=user.email,
+                        error=error_msg),
+                      'error')
 
             return redirect(url_for('.index'))
 
@@ -109,7 +121,7 @@ class AdminIndexView(admin.AdminIndexView):
                 return self.render('admin/auth/unconfirm_email.html')
 
             controllers.set_user_password(user, form.password.data)
-            flash('New password changed successfully')
+            flash(_(u'Nova senha salva com sucesso!!'))
             return redirect(url_for('.index'))
 
         self._template_args['form'] = form
@@ -131,17 +143,20 @@ class UserAdminView(sqla.ModelView):
 
     def after_model_change(self, form, model, is_created):
         if is_created:
-            # Now we'll send the email confirmation link
+            # Enviamos o email de confirmação para o usuário.
             was_sent, error_msg = model.send_confirmation_email()
             if was_sent:
-                flash('Confirmation email sent to: %s.' % model.email)
+                flash(_(u'Enviamos o email de confirmação para: %(email)s',
+                        email=model.email))
             else:
-                flash(error_msg, 'error')
+                flash(_(u'Ocorreu um erro no envio do email de confirmação para: %(email)s',
+                        email=model.email),
+                      'error')
 
     def is_accessible(self):
         return login.current_user.is_authenticated
 
-    @action('confirm_email', 'Send Confirmation Email', 'Are you sure you want to send confirmation email to selected users?')
+    @action('confirm_email', _(u'Enviar email de confirmação'), ACTION_SEND_EMAIL_CONFIRMATION_MSG)
     def action_send_confirm_email(self, ids):
         try:
             query = models.User.query.filter(models.User.id.in_(ids))
@@ -150,14 +165,20 @@ class UserAdminView(sqla.ModelView):
                 was_sent, error_msg = user.send_confirmation_email()
                 if was_sent:
                     count += 1
-                    flash('Confirmation email sent to: %s.' % user.email)
+                    flash(_(u'Enviamos o email de confirmação para: %(email)s',
+                            email=user.email))
                 else:
-                    flash(error_msg, 'error')
-            flash('%s users were successfully notified.' % count)
+                    flash(_(u'Ocorreu um erro no envio do email de confirmação para: %(email)s',
+                            email=user.email),
+                          'error')
+
+            flash(_(u'%(count)s usuários foram notificados com sucesso!', count=count))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
-            flash('Failed to sent email to users. %s' % str(ex), 'error')
 
 
 class OpacBaseAdminView(mongoengine.ModelView):
@@ -198,35 +219,29 @@ class JournalAdminView(OpacBaseAdminView):
         scielo_issn=lambda v, c, m, p: '%s\n%s' % (m.print_issn or '', m.eletronic_issn or ''),
     )
 
-    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
         try:
-
             controllers.set_journal_is_public_bulk(ids, True)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Journal(s) was successfully publish.')
-
+            flash(_(u'Periódico(s) publicado(s) com sucesso!!'))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando publicar o(s) periódico(s)!!'), 'error')
             if not self.handle_view_exception(ex):
                 raise
 
-            flash('Failed to publish Journal(s).', 'error')
-
-    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    @action('unpublish', _(u'Despublicar'), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish(self, ids):
         try:
-
             controllers.set_journal_is_public_bulk(ids, False)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Journal(s) was successfully publish.')
-
+            flash(_(u'Periódico(s) despublicado com sucesso!!'))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando publicar o(s) periódico(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
-
-            flash('Failed to publish Journal(s).', 'error')
 
 
 class IssueAdminView(OpacBaseAdminView):
@@ -247,35 +262,31 @@ class IssueAdminView(OpacBaseAdminView):
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
     )
 
-    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
         try:
-
             controllers.set_issue_is_public_bulk(ids, True)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Issue(s) was successfully publish.')
-
+            flash(_(u'Fascículo(s) publicado(s) com sucesso!!'))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
 
-            flash('Failed to publish Issue(s).', 'error')
-
-    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    @action('unpublish', _(u'Despublicar'), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish(self, ids):
         try:
-
             controllers.set_issue_is_public_bulk(ids, False)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Issue(s) was successfully publish.')
-
+            flash(_(u'Fascículo(s) despublicado(s) com sucesso!!'))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
-
-            flash('Failed to publish Issue(s).', 'error')
 
 
 class ArticleAdminView(OpacBaseAdminView):
@@ -295,46 +306,45 @@ class ArticleAdminView(OpacBaseAdminView):
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
     )
 
-    @action('rebuild_html', 'Rebuild HTML', 'Are you sure you want to rebuild the HTMLs for selected articles?')
-    def action_send_confirm_email(self, ids):
+    @action('rebuild_html', _(u'Reconstruir HTML'), ACTION_REBUILD_CONFIRMATION_MSG)
+    def rebuild_html(self, ids):
         try:
             articles = controllers.filter_articles_by_ids(ids)
             count = 0
             for article in articles:
                 rebuild_article_xml(article)
                 count += 1
-            flash('%s articles were successfully rebuilt.' % count)
+            flash(_(u'Artigo(s) reconstruido com sucesso!!'))
         except Exception, ex:
+            flash(_(u'Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
-            flash('Failed to rebuild articles. %s' % str(ex), 'error')
 
-    @action('publish', 'Publicar', 'Are you sure you want to publish the selected itens?')
+    @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
         try:
-
             controllers.set_article_is_public_bulk(ids, True)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Issue(s) was successfully publish.')
+            flash(_(u'Artigo(s) publicado com sucesso!!'))
 
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
 
-            flash('Failed to publish Article(s).', 'error')
-
-    @action('unpublish', 'Despublicar', 'Are you sure you want to unpublish the selected itens?')
+    @action('unpublish', 'Despublicar', ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish(self, ids):
         try:
-
             controllers.set_article_is_public_bulk(ids, False)
-
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash('Article(s) was successfully publish.')
-
+            flash(_(u'Artigo(s) despublicado com sucesso!!'))
         except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
             if not self.handle_view_exception(ex):
                 raise
-
-            flash('Failed to publish Article.', 'error')

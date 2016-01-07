@@ -19,12 +19,37 @@
           {{ current_user.email }} <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="{{ url_for('admin.reset') }}">Recuperar a senha</a></li>
-          <li><a href="{{ url_for('admin.logout_view') }}">Terminar sessão</a></li>
+          <li><a href="{{ url_for('admin.reset') }}">{% trans %}Recuperar a senha{% endtrans %}</a></li>
+          <li><a href="{{ url_for('admin.logout_view') }}">{% trans %}Terminar sessão{% endtrans %}</a></li>
         </ul>
       </li>
     {% else %}
-      <li><a href="{{ url_for('admin.login_view') }}">Iniciar sessão</a></li>
+      <li><a href="{{ url_for('admin.login_view') }}">{% trans %}Iniciar sessão{% endtrans %}</a></li>
     {% endif %}
   </ul>
+{% endblock %}
+
+{% block tail %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+        <p class="text-center text-capitalize">
+          <small>
+            {% for k,v in config.LANGUAGES.iteritems() %}
+              <a href="{{ url_for('main.set_locale', lang_code=k) }}">
+                {% if k == session['lang'] %}
+                  <strong>{{ v }}</strong>
+                {% else %}
+                  {{ v }}
+                {% endif %}
+              </a>
+              {% if not loop.last %}|{% endif %}
+            {% endfor %}
+          </small>
+        </p>
+        <hr>
+      </div>
+    </div>
+  </div>
 {% endblock %}

@@ -8,24 +8,24 @@
       {% if current_user.is_authenticated %}
 
         <div class="panel panel-default">
-          <div class="panel-heading">Iniciar sessão</div>
+          <div class="panel-heading">{% trans %}Iniciar sessão{% endtrans %}</div>
           <div class="panel-body">
-            Você já iniciou sessão!
+            {% trans %}Você já iniciou sessão!{% endtrans %}
           </div>
         </div>
 
       {% else %}
 
         <div class="panel panel-default">
-          <div class="panel-heading">Iniciar sessão</div>
+          <div class="panel-heading">{% trans %}Iniciar sessão{% endtrans %}</div>
           <div class="panel-body">
             <form method="POST" action="" class="form-horizontal">
               {% include "admin/includes/forms.html" %}
-              <button class="btn btn-primary pull-right" type="submit">Enviar</button>
+              <button class="btn btn-primary pull-right" type="submit">{% trans %}Enviar{% endtrans %}</button>
             </form>
           </div>
           <div class="panel-footer">
-            <a href="{{ url_for('.reset') }}">Esqueci a senha?</a>
+            <a href="{{ url_for('.reset') }}">{% trans %}Esqueci a senha?{% endtrans %}</a>
           </div>
         </div>
 

@@ -1,10 +1,33 @@
 # coding: utf-8
 
 from collections import OrderedDict
+from flask_babelex import gettext as _
+from flask import render_template, abort, current_app, request, session, redirect
 
-from flask import render_template, abort
 from . import main
+from flask import current_app
+from app import babel
 from app import controllers
+
+
+@babel.localeselector
+def get_locale():
+    langs = current_app.config.get('LANGUAGES')
+    lang_from_headers = request.accept_languages.best_match(langs.keys())
+    if 'lang' not in session.keys():
+        session['lang'] = lang_from_headers
+    return session['lang']
+
+
+@main.route('/set_locale/<string:lang_code>')
+def set_locale(lang_code):
+    langs = current_app.config.get('LANGUAGES')
+    if lang_code not in langs.keys():
+        abort(400, _('Código de idioma inválido'))
+
+    # salvar o lang code na sessão
+    session['lang'] = lang_code
+    return redirect(request.referrer)
 
 
 @main.route('/')
@@ -46,7 +69,7 @@ def journal_detail(journal_id):
     journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
-        abort(404, 'Journal not found')
+        abort(404, _(u'Periódico não encontrado'))
 
     context = {'journal': journal}
 
@@ -58,7 +81,7 @@ def issue_grid(journal_id):
     journal = controllers.get_journal_by_jid(journal_id)
 
     if not journal:
-        abort(404, 'Journal not found')
+        abort(404, _(u'Periódico não encontrado'))
 
     issues = controllers.get_issues_by_jid(journal_id)
 
@@ -81,7 +104,7 @@ def issue_toc(issue_id):
     issue = controllers.get_issue_by_iid(issue_id)
 
     if not issue:
-        abort(404, 'Issue not found')
+        abort(404, _(u'Fascículo não encontrado'))
 
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid)
@@ -98,7 +121,7 @@ def article_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, 'Article not found')
+        abort(404, _(u'Artigo não encontrado'))
 
     context = {
         'article': article,
@@ -113,7 +136,7 @@ def article_html_by_aid(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, 'Article not found')
+        abort(404, _(u'Artigo não encontrado'))
 
     article_html = article.htmls[0].source
 
@@ -125,7 +148,7 @@ def abstract_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, 'Article not found')
+        abort(404, _(u'Artigo não encontrado'))
 
     context = {
         'article': article,

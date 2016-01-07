@@ -1,0 +1,322 @@
+# Spanish translations for OPAC.
+# Copyright (C) 2016 ORGANIZATION
+# This file is distributed under the same license as the OPAC project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OPAC 1.0\n"
+"Report-Msgid-Bugs-To: tecnologia@scielo.org\n"
+"POT-Creation-Date: 2016-01-07 14:31-0200\n"
+"PO-Revision-Date: 2016-01-07 14:56-0200\n"
+"Last-Translator: scielo <tecnologia@scielo.org>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.2.0\n"
+"X-Generator: Poedit 1.8.6\n"
+
+#: app/__init__.py:80
+msgid "Periódico"
+msgstr "Periódico"
+
+#: app/__init__.py:81
+msgid "Fascículo"
+msgstr "Fascícluo"
+
+#: app/__init__.py:82
+msgid "Artigo"
+msgstr "Artículo"
+
+#: app/__init__.py:83
+msgid "Usuário"
+msgstr "Usuario"
+
+#: app/admin/forms.py:9 app/admin/forms.py:21
+msgid "Email"
+msgstr "Email"
+
+#: app/admin/forms.py:10 app/admin/forms.py:25
+msgid "Senha"
+msgstr "Contraseña"
+
+#: app/admin/forms.py:15
+msgid "Usuário inválido"
+msgstr "Usuario inválido"
+
+#: app/admin/forms.py:17
+msgid "Senha inválida"
+msgstr "Contraseña inválida"
+
+#: app/admin/views.py:18
+msgid "Tem certeza que quer publicar os itens selecionados?"
+msgstr "¿Está seguro que desea publicar los ítems seleccionados?"
+
+#: app/admin/views.py:19
+msgid "Tem certeza que quer despublicar os itens selecionados?"
+msgstr "¿Está seguro que desea despublicar los ítems seleccionados?"
+
+#: app/admin/views.py:20
+msgid "Tem certeza que quer reconstruir os artigos selecionados?"
+msgstr "¿Está seguro que desea reconstruir los artículos seleccionados?"
+
+#: app/admin/views.py:21
+msgid ""
+"Tem certeza que quer enviar email de confirmação aos usuários selecionados?"
+msgstr ""
+"¿Está seguro que desea enviar email de confirmación a los usuarios "
+"seleccionados?"
+
+#: app/admin/views.py:76 app/admin/views.py:89
+msgid "Usuário não encontrado"
+msgstr "Usuario no encontrado"
+
+#: app/admin/views.py:79
+#, python-format
+msgid "Email: %(email)s confirmado com sucesso!"
+msgstr "Email: %(email)s confirmado com éxito!"
+
+#: app/admin/views.py:95
+#, python-format
+msgid "Enviamos as instruções para recuperar a senha para: %(email)s"
+msgstr "Enviamos las instrucciones para recuperar la contraseña para: %(email)s"
+
+#: app/admin/views.py:98
+#, python-format
+msgid ""
+"Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: "
+"%(error)s"
+msgstr ""
+"Ocurrió un error en el envío de las instrucciones por email para %(email)s. "
+"Error: %(error)s"
+
+#: app/admin/views.py:124
+msgid "Nova senha salva com sucesso!!"
+msgstr "Nueva contraseña guardada con éxito!!"
+
+#: app/admin/views.py:150 app/admin/views.py:169
+#, python-format
+msgid "Enviamos o email de confirmação para: %(email)s"
+msgstr "Enviamos el email de confirmación para %(email)s"
+
+#: app/admin/views.py:153 app/admin/views.py:172
+#, python-format
+msgid "Ocorreu um erro no envio do email de confirmação para: %(email)s"
+msgstr "Ocurrió un error en el envío de email de confirmación para %(email)s"
+
+#: app/admin/views.py:160
+msgid "Enviar email de confirmação"
+msgstr "Enviar email de confirmación"
+
+#: app/admin/views.py:176
+#, python-format
+msgid "%(count)s usuários foram notificados com sucesso!"
+msgstr "%(count)s usuarios fueron notificados con éxito!"
+
+#: app/admin/views.py:179
+#, python-format
+msgid "Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s"
+msgstr "Ocurrió un error en el envío de emails de confirmación. Error: %(ex)s"
+
+#: app/admin/views.py:225 app/admin/views.py:268 app/admin/views.py:328
+msgid "Publicar"
+msgstr "Publicar"
+
+#: app/admin/views.py:230
+msgid "Periódico(s) publicado(s) com sucesso!!"
+msgstr "Periódico(s) publicado(s) con éxito!!"
+
+#: app/admin/views.py:232
+msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!"
+msgstr "Ocurrió un error intentando publicar el/los periódico(s)!!"
+
+#: app/admin/views.py:236 app/admin/views.py:281
+msgid "Despublicar"
+msgstr "Despublicar"
+
+#: app/admin/views.py:241
+msgid "Periódico(s) despublicado com sucesso!!"
+msgstr "Periódico(s) despublicado(s) com éxito!!"
+
+#: app/admin/views.py:244
+#, python-format
+msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!. Erro: %(ex)s"
+msgstr "Ocurrió un error intentando publicar el/los periódico(s)!! Erro: %(ex)s"
+
+#: app/admin/views.py:273
+msgid "Fascículo(s) publicado(s) com sucesso!!"
+msgstr "Fascículo(s) publicado(s) com éxito!!"
+
+#: app/admin/views.py:276 app/admin/views.py:337
+#, python-format
+msgid "Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s"
+msgstr "Ocurrió un error intentando publicar el/los fascículo(s)!! Error: %(ex)s"
+
+#: app/admin/views.py:286
+msgid "Fascículo(s) despublicado(s) com sucesso!!"
+msgstr "Fascículo(s) despublicado(s) com éxito!!"
+
+#: app/admin/views.py:289 app/admin/views.py:350
+#, python-format
+msgid "Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s"
+msgstr ""
+"Ocurrió un error intentando despublicar el/los fascículo(s)!! Error: %(ex)s"
+
+#: app/admin/views.py:312
+msgid "Reconstruir HTML"
+msgstr "Reconstruir HTML"
+
+#: app/admin/views.py:320
+msgid "Artigo(s) reconstruido com sucesso!!"
+msgstr "Artículo recontruido con éxito!!"
+
+#: app/admin/views.py:323
+#, python-format
+msgid "Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s"
+msgstr "Ocurrió un error intentando reconstruir el/los artículo(s). Error: %(ex)s"
+
+#: app/admin/views.py:333
+msgid "Artigo(s) publicado com sucesso!!"
+msgstr "Artículo(s) publicado con éxito!!"
+
+#: app/admin/views.py:347
+msgid "Artigo(s) despublicado com sucesso!!"
+msgstr "Artículo(s) despublicado con éxito!!"
+
+#: app/main/views.py:26
+msgid "Código de idioma inválido"
+msgstr "Código de idioma inválido"
+
+#: app/main/views.py:72 app/main/views.py:84
+msgid "Periódico não encontrado"
+msgstr "Periódico no encontrado"
+
+#: app/main/views.py:107
+msgid "Fascículo não encontrado"
+msgstr "Fascículo no encontrado"
+
+#: app/main/views.py:124 app/main/views.py:139 app/main/views.py:151
+msgid "Artigo não encontrado"
+msgstr "Artículo no encontrado"
+
+#: app/templates/admin/index.html:7
+msgid "da coleção"
+msgstr "de la colección"
+
+#: app/templates/admin/index.html:12
+msgid "Periódicos"
+msgstr "Periódicos"
+
+#: app/templates/admin/index.html:15 app/templates/admin/index.html:22
+#: app/templates/admin/index.html:35 app/templates/admin/index.html:42
+#: app/templates/admin/index.html:55 app/templates/admin/index.html:62
+msgid "Publicados"
+msgstr "Publicados"
+
+#: app/templates/admin/index.html:16 app/templates/admin/index.html:36
+#: app/templates/admin/index.html:56
+msgid "Total"
+msgstr "Total"
+
+#: app/templates/admin/index.html:32
+msgid "Fascícluos"
+msgstr "Fascícluos"
+
+#: app/templates/admin/index.html:52
+msgid "Artigos"
+msgstr "Artículos"
+
+#: app/templates/admin/opac_base.html:22 app/templates/admin/auth/reset.html:9
+#: app/templates/admin/auth/reset_with_token.html:9
+msgid "Recuperar a senha"
+msgstr "Recuperar contraseña"
+
+#: app/templates/admin/opac_base.html:23
+msgid "Terminar sessão"
+msgstr "Cerrar sesión"
+
+#: app/templates/admin/opac_base.html:27 app/templates/admin/auth/login.html:11
+#: app/templates/admin/auth/login.html:20
+msgid "Iniciar sessão"
+msgstr "Inicial sesión"
+
+#: app/templates/admin/auth/login.html:13
+msgid "Você já iniciou sessão!"
+msgstr "Usted ya inició sesión!"
+
+#: app/templates/admin/auth/login.html:24 app/templates/admin/auth/reset.html:13
+#: app/templates/admin/auth/reset_with_token.html:13
+msgid "Enviar"
+msgstr "Enviar"
+
+#: app/templates/admin/auth/login.html:28
+msgid "Esqueci a senha?"
+msgstr "Olvidé mi contraseña"
+
+#: app/templates/admin/model/custom_list.html:17
+#, python-format
+msgid "%(name)s"
+msgstr "%(name)s"
+
+#: app/templates/collection/index.html:8
+msgid "Notícias"
+msgstr "Noticias"
+
+#: app/templates/collection/index.html:13
+msgid "Compartilhe"
+msgstr "Compartir"
+
+#: app/templates/collection/index.html:19
+msgid "Outras redes sociais"
+msgstr "Otras redes sociales"
+
+#~ msgid "JID"
+#~ msgstr "JID"
+
+#~ msgid "Coleções"
+#~ msgstr "Colecciones"
+
+#~ msgid "Título"
+#~ msgstr "Título"
+
+#~ msgid "Criado"
+#~ msgstr "Creado"
+
+#~ msgid "Atualizado"
+#~ msgstr "Actualizado"
+
+#~ msgid "Acrônimo"
+#~ msgstr "Acrónimo"
+
+#~ msgid "Issn"
+#~ msgstr "Issn"
+
+#~ msgid "Periódico anterior"
+#~ msgstr "Periódico anterior"
+
+#~ msgid "Estado atual"
+#~ msgstr "Estado actual"
+
+#~ msgid "Publicado?"
+#~ msgstr "Publicado?"
+
+#~ msgid "IID"
+#~ msgstr "IID"
+
+#~ msgid "Volume"
+#~ msgstr "Volúmen"
+
+#~ msgid "Número"
+#~ msgstr "Número"
+
+#~ msgid "Tipo"
+#~ msgstr "Tipo"
+
+#~ msgid "Ano"
+#~ msgstr "Año"
+
+#~ msgid "AID"
+#~ msgstr "AID"
