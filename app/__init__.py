@@ -29,9 +29,9 @@ def create_app(config_name=None):
                 static_folder='static',
                 instance_relative_config=True)
     # Config
-    app.config.from_object('config.default')  # Get all basic configuration
-    app.config.from_object(config_name)  # Get enviroment configuration
-    app.config.from_pyfile('config.py')  # Get unversioned local configuration
+    app.config.from_object('config.default')  # Configuração basica
+    app.config.from_object(config_name)  # Configuração dependente do ambiente
+    app.config.from_pyfile('config.py')  # Configuração local não versionada (chaves, segredos, senhas etc.)
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
@@ -57,13 +57,13 @@ def create_app(config_name=None):
     dbmongo.init_app(app)
     # SQLAlchemy
     dbsql.init_app(app)
-    # Mail
+    # Emails
     mail.init_app(app)
 
-    # Register a errorhandler
+    # Handler de páginas de erro
     errors.register_errorhandlers(app)
 
-    # Admin Views
+    # Vistas do admin
     from .models import User
     from app.admin import views
     admin = flask_admin.Admin(

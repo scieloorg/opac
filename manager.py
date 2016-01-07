@@ -42,6 +42,13 @@ def reset_dbsql(force_delete=False):
 
 @manager.command
 def create_superuser():
+    """
+    Cria um novo usuário a partir dos dados inseridos na linha de comandos.
+    Para criar um novo usuário é necessario preencher:
+    - email (deve ser válido é único, se já existe outro usuário com esse email deve inserir outro);
+    - senha (modo echo off)
+    - e se o usuário tem email confirmado (caso sim, pode fazer logim, caso que não, deve verificar por email)
+    """
     user_email = None
     user_password = None
 

@@ -1,10 +1,13 @@
 # coding: utf-8
+
 from flask import render_template
 
 
-# Get solution from StackOverflow:
-# http://stackoverflow.com/questions/30108000/flask-register-blueprint-error-python
 def register_errorhandlers(app):
+    """
+    Handler para as views de erros: 404, 401, 500 etc.
+    (http://stackoverflow.com/questions/30108000/flask-register-blueprint-error-python)
+    """
 
     def render_error(error):
         error_code = getattr(error, 'code', 500)

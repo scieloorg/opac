@@ -1,12 +1,15 @@
-# Default configuration
+# coding: utf-8
+
+"""
+    Configuração para o ambiente de desenvolvimento
+"""
+
 
 DEBUG = True
-
-# Assets
 ASSETS_DEBUG = DEBUG
 
 
-# Mail settings
+# envio de emails
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 1025
 MAIL_USE_TLS = False

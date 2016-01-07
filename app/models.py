@@ -1,4 +1,11 @@
 # coding: utf-8
+
+"""
+    Conjunto de modelos relacionais para o controle da app (Usuarios, auditorias, logs, etc)
+    Os modelos do catálogo do OPAC (periódicos, fascículos, artigos) estão definidos na
+    lib: opac_schema (ver requirements.txt)
+"""
+
 from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
@@ -8,7 +15,6 @@ from . import login_manager
 import notifications
 
 
-# Create user model.
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
@@ -25,7 +31,7 @@ class User(UserMixin, db.Model):
 
     def is_correct_password(self, plaintext):
         """
-        compares a string with the hashed password stored for that user.
+        Compara a string ``plaintext`` com a senha "hasheada" armazenada para este usuário.
         """
         return check_password_hash(self._password, plaintext)
 
@@ -42,4 +48,8 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+        Retora usuário pelo id.
+        Necessário para o login manager.
+    """
     return User.query.get(int(user_id))

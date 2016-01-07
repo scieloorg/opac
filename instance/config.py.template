@@ -1,23 +1,24 @@
-# Instance configuration
+# coding: utf-8
 
-# Debug
+"""
+    EXEMPLO de configuração da instância
+"""
+
 DEBUG = True
-
-# Assets
 ASSETS_DEBUG = DEBUG
 
-# Mongo
 MONGODB_SETTINGS = {
     'db': 'manager2mongo',
     # 'host': '127.0.0.1',
     # 'port': 27017
 }
 
-# OPAC Collection
-OPAC_COLLECTION = ''
+# Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
+OPAC_COLLECTION = 'spa'
 
+DEBUG_TB_INTERCEPT_REDIRECTS = False
 
-# Mail settings
+# Envio de emails
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 1025
 MAIL_USE_TLS = False
@@ -29,5 +30,3 @@ MAIL_DEFAULT_SENDER = 'webmaster.dev@opac.scielo.org'
 MAIL_MAX_EMAILS = None
 # MAIL_SUPPRESS_SEND = default app.testing
 MAIL_ASCII_ATTACHMENTS = False
-
-TOKEN_MAX_AGE = 86400  # value in seconds: 86400 = 60*60*24 = 1 day

@@ -11,15 +11,14 @@ CSS = "/static/css/style_article_html.css"
 
 def get_timed_serializer():
     """
-    Retorna uma instancia do URLSafeTimedSerializer necessário para gerar tokens
+    Retorna uma instância do URLSafeTimedSerializer necessário para gerar tokens
     """
-
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
 
 def send_email(recipient, subject, html):
     """
-    Método auxiliar para envio de email
+    Método auxiliar para envio de emails
     - recipient: destinatario
     - subject: assunto
     - html: corpo da mensagem (formato html)
@@ -34,7 +33,7 @@ def send_email(recipient, subject, html):
 
 def rebuild_article_xml(article):
     """
-    Método auxilixar para regerar o HTML de um artigo, a partir do atributo ``xml``.
+    Método auxilixar para regerar o HTML de um artigo, a partir do atributo xml (``article.xml``).
     Caso exista algum problema no processo, levanta a exceção.
     Caso o artigo recebido por parametro, não tenha atribute ``xml``, levanta um ValueError
     """
@@ -76,12 +75,13 @@ def reset_db():
 def create_user(user_email, user_password, user_email_confirmed):
     """
     Cria um novo usuário, com acesso habilitado para acessar no admin.
-    O parametro: ``user_password`` deve ser a senha em plain text,
-    para ser hashed no momento de salvar o usuário.
+    O parâmetro: ``user_password`` deve ser a senha em texto plano,
+    que sera "hasheada" no momento de salvar o usuário.
     """
 
-    new_user = models.User(email=user_email,
-                    password=user_password,
-                    email_confirmed=user_email_confirmed)
+    new_user = models.User(
+        email=user_email,
+        password=user_password,
+        email_confirmed=user_email_confirmed)
     dbsql.session.add(new_user)
     dbsql.session.commit()
