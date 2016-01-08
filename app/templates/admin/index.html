@@ -4,22 +4,22 @@
   <div class="container">
     <div class="row">
       <div class="page-header">
-        <h1>OPAC Admin <small>da coleção: {{config.OPAC_COLLECTION|upper}}</small></h1>
+        <h1>OPAC Admin <small>{% trans %}da coleção{% endtrans %}: {{config.OPAC_COLLECTION|upper}}</small></h1>
       </div>
       <div class="col-md-4">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Periódicos:</h3>
+            <h3 class="panel-title">{% trans %}Periódicos{% endtrans %}:</h3>
           </div>
           <div class="panel-body">
-            <h1>{{counts.journals_public_count}} <small>Publicados</small></h1>
-            <h2>{{counts.journals_total_count}} <small>Total</small></h2>
+            <h1>{{counts.journals_public_count}} <small>{% trans %}Publicados{% endtrans %}</small></h1>
+            <h2>{{counts.journals_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
           </div>
           {% if counts.journals_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{counts.journals_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.journals_public_count / counts.journals_total_count)|round(2, 'floor') }}%;">
-                  {{ 100 * (counts.journals_public_count / counts.journals_total_count)|round(2, 'floor') }}% Publicados
+                  {{ 100 * (counts.journals_public_count / counts.journals_total_count)|round(2, 'floor') }}% {% trans %}Publicados{% endtrans %}
                 </div>
               </div>
             </div>
@@ -29,17 +29,17 @@
       <div class="col-md-4">
         <div class="panel panel-info">
           <div class="panel-heading">
-            <h3 class="panel-title">Fascícluos:</h3>
+            <h3 class="panel-title">{% trans %}Fascícluos{% endtrans %}:</h3>
           </div>
           <div class="panel-body">
-            <h1>{{counts.issues_public_count}} <small>Publicados</small></h1>
-            <h2>{{counts.issues_total_count}} <small>Total</small></h2>
+            <h1>{{counts.issues_public_count}} <small>{% trans %}Publicados{% endtrans %}</small></h1>
+            <h2>{{counts.issues_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
           </div>
           {% if counts.issues_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{counts.issues_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.issues_public_count / counts.issues_total_count)|round(2, 'floor') }}%;">
-                  {{ 100 * (counts.issues_public_count / counts.issues_total_count)|round(2, 'floor') }}% Publicados
+                  {{ 100 * (counts.issues_public_count / counts.issues_total_count)|round(2, 'floor') }}% {% trans %}Publicados{% endtrans %}
                 </div>
               </div>
             </div>
@@ -49,17 +49,17 @@
       <div class="col-md-4">
         <div class="panel panel-success">
           <div class="panel-heading">
-            <h3 class="panel-title">Artigos:</h3>
+            <h3 class="panel-title">{% trans %}Artigos{% endtrans %}:</h3>
           </div>
           <div class="panel-body">
-            <h1>{{counts.articles_public_count}} <small>Publicados</small></h1>
-            <h2>{{counts.articles_total_count}} <small>Total</small></h2>
+            <h1>{{counts.articles_public_count}} <small>{% trans %}Publicados{% endtrans %}</small></h1>
+            <h2>{{counts.articles_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
           </div>
           {% if counts.articles_total_count > 0 %}
             <div class="panel-footer">
               <div class="progress">
                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{counts.articles_public_count}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ 100 * (counts.articles_public_count / counts.articles_total_count)|round(2, 'floor') }}%;">
-                  {{ 100 * (counts.articles_public_count / counts.articles_total_count)|round(2, 'floor') }}% Publicados
+                  {{ 100 * (counts.articles_public_count / counts.articles_total_count)|round(2, 'floor') }}% {% trans %}Publicados{% endtrans %}
                 </div>
               </div>
             </div>

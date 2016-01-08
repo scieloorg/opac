@@ -29,3 +29,10 @@ OPAC_COLLECTION = ''
 
 # Tempo de expiração para os tokens
 TOKEN_MAX_AGE = 86400  # valor en segundos: 86400 = 60*60*24 = 1 dia
+
+LANGUAGES = {
+    'pt_BR': u'Português',
+    'en': u'English',
+    'es': u'Español',
+}
+BABEL_DEFAULT_LOCALE = 'pt_BR'

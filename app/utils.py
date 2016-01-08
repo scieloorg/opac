@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from lxml import etree
 import packtools
 from itsdangerous import URLSafeTimedSerializer
@@ -6,7 +7,7 @@ from flask_mail import Message
 from flask import current_app
 from . import dbsql, controllers, mail, models
 
-CSS = "/static/css/style_article_html.css"
+CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
 
 
 def get_timed_serializer():
