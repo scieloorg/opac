@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 import os
+import unittest
 from app import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Journal, Issue, Article
 from app import utils, controllers
@@ -84,6 +85,17 @@ def create_superuser():
     # cria usuario
     utils.create_user(user_email, user_password, email_confirmed)
     print u'Novo usuário criado com sucesso!'
+
+
+@manager.command
+@manager.option('-v', '--verbosity', dest='verbosity', default=2)
+def test(verbosity=2):
+    """ Executa tests unitarios.
+    Lembre de definir a variável: OPAC_CONFIG="config.testing" antes de executar este comando:
+    > OPAC_CONFIG="config.testing" && python manager.py test
+    """
+    tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=verbosity).run(tests)
 
 if __name__ == '__main__':
     manager.run()
