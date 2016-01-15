@@ -1,4 +1,5 @@
 # coding: utf-8
+import logging
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
@@ -19,6 +20,8 @@ ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens sel
 ACTION_UNPUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer despublicar os itens selecionados?')
 ACTION_REBUILD_CONFIRMATION_MSG = _(u'Tem certeza que quer reconstruir os artigos selecionados?')
 ACTION_SEND_EMAIL_CONFIRMATION_MSG = _(u'Tem certeza que quer enviar email de confirmação aos usuários selecionados?')
+
+logger = logging.getLogger(__name__)
 
 
 class AdminIndexView(admin.AdminIndexView):

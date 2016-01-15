@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import logging
 from collections import OrderedDict
 from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect
@@ -8,6 +9,8 @@ from . import main
 from flask import current_app
 from app import babel
 from app import controllers
+
+logger = logging.getLogger(__name__)
 
 
 @babel.localeselector
