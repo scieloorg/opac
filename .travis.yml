@@ -2,6 +2,6 @@ language: python
 python:
   - "2.7"
 script:
-  - pip install -e https://github.com/jfunez/packtools.git#egg=html-generator-new
-  - pip install git+git@github.com:scieloorg/opac_schema.git#egg=opac_schema
+  - pip install -e git+https://github.com/scieloorg/opac_schema.git#egg=opac_schema
+  - pip install -e git+https://github.com/jfunez/packtools.git#egg=html-generator-new
   - make test
