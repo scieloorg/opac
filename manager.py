@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+import sys
 import os
 import unittest
 from app import create_app, dbsql, dbmongo, mail
@@ -99,7 +100,10 @@ def test(verbosity=2):
     """
     tests = unittest.TestLoader().discover('tests')
     result = unittest.TextTestRunner(verbosity=verbosity).run(tests)
-    return result.wasSuccessful()
+    if result.wasSuccessful():
+        return sys.exit()
+    else:
+        return sys.exit(1)
 
 if __name__ == '__main__':
     manager.run()

@@ -1,11 +1,12 @@
+sudo: false
 language: python
-
 env:
   - OPAC_CONFIG="config.testing"
 python:
   - "2.7"
-script:
-  - cp instance/config.py.template instance/config.py
+install:
   - pip install -e git+https://github.com/scieloorg/opac_schema.git#egg=opac_schema
   - pip install -e git+https://github.com/jfunez/packtools.git#egg=html-generator-new
-  - python manager.py test
+before_script:
+  - cp instance/config.py.template instance/config.py
+script: python manager.py test
