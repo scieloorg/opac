@@ -98,7 +98,8 @@ def test(verbosity=2):
     > export OPAC_CONFIG="config.testing" && python manager.py test
     """
     tests = unittest.TestLoader().discover('tests')
-    unittest.TextTestRunner(verbosity=verbosity).run(tests)
+    result = unittest.TextTestRunner(verbosity=verbosity).run(tests)
+    return result.wasSuccessful()
 
 if __name__ == '__main__':
     manager.run()
