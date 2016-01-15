@@ -25,4 +25,4 @@ compile_messages:
 #########
 
 test:
-	OPAC_CONFIG="config.testing" && python manager.py test
+	export OPAC_CONFIG="config.testing" && python manager.py test

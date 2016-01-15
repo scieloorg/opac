@@ -37,7 +37,7 @@ def get_journals_by_study_area():
     """
     Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
 
-    - ``meta`` é um dicionario de metadados, que contem o ``total`` de periódicos retornados;
+    - ``meta`` é um dicionario de metadados, que contém o ``total`` de periódicos retornados;
     - ``objects`` é um dicionario de periódicos agrupados pela área de conhecimento.
 
     Exemplo:

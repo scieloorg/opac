@@ -1,4 +1,7 @@
 language: python
+
+env:
+  - OPAC_CONFIG="config.testing"
 python:
   - "2.7"
 script:

@@ -31,6 +31,7 @@ def create_app(config_name=None):
                 static_url_path='/static',
                 static_folder='static',
                 instance_relative_config=True)
+
     # Configurações
     app.config.from_object('config.default')  # Configuração basica
     app.config.from_object(config_name)  # Configuração dependente do ambiente
@@ -67,7 +68,7 @@ def create_app(config_name=None):
     # Handler de páginas de erro
     errors.register_errorhandlers(app)
 
-    # Vistas do admin
+    # Interface do admin
     from .models import User
     from app.admin import views
 
