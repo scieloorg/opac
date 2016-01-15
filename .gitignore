@@ -53,7 +53,7 @@ coverage.xml
 
 # Translations
 *.mo
-*.pot
+# *.pot # versionado para integarção com transifex
 
 # Django stuff:
 *.log
