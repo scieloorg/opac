@@ -7,6 +7,8 @@ python:
 install:
   - pip install -e git+https://github.com/scieloorg/opac_schema.git#egg=opac_schema
   - pip install -e git+https://github.com/jfunez/packtools.git#egg=html-generator-new
+  - pip install -r requirements.txt
 before_script:
   - cp instance/config.py.template instance/config.py
-script: python manager.py test
+script:
+  - python manager.py test
