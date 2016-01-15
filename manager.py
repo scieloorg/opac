@@ -95,7 +95,7 @@ def create_superuser():
 def test(verbosity=2):
     """ Executa tests unitarios.
     Lembre de definir a variável: OPAC_CONFIG="config.testing" antes de executar este comando:
-    > OPAC_CONFIG="config.testing" && python manager.py test
+    > export OPAC_CONFIG="config.testing" && python manager.py test
     """
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=verbosity).run(tests)
