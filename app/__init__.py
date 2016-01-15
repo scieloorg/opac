@@ -1,5 +1,6 @@
 # coding: utf-8
 import os
+import logging.config
 from flask import Flask
 from flask_assets import Environment, Bundle
 from flask_debugtoolbar import DebugToolbarExtension
@@ -25,12 +26,19 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'admin.login_view'
 
+logging.config.fileConfig(os.path.join(os.path.dirname(
+                          os.path.abspath(__file__)), '../config/logger.ini'))
+
+logger = logging.getLogger(__name__)
+
 
 def create_app(config_name=None):
     app = Flask(__name__,
                 static_url_path='/static',
                 static_folder='static',
                 instance_relative_config=True)
+
+    logger.info("teste de log")
 
     # Configurações
     app.config.from_object('config.default')  # Configuração basica
