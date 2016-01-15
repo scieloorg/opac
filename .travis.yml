@@ -6,7 +6,7 @@ python:
   - "2.7"
 install:
   - pip install -e git+https://github.com/scieloorg/opac_schema.git#egg=opac_schema
-  - pip install -e git+https://github.com/jfunez/packtools.git#egg=html-generator-new
+  - pip install -e git+https://github.com/jfunez/packtools.git@html-generator-new#egg=packtools
   - pip install -r requirements.txt
 before_script:
   - cp instance/config.py.template instance/config.py
