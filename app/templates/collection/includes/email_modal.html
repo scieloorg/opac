@@ -3,35 +3,35 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                  <h4 class="modal-title">Enviar página por e-mail</h4>
+                  <h4 class="modal-title">{% trans %}Enviar página por e-mail{% endtrans %}</h4>
               </div>
               <form name="sendViaEmail" action="resultados-enviado.en.html" method="post" class="validate">
                   <div class="modal-body">
                       <div class="form-group">
-                          <label class="control-label">Para*</label>
+                          <label class="control-label">{% trans %}Para{% endtrans %}*</label>
                           <input type="text" name="email" value="" class="form-control valid multipleMail" />
 
                           <p class="text-muted">
-                              Use ; (semicolon) to insert more emails.
+                              {% trans %}Use ; (semicolon) to insert more emails.{% endtrans %}
                           </p>
                       </div>
                       <div class="form-group extendForm">
-                          <a href="javascript:;" class="showBlock" id="showBlock" data-rel="#extraFields" data-hide="#showBlock">Alterar remetente, assunto e comentários</a>
+                          <a href="javascript:;" class="showBlock" id="showBlock" data-rel="#extraFields" data-hide="#showBlock">{% trans %}Alterar remetente, assunto e comentários{% endtrans %}</a>
 
                           <div id="extraFields" style="display: none;">
                               <div class="form-group">
-                                  <label>Seu e-mail</label>
+                                  <label>{% trans %}Seu e-mail{% endtrans %}</label>
                                   <input type="text" name="yourEmail" value="" class="form-control" placeholder="" />
                               </div>
                               <div class="form-group">
-                                  <label>Assunto</label>
+                                  <label>{% trans %}Assunto{% endtrans %}</label>
                                   <input type="text" name="subject" value="" class="form-control" placeholder="" />
                               </div>
                               <div class="form-group">
-                                  <label>Comentário</label>
+                                  <label>{% trans %}Comentário{% endtrans %}</label>
                                   <textarea name="comment" class="form-control"></textarea>
                               </div>
-                              <a href="javascript:;" class="showBlock" data-rel="#showBlock" data-hide="#extraFields">Remover remetente, assunto e comentários</a>
+                              <a href="javascript:;" class="showBlock" data-rel="#showBlock" data-hide="#extraFields">{% trans %}Remover remetente, assunto e comentários{% endtrans %}</a>
                           </div>
                       </div>
                   </div>

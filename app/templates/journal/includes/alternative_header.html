@@ -1,7 +1,7 @@
 <div class="alternativeHeader">
   <div class="container">
     <div class="col-md-2 col-sm-3 mainNav">
-      <a href="#" class="menu" data-rel="#alternativeMainMenu" title="Abrir menu">Abrir menu</a>
+      <a href="#" class="menu" data-rel="#alternativeMainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
       <h2><a href="{{ url_for('.index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-alternative-brasil.png') }}" alt="SciELO Brasil"></a></h2>
       <div class="mainMenu" id="alternativeMainMenu">
         <div class="row">
@@ -20,7 +20,7 @@
         <li>
           <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="dropdown-toggle" data-toggle="dropdown">{{ journal['title_iso']}} <span class="glyphBtn grayArrowDown"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li class="dropdown-header">Número atual:</li>
+            <li class="dropdown-header">{% trans %}Número atual{% endtrans %}:</li>
             <li><strong>Bol. Mus. Para. Emílio Goeldi. Ciênc. hum. vol.8 no.1 Belém jan./abr. 2013</strong></li>
           </ul>
         </li>
@@ -32,11 +32,11 @@
         <li>
           <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn numbers"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li class="dropdown-header">Números</li>
-            <li><a href="{{ url_for('.issue_grid', journal_id=journal.id) }}">• todos</a></li>
-            <li><a href="atual.html">« anterior</a></li>
-            <li><a href="atual.html">• atual</a></li>
-            <li><a href="atual.html">» próximo</a></li>
+            <li class="dropdown-header">{% trans %}Números{% endtrans %}</li>
+            <li><a href="{{ url_for('.issue_grid', journal_id=journal.id) }}">• {% trans %}todos{% endtrans %}</a></li>
+            <li><a href="atual.html">« {% trans %}anterior{% endtrans %}</a></li>
+            <li><a href="atual.html">• {% trans %}atual{% endtrans %}</a></li>
+            <li><a href="atual.html">» {% trans %}próximo{% endtrans %}</a></li>
           </ul>
         </li>
         <li><a href="buscar.html" class="showTooltip" data-placement="bottom" title="Buscar"><span class="glyphBtn search"></span></a></li>
@@ -44,11 +44,11 @@
         <li>
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn contents"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li class="dropdown-header">Periódico</li>
-            <li><a href="secundaria.html" class="icon"><span class="glyphBtn submission"></span> Submissão de manuscritos</a></li>
-            <li><a href="secundaria.html" class="icon"><span class="glyphBtn authorInstructions"></span> Instruções aos autores</a></li>
-            <li><a href="secundaria.html" class="icon"><span class="glyphBtn about"></span> Sobre o periódico</a></li>
-            <li><a href="secundaria.html" class="icon"><span class="glyphBtn contact"></span> Contato</a></li>
+            <li class="dropdown-header">{% trans %}Periódico{% endtrans %}</li>
+            <li><a href="secundaria.html" class="icon"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+            <li><a href="secundaria.html" class="icon"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
+            <li><a href="secundaria.html" class="icon"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
+            <li><a href="secundaria.html" class="icon"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
           </ul>
         </li>
       </ul>

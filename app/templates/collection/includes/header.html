@@ -2,40 +2,40 @@
   <div class="container">
     <div class="topFunction">
       <div class="col-md-3 col-sm-4 mainNav">
-          <a href="" class="menu" data-rel=".mainMenu" title="Abrir menu">Abrir menu</a>
+          <a href="" class="menu" data-rel=".mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
           <div class="mainMenu">
             <nav>
               <ul>
                 <li>
                   <a href="{{ url_for('.index') }}"><strong>SciELO Brasil</strong></a>
                   <ul>
-                      <li><a href="{{ url_for('.collection_list_alpha') }}">Lista alfabética de periódicos</a></li>
-                      <li><a href="{{ url_for('.collection_list_theme') }}">Lista temática de periódicos</a></li>
-                      <li><a href="/Colecao/edit.html">Lista de periódicos por editoras</a></li>
-                      <li><a href="/Colecao/buscar.html">Busca</a></li>
-                      <li><a href="/Colecao/metricas.html">Métricas</a></li>
-                      <li><a href="/Colecao/sobre.html">Sobre o SciELO Brasil</a></li>
-                      <li><a href="/Colecao/contatos.html">Contatos</a></li>
+                      <li><a href="{{ url_for('.collection_list_alpha') }}">{% trans %}Lista alfabética de periódicos{% endtrans %}</a></li>
+                      <li><a href="{{ url_for('.collection_list_theme') }}">{% trans %}Lista temática de periódicos{% endtrans %}</a></li>
+                      <li><a href="/Colecao/edit.html">{% trans %}Lista de periódicos por editoras{% endtrans %}</a></li>
+                      <li><a href="/Colecao/buscar.html">{% trans %}Busca{% endtrans %}</a></li>
+                      <li><a href="/Colecao/metricas.html">{% trans %}Métricas{% endtrans %}</a></li>
+                      <li><a href="/Colecao/sobre.html">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
+                      <li><a href="/Colecao/contatos.html">{% trans %}Contatos{% endtrans %}</a></li>
                   </ul>
                 </li>
                 <li>
-                  <a href="/Rede/"><strong>SciELO.org - Rede SciELO</strong></a>
+                  <a href="/Rede/"><strong>{% trans %}SciELO.org - Rede SciELO{% endtrans %}</strong></a>
                   <ul>
-                    <li><a href="http://www.scielo.org/php/index.php">Coleções nacionais e temáticas</a></li>
-                    <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">Lista alfabética de periódicos</a></li>
-                    <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">Lista de periódicos por assunto</a></li>
-                    <li><a href="/Colecao/buscar.html">Busca</a></li>
-                    <li><a href="http://www.scielo.org/applications/scielo-org/php/siteUsage.php">Métricas</a></li>
-                    <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">Acesso OAI e RSS</a></li>
-                    <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">Sobre a Rede SciELO</a></li>
-                    <li><a href="#">Contatos</a></li>
+                    <li><a href="http://www.scielo.org/php/index.php">{% trans %}Coleções nacionais e temáticas{% endtrans %}</a></li>
+                    <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">{% trans %}Lista alfabética de periódicos{% endtrans %}</a></li>
+                    <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">{% trans %}Lista de periódicos por assunto{% endtrans %}</a></li>
+                    <li><a href="/Colecao/buscar.html">{% trans %}Busca{% endtrans %}</a></li>
+                    <li><a href="http://www.scielo.org/applications/scielo-org/php/siteUsage.php">{% trans %}Métricas{% endtrans %}</a></li>
+                    <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">{% trans %}Acesso OAI e RSS{% endtrans %}</a></li>
+                    <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
+                    <li><a href="#">{% trans %}Contatos{% endtrans %}</a></li>
                   </ul>
                 </li>
                 <li>
-                  <a href="#"><strong>Portal do Autor</strong></a>
+                  <a href="#"><strong>{% trans %}Portal do Autor{% endtrans %}</strong></a>
                 </li>
                 <li>
-                  <a href="http://blog.scielo.org/"><strong>Blog SciELO em Perspectiva</strong></a>
+                  <a href="http://blog.scielo.org/"><strong>{% trans %}Blog SciELO em Perspectiva{% endtrans %}</strong></a>
                 </li>
               </ul>
             </nav>

@@ -8,13 +8,13 @@
         <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
         <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
         <span class="divisor"></span>
-        Compartilhe
+        {% trans %}Compartilhe{% endtrans %}
         <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
         <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
         <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
         <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
         <ul class="dropdown-menu">
-          <li class="dropdown-header">Outras redes sociais</li>
+          <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
           <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
           <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
           <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
@@ -26,19 +26,19 @@
       <div class="col-md-12 content journalHome">
         <div class="block mission">
           <div class="col-md-6 col-sm-6">
-            <h1>Nossa Missão</h1>
+            <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
             <p>{{ journal.mission[0].description }}{# filtar pelo idioma #}</p>
           </div>
           <div class="col-md-6 col-sm-6">
-            <h3>Métricas deste periódico</h3>
+            <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
             <ul>
               <li><a href="">SciELO</a>
               <li><a href="">Google Scholar</a>
                 <div>
-                  <small>Índice h5:</small> <strong>6</strong>
+                  <small>{% trans %}Índice h5{% endtrans %}:</small> <strong>6</strong>
                 </div>
                 <div>
-                  <small>Mediana h5:</small> <strong>16</strong>
+                  <small>{% trans %}Mediana h5{% endtrans %}:</small> <strong>16</strong>
                 </div>
               </li>
             </ul>
@@ -53,13 +53,13 @@
                   <img src="{{ latest_issue.cover_url }}" alt="Capa do número mais recente" /> <!-- a imagem é opcional -->
                 {% endif %}
                 <span class="text">
-                  <small>Número mais recente</small>
+                  <small>{% trans %}Número mais recente{% endtrans %}</small>
                   <h2>{{ journal.last_issue.bibliographic_legend }}</h2>
                 </span>
               </a>
             </div>
             <div class="col-md-6 col-sm-6">
-              <h3>Sumário</h3>
+              <h3>{% trans %}Sumário{% endtrans %}</h3>
               <ul>
                 {% for section in journal.last_issue.sections %}
                   <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
@@ -84,7 +84,7 @@
                       <span>2013/12 - v8 n.3</span>
                       <h3>Dossiê Metodologia da pesquisa arqueológica</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
                       <span>2012/12 - v7 n.3</span>
                       <h3>Dossiês sobre antropologia física e sobre hidrelétricas</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -102,7 +102,7 @@
                       <span>2012/08 - v7 n.2</span>
                       <h3>Agriculturas Amazônicas</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -111,7 +111,7 @@
                       <span>2013/12 - v8 n.3</span>
                       <h3>Dossiê Metodologia da pesquisa arqueológica</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -120,7 +120,7 @@
                       <span>2012/04 - v7 n.1</span>
                       <h3>Museologia e Patrimônio</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -129,7 +129,7 @@
                       <span>2011/08 - v6 n.2</span>
                       <h3>Número especial destaca obra de Benedito Nunes</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -138,7 +138,7 @@
                       <span>2011/08 - v6 n.2</span>
                       <h3>Número especial destaca obra de Benedito Nunes</h3>
                       <div>
-                        Press-release em <a href="">português</a> e <a href="">inglês</a>
+                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
                       </div>
                     </div>
                   </div>
@@ -153,7 +153,7 @@
         {# news #}
         <div class="block news">
           <div class="col-md-12">
-            <h2>Notícias</h2>
+            <h2>{% trans %}Notícias{% endtrans %}</h2>
 
             <a href="#">
               <div class="col-md-2 col-sm-3">
@@ -162,7 +162,7 @@
               <div class="col-md-8 col-sm-8">
                 10/05/2013
                 <h3>RAE abre chamada de trabalhos em Social Businesses</h3>
-                RAE está com a chamada de trabalhos, Social Businesses, organizada pelos professores Edgard Barki (FGV-EAESP), Graziella Comini (FEA-USP), Stuart Hart (Cornell University), Sudhanshu Rai (Copenhagen Business School), Ann L Cunliffe (Leeds University Business School). O prazo para submissões é 10/03/2014. <strong>Continue lendo »</strong>
+                RAE está com a chamada de trabalhos, Social Businesses, organizada pelos professores Edgard Barki (FGV-EAESP), Graziella Comini (FEA-USP), Stuart Hart (Cornell University), Sudhanshu Rai (Copenhagen Business School), Ann L Cunliffe (Leeds University Business School). O prazo para submissões é 10/03/2014. <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
               </div>
               <div class="clearfix"></div>
             </a>
@@ -174,7 +174,7 @@
               <div class="col-md-8 col-sm-8">
                 22/03/2013
                 <h3>Uso de conhecimento científico na autogestão de riscos em DSTs</h3>
-                Interface – Comunicação Saúde Educação traz artigo que aborda as Doenças Sexualmente Transmissíveis HIV/AIDS voltado principalmente para homens que fazem sexo com homens. George Moraes de Luis, psicólogo social e pesquisador da PUC/SP, salienta que cada vez mais os homens pesquisam em fontes estrangeiras formas para se proteger, pois "os debates no exterior são mais francos, abertos, enquanto aqueles que ocorrem no Brasil prezam pela cautela na divulgação de informações que ainda estão em fase de estudo".  <strong>Continue lendo »</strong>
+                Interface – Comunicação Saúde Educação traz artigo que aborda as Doenças Sexualmente Transmissíveis HIV/AIDS voltado principalmente para homens que fazem sexo com homens. George Moraes de Luis, psicólogo social e pesquisador da PUC/SP, salienta que cada vez mais os homens pesquisam em fontes estrangeiras formas para se proteger, pois "os debates no exterior são mais francos, abertos, enquanto aqueles que ocorrem no Brasil prezam pela cautela na divulgação de informações que ainda estão em fase de estudo".  <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
               </div>
               <div class="clearfix"></div>
             </a>
@@ -186,7 +186,7 @@
               <div class="col-md-8 col-sm-8">
                 05/02/2013
                 <h3>Entrevista com Nikos Salíngaros</h3>
-                Nikos Salíngaros, físico da Universidade do Texas e indicado como um dos 100 mais destacados pensadores urbanos pelo Planetizen, em entrevista concedida a urbe. Revista Brasileira de Gestão Urbana, fala como se interessou pelo projeto urbano e arquitetura, critica o desconstrutivismo na arquitetura e comenta sobre sua ligação com o novo urbanismo. <strong>Continue lendo »</strong>
+                Nikos Salíngaros, físico da Universidade do Texas e indicado como um dos 100 mais destacados pensadores urbanos pelo Planetizen, em entrevista concedida a urbe. Revista Brasileira de Gestão Urbana, fala como se interessou pelo projeto urbano e arquitetura, critica o desconstrutivismo na arquitetura e comenta sobre sua ligação com o novo urbanismo. <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
               </div>
               <div class="clearfix"></div>
             </a>
