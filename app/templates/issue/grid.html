@@ -8,13 +8,13 @@
         <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
         <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
         <span class="divisor"></span>
-        Compartilhe
+        {% trans %}Compartilhe{% endtrans %}
         <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
         <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
         <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
         <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
         <ul class="dropdown-menu">
-          <li class="dropdown-header">Outras redes sociais</li>
+          <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
           <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
           <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
           <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
@@ -26,15 +26,15 @@
       <div class="col-md-12 content issueList" id="issueList">
         <div class="row">
           <div class="col-md-6 col-sm-6">
-            <h1>Todos os números</h1>
+            <h1>{% trans %}Todos os números{% endtrans %}</h1>
           </div>
         </div>
         <table>
           <thead>
             <tr>
-              <td class="col-xs-1">Ano</td>
-              <th class="col-xs-1">Volume</th>
-              <td class="col-xs-10 left">Número</td>
+              <td class="col-xs-1">{% trans %}Ano{% endtrans %}</td>
+              <th class="col-xs-1">{% trans %}Volume{% endtrans %}</th>
+              <td class="col-xs-10 left">{% trans %}Número{% endtrans %}</td>
             </tr>
           </thead>
           <tbody>
@@ -63,11 +63,11 @@
           </tbody>
         </table>
         <div class="col-md-12">
-          <h2>Histórico deste periódico na coleção</h2>
+          <h2>{% trans %}Histórico deste periódico na coleção{% endtrans %}</h2>
           <ul>
             {% for event in journal.timeline %}
               {% if event.status == 'current'%}
-                <li>Em {{ event.since }} admitido na coleção da SciELO</li>
+                <li>Em {{ event.since }} {% trans %}admitido na coleção da SciELO{% endtrans %}</li>
               {% elif event.status == 'rejected' %}
                 <li>Em {{ event.since }} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
               {% elif event.status == 'suspended' %}

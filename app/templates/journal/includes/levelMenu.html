@@ -2,24 +2,24 @@
   <div class="container">
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="btn single selected"><span class="glyphBtn home"></span> home</a>
+      <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="btn single selected"><span class="glyphBtn home"></span> {% trans %}home{% endtrans %}</a>
     </div>
     <div class="col-md-6 col-sm-6">
-      <h2><span class="glyphBtn numbers"></span> Números</h2>
+      <h2><span class="glyphBtn numbers"></span> {% trans %}Números{% endtrans %}</h2>
       <div class="btn-group">
-        <a href="{{ url_for('.issue_grid', journal_id=journal.jid) }}" class="btn group">todos</a>
-        <a href="homepage.html" class="btn group">« anterior</a>
-        <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}" class="btn group">atual</a>
-        <a href="homepage.html" class="btn group disabled">próximo »</a>
+        <a href="{{ url_for('.issue_grid', journal_id=journal.jid) }}" class="btn group">{% trans %}todos{% endtrans %}</a>
+        <a href="homepage.html" class="btn group">« {% trans %}anterior{% endtrans %}</a>
+        <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}" class="btn group">{% trans %}atual{% endtrans %}</a>
+        <a href="homepage.html" class="btn group disabled">{% trans %}próximo{% endtrans %} »</a>
       </div>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="buscar.html" class="btn single"><span class="glyphBtn search"></span> buscar</a>
+      <a href="buscar.html" class="btn single"><span class="glyphBtn search"></span> {% trans %}buscar{% endtrans %}</a>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="metricas.html" class="btn single"><span class="glyphBtn metrics"></span> métricas</a>
+      <a href="metricas.html" class="btn single"><span class="glyphBtn metrics"></span> {% trans %}métricas{% endtrans %}</a>
     </div>
   </div>
 </section>

@@ -7,31 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPAC 1.0\n"
 "Report-Msgid-Bugs-To: tecnologia@scielo.org\n"
-"POT-Creation-Date: 2016-01-07 14:31-0200\n"
+"POT-Creation-Date: 2016-01-18 12:18-0600\n"
 "PO-Revision-Date: 2016-01-07 14:56-0200\n"
 "Last-Translator: scielo <tecnologia@scielo.org>\n"
 "Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.2.0\n"
-"X-Generator: Poedit 1.8.6\n"
 
-#: app/__init__.py:80
+#: app/__init__.py:89 app/templates/journal/includes/alternative_header.html:47
 msgid "Periódico"
 msgstr "Journal"
 
-#: app/__init__.py:81
+#: app/__init__.py:90
 msgid "Fascículo"
 msgstr "Issue"
 
-#: app/__init__.py:82
+#: app/__init__.py:91
 msgid "Artigo"
 msgstr "Article"
 
-#: app/__init__.py:83
+#: app/__init__.py:92
 msgid "Usuário"
 msgstr "User"
 
@@ -51,68 +50,69 @@ msgstr "Invalid user"
 msgid "Senha inválida"
 msgstr "Invalid password"
 
-#: app/admin/views.py:18
+#: app/admin/views.py:19
 msgid "Tem certeza que quer publicar os itens selecionados?"
 msgstr "Are you sure you want to publish the selected items?"
 
-#: app/admin/views.py:19
+#: app/admin/views.py:20
 msgid "Tem certeza que quer despublicar os itens selecionados?"
 msgstr "Are you sure you want to unpublish the selected items?"
 
-#: app/admin/views.py:20
+#: app/admin/views.py:21
 msgid "Tem certeza que quer reconstruir os artigos selecionados?"
 msgstr "Are you sure you want to rebuild the selected articles?"
 
-#: app/admin/views.py:21
+#: app/admin/views.py:22
 msgid ""
-"Tem certeza que quer enviar email de confirmação aos usuários selecionados?"
+"Tem certeza que quer enviar email de confirmação aos usuários "
+"selecionados?"
 msgstr "Are you sure you want to send confirmation email to the selected users?"
 
-#: app/admin/views.py:76 app/admin/views.py:89
+#: app/admin/views.py:79 app/admin/views.py:92
 msgid "Usuário não encontrado"
 msgstr "User not found"
 
-#: app/admin/views.py:79
+#: app/admin/views.py:82
 #, python-format
 msgid "Email: %(email)s confirmado com sucesso!"
 msgstr "Email: %(email)s successfully confirmed!"
 
-#: app/admin/views.py:95
+#: app/admin/views.py:98
 #, python-format
 msgid "Enviamos as instruções para recuperar a senha para: %(email)s"
 msgstr "Sent the instructions to recover the password to: %(email)s"
 
-#: app/admin/views.py:98
+#: app/admin/views.py:101
 #, python-format
 msgid ""
 "Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: "
 "%(error)s"
 msgstr "Error sending the instructions via email to: %(email)s. Error: %(error)s"
 
-#: app/admin/views.py:124
+#: app/admin/views.py:127
 msgid "Nova senha salva com sucesso!!"
 msgstr "New password saved successfully!!"
 
-#: app/admin/views.py:150 app/admin/views.py:169
+#: app/admin/views.py:152 app/admin/views.py:171
 #, python-format
 msgid "Enviamos o email de confirmação para: %(email)s"
 msgstr "We sent a confirmation email to: %(email)s"
 
-#: app/admin/views.py:153 app/admin/views.py:172
+#: app/admin/views.py:155 app/admin/views.py:174
 #, python-format
 msgid "Ocorreu um erro no envio do email de confirmação para: %(email)s"
 msgstr "An error occurred while sending the confirmation email to: %(email)s"
 
-#: app/admin/views.py:160
+#: app/admin/views.py:162
 msgid "Enviar email de confirmação"
 msgstr "Send confirmation email"
 
-#: app/admin/views.py:176
+#: app/admin/views.py:178
 #, python-format
 msgid "%(count)s usuários foram notificados com sucesso!"
 msgstr "%(count)s users were successfully notified!"
 
-#: app/admin/views.py:179
+#: app/admin/views.py:181
 #, python-format
 msgid "Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s"
 msgstr "An error occurred while sending the confirmation emails. Error: %(ex)s"
@@ -181,21 +181,39 @@ msgstr "Article(s) successfully published!!"
 msgid "Artigo(s) despublicado com sucesso!!"
 msgstr "Article(s) successfully unpublished!!"
 
-#: app/main/views.py:26
+#: app/main/views.py:29
 msgid "Código de idioma inválido"
 msgstr "Invalid language code"
 
-#: app/main/views.py:72 app/main/views.py:84
+#: app/main/views.py:75 app/main/views.py:87
 msgid "Periódico não encontrado"
 msgstr "Journal not found"
 
-#: app/main/views.py:107
+#: app/main/views.py:110
 msgid "Fascículo não encontrado"
 msgstr "Issue not found"
 
-#: app/main/views.py:124 app/main/views.py:139 app/main/views.py:151
+#: app/main/views.py:127 app/main/views.py:142 app/main/views.py:154
 msgid "Artigo não encontrado"
 msgstr "Article not found"
+
+#: app/templates/403.html:24
+msgid "Acesso não autorizado!"
+msgstr ""
+
+#: app/templates/403.html:25 app/templates/404.html:25
+#: app/templates/500.html:25
+msgid "Por favor entre en contato com o administrador."
+msgstr ""
+
+#: app/templates/404.html:24
+#, fuzzy
+msgid "Página não encontrada"
+msgstr "User not found"
+
+#: app/templates/500.html:24
+msgid "Erro interno do servidor"
+msgstr ""
 
 #: app/templates/admin/index.html:7
 msgid "da coleção"
@@ -242,7 +260,8 @@ msgstr "Login"
 msgid "Você já iniciou sessão!"
 msgstr "You’re already logged in!"
 
-#: app/templates/admin/auth/login.html:24 app/templates/admin/auth/reset.html:13
+#: app/templates/admin/auth/login.html:24
+#: app/templates/admin/auth/reset.html:13
 #: app/templates/admin/auth/reset_with_token.html:13
 msgid "Enviar"
 msgstr "Send"
@@ -251,22 +270,529 @@ msgstr "Send"
 msgid "Esqueci a senha?"
 msgstr "Forgot the password?"
 
-#: app/templates/admin/model/custom_list.html:17
-#, python-format
-msgid "%(name)s"
-msgstr "%(name)s"
+#: app/templates/admin/auth/unconfirm_email.html:7
+#, fuzzy
+msgid "Email não confirmado!"
+msgstr "Send confirmation email"
 
-#: app/templates/collection/index.html:8
-msgid "Notícias"
-msgstr "News"
+#: app/templates/admin/auth/unconfirm_email.html:9
+msgid ""
+"Você <strong>deve</strong> confirmar seu email.<br>\n"
+"            <strong>Por favor entre em contato com o "
+"administrador.</strong>"
+msgstr ""
 
+#: app/templates/article/abstract.html:18 app/templates/article/detail.html:18
 #: app/templates/collection/index.html:13
+#: app/templates/collection/list_alpha.html:15
+#: app/templates/collection/list_institution.html:13
+#: app/templates/collection/list_theme.html:13 app/templates/issue/grid.html:11
+#: app/templates/issue/toc.html:11 app/templates/journal/detail.html:11
 msgid "Compartilhe"
 msgstr "Share"
 
+#: app/templates/article/abstract.html:24 app/templates/article/detail.html:24
 #: app/templates/collection/index.html:19
+#: app/templates/collection/list_alpha.html:21
+#: app/templates/collection/list_institution.html:19
+#: app/templates/collection/list_theme.html:19 app/templates/issue/grid.html:17
+#: app/templates/issue/toc.html:17 app/templates/journal/detail.html:17
 msgid "Outras redes sociais"
 msgstr "Other social networks"
+
+#: app/templates/article/abstract.html:35 app/templates/article/detail.html:35
+msgid "Versões"
+msgstr ""
+
+#: app/templates/article/abstract.html:40 app/templates/article/detail.html:40
+msgid "Texto em inglês"
+msgstr ""
+
+#: app/templates/article/abstract.html:41 app/templates/article/detail.html:41
+msgid "Texto em espanhol"
+msgstr ""
+
+#: app/templates/article/abstract.html:47 app/templates/article/detail.html:47
+msgid "Tradução automática"
+msgstr ""
+
+#: app/templates/article/abstract.html:59 app/templates/article/detail.html:59
+msgid "Artigos similares"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:4
+#: app/templates/collection/includes/header.html:5
+#: app/templates/journal/includes/alternative_header.html:4
+#: app/templates/journal/includes/header.html:5
+msgid "Abrir menu"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:27
+msgid "Sobre os autores"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:30
+msgid "Permissões"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:42
+#, fuzzy
+msgid "Artigos de"
+msgstr "Articles"
+
+#: app/templates/article/includes/alternative_header.html:43
+#: app/templates/article/includes/levelMenu.html:10
+#, fuzzy
+msgid "sumário"
+msgstr "User"
+
+#: app/templates/article/includes/alternative_header.html:44
+#: app/templates/article/includes/levelMenu.html:11
+#: app/templates/journal/includes/alternative_header.html:37
+#: app/templates/journal/includes/levelMenu.html:11
+msgid "anterior"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:45
+#: app/templates/article/includes/levelMenu.html:12
+#: app/templates/journal/includes/alternative_header.html:38
+#: app/templates/journal/includes/levelMenu.html:12
+#, fuzzy
+msgid "atual"
+msgstr "Total"
+
+#: app/templates/article/includes/alternative_header.html:52
+#: app/templates/article/includes/alternative_header.html:62
+msgid "Baixar"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:53
+#: app/templates/article/includes/alternative_header.html:63
+#: app/templates/article/includes/levelMenu.html:25
+#: app/templates/article/includes/levelMenu.html:39
+msgid "Português"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:54
+#: app/templates/article/includes/alternative_header.html:64
+#: app/templates/article/includes/levelMenu.html:24
+#: app/templates/article/includes/levelMenu.html:38
+msgid "Inglês"
+msgstr ""
+
+#: app/templates/article/includes/alternative_header.html:55
+#: app/templates/article/includes/alternative_header.html:65
+#: app/templates/article/includes/levelMenu.html:23
+#: app/templates/article/includes/levelMenu.html:37
+msgid "Espanhol"
+msgstr ""
+
+#: app/templates/article/includes/levelMenu.html:8
+#, python-format
+msgid "Artigos do Ano %(year)s, Volume %(volume)s Número %(number)s"
+msgstr ""
+
+#: app/templates/article/includes/levelMenu.html:13
+#: app/templates/journal/includes/alternative_header.html:39
+#: app/templates/journal/includes/levelMenu.html:13
+msgid "próximo"
+msgstr ""
+
+#: app/templates/article/includes/levelMenu.html:17
+msgid "Outras versões deste artigo"
+msgstr ""
+
+#: app/templates/collection/index.html:8 app/templates/journal/detail.html:156
+msgid "Notícias"
+msgstr "News"
+
+#: app/templates/collection/list_alpha.html:10
+#: app/templates/collection/includes/header.html:12
+#: app/templates/collection/includes/header.html:25
+#: app/templates/journal/includes/header.html:18
+#: app/templates/journal/includes/header.html:31
+msgid "Lista alfabética de periódicos"
+msgstr ""
+
+#: app/templates/collection/list_alpha.html:46
+#: app/templates/collection/list_theme.html:54
+#: app/templates/collection/list_theme.html:111
+msgid "Título"
+msgstr ""
+
+#: app/templates/collection/list_alpha.html:49
+#: app/templates/collection/list_institution.html:45
+#: app/templates/collection/list_theme.html:57
+#: app/templates/collection/list_theme.html:114
+msgid "download da lista"
+msgstr ""
+
+#: app/templates/collection/list_institution.html:8
+msgid "Lista periódicos por instituição"
+msgstr ""
+
+#: app/templates/collection/list_institution.html:42
+msgid "Editoras"
+msgstr ""
+
+#: app/templates/collection/list_institution.html:42
+#, python-format
+msgid "(Total %(editoras)s editoras / %(periodicos)s periódicos)"
+msgstr ""
+
+#: app/templates/collection/list_theme.html:8
+#: app/templates/collection/includes/header.html:13
+#: app/templates/journal/includes/header.html:19
+msgid "Lista temática de periódicos"
+msgstr ""
+
+#: app/templates/collection/list_theme.html:31
+msgid "Grandes áreas do conhecimento"
+msgstr ""
+
+#: app/templates/collection/list_theme.html:32
+msgid "Áreas temáticas do Web of Science"
+msgstr ""
+
+#: app/templates/collection/list_theme.html:54
+#: app/templates/collection/list_theme.html:111
+#, python-format
+msgid "(Total %(temas)s temas / %(periodicos)s periódicos)"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:6
+msgid "Enviar página por e-mail"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:11
+msgid "Para"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:15
+msgid "Use ; (semicolon) to insert more emails."
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:19
+msgid "Alterar remetente, assunto e comentários"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:23
+msgid "Seu e-mail"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:27
+msgid "Assunto"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:31
+msgid "Comentário"
+msgstr ""
+
+#: app/templates/collection/includes/email_modal.html:34
+msgid "Remover remetente, assunto e comentários"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:14
+#: app/templates/journal/includes/header.html:20
+msgid "Lista de periódicos por editoras"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:15
+#: app/templates/collection/includes/header.html:27
+#: app/templates/journal/includes/header.html:21
+#: app/templates/journal/includes/header.html:33
+msgid "Busca"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:16
+#: app/templates/collection/includes/header.html:28
+#: app/templates/collection/includes/levelMenu.html:22
+#: app/templates/journal/includes/header.html:22
+#: app/templates/journal/includes/header.html:34
+msgid "Métricas"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:17
+#: app/templates/collection/includes/levelMenu.html:28
+msgid "Sobre o"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:18
+#: app/templates/collection/includes/header.html:31
+#: app/templates/journal/includes/header.html:24
+#: app/templates/journal/includes/header.html:37
+msgid "Contatos"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:22
+#: app/templates/journal/includes/header.html:28
+msgid "SciELO.org - Rede SciELO"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:24
+#: app/templates/journal/includes/header.html:30
+msgid "Coleções nacionais e temáticas"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:26
+#: app/templates/journal/includes/header.html:32
+msgid "Lista de periódicos por assunto"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:29
+#: app/templates/journal/includes/header.html:35
+msgid "Acesso OAI e RSS"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:30
+#: app/templates/collection/includes/levelMenu.html:29
+#: app/templates/journal/includes/header.html:36
+msgid "Sobre a Rede SciELO"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:35
+#: app/templates/collection/includes/levelMenu.html:3
+#: app/templates/journal/includes/header.html:41
+msgid "Portal do Autor"
+msgstr ""
+
+#: app/templates/collection/includes/header.html:38
+#: app/templates/journal/includes/header.html:44
+msgid "Blog SciELO em Perspectiva"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:6
+msgid "Home"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:10
+msgid "Buscar artigos"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:10
+msgid "Buscar"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:13
+#, fuzzy
+msgid "Lista de Periódicos"
+msgstr "Journals"
+
+#: app/templates/collection/includes/levelMenu.html:15
+msgid "Alfabética"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:16
+msgid "Temática"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:17
+msgid "Por instituição"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:26
+#: app/templates/journal/includes/header.html:23
+msgid "Sobre o SciELO"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:30
+msgid "Avaliação de periódicos"
+msgstr ""
+
+#: app/templates/collection/includes/levelMenu.html:31
+msgid "Equipe"
+msgstr ""
+
+#: app/templates/includes/footer.html:26
+msgid ""
+"Todo o conteúdo de www.scielo.br, exceto onde está identificado, está "
+"licenciado sob uma Licença Creative Commons."
+msgstr ""
+
+#: app/templates/includes/footer.html:27
+msgid "saiba mais"
+msgstr ""
+
+#: app/templates/includes/format_journal_row.html:12
+msgid "números"
+msgstr ""
+
+#: app/templates/includes/format_journal_row.html:13
+msgid "Último"
+msgstr ""
+
+#: app/templates/includes/format_journal_row.html:14
+#: app/templates/issue/grid.html:36
+msgid "Volume"
+msgstr ""
+
+#: app/templates/includes/format_journal_row.html:15
+msgid "Nº"
+msgstr ""
+
+#: app/templates/issue/grid.html:29
+msgid "Todos os números"
+msgstr ""
+
+#: app/templates/issue/grid.html:35
+msgid "Ano"
+msgstr ""
+
+#: app/templates/issue/grid.html:37
+msgid "Número"
+msgstr ""
+
+#: app/templates/issue/grid.html:66
+msgid "Histórico deste periódico na coleção"
+msgstr ""
+
+#: app/templates/issue/grid.html:70
+msgid "admitido na coleção da SciELO"
+msgstr ""
+
+#: app/templates/issue/toc.html:29
+msgid "Navegue nos números"
+msgstr ""
+
+#: app/templates/issue/toc.html:35
+msgid "Vol."
+msgstr ""
+
+#: app/templates/issue/toc.html:35
+msgid "No."
+msgstr ""
+
+#: app/templates/issue/toc.html:50
+msgid "Editor científico"
+msgstr ""
+
+#: app/templates/issue/toc.html:54
+msgid "Editores associados"
+msgstr ""
+
+#: app/templates/issue/toc.html:61
+msgid "Veja toda a equipe editorial"
+msgstr ""
+
+#: app/templates/issue/toc.html:71 app/templates/journal/detail.html:62
+#, fuzzy
+msgid "Sumário"
+msgstr "User"
+
+#: app/templates/issue/toc.html:73
+msgid "vol."
+msgstr ""
+
+#: app/templates/issue/toc.html:73
+msgid "no."
+msgstr ""
+
+#: app/templates/journal/detail.html:29
+msgid "Nossa Missão"
+msgstr ""
+
+#: app/templates/journal/detail.html:33
+msgid "Métricas deste periódico"
+msgstr ""
+
+#: app/templates/journal/detail.html:38
+msgid "Índice h5"
+msgstr ""
+
+#: app/templates/journal/detail.html:41
+msgid "Mediana h5"
+msgstr ""
+
+#: app/templates/journal/detail.html:56
+msgid "Número mais recente"
+msgstr ""
+
+#: app/templates/journal/detail.html:87 app/templates/journal/detail.html:96
+#: app/templates/journal/detail.html:105 app/templates/journal/detail.html:114
+#: app/templates/journal/detail.html:123 app/templates/journal/detail.html:132
+#: app/templates/journal/detail.html:141
+msgid "Press-release em"
+msgstr ""
+
+#: app/templates/journal/detail.html:87 app/templates/journal/detail.html:96
+#: app/templates/journal/detail.html:105 app/templates/journal/detail.html:114
+#: app/templates/journal/detail.html:123 app/templates/journal/detail.html:132
+#: app/templates/journal/detail.html:141
+msgid "português"
+msgstr ""
+
+#: app/templates/journal/detail.html:87 app/templates/journal/detail.html:96
+#: app/templates/journal/detail.html:105 app/templates/journal/detail.html:114
+#: app/templates/journal/detail.html:123 app/templates/journal/detail.html:132
+#: app/templates/journal/detail.html:141
+msgid "inglês"
+msgstr ""
+
+#: app/templates/journal/detail.html:165 app/templates/journal/detail.html:177
+#: app/templates/journal/detail.html:189
+msgid "Continue lendo"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:23
+msgid "Número atual"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:35
+#: app/templates/journal/includes/levelMenu.html:8
+msgid "Números"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:36
+#: app/templates/journal/includes/levelMenu.html:10
+msgid "todos"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:48
+#: app/templates/journal/includes/header.html:76
+msgid "Submissão de manuscritos"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:49
+#: app/templates/journal/includes/header.html:77
+msgid "Instruções aos autores"
+msgstr ""
+
+#: app/templates/journal/includes/alternative_header.html:50
+#: app/templates/journal/includes/header.html:78
+#, fuzzy
+msgid "Sobre o periódico"
+msgstr "Journal"
+
+#: app/templates/journal/includes/alternative_header.html:51
+#: app/templates/journal/includes/header.html:79
+msgid "Contato"
+msgstr ""
+
+#: app/templates/journal/includes/contact_footer.html:30
+#, fuzzy
+msgid "Siga este periódico nas redes sociais"
+msgstr "Other social networks"
+
+#: app/templates/journal/includes/contact_footer.html:34
+msgid "Acompanhe os números deste periódico no seu leitor de RSS"
+msgstr ""
+
+#: app/templates/journal/includes/header.html:58
+#, fuzzy
+msgid "Publicação de"
+msgstr "Published"
+
+#: app/templates/journal/includes/levelMenu.html:5
+msgid "home"
+msgstr ""
+
+#: app/templates/journal/includes/levelMenu.html:18
+msgid "buscar"
+msgstr ""
+
+#: app/templates/journal/includes/levelMenu.html:22
+msgid "métricas"
+msgstr ""
 
 #~ msgid "JID"
 #~ msgstr "JID"
@@ -315,3 +841,7 @@ msgstr "Other social networks"
 
 #~ msgid "AID"
 #~ msgstr "AID"
+
+#~ msgid "%(name)s"
+#~ msgstr "%(name)s"
+
