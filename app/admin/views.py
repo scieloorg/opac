@@ -221,6 +221,48 @@ class JournalAdminView(OpacBaseAdminView):
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         scielo_issn=lambda v, c, m, p: '%s\n%s' % (m.print_issn or '', m.eletronic_issn or ''),
     )
+    column_labels = dict(
+        jid=__(u'Id Periódico'),
+        collections=__(u'Coleções'),
+        timeline=__(u'Linha do tempo'),
+        national_code=__(u'Código IBICT - CCN'),
+        subject_categories=__(u'Categorias de assunto'),
+        study_areas=__(u'Áreas de estudo'),
+        social_networks=__(u'Redes sociais'),
+        title=__(u'Título'),
+        title_iso=__(u'Título ISO'),
+        short_title=__(u'Título curto'),
+        created=__(u'Criado'),
+        updated=__(u'Atualizado'),
+        acronym=__(u'Acrônimo'),
+        scielo_issn=__(u'ISSN SciELO'),
+        print_issn=__(u'ISSN impresso'),
+        eletronic_issn=__(u'ISSN eletrônico'),
+        subject_descriptors=__(u'Descritores de assunto'),
+        init_year=__(u'Ano inicial'),
+        init_vol=__(u'Volume inicial'),
+        init_num=__(u'Número inicial'),
+        final_year=__(u'Ano final'),
+        final_vol=__(u'Volume final'),
+        final_num=__(u'Número final'),
+        online_submission_url=__(u'Url da submissão online'),
+        cover_url=__(u'Url do capa'),
+        logo_url=__(u'Url do logotipo'),
+        other_titles=__(u'Outros títulos'),
+        publisher_name=__(u'Nome da editora'),
+        publisher_country=__(u'País da editora'),
+        publisher_state=__(u'Estado da editora'),
+        publisher_city=__(u'Cidade da editora'),
+        publisher_address=__(u'Endereço da editora'),
+        publisher_telephone=__(u'Telefone da editora'),
+        mission=__(u'Missão'),
+        index_at=__(u'No índice'),
+        sponsors=__(u'Patrocinadores'),
+        previous_journal_ref=__(u'Ref periódico anterior'),
+        current_status=__(u'Situação atual'),
+        issue_count=__(u'Total de números'),
+        is_public=__(u'Publicado?')
+    )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
@@ -263,6 +305,26 @@ class IssueAdminView(OpacBaseAdminView):
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+    )
+    column_labels = dict(
+        iid=__(u'Id Número'),
+        journal=__(u'Periódico'),
+        sections=__(u'Seções'),
+        cover_url=__(u'Url do capa'),
+        volume=__(u'Volume'),
+        number=__(u'Número'),
+        created=__(u'Criado'),
+        updated=__(u'Atualizado'),
+        type=__(u'Tipo'),
+        suppl_text=__(u'Texto do suplemento'),
+        spe_text=__(u'Texto do especial'),
+        start_month=__(u'Mês inicial'),
+        end_month=__(u'Mês final'),
+        year=__(u'Ano'),
+        label=__(u'Etiqueta'),
+        order=__(u'Ordem'),
+        bibliographic_legend=__(u'Legenda bibliográfica'),
+        is_public=__(u'Publicado?')
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -307,6 +369,19 @@ class ArticleAdminView(OpacBaseAdminView):
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
+    )
+    column_labels = dict(
+        aid=__(u'Id Artigo'),
+        issue=__(u'Número'),
+        journal=__(u'Periódico'),
+        title=__(u'Título'),
+        section=__(u'Seção'),
+        is_aop=__(u'É AOP?'),
+        created=__(u'Criado'),
+        updated=__(u'Atualizado'),
+        htmls=__(u'HTML\'s'),
+        domain_key=__(u'Chave de domínio'),
+        is_public=__(u'Publicado?')
     )
 
     @action('rebuild_html', _(u'Reconstruir HTML'), ACTION_REBUILD_CONFIRMATION_MSG)
