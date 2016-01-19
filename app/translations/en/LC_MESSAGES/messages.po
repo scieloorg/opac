@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OPAC 1.0\n"
 "Report-Msgid-Bugs-To: tecnologia@scielo.org\n"
-"POT-Creation-Date: 2016-01-19 10:01-0600\n"
+"POT-Creation-Date: 2016-01-19 12:15-0600\n"
 "PO-Revision-Date: 2016-01-07 14:56-0200\n"
 "Last-Translator: scielo <tecnologia@scielo.org>\n"
 "Language: en\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "Periódico"
 msgstr "Journal"
 
-#: app/__init__.py:90 app/admin/views.py:375
+#: app/__init__.py:90
 msgid "Fascículo"
 msgstr "Issue"
 
@@ -123,7 +123,7 @@ msgid "Id Periódico"
 msgstr "Journal Id"
 
 #: app/admin/views.py:226
-msgid "Colecções"
+msgid "Coleções"
 msgstr ""
 
 #: app/admin/views.py:227
@@ -131,11 +131,11 @@ msgid "Linha do tempo"
 msgstr ""
 
 #: app/admin/views.py:228
-msgid "Código nacional"
+msgid "Código IBICT - CCN"
 msgstr ""
 
 #: app/admin/views.py:229
-msgid "Categorias de assunto "
+msgid "Categorias de assunto"
 msgstr ""
 
 #: app/admin/views.py:230
@@ -248,7 +248,7 @@ msgid "Cidade da editora"
 msgstr ""
 
 #: app/admin/views.py:256
-msgid "Direção da editora"
+msgid "Endereço da editora"
 msgstr ""
 
 #: app/admin/views.py:257
@@ -277,7 +277,7 @@ msgid "Situação atual"
 msgstr ""
 
 #: app/admin/views.py:263
-msgid "Número do fascículos"
+msgid "Total de números"
 msgstr ""
 
 #: app/admin/views.py:264 app/admin/views.py:327 app/admin/views.py:384
@@ -310,7 +310,7 @@ msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!. Erro: %(ex)s"
 msgstr "An error occurred trying to publish the journal(s)!! Error %(ex)s"
 
 #: app/admin/views.py:310
-msgid "Id Fascículo"
+msgid "Id Número"
 msgstr "Issue Id"
 
 #: app/admin/views.py:312
@@ -322,7 +322,8 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: app/admin/views.py:315 app/templates/issue/grid.html:37
+#: app/admin/views.py:315 app/admin/views.py:375
+#: app/templates/issue/grid.html:37
 msgid "Número"
 msgstr ""
 
@@ -360,7 +361,7 @@ msgid "Ordem"
 msgstr ""
 
 #: app/admin/views.py:326
-msgid "Lenda bibliográfica"
+msgid "Legenda bibliográfica"
 msgstr ""
 
 #: app/admin/views.py:335
@@ -390,7 +391,7 @@ msgid "Seção"
 msgstr ""
 
 #: app/admin/views.py:379
-msgid "É AOP"
+msgid "É AOP?"
 msgstr ""
 
 #: app/admin/views.py:382
@@ -1069,4 +1070,25 @@ msgstr ""
 
 #~ msgid "É Pública"
 #~ msgstr "Unpublish"
+
+#~ msgid "Colecções"
+#~ msgstr ""
+
+#~ msgid "Código nacional"
+#~ msgstr ""
+
+#~ msgid "Categorias de assunto "
+#~ msgstr ""
+
+#~ msgid "Direção da editora"
+#~ msgstr ""
+
+#~ msgid "Número do fascículos"
+#~ msgstr ""
+
+#~ msgid "Lenda bibliográfica"
+#~ msgstr ""
+
+#~ msgid "É AOP"
+#~ msgstr ""
 

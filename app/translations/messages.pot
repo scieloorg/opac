@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-19 10:01-0600\n"
+"POT-Creation-Date: 2016-01-19 12:15-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Periódico"
 msgstr ""
 
-#: app/__init__.py:90 app/admin/views.py:375
+#: app/__init__.py:90
 msgid "Fascículo"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgid "Id Periódico"
 msgstr ""
 
 #: app/admin/views.py:226
-msgid "Colecções"
+msgid "Coleções"
 msgstr ""
 
 #: app/admin/views.py:227
@@ -130,11 +130,11 @@ msgid "Linha do tempo"
 msgstr ""
 
 #: app/admin/views.py:228
-msgid "Código nacional"
+msgid "Código IBICT - CCN"
 msgstr ""
 
 #: app/admin/views.py:229
-msgid "Categorias de assunto "
+msgid "Categorias de assunto"
 msgstr ""
 
 #: app/admin/views.py:230
@@ -245,7 +245,7 @@ msgid "Cidade da editora"
 msgstr ""
 
 #: app/admin/views.py:256
-msgid "Direção da editora"
+msgid "Endereço da editora"
 msgstr ""
 
 #: app/admin/views.py:257
@@ -273,7 +273,7 @@ msgid "Situação atual"
 msgstr ""
 
 #: app/admin/views.py:263
-msgid "Número do fascículos"
+msgid "Total de números"
 msgstr ""
 
 #: app/admin/views.py:264 app/admin/views.py:327 app/admin/views.py:384
@@ -306,7 +306,7 @@ msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!. Erro: %(ex)s"
 msgstr ""
 
 #: app/admin/views.py:310
-msgid "Id Fascículo"
+msgid "Id Número"
 msgstr ""
 
 #: app/admin/views.py:312
@@ -318,7 +318,8 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: app/admin/views.py:315 app/templates/issue/grid.html:37
+#: app/admin/views.py:315 app/admin/views.py:375
+#: app/templates/issue/grid.html:37
 msgid "Número"
 msgstr ""
 
@@ -355,7 +356,7 @@ msgid "Ordem"
 msgstr ""
 
 #: app/admin/views.py:326
-msgid "Lenda bibliográfica"
+msgid "Legenda bibliográfica"
 msgstr ""
 
 #: app/admin/views.py:335
@@ -385,7 +386,7 @@ msgid "Seção"
 msgstr ""
 
 #: app/admin/views.py:379
-msgid "É AOP"
+msgid "É AOP?"
 msgstr ""
 
 #: app/admin/views.py:382

@@ -223,10 +223,10 @@ class JournalAdminView(OpacBaseAdminView):
     )
     column_labels = dict(
         jid=__(u'Id Periódico'),
-        collections=__(u'Colecções'),
+        collections=__(u'Coleções'),
         timeline=__(u'Linha do tempo'),
-        national_code=__(u'Código nacional'),
-        subject_categories=__(u'Categorias de assunto '),
+        national_code=__(u'Código IBICT - CCN'),
+        subject_categories=__(u'Categorias de assunto'),
         study_areas=__(u'Áreas de estudo'),
         social_networks=__(u'Redes sociais'),
         title=__(u'Título'),
@@ -253,14 +253,14 @@ class JournalAdminView(OpacBaseAdminView):
         publisher_country=__(u'País da editora'),
         publisher_state=__(u'Estado da editora'),
         publisher_city=__(u'Cidade da editora'),
-        publisher_address=__(u'Direção da editora'),
+        publisher_address=__(u'Endereço da editora'),
         publisher_telephone=__(u'Telefone da editora'),
         mission=__(u'Missão'),
         index_at=__(u'No índice'),
         sponsors=__(u'Patrocinadores'),
         previous_journal_ref=__(u'Ref periódico anterior'),
         current_status=__(u'Situação atual'),
-        issue_count=__(u'Número do fascículos'),
+        issue_count=__(u'Total de números'),
         is_public=__(u'Publicado?')
     )
 
@@ -307,7 +307,7 @@ class IssueAdminView(OpacBaseAdminView):
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
     )
     column_labels = dict(
-        iid=__(u'Id Fascículo'),
+        iid=__(u'Id Número'),
         journal=__(u'Periódico'),
         sections=__(u'Seções'),
         cover_url=__(u'Url do capa'),
@@ -323,7 +323,7 @@ class IssueAdminView(OpacBaseAdminView):
         year=__(u'Ano'),
         label=__(u'Etiqueta'),
         order=__(u'Ordem'),
-        bibliographic_legend=__(u'Lenda bibliográfica'),
+        bibliographic_legend=__(u'Legenda bibliográfica'),
         is_public=__(u'Publicado?')
     )
 
@@ -372,11 +372,11 @@ class ArticleAdminView(OpacBaseAdminView):
     )
     column_labels = dict(
         aid=__(u'Id Artigo'),
-        issue=__(u'Fascículo'),
+        issue=__(u'Número'),
         journal=__(u'Periódico'),
         title=__(u'Título'),
         section=__(u'Seção'),
-        is_aop=__(u'É AOP'),
+        is_aop=__(u'É AOP?'),
         created=__(u'Criado'),
         updated=__(u'Atualizado'),
         htmls=__(u'HTML\'s'),
