@@ -38,8 +38,6 @@ def create_app(config_name=None):
                 static_folder='static',
                 instance_relative_config=True)
 
-    logger.info("teste de log")
-
     # Configurações
     app.config.from_object('config.default')  # Configuração basica
     app.config.from_object(config_name)  # Configuração dependente do ambiente
