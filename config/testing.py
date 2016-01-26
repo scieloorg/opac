@@ -16,6 +16,11 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:////%s' % DATABASE_PATH
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+MONGODB_SETTINGS = {
+    'db': 'TESTING_opac_mongo',
+    # 'host': '127.0.0.1',
+    # 'port': 27017
+}
 
 # envio de emails
 MAIL_SERVER = 'localhost'
@@ -29,3 +34,5 @@ MAIL_DEFAULT_SENDER = 'webmaster.test@opac.scielo.org'
 MAIL_MAX_EMAILS = None
 # MAIL_SUPPRESS_SEND = default app.testing
 MAIL_ASCII_ATTACHMENTS = False
+
+DEBUG_TB_INTERCEPT_REDIRECTS = False

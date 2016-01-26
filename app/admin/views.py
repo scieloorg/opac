@@ -1,9 +1,11 @@
 # coding: utf-8
 import logging
+from uuid import uuid4
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
+from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, render_template, request, flash, abort
 from flask.ext.admin.contrib import sqla, mongoengine
@@ -14,6 +16,7 @@ import forms
 from app import models
 from app import controllers
 from ..utils import get_timed_serializer, rebuild_article_xml
+from opac_schema.v1.models import Sponsor
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -195,6 +198,30 @@ class OpacBaseAdminView(mongoengine.ModelView):
 
     def is_accessible(self):
         return login.current_user.is_authenticated
+
+
+class SponsorAdminView(OpacBaseAdminView):
+    can_create = True
+    can_edit = True
+    can_delete = True
+    create_modal = True
+    edit_modal = True
+    can_view_details = True
+    column_exclude_list = ('_id', )
+    column_searchable_list = ('name',)
+
+    def on_model_change(self, form, model, is_created):
+        # é necessario definir um valor para o campo ``_id`` na criação.
+        if is_created:
+            model._id = str(uuid4().hex)
+
+
+class CollectionAdminView(OpacBaseAdminView):
+    can_edit = True
+    edit_modal = True
+    form_excluded_columns = ('acronym', )
+    column_exclude_list = ('_id', )
+    inline_models = (InlineFormAdmin(Sponsor),)
 
 
 class JournalAdminView(OpacBaseAdminView):

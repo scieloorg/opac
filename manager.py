@@ -4,7 +4,7 @@ import sys
 import os
 import unittest
 from app import create_app, dbsql, dbmongo, mail
-from opac_schema.v1.models import Journal, Issue, Article
+from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 from app import utils, controllers
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -18,7 +18,14 @@ manager.add_command('dbsql', MigrateCommand)
 
 
 def make_shell_context():
-    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail, Journal=Journal, Issue=Issue, Article=Article)
+    app_models = {
+        'Collection': Collection,
+        'Sponsor': Sponsor,
+        'Journal': Journal,
+        'Issue': Issue,
+        'Article': Article,
+    }
+    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail, **app_models)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
