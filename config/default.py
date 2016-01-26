@@ -36,3 +36,7 @@ LANGUAGES = {
     'es': u'Español',
 }
 BABEL_DEFAULT_LOCALE = 'pt_BR'
+
+# Google Analytics
+# Use o tutorial do google: https://goo.gl/HE77SO para resgatar o TRACKING_CODE
+GA_TRACKING_CODE = None
