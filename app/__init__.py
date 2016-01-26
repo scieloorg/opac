@@ -13,7 +13,7 @@ from flask_babelex import Babel
 from flask_babelex import lazy_gettext
 
 import errors
-from opac_schema.v1.models import Journal, Issue, Article
+from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 
 assets = Environment()
 toolbar = DebugToolbarExtension()
@@ -86,6 +86,8 @@ def create_app(config_name=None):
         template_mode='bootstrap3',
         base_template="admin/opac_base.html")
 
+    admin.add_view(views.CollectionAdminView(Collection, name=lazy_gettext(u'Coleção')))
+    admin.add_view(views.SponsorAdminView(Sponsor, name=lazy_gettext(u'Financiador')))
     admin.add_view(views.JournalAdminView(Journal, name=lazy_gettext(u'Periódico')))
     admin.add_view(views.IssueAdminView(Issue, name=lazy_gettext(u'Fascículo')))
     admin.add_view(views.ArticleAdminView(Article, name=lazy_gettext(u'Artigo')))

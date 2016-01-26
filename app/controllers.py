@@ -29,8 +29,7 @@ def get_journals(collection=None, is_public=True, order_by="title"):
     if not collection:
         collection = current_app.config.get('OPAC_COLLECTION')
 
-    return Journal.objects(collections__acronym=collection,
-                           is_public=is_public).order_by(order_by)
+    return Journal.objects(is_public=is_public).order_by(order_by)
 
 
 def get_journals_by_study_area():
