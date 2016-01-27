@@ -289,7 +289,8 @@ class JournalAdminView(OpacBaseAdminView):
         previous_journal_ref=__(u'Ref periódico anterior'),
         current_status=__(u'Situação atual'),
         issue_count=__(u'Total de números'),
-        is_public=__(u'Publicado?')
+        is_public=__(u'Publicado?'),
+        unpublish_reason=__(u'Motivo de despublicação'),
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -303,7 +304,7 @@ class JournalAdminView(OpacBaseAdminView):
             if not self.handle_view_exception(ex):
                 raise
 
-    def unpublish_journal(self, ids, reason):
+    def unpublish_journals(self, ids, reason):
         try:
             controllers.set_journal_is_public_bulk(ids, False, reason)
             # Adicionar mais contexto sobre as consequência dessa ação
@@ -317,15 +318,15 @@ class JournalAdminView(OpacBaseAdminView):
 
     @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_by_copyright(self, ids):
-        self.unpublish_journal(ids, choices.UNPUBLISH_REASONS[0])
+        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
 
     @action('unpublish_plagiarism', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_plagiarism(self, ids):
-        self.unpublish_journal(ids, choices.UNPUBLISH_REASONS[1])
+        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[1])
 
     @action('unpublish_abuse', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_abuse(self, ids):
-        self.unpublish_journal(ids, choices.UNPUBLISH_REASONS[2])
+        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[2])
 
 
 class IssueAdminView(OpacBaseAdminView):
@@ -363,7 +364,8 @@ class IssueAdminView(OpacBaseAdminView):
         label=__(u'Etiqueta'),
         order=__(u'Ordem'),
         bibliographic_legend=__(u'Legenda bibliográfica'),
-        is_public=__(u'Publicado?')
+        is_public=__(u'Publicado?'),
+        unpublish_reason=__(u'Motivo de despublicação'),
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -379,7 +381,7 @@ class IssueAdminView(OpacBaseAdminView):
             if not self.handle_view_exception(ex):
                 raise
 
-    def unpublish_issue(self, ids, reason):
+    def unpublish_issues(self, ids, reason):
         try:
             controllers.set_issue_is_public_bulk(ids, False, reason)
             # Adicionar mais contexto sobre as consequência dessa ação
@@ -393,19 +395,22 @@ class IssueAdminView(OpacBaseAdminView):
 
     @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_by_copyright(self, ids):
-        self.unpublish_issue(ids, choices.UNPUBLISH_REASONS[0])
+        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[0])
 
     @action('unpublish_plagiarism', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_plagiarism(self, ids):
-        self.unpublish_issue(ids, choices.UNPUBLISH_REASONS[1])
+        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[1])
 
     @action('unpublish_abuse', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_abuse(self, ids):
-        self.unpublish_issue(ids, choices.UNPUBLISH_REASONS[2])
+        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[2])
 
 
 class ArticleAdminView(OpacBaseAdminView):
 
+    column_filters = [
+        'is_public', 'unpublish_reason'
+    ]
     column_searchable_list = [
         'aid', 'title', 'domain_key'
     ]
@@ -431,7 +436,8 @@ class ArticleAdminView(OpacBaseAdminView):
         updated=__(u'Atualizado'),
         htmls=__(u'HTML\'s'),
         domain_key=__(u'Chave de domínio'),
-        is_public=__(u'Publicado?')
+        is_public=__(u'Publicado?'),
+        unpublish_reason=__(u'Motivo de despublicação'),
     )
 
     @action('rebuild_html', _(u'Reconstruir HTML'), ACTION_REBUILD_CONFIRMATION_MSG)
@@ -464,10 +470,9 @@ class ArticleAdminView(OpacBaseAdminView):
             if not self.handle_view_exception(ex):
                 raise
 
-    @action('unpublish', 'Despublicar', ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish(self, ids):
+    def unpublish_articles(self, ids, reason):
         try:
-            controllers.set_article_is_public_bulk(ids, False)
+            controllers.set_article_is_public_bulk(ids, False, reason)
             # Adicionar mais contexto sobre as consequência dessa ação
             flash(_(u'Artigo(s) despublicado com sucesso!!'))
         except Exception as ex:
@@ -476,3 +481,15 @@ class ArticleAdminView(OpacBaseAdminView):
                   'error')
             if not self.handle_view_exception(ex):
                 raise
+
+    @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_by_copyright(self, ids):
+        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[0])
+
+    @action('unpublish_plagiarism', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_plagiarism(self, ids):
+        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[1])
+
+    @action('unpublish_abuse', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_abuse(self, ids):
+        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[2])

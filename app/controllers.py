@@ -157,6 +157,7 @@ def set_journal_is_public_bulk(jids, is_public=True, reason=''):
 
     - ``jids``: lista de jids de periódicos a serem atualizados.
     - ``is_public``: boolean, filtra por público e não público.
+    - ``reason``: string, indica o motivo pelo qual o periódico é despublicado.
     """
     for journal in get_journals_by_jid(jids).values():
         journal.is_public = is_public
@@ -214,6 +215,7 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
 
     - ``iids``: lista de iids de fascículos a serem atualizados.
     - ``is_public``: boolean, filtra por público e não público.
+    - ``reason``: string, indica o motivo pelo qual o issue é despublicado.
     """
 
     for issue in get_issues_by_iid(iids).values():
@@ -255,16 +257,18 @@ def get_articles_by_aid(aids):
     return Article.objects.in_bulk(aids)
 
 
-def set_article_is_public_bulk(aids, is_public=True):
+def set_article_is_public_bulk(aids, is_public=True, reason=''):
     """
     Atualiza uma lista de artigos como público ou não público.
 
     - ``aids``: lista de aids de artigos a serem atualizados.
     - ``is_public``: boolean, filtra por público e não público.
+    - ``reason``: string, indica o motivo pelo qual o artigo é despublicado.
     """
 
     for article in get_articles_by_aid(aids).values():
         article.is_public = is_public
+        article.unpublish_reason = reason
         article.save()
 
 
