@@ -331,7 +331,7 @@ class JournalAdminView(OpacBaseAdminView):
 class IssueAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'label', 'volume', 'number', 'is_public'. 'unpublish_reason'
+        'label', 'volume', 'number', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
         'iid', 'label'
