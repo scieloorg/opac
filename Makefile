@@ -1,5 +1,11 @@
 
 #########
+## deps #
+#########
+update_requirements:
+	pip install --upgrade -r requirements.txt
+
+#########
 ## i18n #
 #########
 
