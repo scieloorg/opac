@@ -124,7 +124,7 @@ def article_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, _(u'Artigo não encontrado'))
+        abort(404, {'message': _(u'Artigo não encontrado')})
 
     context = {
         'article': article,
