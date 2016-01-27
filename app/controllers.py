@@ -16,18 +16,13 @@ from . import models as sql_models
 
 # -------- JOURNAL --------
 
-def get_journals(collection=None, is_public=True, order_by="title"):
+def get_journals(is_public=True, order_by="title"):
     """
     Retorna uma lista de periódicos considerando os parâmetros:
-    - ``collection``: acrônimo da coleção, caso seja None filtra
-                      pelo acrônimo definido na configuração OPAC_COLLECTION;
     - ``is_public``: filtra por público e não público de cada periódico;
     - ``order_by``: que corresponde ao nome de um atributo pelo qual
                     deve estar ordenada a lista resultante.
     """
-
-    if not collection:
-        collection = current_app.config.get('OPAC_COLLECTION')
 
     return Journal.objects(is_public=is_public).order_by(order_by)
 
@@ -156,7 +151,7 @@ def get_journals_by_jid(jids):
     return Journal.objects.in_bulk(jids)
 
 
-def set_journal_is_public_bulk(jids, is_public=True):
+def set_journal_is_public_bulk(jids, is_public=True, reason=''):
     """
     Atualiza uma lista de periódicos como público ou não público.
 
@@ -165,6 +160,7 @@ def set_journal_is_public_bulk(jids, is_public=True):
     """
     for journal in get_journals_by_jid(jids).values():
         journal.is_public = is_public
+        journal.unpublish_reason = reason
         journal.save()
 
 
@@ -197,7 +193,7 @@ def get_issue_by_iid(iid, is_public=True):
 
     issue = Issue.objects.filter(iid=iid).first()
 
-    if issue.journal.is_public == is_public and issue.is_public == is_public:
+    if issue and issue.journal.is_public == is_public and issue.is_public == is_public:
         return issue
 
 
@@ -212,7 +208,7 @@ def get_issues_by_iid(iids):
     return Issue.objects.in_bulk(iids)
 
 
-def set_issue_is_public_bulk(iids, is_public=True):
+def set_issue_is_public_bulk(iids, is_public=True, reason=''):
     """
     Atualiza uma lista de fascículos como público ou não público.
 
@@ -222,6 +218,7 @@ def set_issue_is_public_bulk(iids, is_public=True):
 
     for issue in get_issues_by_iid(iids).values():
         issue.is_public = is_public
+        issue.unpublish_reason = reason
         issue.save()
 
 
@@ -237,12 +234,14 @@ def get_article_by_aid(aid, is_public=True):
 
     article = Article.objects(aid=aid).first()
 
-    article_public = article.is_public
-    journal_public = article.journal.is_public
-    issue_public = article.issue.is_public
+    if article:
 
-    if all([article_public, journal_public, issue_public]):
-        return article
+        article_public = article.is_public
+        journal_public = article.journal.is_public
+        issue_public = article.issue.is_public
+
+        if all([article_public, journal_public, issue_public]):
+            return article
 
 
 def get_articles_by_aid(aids):
