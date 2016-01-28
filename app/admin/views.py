@@ -21,7 +21,7 @@ from app import models
 from app import controllers
 from app import choices
 from ..utils import get_timed_serializer, rebuild_article_xml
-from opac_schema.v1.models import Sponsor, Issue
+from opac_schema.v1.models import Sponsor, Issue, Article
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -454,7 +454,22 @@ class IssueAdminView(OpacBaseAdminView):
 class ArticleAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'is_public', 'unpublish_reason'
+        CustomFilterEqual(column=Article.issue, name=__(u'Número')),
+        CustomFilterNotEqual(column=Article.issue, name=__(u'Número')),
+        CustomFilterLike(column=Article.issue, name=__(u'Número')),
+        CustomFilterNotLike(column=Article.issue, name=__(u'Número')),
+        CustomFilterEmpty(column=Article.issue, name=__(u'Número')),
+        CustomFilterInList(column=Article.issue, name=__(u'Número')),
+        CustomFilterNotInList(column=Article.issue, name=__(u'Número')),
+        CustomFilterEqual(column=Article.journal, name=__(u'Periódico')),
+        CustomFilterNotEqual(column=Article.journal, name=__(u'Periódico')),
+        CustomFilterLike(column=Article.journal, name=__(u'Periódico')),
+        CustomFilterNotLike(column=Article.journal, name=__(u'Periódico')),
+        CustomFilterInList(column=Article.journal, name=__(u'Periódico')),
+        CustomFilterNotInList(column=Article.journal, name=__(u'Periódico')),
+        'is_aop',
+        'is_public',
+        'unpublish_reason'
     ]
     column_searchable_list = [
         'aid', 'issue', 'journal', 'title', 'domain_key'
