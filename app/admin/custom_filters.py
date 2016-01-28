@@ -4,6 +4,7 @@ from mongoengine import ReferenceField, EmbeddedDocumentField
 from mongoengine.queryset import Q
 from opac_schema.v1.models import Journal
 
+
 def get_flt(column=None, value=None, term=''):
     flt = None
     search_fields = {
@@ -24,11 +25,11 @@ def get_flt(column=None, value=None, term=''):
                 criteria |= q
         journal = Journal.objects.filter(criteria)
         flt = {'journal__in': journal}
-    
+
     elif isinstance(column, EmbeddedDocumentField):
         criteria = None
         for field in search_fields[column.name]:
-            flt = {'%s__%s__%s' % (column.name, field, term):value}
+            flt = {'%s__%s__%s' % (column.name, field, term): value}
             q = Q(**flt)
 
             if criteria is None:

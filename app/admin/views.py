@@ -9,14 +9,14 @@ from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, render_template, request, flash, abort
 from flask.ext.admin.contrib import sqla, mongoengine
+from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from werkzeug.security import generate_password_hash
 from flask import current_app
-from opac_schema.v1.models import Issue
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 from mongoengine.queryset import Q
 
 import forms
-from custom_filters import *
+from custom_filters import get_flt
 from app import models
 from app import controllers
 from app import choices
@@ -360,7 +360,7 @@ class IssueAdminView(OpacBaseAdminView):
         'label', 'volume', 'number', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
-        'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend' 
+        'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
     ]
     column_exclude_list = [
         '_id', 'use_licenses', 'sections', 'cover_url', 'suppl_text',
