@@ -457,7 +457,7 @@ class ArticleAdminView(OpacBaseAdminView):
         'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
-        'aid', 'title', 'domain_key'
+        'aid', 'issue', 'journal', 'title', 'domain_key'
     ]
     column_exclude_list = [
         '_id', 'section', 'is_aop', 'htmls',
