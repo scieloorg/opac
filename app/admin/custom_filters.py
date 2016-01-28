@@ -1,6 +1,7 @@
 # coding: utf-8
-import logging
-from flask.ext.admin.contrib.mongoengine.filters import FilterEqual, FilterNotEqual, FilterLike, FilterNotLike, FilterEmpty, FilterInList
+from flask.ext.admin.contrib.mongoengine.filters import (
+    FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
+    FilterEmpty, FilterInList)
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import ReferenceField, EmbeddedDocumentField
 from mongoengine.queryset import Q
@@ -46,15 +47,18 @@ def get_flt(column=None, value=None, term=''):
 
     return Q(**flt)
 
+
 class CustomFilterEqual(FilterEqual):
     def apply(self, query, value):
         flt = get_flt(self.column, value)
         return query.filter(flt)
 
+
 class CustomFilterNotEqual(FilterNotEqual):
     def apply(self, query, value):
         flt = get_flt(self.column, value, 'ne')
         return query.filter(flt)
+
 
 class CustomFilterLike(FilterLike):
     def apply(self, query, value):
@@ -62,11 +66,13 @@ class CustomFilterLike(FilterLike):
         flt = get_flt(self.column, data, term)
         return query.filter(flt)
 
+
 class CustomFilterNotLike(FilterNotLike):
     def apply(self, query, value):
         term, data = parse_like_term(value)
         flt = get_flt(self.column, data, 'not__%s' % term)
         return query.filter(flt)
+
 
 class CustomFilterEmpty(FilterEmpty):
     def apply(self, query, value):
@@ -75,6 +81,7 @@ class CustomFilterEmpty(FilterEmpty):
         else:
             flt = get_flt(self.column, None, 'ne')
         return query.filter(flt)
+
 
 class CustomFilterInList(FilterInList):
     def apply(self, query, value):
