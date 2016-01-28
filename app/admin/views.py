@@ -256,7 +256,7 @@ class JournalAdminView(OpacBaseAdminView):
         'current_status', 'acronym', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
-        '_id', 'title', 'print_issn', 'eletronic_issn', 'acronym',
+        '_id', 'title', 'title_iso', 'short_title', 'print_issn', 'eletronic_issn', 'acronym',
     ]
     column_exclude_list = [
         '_id', 'timeline', 'use_licenses', 'national_code', 'subject_categories',
