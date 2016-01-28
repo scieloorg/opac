@@ -3,7 +3,7 @@ from flask.ext.admin.contrib.mongoengine.filters import (
     FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
     FilterEmpty, FilterInList)
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
-from mongoengine import ReferenceField, EmbeddedDocumentField
+from mongoengine import ReferenceField, EmbeddedDocumentField, ListField, StringField
 from mongoengine.queryset import Q
 from opac_schema.v1.models import Journal, Issue
 
@@ -48,6 +48,10 @@ def get_flt(column=None, value=None, term=''):
             else:
                 criteria |= q
         return criteria
+
+    elif isinstance(column, ListField) and isinstance(column.field, StringField):
+        flt = {'%s__%s' % (column.name, term): value if value else []}
+
     else:
         flt = {'%s__%s' % (column.name, term): value}
 
