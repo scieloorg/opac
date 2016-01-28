@@ -9,10 +9,14 @@ from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, render_template, request, flash, abort
 from flask.ext.admin.contrib import sqla, mongoengine
+from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from werkzeug.security import generate_password_hash
 from flask import current_app
+from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
+from mongoengine.queryset import Q
 
 import forms
+from custom_filters import get_flt
 from app import models
 from app import controllers
 from app import choices
@@ -196,6 +200,27 @@ class OpacBaseAdminView(mongoengine.ModelView):
     create_modal = True
     edit_modal = True
     can_view_details = True
+    allowed_search_types = (
+        StringField,
+        URLField,
+        EmailField,
+        EmbeddedDocumentField,
+        ReferenceField
+    )
+
+    def _search(self, query, search_term):
+        op, term = parse_like_term(search_term)
+
+        criteria = None
+
+        for field in self._search_fields:
+            flt = get_flt(field, term, op)
+
+            if criteria is None:
+                criteria = flt
+            else:
+                criteria |= flt
+        return query.filter(criteria)
 
     def is_accessible(self):
         return login.current_user.is_authenticated
@@ -335,7 +360,7 @@ class IssueAdminView(OpacBaseAdminView):
         'label', 'volume', 'number', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
-        'iid', 'label'
+        'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
     ]
     column_exclude_list = [
         '_id', 'use_licenses', 'sections', 'cover_url', 'suppl_text',
