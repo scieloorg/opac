@@ -16,12 +16,12 @@ from mongoengine import StringField, EmailField, URLField, ReferenceField, Embed
 from mongoengine.queryset import Q
 
 import forms
-from custom_filters import get_flt
+from custom_filters import get_flt, CustomFilterEqual, CustomFilterNotEqual, CustomFilterLike, CustomFilterNotLike, CustomFilterEmpty, CustomFilterInList, CustomFilterNotInList
 from app import models
 from app import controllers
 from app import choices
 from ..utils import get_timed_serializer, rebuild_article_xml
-from opac_schema.v1.models import Sponsor
+from opac_schema.v1.models import Sponsor, Issue
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -357,7 +357,27 @@ class JournalAdminView(OpacBaseAdminView):
 class IssueAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'label', 'volume', 'number', 'is_public', 'unpublish_reason'
+        CustomFilterEqual(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterNotEqual(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterLike(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterNotLike(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterInList(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterNotInList(column=Issue.journal, name=__(u'Periódico')),
+        CustomFilterEqual(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotEqual(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterLike(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotLike(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterEmpty(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterInList(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotInList(column=Issue.use_licenses, name=__(u'Licença de uso')),
+        'volume',
+        'number',
+        'type',
+        'start_month',
+        'end_month',
+        'year',
+        'is_public',
+        'unpublish_reason'
     ]
     column_searchable_list = [
         'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
