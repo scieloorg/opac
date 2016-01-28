@@ -5,18 +5,21 @@ from flask.ext.admin.contrib.mongoengine.filters import (
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import ReferenceField, EmbeddedDocumentField
 from mongoengine.queryset import Q
-from opac_schema.v1.models import Journal
+from opac_schema.v1.models import Journal, Issue
 
 
 def get_flt(column=None, value=None, term=''):
     flt = None
     search_fields = {
         'journal': ['jid', 'title', 'title_iso', 'short_title', 'acronym', 'print_issn', 'eletronic_issn'],
+        'issue': ['label'],
         'use_licenses': ['license_code']
     }
-    if isinstance(column, ReferenceField) and isinstance(column.document_type_obj(), Journal):
+
+    if isinstance(column, ReferenceField):
         criteria = None
-        for field in search_fields['journal']:
+        reference_values = None
+        for field in search_fields[column.name]:
             flt = {'%s__%s' % (field, term): value}
             q = Q(**flt)
 
@@ -26,8 +29,11 @@ def get_flt(column=None, value=None, term=''):
                 criteria &= q
             else:
                 criteria |= q
-        journal = Journal.objects.filter(criteria)
-        flt = {'journal__in': journal}
+        if isinstance(column.document_type_obj(), Journal):
+            reference_values = Journal.objects.filter(criteria)
+        elif isinstance(column.document_type_obj(), Issue):
+            reference_values = Issue.objects.filter(criteria)
+        flt = {'%s__in' % column.name: reference_values}
 
     elif isinstance(column, EmbeddedDocumentField):
         criteria = None
