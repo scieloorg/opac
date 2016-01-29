@@ -21,7 +21,7 @@ from app import models
 from app import controllers
 from app import choices
 from ..utils import get_timed_serializer, rebuild_article_xml
-from opac_schema.v1.models import Sponsor, Issue, Article
+from opac_schema.v1.models import Sponsor, Journal, Issue, Article
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -253,7 +253,26 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'current_status', 'acronym', 'is_public', 'unpublish_reason'
+        CustomFilterEqual(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotEqual(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterLike(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotLike(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterEmpty(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterInList(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        CustomFilterNotInList(column=Journal.use_licenses, name=__(u'Licença de uso')),
+        'national_code',
+        'init_year',
+        'final_year',
+        'init_vol',
+        'final_vol',
+        'init_num',
+        'final_num',
+        'current_status',
+        CustomFilterLike(column=Journal.index_at, name=__(u'No índice')),
+        CustomFilterNotLike(column=Journal.index_at, name=__(u'No índice')),
+        CustomFilterEmpty(column=Journal.index_at, name=__(u'No índice')),
+        'is_public',
+        'unpublish_reason'
     ]
     column_searchable_list = [
         '_id', 'title', 'title_iso', 'short_title', 'print_issn', 'eletronic_issn', 'acronym',
