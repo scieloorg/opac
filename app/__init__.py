@@ -12,7 +12,6 @@ from flask_mail import Mail
 from flask_babelex import Babel
 from flask_babelex import lazy_gettext
 
-import errors
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 
 assets = Environment()
@@ -70,9 +69,6 @@ def create_app(config_name=None):
     dbsql.init_app(app)
     # Emails
     mail.init_app(app)
-
-    # Handler de páginas de erro
-    errors.register_errorhandlers(app)
 
     # Interface do admin
     from .models import User
