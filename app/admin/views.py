@@ -16,7 +16,7 @@ from mongoengine import StringField, EmailField, URLField, ReferenceField, Embed
 from mongoengine.queryset import Q
 
 import forms
-from custom_filters import get_flt, CustomFilterEqual, CustomFilterNotEqual, CustomFilterLike, CustomFilterNotLike, CustomFilterEmpty, CustomFilterInList, CustomFilterNotInList
+from custom_filters import get_flt, CustomFilterConverter
 from app import models
 from app import controllers
 from app import choices
@@ -207,6 +207,7 @@ class OpacBaseAdminView(mongoengine.ModelView):
         EmbeddedDocumentField,
         ReferenceField
     )
+    filter_converter = CustomFilterConverter()
 
     def _search(self, query, search_term):
         op, term = parse_like_term(search_term)
@@ -253,26 +254,8 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        CustomFilterEqual(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotEqual(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterLike(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotLike(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterEmpty(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterInList(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotInList(column=Journal.use_licenses, name=__(u'Licença de uso')),
-        'national_code',
-        'init_year',
-        'final_year',
-        'init_vol',
-        'final_vol',
-        'init_num',
-        'final_num',
-        'current_status',
-        CustomFilterLike(column=Journal.index_at, name=__(u'No índice')),
-        CustomFilterNotLike(column=Journal.index_at, name=__(u'No índice')),
-        CustomFilterEmpty(column=Journal.index_at, name=__(u'No índice')),
-        'is_public',
-        'unpublish_reason'
+        'use_licenses', 'national_code', 'init_year', 'final_year', 'init_vol', 'final_vol',
+        'init_num', 'final_num', 'current_status', 'index_at', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
         '_id', 'title', 'title_iso', 'short_title', 'print_issn', 'eletronic_issn', 'acronym',
@@ -376,27 +359,8 @@ class JournalAdminView(OpacBaseAdminView):
 class IssueAdminView(OpacBaseAdminView):
 
     column_filters = [
-        CustomFilterEqual(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterNotEqual(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterLike(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterNotLike(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterInList(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterNotInList(column=Issue.journal, name=__(u'Periódico')),
-        CustomFilterEqual(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotEqual(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterLike(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotLike(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterEmpty(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterInList(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        CustomFilterNotInList(column=Issue.use_licenses, name=__(u'Licença de uso')),
-        'volume',
-        'number',
-        'type',
-        'start_month',
-        'end_month',
-        'year',
-        'is_public',
-        'unpublish_reason'
+        'journal', 'use_licenses', 'volume', 'number', 'type', 'start_month',
+        'end_month', 'year', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
         'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
@@ -473,22 +437,7 @@ class IssueAdminView(OpacBaseAdminView):
 class ArticleAdminView(OpacBaseAdminView):
 
     column_filters = [
-        CustomFilterEqual(column=Article.issue, name=__(u'Número')),
-        CustomFilterNotEqual(column=Article.issue, name=__(u'Número')),
-        CustomFilterLike(column=Article.issue, name=__(u'Número')),
-        CustomFilterNotLike(column=Article.issue, name=__(u'Número')),
-        CustomFilterEmpty(column=Article.issue, name=__(u'Número')),
-        CustomFilterInList(column=Article.issue, name=__(u'Número')),
-        CustomFilterNotInList(column=Article.issue, name=__(u'Número')),
-        CustomFilterEqual(column=Article.journal, name=__(u'Periódico')),
-        CustomFilterNotEqual(column=Article.journal, name=__(u'Periódico')),
-        CustomFilterLike(column=Article.journal, name=__(u'Periódico')),
-        CustomFilterNotLike(column=Article.journal, name=__(u'Periódico')),
-        CustomFilterInList(column=Article.journal, name=__(u'Periódico')),
-        CustomFilterNotInList(column=Article.journal, name=__(u'Periódico')),
-        'is_aop',
-        'is_public',
-        'unpublish_reason'
+        'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
         'aid', 'issue', 'journal', 'title', 'domain_key'
