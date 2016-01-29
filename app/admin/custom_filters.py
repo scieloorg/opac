@@ -1,7 +1,7 @@
 # coding: utf-8
 from flask.ext.admin.contrib.mongoengine.filters import (
     FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
-    FilterEmpty, FilterInList)
+    FilterEmpty, FilterInList, FilterNotInList)
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import ReferenceField, EmbeddedDocumentField, ListField, StringField
 from mongoengine.queryset import Q
@@ -99,7 +99,7 @@ class CustomFilterInList(FilterInList):
         return query.filter(flt)
 
 
-class CustomFilterNotInList(FilterInList):
+class CustomFilterNotInList(FilterNotInList):
     def apply(self, query, value):
         flt = get_flt(self.column, value, 'nin')
         return query.filter(flt)
