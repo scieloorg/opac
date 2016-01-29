@@ -1,0 +1,9 @@
+{% extends "errors/base.html" %}
+
+{% block error_message %}
+  {% if message %}
+    {{ message|safe }}
+  {% else %}
+    {% trans %}Acesso não autorizado!{% endtrans %}
+  {% endif %}
+{% endblock %}

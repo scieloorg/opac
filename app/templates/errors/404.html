@@ -1,0 +1,9 @@
+{% extends "errors/base.html" %}
+
+{% block error_message %}
+  {% if message %}
+    {{ message|safe }}
+  {% else %}
+    {% trans %}A URL solicitada não foi encontrada no servidor. Se você digitou a URL manualmente, por favor verifique e tente novamente.{% endtrans %}
+  {% endif %}
+{% endblock %}
