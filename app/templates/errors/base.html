@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+  .msg { margin-top: 25% }
+  .msg img {
+    display: block;
+    margin: 0 auto;
+  }
+  .center-block {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+</style>
+  <div class="container">
+    <div class="row-fluid">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="msg clearfix">
+          <div class="center-block">
+            <img class="img-responsive" src="{{ url_for('static', filename='img/logo-scielo-signature.png') }}">
+            <h2 class="text-center">
+              {% block error_message %}
+                {% trans %}Erro{% endtrans %}
+              {% endblock %}
+            </h2>
+            <p>{% trans %}Caso o problema persista, por favor entre em contato com o administrador.{% endtrans %}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
