@@ -74,6 +74,9 @@ def journal_detail(journal_id):
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
 
+    if not journal.is_public:
+        abort(404, _(journal.unpublish_reason))
+
     context = {'journal': journal}
 
     return render_template("journal/detail.html", **context)
@@ -86,7 +89,10 @@ def issue_grid(journal_id):
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
 
-    issues = controllers.get_issues_by_jid(journal_id)
+    if not journal.is_public:
+        abort(404, _(journal.unpublish_reason))
+
+    issues = controllers.get_issues_by_jid(journal_id, is_public=True)
 
     result_dict = OrderedDict()
     for issue in issues:
@@ -109,6 +115,12 @@ def issue_toc(issue_id):
     if not issue:
         abort(404, _(u'Fascículo não encontrado'))
 
+    if not issue.is_public:
+        abort(404, _(issue.unpublish_reason))
+
+    if not issue.journal.is_public:
+        abort(404, _(issue.journal.unpublish_reason))
+
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid)
 
@@ -124,7 +136,16 @@ def article_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, {'message': _(u'Artigo não encontrado')})
+        abort(404, _(u'Artigo não encontrado'))
+
+    if not article.is_public:
+        abort(404, _(article.unpublish_reason))
+
+    if not article.issue.is_public:
+        abort(404, _(article.issue.unpublish_reason))
+
+    if not article.journal.is_public:
+        abort(404, _(article.journal.unpublish_reason))
 
     context = {
         'article': article,
@@ -141,6 +162,9 @@ def article_html_by_aid(article_id):
     if not article:
         abort(404, _(u'Artigo não encontrado'))
 
+    if not article.is_public:
+        abort(404, _(article.unpublish_reason))
+
     article_html = article.htmls[0].source
 
     return article_html
@@ -152,6 +176,9 @@ def abstract_detail(article_id):
 
     if not article:
         abort(404, _(u'Artigo não encontrado'))
+
+    if not article.is_public:
+        abort(404, _(article.unpublish_reason))
 
     context = {
         'article': article,

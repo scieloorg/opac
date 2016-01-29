@@ -129,15 +129,15 @@ def get_journals_by_sponsor():
     return {'meta': meta, 'objects': dict_journals}
 
 
-def get_journal_by_jid(jid, is_public=True):
+def get_journal_by_jid(jid, **kwargs):
     """
-    Retorna um periódico considerando os parâmetros ``jid`` e ``is_public``
+    Retorna um periódico considerando os parâmetros ``jid`` e ``kwargs``
 
     - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
-    - ``is_public``: boolean, filtra por público e não público.
+    - ``kwargs``: parâmetros de filtragem.
     """
 
-    return Journal.objects(jid=jid, is_public=is_public).first()
+    return Journal.objects(jid=jid, **kwargs).first()
 
 
 def get_journals_by_jid(jids):
@@ -167,35 +167,36 @@ def set_journal_is_public_bulk(jids, is_public=True, reason=''):
 
 # -------- ISSUE --------
 
-def get_issues_by_jid(jid, is_public=True, order_by=None):
+def get_issues_by_jid(jid, **kwargs):
     """
-    Retorna uma lista de fascículos considerando os parâmetros ``jid`` e ``is_public``,
+    Retorna uma lista de fascículos considerando os parâmetros ``jid`` e ``kwargs``,
     e ordenado por parâmetro ``order_by``.
 
     - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
-    - ``is_public``: boolean, filtra por público e não público.
-    - ``order_by``: string ou lista, campo ou lista de campos para fazer a ordenação.
+    - ``kwargs``: parâmetros de filtragem, utilize a chave ``order_by` para indicar
+    uma lista de ordenação.
     """
 
-    if not order_by:
+    order_by = kwargs.get('order_by', None)
+
+    if order_by:
+        del kwargs['order_by']
+    else:
         order_by = ["-year", "-volume", "-number"]
 
     if get_journal_by_jid(jid):
-        return Issue.objects(journal=jid, is_public=True).order_by(*order_by)
+        return Issue.objects(journal=jid, **kwargs).order_by(*order_by)
 
 
-def get_issue_by_iid(iid, is_public=True):
+def get_issue_by_iid(iid, **kwargs):
     """
-    Retorna um fascículo considerando os parâmetros ``iid`` e ``is_public``.
+    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
 
     - ``iid``: string, chave primaria do fascículo (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
-    - ``is_public``: boolean, filtra por público e não público.
+    - ``kwargs``: parâmetros de filtragem.
     """
 
-    issue = Issue.objects.filter(iid=iid).first()
-
-    if issue and issue.journal.is_public == is_public and issue.is_public == is_public:
-        return issue
+    return Issue.objects.filter(iid=iid, **kwargs).first()
 
 
 def get_issues_by_iid(iids):
@@ -226,24 +227,15 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
 
 # -------- ARTICLE --------
 
-def get_article_by_aid(aid, is_public=True):
+def get_article_by_aid(aid, **kwargs):
     """
-    Retorna um artigo considerando os parâmetros ``aid`` e ``is_public``.
+    Retorna um artigo considerando os parâmetros ``aid`` e ``kwargs``.
 
     - ``aid``: string, chave primaria do artigo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
-    - ``is_public``: boolean, filtra por público e não público.
+    - ``kwargs``: parâmetros de filtragem.
     """
 
-    article = Article.objects(aid=aid).first()
-
-    if article:
-
-        article_public = article.is_public
-        journal_public = article.journal.is_public
-        issue_public = article.issue.is_public
-
-        if all([article_public, journal_public, issue_public]):
-            return article
+    return Article.objects(aid=aid, **kwargs).first()
 
 
 def get_articles_by_aid(aids):
@@ -272,15 +264,16 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
         article.save()
 
 
-def get_articles_by_iid(iid, is_public=True):
+def get_articles_by_iid(iid, **kwargs):
     """
     Retorna uma lista de artigos aonde o atributo ``iid`` de cada um deles
     é igual ao parâmetro: ``iid``.
 
     - ``iid``: chave primaria de fascículo para escolher os artigos.
+    - ``kwargs``: parâmetros de filtragem.
     """
 
-    return Article.objects(issue=iid, is_public=is_public)
+    return Article.objects(issue=iid, **kwargs)
 
 # -------- SLQALCHEMY --------
 
