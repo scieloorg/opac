@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
 <style type="text/css">
   .msg { margin-top: 50% }
@@ -21,7 +22,13 @@
         <div class="msg clearfix">
           <div class="center-block">
             <img class="img-responsive" src="{{ url_for('static', filename='img/logo-scielo-signature.png') }}">
-            <h1 class="text-center">{% trans %}Página não encontrada{% endtrans %}</h1>
+            <h1 class="text-center">
+              {% if message %}
+                  {{ message|safe }}
+                {% else %}
+                  {% trans %}Página não encontrada{% endtrans %}</h1>
+              {% endif %}
+            </h1>
             <p>{% trans %}Por favor entre en contato com o administrador.{% endtrans %}</p>
           </div>
         </div>
