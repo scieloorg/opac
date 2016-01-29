@@ -1,8 +1,9 @@
 # coding: utf-8
 from flask.ext.admin.contrib.mongoengine.filters import (
     FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
-    FilterEmpty, FilterInList, FilterNotInList)
+    FilterEmpty, FilterInList, FilterNotInList, FilterConverter)
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
+from flask.ext.admin.model import filters
 from mongoengine import ReferenceField, EmbeddedDocumentField, ListField, StringField
 from mongoengine.queryset import Q
 from opac_schema.v1.models import Journal, Issue
@@ -103,3 +104,21 @@ class CustomFilterNotInList(FilterNotInList):
     def apply(self, query, value):
         flt = get_flt(self.column, value, 'nin')
         return query.filter(flt)
+
+
+class CustomFilterConverter(FilterConverter):
+    # Campos dentro filtros ReferenceField, EmbeddedDocumentField, ListField
+    # deve ser do tipo StringField
+
+    reference_filters = (CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
+                         CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
+                         CustomFilterNotInList)
+    list_filters = (CustomFilterLike, CustomFilterNotLike, CustomFilterEmpty)
+
+    @filters.convert('ReferenceField', 'EmbeddedDocumentField')
+    def conv_reference(self, column, name):
+        return [f(column, name) for f in self.reference_filters]
+
+    @filters.convert('ListField')
+    def conv_list(self, column, name):
+        return [f(column, name) for f in self.list_filters]
