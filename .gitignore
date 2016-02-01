@@ -12,6 +12,7 @@ bundle.css
 
 # Flask config
 instance/config.py
+instance/local_config_testing.py
 
 # Distribution / packaging
 .Python

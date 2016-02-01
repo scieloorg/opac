@@ -17,9 +17,9 @@ SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 MONGODB_SETTINGS = {
-    'db': 'TESTING_opac_mongo',
-    # 'host': '127.0.0.1',
-    # 'port': 27017
+    'db': 'TESTING_OPAC_MONGO',
+    'host': '127.0.0.1',
+    'port': 27017
 }
 
 # envio de emails

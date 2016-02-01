@@ -1,6 +1,10 @@
+# coding: utf-8
+
 from flask.ext.testing import TestCase
 from flask import current_app, url_for
-from app import create_app, dbsql
+from app import create_app, dbsql, dbmongo
+
+from base import MongoInstance, BaseTestCase
 
 
 class FlaskClientTestCase(TestCase):

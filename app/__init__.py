@@ -40,7 +40,10 @@ def create_app(config_name=None):
     # Configurações
     app.config.from_object('config.default')  # Configuração basica
     app.config.from_object(config_name)  # Configuração dependente do ambiente
-    app.config.from_pyfile('config.py')  # Configuração local não versionada (chaves, segredos, senhas etc.)
+    if app.config['TESTING']:
+        app.config.from_pyfile('local_config_testing.py', silent=True)
+    else:
+        app.config.from_pyfile('config.py')  # Configuração local não versionada (chaves, segredos, senhas etc.)
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
