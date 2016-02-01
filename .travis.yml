@@ -12,3 +12,5 @@ before_script:
   - cp instance/config.py.template instance/config.py
 script:
   - python manager.py test
+services:
+ - mongodb
