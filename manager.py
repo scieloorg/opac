@@ -3,6 +3,7 @@
 import sys
 import os
 import unittest
+import coverage
 from app import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 from app import utils, controllers
@@ -11,10 +12,15 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from app.admin.forms import EmailForm
 from flask import current_app
 
+COV = None
 app = create_app(os.getenv('OPAC_CONFIG'))
 migrate = Migrate(app, dbsql)
 manager = Manager(app)
 manager.add_command('dbsql', MigrateCommand)
+
+if os.environ.get('FLASK_COVERAGE'):
+    COV = coverage.coverage(branch=True, include='app/*')
+    COV.start()
 
 
 def make_shell_context():
@@ -100,13 +106,25 @@ def create_superuser():
 
 @manager.command
 @manager.option('-v', '--verbosity', dest='verbosity', default=2)
-def test(verbosity=2):
+def test(coverage=False, verbosity=2):
     """ Executa tests unitarios.
     Lembre de definir a variável: OPAC_CONFIG="config.testing" antes de executar este comando:
     > export OPAC_CONFIG="config.testing" && python manager.py test
     """
+    if coverage and not os.environ.get('FLASK_COVERAGE'):
+        os.environ['FLASK_COVERAGE'] = '1'
+        os.execvp(sys.executable, [sys.executable] + sys.argv)
+
     tests = unittest.TestLoader().discover('tests')
     result = unittest.TextTestRunner(verbosity=verbosity).run(tests)
+
+    if COV:
+        COV.stop()
+        COV.save()
+        print('Coverage Summary:')
+        COV.report()
+        COV.erase()
+
     if result.wasSuccessful():
         return sys.exit()
     else:
