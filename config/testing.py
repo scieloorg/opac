@@ -5,8 +5,11 @@
 """
 
 TESTING = True
-DEBUG = True
+DEBUG = False
 ASSETS_DEBUG = DEBUG
+OPAC_COLLECTION = 'DUMMY_TEST'
+SECRET_KEY = 'a-dummy-testing-secret'
+
 
 # SQL Alchemy
 DATABASE_FILE = 'TESTING_opac_admin.sqlite'
