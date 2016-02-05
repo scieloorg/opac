@@ -142,27 +142,27 @@ def get_journal_by_jid(jid, **kwargs):
 
 def get_journals_by_jid(jids):
     """
-    Retorna uma lista de periódicos aonde o atributo ``jid`` de cada um deles
+    Retorna um dicionário de periódicos aonde o atributo ``jid`` de cada um deles
     pertence a lista do parâmetro: ``jids``
 
     - ``jids``: lista de jids de periódicos a serem filtrados.
+
+    Em caso de não existir itens retorna None.
+
+    Exemplo do retorno:
+        {
+            u'jid12': <Journal: rev-jid12>,
+            u'jid1': <Journal: rev-jid1>,
+            u'jid123': <Journal: rev-jid123>
+        }
+
     """
+    journals = Journal.objects.in_bulk(jids)
 
-    return Journal.objects.in_bulk(jids)
+    if not journals:
+        return None
 
-
-def set_journal_is_public_bulk(jids, is_public=True, reason=''):
-    """
-    Atualiza uma lista de periódicos como público ou não público.
-
-    - ``jids``: lista de jids de periódicos a serem atualizados.
-    - ``is_public``: boolean, filtra por público e não público.
-    - ``reason``: string, indica o motivo pelo qual o periódico é despublicado.
-    """
-    for journal in get_journals_by_jid(jids).values():
-        journal.is_public = is_public
-        journal.unpublish_reason = reason
-        journal.save()
+    return journals
 
 
 # -------- ISSUE --------
@@ -201,13 +201,27 @@ def get_issue_by_iid(iid, **kwargs):
 
 def get_issues_by_iid(iids):
     """
-    Retorna uma lista de fascículos aonde o atributo ``iid`` de cada um deles
+    Retorna um dicionário de fascículos aonde o atributo ``iid`` de cada um deles
     pertence a lista do parâmetro: ``iids``
 
     - ``iids``: lista de iids de fascículos a serem filtrados.
+
+    Em caso de não existir itens retorna None.
+
+    Exemplo do retorno:
+        {
+            u'iid12': <Issue: issue-iid12>,
+            u'iid1': <Issue: issue-iid1>,
+            u'iid123': <Issue: issue-iid123>
+        }
     """
 
-    return Issue.objects.in_bulk(iids)
+    issues = Issue.objects.in_bulk(iids)
+
+    if not issues:
+        return None
+
+    return issues
 
 
 def set_issue_is_public_bulk(iids, is_public=True, reason=''):
@@ -240,13 +254,26 @@ def get_article_by_aid(aid, **kwargs):
 
 def get_articles_by_aid(aids):
     """
-    Retorna uma lista de artigos aonde o atributo ``aid`` de cada um deles
+    Retorna um dicionário de artigos aonde o atributo ``aid`` de cada um deles
     pertence a lista do parâmetro: ``aids``
 
     - ``aids``: lista de aids de artigos a serem filtrados.
+
+    Em caso de não existir itens retorna None.
+
+    Exemplo do retorno:
+        {
+            u'aid12': <Article: article-aid12>,
+            u'aid1': <Article: article-aid1>,
+            u'aid123': <Article: article-aid123>
     """
 
-    return Article.objects.in_bulk(aids)
+    articles = Article.objects.in_bulk(aids)
+
+    if not articles:
+        return None
+
+    return articles
 
 
 def set_article_is_public_bulk(aids, is_public=True, reason=''):
