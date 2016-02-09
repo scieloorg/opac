@@ -459,7 +459,7 @@ class ArticleAdminView(OpacBaseAdminView):
         journal=__(u'Periódico'),
         title=__(u'Título'),
         section=__(u'Seção'),
-        is_aop=__(u'É AOP?'),
+        is_aop=__(u'É Ahead of Print?'),
         created=__(u'Criado'),
         updated=__(u'Atualizado'),
         htmls=__(u'HTML\'s'),
