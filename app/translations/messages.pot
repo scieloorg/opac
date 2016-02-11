@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-27 17:12-0200\n"
+"POT-Creation-Date: 2016-02-09 09:29-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Financiador"
 msgstr ""
 
-#: app/__init__.py:89 app/admin/views.py:351 app/admin/views.py:431
+#: app/__init__.py:89 app/admin/views.py:379 app/admin/views.py:459
 #: app/templates/journal/includes/alternative_header.html:47
 msgid "Periódico"
 msgstr ""
@@ -70,378 +70,378 @@ msgstr ""
 msgid "Senha inválida"
 msgstr ""
 
-#: app/admin/views.py:23
+#: app/admin/views.py:27
 msgid "Tem certeza que quer publicar os itens selecionados?"
 msgstr ""
 
-#: app/admin/views.py:24
+#: app/admin/views.py:28
 msgid "Tem certeza que quer despublicar os itens selecionados?"
 msgstr ""
 
-#: app/admin/views.py:25
+#: app/admin/views.py:29
 msgid "Tem certeza que quer reconstruir os artigos selecionados?"
 msgstr ""
 
-#: app/admin/views.py:26
+#: app/admin/views.py:30
 msgid ""
 "Tem certeza que quer enviar email de confirmação aos usuários "
 "selecionados?"
 msgstr ""
 
-#: app/admin/views.py:83 app/admin/views.py:96
+#: app/admin/views.py:87 app/admin/views.py:100
 msgid "Usuário não encontrado"
 msgstr ""
 
-#: app/admin/views.py:86
+#: app/admin/views.py:90
 #, python-format
 msgid "Email: %(email)s confirmado com sucesso!"
 msgstr ""
 
-#: app/admin/views.py:102
+#: app/admin/views.py:106
 #, python-format
 msgid "Enviamos as instruções para recuperar a senha para: %(email)s"
 msgstr ""
 
-#: app/admin/views.py:105
+#: app/admin/views.py:109
 #, python-format
 msgid ""
 "Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: "
 "%(error)s"
 msgstr ""
 
-#: app/admin/views.py:131
+#: app/admin/views.py:135
 msgid "Nova senha salva com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:156 app/admin/views.py:175
+#: app/admin/views.py:160 app/admin/views.py:179
 #, python-format
 msgid "Enviamos o email de confirmação para: %(email)s"
 msgstr ""
 
-#: app/admin/views.py:159 app/admin/views.py:178
+#: app/admin/views.py:163 app/admin/views.py:182
 #, python-format
 msgid "Ocorreu um erro no envio do email de confirmação para: %(email)s"
 msgstr ""
 
-#: app/admin/views.py:166
+#: app/admin/views.py:170
 msgid "Enviar email de confirmação"
 msgstr ""
 
-#: app/admin/views.py:182
+#: app/admin/views.py:186
 #, python-format
 msgid "%(count)s usuários foram notificados com sucesso!"
 msgstr ""
 
-#: app/admin/views.py:185
+#: app/admin/views.py:189
 #, python-format
 msgid "Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s"
 msgstr ""
 
-#: app/admin/views.py:253
+#: app/admin/views.py:280
 msgid "Id Periódico"
 msgstr ""
 
-#: app/admin/views.py:254
+#: app/admin/views.py:281
 msgid "Coleções"
 msgstr ""
 
-#: app/admin/views.py:255
+#: app/admin/views.py:282
 msgid "Linha do tempo"
 msgstr ""
 
-#: app/admin/views.py:256
+#: app/admin/views.py:283
 msgid "Código IBICT - CCN"
 msgstr ""
 
-#: app/admin/views.py:257
+#: app/admin/views.py:284
 msgid "Categorias de assunto"
 msgstr ""
 
-#: app/admin/views.py:258
+#: app/admin/views.py:285
 msgid "Áreas de estudo"
 msgstr ""
 
-#: app/admin/views.py:259
+#: app/admin/views.py:286
 msgid "Redes sociais"
 msgstr ""
 
-#: app/admin/views.py:260 app/admin/views.py:432
+#: app/admin/views.py:287 app/admin/views.py:460
 #: app/templates/collection/list_alpha.html:46
 #: app/templates/collection/list_theme.html:54
 #: app/templates/collection/list_theme.html:111
 msgid "Título"
 msgstr ""
 
-#: app/admin/views.py:261
+#: app/admin/views.py:288
 msgid "Título ISO"
 msgstr ""
 
-#: app/admin/views.py:262
+#: app/admin/views.py:289
 msgid "Título curto"
 msgstr ""
 
-#: app/admin/views.py:263 app/admin/views.py:356 app/admin/views.py:435
+#: app/admin/views.py:290 app/admin/views.py:384 app/admin/views.py:463
 msgid "Criado"
 msgstr ""
 
-#: app/admin/views.py:264 app/admin/views.py:357 app/admin/views.py:436
+#: app/admin/views.py:291 app/admin/views.py:385 app/admin/views.py:464
 msgid "Atualizado"
 msgstr ""
 
-#: app/admin/views.py:265
+#: app/admin/views.py:292
 msgid "Acrônimo"
 msgstr ""
 
-#: app/admin/views.py:266
+#: app/admin/views.py:293
 msgid "ISSN SciELO"
 msgstr ""
 
-#: app/admin/views.py:267
+#: app/admin/views.py:294
 msgid "ISSN impresso"
 msgstr ""
 
-#: app/admin/views.py:268
+#: app/admin/views.py:295
 msgid "ISSN eletrônico"
 msgstr ""
 
-#: app/admin/views.py:269
+#: app/admin/views.py:296
 msgid "Descritores de assunto"
 msgstr ""
 
-#: app/admin/views.py:270
+#: app/admin/views.py:297
 msgid "Ano inicial"
 msgstr ""
 
-#: app/admin/views.py:271
+#: app/admin/views.py:298
 msgid "Volume inicial"
 msgstr ""
 
-#: app/admin/views.py:272
+#: app/admin/views.py:299
 msgid "Número inicial"
 msgstr ""
 
-#: app/admin/views.py:273
+#: app/admin/views.py:300
 msgid "Ano final"
 msgstr ""
 
-#: app/admin/views.py:274
+#: app/admin/views.py:301
 msgid "Volume final"
 msgstr ""
 
-#: app/admin/views.py:275
+#: app/admin/views.py:302
 msgid "Número final"
 msgstr ""
 
-#: app/admin/views.py:276
+#: app/admin/views.py:303
 msgid "Url da submissão online"
 msgstr ""
 
-#: app/admin/views.py:277 app/admin/views.py:353
+#: app/admin/views.py:304 app/admin/views.py:381
 msgid "Url do capa"
 msgstr ""
 
-#: app/admin/views.py:278
+#: app/admin/views.py:305
 msgid "Url do logotipo"
 msgstr ""
 
-#: app/admin/views.py:279
+#: app/admin/views.py:306
 msgid "Outros títulos"
 msgstr ""
 
-#: app/admin/views.py:280
+#: app/admin/views.py:307
 msgid "Nome da editora"
 msgstr ""
 
-#: app/admin/views.py:281
+#: app/admin/views.py:308
 msgid "País da editora"
 msgstr ""
 
-#: app/admin/views.py:282
+#: app/admin/views.py:309
 msgid "Estado da editora"
 msgstr ""
 
-#: app/admin/views.py:283
+#: app/admin/views.py:310
 msgid "Cidade da editora"
 msgstr ""
 
-#: app/admin/views.py:284
+#: app/admin/views.py:311
 msgid "Endereço da editora"
 msgstr ""
 
-#: app/admin/views.py:285
+#: app/admin/views.py:312
 msgid "Telefone da editora"
 msgstr ""
 
-#: app/admin/views.py:286
+#: app/admin/views.py:313
 msgid "Missão"
 msgstr ""
 
-#: app/admin/views.py:287
+#: app/admin/views.py:314
 msgid "No índice"
 msgstr ""
 
-#: app/admin/views.py:288
+#: app/admin/views.py:315
 msgid "Patrocinadores"
 msgstr ""
 
-#: app/admin/views.py:289
+#: app/admin/views.py:316
 msgid "Ref periódico anterior"
 msgstr ""
 
-#: app/admin/views.py:290
+#: app/admin/views.py:317
 msgid "Situação atual"
 msgstr ""
 
-#: app/admin/views.py:291
+#: app/admin/views.py:318
 msgid "Total de números"
 msgstr ""
 
-#: app/admin/views.py:292 app/admin/views.py:367 app/admin/views.py:439
+#: app/admin/views.py:319 app/admin/views.py:395 app/admin/views.py:467
 msgid "Publicado?"
 msgstr ""
 
-#: app/admin/views.py:293 app/admin/views.py:368 app/admin/views.py:440
+#: app/admin/views.py:320 app/admin/views.py:396 app/admin/views.py:468
 msgid "Motivo de despublicação"
 msgstr ""
 
-#: app/admin/views.py:296 app/admin/views.py:371 app/admin/views.py:459
+#: app/admin/views.py:323 app/admin/views.py:399 app/admin/views.py:487
 msgid "Publicar"
 msgstr ""
 
-#: app/admin/views.py:301
+#: app/admin/views.py:328
 msgid "Periódico(s) publicado(s) com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:303
+#: app/admin/views.py:330
 msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!"
 msgstr ""
 
-#: app/admin/views.py:311
+#: app/admin/views.py:338
 msgid "Periódico(s) despublicado com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:314
+#: app/admin/views.py:341
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) periódico(s)!!. Erro: %(ex)s"
 msgstr ""
 
-#: app/admin/views.py:319 app/admin/views.py:323 app/admin/views.py:327
-#: app/admin/views.py:396 app/admin/views.py:400 app/admin/views.py:404
-#: app/admin/views.py:485 app/admin/views.py:489 app/admin/views.py:493
+#: app/admin/views.py:346 app/admin/views.py:350 app/admin/views.py:354
+#: app/admin/views.py:424 app/admin/views.py:428 app/admin/views.py:432
+#: app/admin/views.py:513 app/admin/views.py:517 app/admin/views.py:521
 #, python-format
 msgid "Despublicar por %s"
 msgstr ""
 
-#: app/admin/views.py:350
+#: app/admin/views.py:378
 msgid "Id Número"
 msgstr ""
 
-#: app/admin/views.py:352
+#: app/admin/views.py:380
 msgid "Seções"
 msgstr ""
 
-#: app/admin/views.py:354 app/templates/includes/format_journal_row.html:14
+#: app/admin/views.py:382 app/templates/includes/format_journal_row.html:14
 #: app/templates/issue/grid.html:36
 msgid "Volume"
 msgstr ""
 
-#: app/admin/views.py:355 app/admin/views.py:430
+#: app/admin/views.py:383 app/admin/views.py:458
 #: app/templates/issue/grid.html:37
 msgid "Número"
 msgstr ""
 
-#: app/admin/views.py:358
+#: app/admin/views.py:386
 msgid "Tipo"
 msgstr ""
 
-#: app/admin/views.py:359
+#: app/admin/views.py:387
 msgid "Texto do suplemento"
 msgstr ""
 
-#: app/admin/views.py:360
+#: app/admin/views.py:388
 msgid "Texto do especial"
 msgstr ""
 
-#: app/admin/views.py:361
+#: app/admin/views.py:389
 msgid "Mês inicial"
 msgstr ""
 
-#: app/admin/views.py:362
+#: app/admin/views.py:390
 msgid "Mês final"
 msgstr ""
 
-#: app/admin/views.py:363 app/templates/issue/grid.html:35
+#: app/admin/views.py:391 app/templates/issue/grid.html:35
 msgid "Ano"
 msgstr ""
 
-#: app/admin/views.py:364
+#: app/admin/views.py:392
 msgid "Etiqueta"
 msgstr ""
 
-#: app/admin/views.py:365
+#: app/admin/views.py:393
 msgid "Ordem"
 msgstr ""
 
-#: app/admin/views.py:366
+#: app/admin/views.py:394
 msgid "Legenda bibliográfica"
 msgstr ""
 
-#: app/admin/views.py:376
+#: app/admin/views.py:404
 msgid "Fascículo(s) publicado(s) com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:379 app/admin/views.py:468
+#: app/admin/views.py:407 app/admin/views.py:496
 #, python-format
 msgid "Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s"
 msgstr ""
 
-#: app/admin/views.py:388
+#: app/admin/views.py:416
 msgid "Fascículo(s) despublicado(s) com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:391 app/admin/views.py:480
+#: app/admin/views.py:419 app/admin/views.py:508
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s"
 msgstr ""
 
-#: app/admin/views.py:429
+#: app/admin/views.py:457
 msgid "Id Artigo"
 msgstr ""
 
-#: app/admin/views.py:433
+#: app/admin/views.py:461
 msgid "Seção"
 msgstr ""
 
-#: app/admin/views.py:434
+#: app/admin/views.py:462
 msgid "É AOP?"
 msgstr ""
 
-#: app/admin/views.py:437
+#: app/admin/views.py:465
 msgid "HTML's"
 msgstr ""
 
-#: app/admin/views.py:438
+#: app/admin/views.py:466
 msgid "Chave de domínio"
 msgstr ""
 
-#: app/admin/views.py:443
+#: app/admin/views.py:471
 msgid "Reconstruir HTML"
 msgstr ""
 
-#: app/admin/views.py:451
+#: app/admin/views.py:479
 msgid "Artigo(s) reconstruido com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:454
+#: app/admin/views.py:482
 #, python-format
 msgid "Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s"
 msgstr ""
 
-#: app/admin/views.py:464
+#: app/admin/views.py:492
 msgid "Artigo(s) publicado com sucesso!!"
 msgstr ""
 
-#: app/admin/views.py:477
+#: app/admin/views.py:505
 msgid "Artigo(s) despublicado com sucesso!!"
 msgstr ""
 
@@ -722,7 +722,7 @@ msgid "Para"
 msgstr ""
 
 #: app/templates/collection/includes/email_modal.html:15
-msgid "Use ; (semicolon) to insert more emails."
+msgid "Utilize ; (ponto e vírgula) para inserir mais emails."
 msgstr ""
 
 #: app/templates/collection/includes/email_modal.html:19
