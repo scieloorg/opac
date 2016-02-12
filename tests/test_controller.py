@@ -76,7 +76,7 @@ class JournalControllerTestCase(BaseTestCase):
         Testando a função controllers.get_journals() com uma coleção de Journal
         vazia, deve retornar ``None``.
         """
-        self.assertFalse(controllers.get_journals())
+        self.assertIsNone(controllers.get_journals())
 
     def test_get_journals_by_study_area(self):
         """
