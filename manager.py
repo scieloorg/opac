@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
-import sys
 import os
+import sys
 import unittest
 import coverage
+
+COV = None
+if os.environ.get('FLASK_COVERAGE'):
+    COV = coverage.coverage(branch=True, include='app/*')
+    COV.start()
+
 from app import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 from app import utils, controllers
@@ -12,15 +18,10 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from app.admin.forms import EmailForm
 from flask import current_app
 
-COV = None
 app = create_app(os.getenv('OPAC_CONFIG'))
 migrate = Migrate(app, dbsql)
 manager = Manager(app)
 manager.add_command('dbsql', MigrateCommand)
-
-if os.environ.get('FLASK_COVERAGE'):
-    COV = coverage.coverage(branch=True, include='app/*')
-    COV.start()
 
 
 def make_shell_context():
@@ -123,6 +124,10 @@ def test(coverage=False, verbosity=2):
         COV.save()
         print('Coverage Summary:')
         COV.report()
+        # basedir = os.path.abspath(os.path.dirname(__file__))
+        # covdir = 'tmp/coverage'
+        # COV.html_report(directory=covdir)
+        # print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
 
     if result.wasSuccessful():

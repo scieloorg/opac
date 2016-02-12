@@ -152,10 +152,21 @@ class UserAdminView(sqla.ModelView):
 
     column_filters = ['email']
 
+    # def get_create_form(self):
+    #     """
+    #         Create form class for model creation view.
+    #         Override to implement customized behavior.
+    #     """
+    #     return forms.EmailForm
+
     def after_model_change(self, form, model, is_created):
         if is_created:
+            try:
+                was_sent, error_msg = model.send_confirmation_email()
+            except ValueError, e:
+                was_sent = False
+                error_msg = e.message
             # Enviamos o email de confirmação para o usuário.
-            was_sent, error_msg = model.send_confirmation_email()
             if was_sent:
                 flash(_(u'Enviamos o email de confirmação para: %(email)s',
                         email=model.email))

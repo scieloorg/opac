@@ -11,7 +11,7 @@ def forbidden(e):
         response.status_code = 403
         return response
     context = {'message': e.get_description()}
-    return render_template('erros/403.html', **context), 403
+    return render_template('errors/403.html', **context), 403
 
 
 @main.app_errorhandler(404)

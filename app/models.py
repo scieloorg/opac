@@ -17,9 +17,9 @@ import notifications
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    _password = db.Column(db.String(128))
-    email_confirmed = db.Column(db.Boolean, default=False)
+    email = db.Column(db.String(120), nullable=False, unique=True)
+    _password = db.Column(db.String(128), nullable=False)
+    email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
     @hybrid_property
     def password(self):
