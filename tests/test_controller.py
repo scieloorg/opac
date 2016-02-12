@@ -76,7 +76,7 @@ class JournalControllerTestCase(BaseTestCase):
         Testando a função controllers.get_journals() com uma coleção de Journal
         vazia, deve retornar uma lista vazia.
         """
-        self.assertListEqual(controllers.get_journals(), [])
+        self.assertEqual(len(controllers.get_journals()), 0)
 
     def test_get_journals_by_study_area(self):
         """
