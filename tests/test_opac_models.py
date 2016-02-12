@@ -5,7 +5,7 @@ from base import BaseTestCase
 from opac_schema.v1 import models
 
 
-class TestCase(BaseTestCase):
+class SponsorTestCase(BaseTestCase):
 
     def test_one_sponsor(self):
         item = {'name': 'bar', '_id': '123'}
