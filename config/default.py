@@ -34,6 +34,8 @@ LANGUAGES = {
     'pt_BR': u'Português',
     'en': u'English',
     'es': u'Español',
+    'es_ES': u'Español (España)',
+    'es_MX': u'Español (México)',
 }
 BABEL_DEFAULT_LOCALE = 'pt_BR'
 

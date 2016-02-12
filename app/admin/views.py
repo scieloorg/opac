@@ -7,21 +7,17 @@ import flask_admin as admin
 from flask_admin.actions import action
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
-from flask import url_for, redirect, render_template, request, flash, abort
+from flask import url_for, redirect, request, flash, abort
 from flask.ext.admin.contrib import sqla, mongoengine
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
-from werkzeug.security import generate_password_hash
 from flask import current_app
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
-from mongoengine.queryset import Q
 
-import forms
-from custom_filters import get_flt, CustomFilterConverter
-from app import models
-from app import controllers
-from app import choices
-from ..utils import get_timed_serializer, rebuild_article_xml
-from opac_schema.v1.models import Sponsor, Journal, Issue, Article
+from app import models, controllers, choices
+from app.admin import forms
+from app.admin.custom_filters import get_flt, CustomFilterConverter
+from app.utils import get_timed_serializer, rebuild_article_xml
+from opac_schema.v1.models import Sponsor
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -470,7 +466,7 @@ class ArticleAdminView(OpacBaseAdminView):
         journal=__(u'Periódico'),
         title=__(u'Título'),
         section=__(u'Seção'),
-        is_aop=__(u'É AOP?'),
+        is_aop=__(u'É Ahead of Print?'),
         created=__(u'Criado'),
         updated=__(u'Atualizado'),
         htmls=__(u'HTML\'s'),
