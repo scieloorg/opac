@@ -74,7 +74,7 @@ class JournalControllerTestCase(BaseTestCase):
     def test_get_journal_without_itens(self):
         """
         Testando a função controllers.get_journals() com uma coleção de Journal
-        vazia, deve retornar ``None``.
+        vazia, deve retornar uma lista vazia.
         """
         self.assertListEqual(controllers.get_journals(), [])
 
