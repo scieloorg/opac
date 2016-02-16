@@ -26,7 +26,7 @@ def get_locale():
 def set_locale(lang_code):
     langs = current_app.config.get('LANGUAGES')
     if lang_code not in langs.keys():
-        abort(400, _('Código de idioma inválido'))
+        abort(400, _(u'Código de idioma inválido'))
 
     # salvar o lang code na sessão
     session['lang'] = lang_code
@@ -165,6 +165,9 @@ def article_html_by_aid(article_id):
     if not article.is_public:
         abort(404, _(article.unpublish_reason))
 
+    if not article.htmls:
+        abort(404, _(u'HTML do artigo não encontrado'))
+
     article_html = article.htmls[0].source
 
     return article_html
@@ -175,10 +178,13 @@ def abstract_detail(article_id):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
-        abort(404, _(u'Artigo não encontrado'))
+        abort(404, _(u'Resumo não encontrado'))
 
     if not article.is_public:
         abort(404, _(article.unpublish_reason))
+
+    if not article.htmls:
+        abort(404, _(u'Resumo do artigo não encontrado'))
 
     context = {
         'article': article,
