@@ -8,9 +8,10 @@ import unittest
 import subprocess
 
 import pymongo
-
+from opac_schema.v1 import models as schema_models
 from flask import current_app
 from flask.ext.testing import TestCase
+from app import dbsql
 
 
 class MongoInstance(object):
@@ -89,8 +90,12 @@ class BaseTestCase(TestCase):
         return current_app
 
     def setUp(self):
+        dbsql.create_all()
         super(TestCase, self).setUp()
 
     def tearDown(self):
+        dbsql.session.remove()
+        dbsql.drop_all()
+        # drop todas as bases mongo
         for db_name in self.conn.database_names():
             self.conn.drop_database(db_name)

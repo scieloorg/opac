@@ -148,13 +148,6 @@ class UserAdminView(sqla.ModelView):
 
     column_filters = ['email']
 
-    # def get_create_form(self):
-    #     """
-    #         Create form class for model creation view.
-    #         Override to implement customized behavior.
-    #     """
-    #     return forms.EmailForm
-
     def after_model_change(self, form, model, is_created):
         if is_created:
             try:

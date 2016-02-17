@@ -165,6 +165,19 @@ def get_journals_by_jid(jids):
     return journals
 
 
+def set_journal_is_public_bulk(jids, is_public=True, reason=''):
+    """
+    Atualiza uma lista de periódicos como público ou não público.
+    - ``jids``: lista de jids de periódicos a serem atualizados.
+    - ``is_public``: boolean, filtra por público e não público.
+    - ``reason``: string, indica o motivo pelo qual o periódico é despublicado.
+    """
+    for journal in get_journals_by_jid(jids).values():
+        journal.is_public = is_public
+        journal.unpublish_reason = reason
+        journal.save()
+
+
 # -------- ISSUE --------
 
 def get_issues_by_jid(jid, **kwargs):
@@ -284,8 +297,12 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
     - ``is_public``: boolean, filtra por público e não público.
     - ``reason``: string, indica o motivo pelo qual o artigo é despublicado.
     """
+    articles = get_articles_by_aid(aids)
+    if not articles:
+        # logger ?
+        return None
 
-    for article in get_articles_by_aid(aids).values():
+    for article in articles.values():
         article.is_public = is_public
         article.unpublish_reason = reason
         article.save()
