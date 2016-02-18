@@ -66,12 +66,17 @@ class MainTestCase(BaseTestCase):
         '/set_locale/<string:lang_code>' deve retornar uma página com
         ``status_code``400 e manter o idioma padrão ``pt_BR``.
         """
+        expected_message = u'<p>Código de idioma inválido</p>'
 
         with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='en_US'))
             self.assertEqual(400, response.status_code)
             self.assertIn('Código de idioma inválido'.decode('utf-8'),
                           response.data.decode('utf-8'))
+            self.assertTemplateUsed('errors/400.html')
+
+            self.assertEqual(expected_message,
+                             self.get_context_variable('message'))
 
     def test_collection_list_alpha(self):
         """
@@ -92,8 +97,8 @@ class MainTestCase(BaseTestCase):
             self.assertIn('journals/%s' % journal.id,
                           response.data.decode('utf-8'))
 
-        self.assertListEqual([journal.id for journal in journals],
-                             [journal.id for journal in self.get_context_variable('journals')])
+        self.assertListEqual(sorted([journal.id for journal in journals]),
+                             sorted([journal.id for journal in self.get_context_variable('journals')]))
 
     def test_collection_list_alpha_without_journals(self):
         """

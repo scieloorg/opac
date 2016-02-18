@@ -116,7 +116,8 @@ def test(coverage=False, verbosity=2):
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
 
-    tests = unittest.TestLoader().discover('tests')
+    # tests = unittest.TestLoader().discover('tests')
+    tests = unittest.TestLoader().discover('tests', pattern='test_main_views*')
     result = unittest.TextTestRunner(verbosity=verbosity).run(tests)
 
     if COV:
