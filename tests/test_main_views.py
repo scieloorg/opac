@@ -4,7 +4,7 @@ import flask
 import warnings
 from flask.ext.testing import TestCase
 from flask_babelex import gettext as _
-from flask import current_app, url_for
+from flask import url_for, request
 from app import create_app, dbsql, dbmongo
 
 from base import MongoInstance, BaseTestCase
@@ -18,9 +18,6 @@ from base import BaseTestCase
 class MainTestCase(BaseTestCase):
     def setUp(self):
         dbsql.create_all()
-
-    def create_app(self):
-        return current_app
 
     def tearDown(self):
         models.Journal.objects.delete()
@@ -44,10 +41,24 @@ class MainTestCase(BaseTestCase):
         o valor informado.
         """
 
-        with self.create_app().test_client() as c:
+        with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='es_ES'))
             self.assertEqual(302, response.status_code)
             self.assertEqual(flask.session['lang'], 'es_ES')
+
+    def test_redirect_when_change_set_locale(self):
+        """
+        Teste para verificar se o redirecionamento da ``view function``
+        ``set_locale`` retorna para a página esperada.
+        """
+
+        with self.client as c:
+            response = c.get(url_for('main.set_locale', lang_code='es_ES'),
+                             headers={'Referer': '/journals'},
+                             follow_redirects=True)
+            self.assertEqual(200, response.status_code)
+
+            self.assertTemplateUsed('collection/list_alpha.html')
 
     def test_change_set_locale_with_unknow_lang(self):
         """
@@ -56,7 +67,7 @@ class MainTestCase(BaseTestCase):
         ``status_code``400 e manter o idioma padrão ``pt_BR``.
         """
 
-        with self.create_app().test_client() as c:
+        with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='en_US'))
             self.assertEqual(400, response.status_code)
             self.assertIn('Código de idioma inválido'.decode('utf-8'),
@@ -80,6 +91,9 @@ class MainTestCase(BaseTestCase):
         for journal in journals:
             self.assertIn('journals/%s' % journal.id,
                           response.data.decode('utf-8'))
+
+        self.assertListEqual([journal.id for journal in journals],
+                             [journal.id for journal in self.get_context_variable('journals')])
 
     def test_collection_list_alpha_without_journals(self):
         """
@@ -402,7 +416,7 @@ class MainTestCase(BaseTestCase):
 
     def test_article_detail_with_journal_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``article_detail`` acessando um fascículo
+        Teste da ``view function`` ``article_detail`` acessando um artigo
         com atributo is_public=True, porém com um periódico com atributo
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
@@ -426,7 +440,7 @@ class MainTestCase(BaseTestCase):
 
     def test_article_detail_with_issue_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``article_detail`` acessando um fascículo
+        Teste da ``view function`` ``article_detail`` acessando um artigo
         com atributo is_public=False, porém com um periódico com atributo
         is_public=True deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do fascículo.
