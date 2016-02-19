@@ -1120,7 +1120,8 @@ class JournalAdminViewTests(BaseTestCase):
             - fazemos login e
             - acessamos a pagina /admin/journal/
         Verificamos:
-            - o Journal criado deve esta listado nessa página
+            - o Journal criado deve estar listado nessa página
+            - e o template utilizado é o esperado
         """
         # with
         journal = makeOneJournal()
@@ -1243,7 +1244,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1294,7 +1294,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1334,7 +1333,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1381,7 +1379,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1421,7 +1418,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1501,7 +1497,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1537,7 +1532,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1573,7 +1567,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1609,7 +1602,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1645,7 +1637,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1681,7 +1672,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -1717,7 +1707,6 @@ class JournalAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
@@ -2172,7 +2161,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issue: /admin/issue/
@@ -2221,7 +2209,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2261,7 +2248,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2302,7 +2288,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2342,7 +2327,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2400,7 +2384,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/issue/
@@ -2436,7 +2419,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de Issues: /admin/issue/
@@ -2472,7 +2454,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2508,7 +2489,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/issue/
@@ -2544,7 +2524,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/issue/
@@ -2580,7 +2559,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2616,7 +2594,6 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
@@ -2660,13 +2637,13 @@ class IssueAdminViewTests(BaseTestCase):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco (is_public=False)
+            - um novo registro do tipo: Issue no banco (is_public=False)
         Quando:
             - fazemos login e
-            - acessamos a pagina de listagem de periódicos: /admin/issue/
+            - acessamos a pagina de listagem de Issue: /admin/issue/
             - realizamos a ação de pubilcar
         Verificamos:
-            - o periódico deve ficar como público
+            - o Issue deve ficar como público
             - o usuario é notificado do resultado da operação
         """
         # with
