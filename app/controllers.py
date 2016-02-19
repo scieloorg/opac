@@ -11,7 +11,9 @@ import datetime
 from opac_schema.v1.models import Journal, Issue, Article, ArticleHTML
 from flask import current_app
 from app import dbsql
+from flask_babelex import lazy_gettext as __
 from . import models as sql_models
+from models import User
 
 
 # -------- JOURNAL --------
@@ -305,10 +307,18 @@ def get_articles_by_iid(iid, **kwargs):
 # -------- SLQALCHEMY --------
 
 
+# -------- USER --------
+
+
 def get_user_by_email(email):
     """
-    Retorna o usuário aonde seu atributo ``email`` é igual ao parâmetro ``email``.
+    Retorna o usuário aonde seu atributo ``email`` é igual ao parâmetro ``email``,
+    caso não seja uma ``string`` retorna um ValueError.
     """
+
+    if not isinstance(email, basestring):
+        raise ValueError(__(u'Parâmetro email deve ser uma string'))
+
     return dbsql.session.query(sql_models.User).filter_by(email=email).first()
 
 
@@ -316,13 +326,22 @@ def get_user_by_id(id):
     """
     Retorna o usuário aonde seu atributo ``id`` é igual ao parâmetro ``id``.
     """
+
+    if not isinstance(id, int):
+        raise ValueError(__(u'Parâmetro email deve ser uma inteiro'))
+
     return dbsql.session.query(sql_models.User).get(id)
 
 
 def set_user_email_confirmed(user):
     """
-    Atualiza o usuário ``user`` deixando ele com email confirmado (atributo ``email_confirmed`` = True).
+    Atualiza o usuário ``user`` deixando ele com email confirmado
+    (atributo ``email_confirmed`` = True).
     """
+
+    if not isinstance(user, User):
+        raise ValueError(__('Usuário deve ser do tipo %s' % User))
+
     user.email_confirmed = True
     dbsql.session.add(user)
     dbsql.session.commit()
@@ -330,29 +349,35 @@ def set_user_email_confirmed(user):
 
 def set_user_password(user, password):
     """
-    Atualiza o usuário ``user`` com a senha definida pelo parâmetro ``password``.
+    Atualiza o usuário ``user`` com a senha definida pelo parâmetro
+    ``password``.
     """
+
+    if not isinstance(user, User):
+        raise ValueError(__('Usuário deve ser do tipo %s' % User))
+
     user.password = password
     dbsql.session.add(user)
     dbsql.session.commit()
 
 
-def filter_articles_by_ids(ids):
-    """
-    Retorna uma lista de artigos aonde o atributo ``iid`` de cada um deles
-    pertence a lista do parâmetro: ``iids``
-
-    - ``iids``: lista de iids de fascículos a serem filtrados.
-    """
-    return Article.objects(_id__in=ids)
+# -------- FUNCTIONS --------
 
 
 def new_article_html_doc(language, source):
     """
-    Retorna uma nova instância de ArticleHTML com os atributos definidos pelos parâmetros:
+    Retorna uma nova instância de ArticleHTML com os atributos definidos pelos
+    parâmetros:
     - ``language`` o código de idioma do artigos;
     - ``source`` a string como o HTML do artigos.
     """
+
+    if not isinstance(language, basestring):
+        raise ValueError(__('Parâmetro language de ser do tipo string'))
+
+    if not isinstance(source, basestring):
+        raise ValueError(__('Parâmetro source de ser do tipo string'))
+
     return ArticleHTML(language=language, source=source)
 
 
