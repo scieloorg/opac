@@ -16,7 +16,8 @@ def send_confirmation_email(recipient_email):
      - (True, '') em caso de sucesso.
      - (Flase, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-
+    if not recipient_email:
+        raise ValueError(u'recipient_email é inválido!')
     try:
         ts = utils.get_timed_serializer()
         token = ts.dumps(recipient_email, salt='email-confirm-key')

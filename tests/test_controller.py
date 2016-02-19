@@ -241,6 +241,14 @@ class JournalControllerTestCase(BaseTestCase):
         self.assertEqual(controllers.get_journal_by_jid('jid123').id,
                          journal.id)
 
+    def test_get_journal_by_jid_without_id(self):
+        """
+        Testando a função controllers.get_journal_by_jid() com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_journal_by_jid, [])
+
     def test_get_journal_by_jid_with_some_params(self):
         """
         Testando a função controllers.get_journal_by_jid() deve retornar um
@@ -299,7 +307,7 @@ class JournalControllerTestCase(BaseTestCase):
         journals = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
 
-        self.assertIsNone(journals)
+        self.assertEqual(journals, {})
 
     def test_get_journals_by_jid_without_journal(self):
         """
@@ -309,7 +317,45 @@ class JournalControllerTestCase(BaseTestCase):
 
         journals = controllers.get_journals_by_jid(['jid1', 'jid12', 'jid123'])
 
-        self.assertIsNone(journals)
+        self.assertEqual(journals, {})
+
+    def test_set_journal_is_public_bulk(self):
+        """
+        Testando alterar o valor de um conjunto de journals.
+        """
+
+        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+
+        controllers.set_journal_is_public_bulk(
+            ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu'], is_public=False)
+
+        ids = ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu']
+
+        journals = controllers.get_journals_by_jid(ids)
+
+        for journal in journals.itervalues():
+            self.assertFalse(journal.is_public)
+
+    def test_set_journal_is_public_bulk_without_jids(self):
+        """
+        Testando alterar o valor de um conjunto de journals, sem ids.
+        """
+
+        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_journal_is_public_bulk, [], is_public=False)
+
+        ids = ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu']
+
+        journals = controllers.get_journals_by_jid(ids)
+
+        for journal in journals.itervalues():
+            self.assertTrue(journal.is_public)
 
 
 class IssueControllerTestCase(BaseTestCase):
@@ -400,6 +446,13 @@ class IssueControllerTestCase(BaseTestCase):
         issue = self._makeOne()
         self.assertEqual(controllers.get_issue_by_iid(issue.id), issue)
 
+    def test_get_issue_by_iid_without_id(self):
+        """
+        Teste da função controllers.get_issue_by_iid() com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+        self.assertRaises(ValueError, controllers.get_issue_by_iid, [])
+
     def test_get_issue_by_iid_with_some_params(self):
         """
         Teste da função controllers.get_issue_by_iid() para retornar um objeto:
@@ -440,7 +493,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(['iid1', 'iid12', 'iid123'])
 
-        self.assertIsNone(issues)
+        self.assertEqual(issues, {})
 
     def test_set_issue_is_public_bulk(self):
         """
@@ -481,6 +534,25 @@ class IssueControllerTestCase(BaseTestCase):
         for issue in issues.itervalues():
             self.assertEqual(u'plágio', issue.unpublish_reason)
 
+    def test_set_issue_is_public_bulk_without_iids(self):
+        """
+        Testando alterar o valor de um conjunto de journals, sem ids.
+        """
+
+        self._makeOne(attrib={'_id': '0ow9sms9ms', 'is_public': True})
+        self._makeOne(attrib={'_id': '90k2ud90ds', 'is_public': True})
+        self._makeOne(attrib={'_id': '98jd9dhydk', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_issue_is_public_bulk, [], is_public=False)
+
+        ids = ['0ow9sms9ms', '90k2ud90ds', '98jd9dhydk']
+
+        issues = controllers.get_issues_by_iid(ids)
+
+        for issue in issues.itervalues():
+            self.assertTrue(issue.is_public)
+
 
 class ArticleControllerTestCase(BaseTestCase):
 
@@ -517,6 +589,14 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self.assertEqual(controllers.get_article_by_aid(article.id).id,
                          article.id)
+
+    def test_get_article_by_aid_without_aid(self):
+        """
+        Teste da função controllers.get_article_by_aid com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_article_by_aid, [])
 
     def test_get_article_by_aid_without_article(self):
         """
@@ -563,7 +643,7 @@ class ArticleControllerTestCase(BaseTestCase):
         articles = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
 
-        self.assertIsNone(articles)
+        self.assertEqual(articles, {})
 
     def test_get_articles_by_aid_without_article(self):
         """
@@ -573,7 +653,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
-        self.assertIsNone(articles)
+        self.assertEqual(articles, {})
 
     def test_set_article_is_public_bulk(self):
         """
@@ -594,21 +674,53 @@ class ArticleControllerTestCase(BaseTestCase):
         for article in articles.itervalues():
             self.assertFalse(article.is_public)
 
+    def test_set_article_is_public_bulk_without_aids(self):
+        """
+        Testando alterar o valor de um conjunto de journals sem iids, deve
+        retorna um ValueError.
+        """
+
+        self._makeOne(attrib={'_id': '9ms9kos9js', 'is_public': True})
+        self._makeOne(attrib={'_id': 'lksnsh8snk', 'is_public': True})
+        self._makeOne(attrib={'_id': '7153gj6ysb', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_article_is_public_bulk, [], is_public=False)
+
+        ids = ['9ms9kos9js', 'lksnsh8snk', '7153gj6ysb']
+
+        articles = controllers.get_articles_by_aid(ids)
+
+        for article in articles.itervalues():
+            self.assertTrue(article.is_public)
+
     def test_get_articles_by_iid(self):
         """
         Testando a função controllers.get_articles_by_iid(), deve retorna uma
         lista de articles.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82'})
+        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
+                              'journal': 'oak,ajimn1'})
 
         expected = [u'012ijs9y24', u'2183ikos90']
 
         articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
 
         self.assertListEqual(sorted(articles), sorted(expected))
+
+    def test_get_articles_by_iid_without_iid(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), sem param iid deve
+        retorna um ValueError.
+        """
+        self.assertRaises(ValueError,
+                          controllers.get_articles_by_iid, [])
+
 
     def test_new_article_html_doc(self):
         """
@@ -842,3 +954,6 @@ class FunctionsInControllerTestCase(BaseTestCase):
 
         self.assertRaises(ValueError,
             controllers.count_elements_by_type_and_visibility, 'ksjkadjkajsdkja')
+
+
+

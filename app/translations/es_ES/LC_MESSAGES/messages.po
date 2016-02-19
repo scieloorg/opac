@@ -1,17 +1,18 @@
-# English translations for OPAC.
+# Spanish (Spain) translations for PROJECT.
 # Copyright (C) 2016 ORGANIZATION
-# This file is distributed under the same license as the OPAC project.
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: OPAC 1.0\n"
-"Report-Msgid-Bugs-To: tecnologia@scielo.org\n"
-"POT-Creation-Date: 2016-02-09 09:29-0600\n"
-"PO-Revision-Date: 2016-01-07 14:56-0200\n"
-"Last-Translator: scielo <tecnologia@scielo.org>\n"
-"Language: en\n"
-"Language-Team: en <LL@li.org>\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-01-27 17:12-0200\n"
+"PO-Revision-Date: 2016-02-09 09:39-0600\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es_ES\n"
+"Language-Team: es_ES <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -19,30 +20,29 @@ msgstr ""
 "Generated-By: Babel 2.2.0\n"
 
 #: app/__init__.py:87
-#, fuzzy
 msgid "Coleção"
-msgstr "of collection"
+msgstr ""
 
 #: app/__init__.py:88
 msgid "Financiador"
 msgstr ""
 
-#: app/__init__.py:89 app/admin/views.py:379 app/admin/views.py:459
+#: app/__init__.py:89 app/admin/views.py:351 app/admin/views.py:431
 #: app/templates/journal/includes/alternative_header.html:47
 msgid "Periódico"
-msgstr "Journal"
+msgstr ""
 
 #: app/__init__.py:90
 msgid "Fascículo"
-msgstr "Issue"
+msgstr ""
 
 #: app/__init__.py:91
 msgid "Artigo"
-msgstr "Article"
+msgstr ""
 
 #: app/__init__.py:92
 msgid "Usuário"
-msgstr "User"
+msgstr ""
 
 #: app/choices.py:6
 msgid "Problema de Direito Autoral"
@@ -58,414 +58,410 @@ msgstr ""
 
 #: app/admin/forms.py:9 app/admin/forms.py:21
 msgid "Email"
-msgstr "Email"
+msgstr ""
 
 #: app/admin/forms.py:10 app/admin/forms.py:25
 msgid "Senha"
-msgstr "Password"
+msgstr ""
 
 #: app/admin/forms.py:15
 msgid "Usuário inválido"
-msgstr "Invalid user"
+msgstr ""
 
 #: app/admin/forms.py:17
 msgid "Senha inválida"
-msgstr "Invalid password"
+msgstr ""
 
-#: app/admin/views.py:27
+#: app/admin/views.py:23
 msgid "Tem certeza que quer publicar os itens selecionados?"
-msgstr "Are you sure you want to publish the selected items?"
+msgstr ""
 
-#: app/admin/views.py:28
+#: app/admin/views.py:24
 msgid "Tem certeza que quer despublicar os itens selecionados?"
-msgstr "Are you sure you want to unpublish the selected items?"
+msgstr ""
 
-#: app/admin/views.py:29
+#: app/admin/views.py:25
 msgid "Tem certeza que quer reconstruir os artigos selecionados?"
-msgstr "Are you sure you want to rebuild the selected articles?"
+msgstr ""
 
-#: app/admin/views.py:30
+#: app/admin/views.py:26
 msgid ""
 "Tem certeza que quer enviar email de confirmação aos usuários "
 "selecionados?"
-msgstr "Are you sure you want to send confirmation email to the selected users?"
+msgstr ""
 
-#: app/admin/views.py:87 app/admin/views.py:100
+#: app/admin/views.py:83 app/admin/views.py:96
 msgid "Usuário não encontrado"
-msgstr "User not found"
+msgstr ""
 
-#: app/admin/views.py:90
+#: app/admin/views.py:86
 #, python-format
 msgid "Email: %(email)s confirmado com sucesso!"
-msgstr "Email: %(email)s successfully confirmed!"
+msgstr ""
 
-#: app/admin/views.py:106
+#: app/admin/views.py:102
 #, python-format
 msgid "Enviamos as instruções para recuperar a senha para: %(email)s"
-msgstr "Sent the instructions to recover the password to: %(email)s"
+msgstr ""
 
-#: app/admin/views.py:109
+#: app/admin/views.py:105
 #, python-format
 msgid ""
 "Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: "
 "%(error)s"
-msgstr "Error sending the instructions via email to: %(email)s. Error: %(error)s"
+msgstr ""
 
-#: app/admin/views.py:135
+#: app/admin/views.py:131
 msgid "Nova senha salva com sucesso!!"
-msgstr "New password saved successfully!!"
+msgstr ""
 
-#: app/admin/views.py:160 app/admin/views.py:179
+#: app/admin/views.py:156 app/admin/views.py:175
 #, python-format
 msgid "Enviamos o email de confirmação para: %(email)s"
-msgstr "We sent a confirmation email to: %(email)s"
+msgstr ""
 
-#: app/admin/views.py:163 app/admin/views.py:182
+#: app/admin/views.py:159 app/admin/views.py:178
 #, python-format
 msgid "Ocorreu um erro no envio do email de confirmação para: %(email)s"
-msgstr "An error occurred while sending the confirmation email to: %(email)s"
+msgstr ""
 
-#: app/admin/views.py:170
+#: app/admin/views.py:166
 msgid "Enviar email de confirmação"
-msgstr "Send confirmation email"
+msgstr ""
 
-#: app/admin/views.py:186
+#: app/admin/views.py:182
 #, python-format
 msgid "%(count)s usuários foram notificados com sucesso!"
-msgstr "%(count)s users were successfully notified!"
+msgstr ""
 
-#: app/admin/views.py:189
+#: app/admin/views.py:185
 #, python-format
 msgid "Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s"
-msgstr "An error occurred while sending the confirmation emails. Error: %(ex)s"
+msgstr ""
 
-#: app/admin/views.py:280
+#: app/admin/views.py:253
 msgid "Id Periódico"
-msgstr "Journal Id"
+msgstr ""
 
-#: app/admin/views.py:281
+#: app/admin/views.py:254
 msgid "Coleções"
 msgstr ""
 
-#: app/admin/views.py:282
+#: app/admin/views.py:255
 msgid "Linha do tempo"
 msgstr ""
 
-#: app/admin/views.py:283
+#: app/admin/views.py:256
 msgid "Código IBICT - CCN"
 msgstr ""
 
-#: app/admin/views.py:284
+#: app/admin/views.py:257
 msgid "Categorias de assunto"
 msgstr ""
 
-#: app/admin/views.py:285
+#: app/admin/views.py:258
 msgid "Áreas de estudo"
 msgstr ""
 
-#: app/admin/views.py:286
-#, fuzzy
+#: app/admin/views.py:259
 msgid "Redes sociais"
-msgstr "Other social networks"
+msgstr ""
 
-#: app/admin/views.py:287 app/admin/views.py:460
+#: app/admin/views.py:260 app/admin/views.py:432
 #: app/templates/collection/list_alpha.html:46
 #: app/templates/collection/list_theme.html:54
 #: app/templates/collection/list_theme.html:111
 msgid "Título"
 msgstr ""
 
-#: app/admin/views.py:288
+#: app/admin/views.py:261
 msgid "Título ISO"
 msgstr ""
 
-#: app/admin/views.py:289
+#: app/admin/views.py:262
 msgid "Título curto"
 msgstr ""
 
-#: app/admin/views.py:290 app/admin/views.py:384 app/admin/views.py:463
+#: app/admin/views.py:263 app/admin/views.py:356 app/admin/views.py:435
 msgid "Criado"
 msgstr ""
 
-#: app/admin/views.py:291 app/admin/views.py:385 app/admin/views.py:464
-#, fuzzy
+#: app/admin/views.py:264 app/admin/views.py:357 app/admin/views.py:436
 msgid "Atualizado"
-msgstr "Total"
+msgstr ""
 
-#: app/admin/views.py:292
+#: app/admin/views.py:265
 msgid "Acrônimo"
 msgstr ""
 
-#: app/admin/views.py:293
+#: app/admin/views.py:266
 msgid "ISSN SciELO"
 msgstr ""
 
-#: app/admin/views.py:294
+#: app/admin/views.py:267
 msgid "ISSN impresso"
 msgstr ""
 
-#: app/admin/views.py:295
+#: app/admin/views.py:268
 msgid "ISSN eletrônico"
 msgstr ""
 
-#: app/admin/views.py:296
+#: app/admin/views.py:269
 msgid "Descritores de assunto"
 msgstr ""
 
-#: app/admin/views.py:297
+#: app/admin/views.py:270
 msgid "Ano inicial"
 msgstr ""
 
-#: app/admin/views.py:298
+#: app/admin/views.py:271
 msgid "Volume inicial"
 msgstr ""
 
-#: app/admin/views.py:299
+#: app/admin/views.py:272
 msgid "Número inicial"
 msgstr ""
 
-#: app/admin/views.py:300
+#: app/admin/views.py:273
 msgid "Ano final"
 msgstr ""
 
-#: app/admin/views.py:301
+#: app/admin/views.py:274
 msgid "Volume final"
 msgstr ""
 
-#: app/admin/views.py:302
+#: app/admin/views.py:275
 msgid "Número final"
 msgstr ""
 
-#: app/admin/views.py:303
+#: app/admin/views.py:276
 msgid "Url da submissão online"
 msgstr ""
 
-#: app/admin/views.py:304 app/admin/views.py:381
+#: app/admin/views.py:277 app/admin/views.py:353
 msgid "Url do capa"
 msgstr ""
 
-#: app/admin/views.py:305
+#: app/admin/views.py:278
 msgid "Url do logotipo"
 msgstr ""
 
-#: app/admin/views.py:306
+#: app/admin/views.py:279
 msgid "Outros títulos"
 msgstr ""
 
-#: app/admin/views.py:307
+#: app/admin/views.py:280
 msgid "Nome da editora"
 msgstr ""
 
-#: app/admin/views.py:308
+#: app/admin/views.py:281
 msgid "País da editora"
 msgstr ""
 
-#: app/admin/views.py:309
+#: app/admin/views.py:282
 msgid "Estado da editora"
 msgstr ""
 
-#: app/admin/views.py:310
+#: app/admin/views.py:283
 msgid "Cidade da editora"
 msgstr ""
 
-#: app/admin/views.py:311
+#: app/admin/views.py:284
 msgid "Endereço da editora"
 msgstr ""
 
-#: app/admin/views.py:312
+#: app/admin/views.py:285
 msgid "Telefone da editora"
 msgstr ""
 
-#: app/admin/views.py:313
+#: app/admin/views.py:286
 msgid "Missão"
 msgstr ""
 
-#: app/admin/views.py:314
+#: app/admin/views.py:287
 msgid "No índice"
 msgstr ""
 
-#: app/admin/views.py:315
+#: app/admin/views.py:288
 msgid "Patrocinadores"
 msgstr ""
 
-#: app/admin/views.py:316
-#, fuzzy
+#: app/admin/views.py:289
 msgid "Ref periódico anterior"
-msgstr "Journal"
+msgstr ""
 
-#: app/admin/views.py:317
+#: app/admin/views.py:290
 msgid "Situação atual"
 msgstr ""
 
-#: app/admin/views.py:318
+#: app/admin/views.py:291
 msgid "Total de números"
 msgstr ""
 
-#: app/admin/views.py:319 app/admin/views.py:395 app/admin/views.py:467
+#: app/admin/views.py:292 app/admin/views.py:367 app/admin/views.py:439
 msgid "Publicado?"
-msgstr "Published?"
+msgstr ""
 
-#: app/admin/views.py:320 app/admin/views.py:396 app/admin/views.py:468
+#: app/admin/views.py:293 app/admin/views.py:368 app/admin/views.py:440
 msgid "Motivo de despublicação"
 msgstr ""
 
-#: app/admin/views.py:323 app/admin/views.py:399 app/admin/views.py:487
+#: app/admin/views.py:296 app/admin/views.py:371 app/admin/views.py:459
 msgid "Publicar"
-msgstr "Publish"
+msgstr ""
 
-#: app/admin/views.py:328
+#: app/admin/views.py:301
 msgid "Periódico(s) publicado(s) com sucesso!!"
-msgstr "Journal(s) successfully published!!"
+msgstr ""
 
-#: app/admin/views.py:330
+#: app/admin/views.py:303
 msgid "Ocorreu um erro tentando publicar o(s) periódico(s)!!"
-msgstr "An error occurred trying to publish the journal(s)!!"
+msgstr ""
 
-#: app/admin/views.py:338
+#: app/admin/views.py:311
 msgid "Periódico(s) despublicado com sucesso!!"
-msgstr "Journal(s) successfully unpublished!!"
+msgstr ""
 
-#: app/admin/views.py:341
-#, fuzzy, python-format
+#: app/admin/views.py:314
+#, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) periódico(s)!!. Erro: %(ex)s"
-msgstr "An error occurred trying to publish the journal(s)!! Error %(ex)s"
+msgstr ""
 
-#: app/admin/views.py:346 app/admin/views.py:350 app/admin/views.py:354
-#: app/admin/views.py:424 app/admin/views.py:428 app/admin/views.py:432
-#: app/admin/views.py:513 app/admin/views.py:517 app/admin/views.py:521
-#, fuzzy, python-format
+#: app/admin/views.py:319 app/admin/views.py:323 app/admin/views.py:327
+#: app/admin/views.py:396 app/admin/views.py:400 app/admin/views.py:404
+#: app/admin/views.py:485 app/admin/views.py:489 app/admin/views.py:493
+#, python-format
 msgid "Despublicar por %s"
-msgstr "Unpublish"
+msgstr ""
 
-#: app/admin/views.py:378
+#: app/admin/views.py:350
 msgid "Id Número"
-msgstr "Issue Id"
+msgstr ""
 
-#: app/admin/views.py:380
+#: app/admin/views.py:352
 msgid "Seções"
 msgstr ""
 
-#: app/admin/views.py:382 app/templates/includes/format_journal_row.html:14
+#: app/admin/views.py:354 app/templates/includes/format_journal_row.html:14
 #: app/templates/issue/grid.html:36
 msgid "Volume"
 msgstr ""
 
-#: app/admin/views.py:383 app/admin/views.py:458
+#: app/admin/views.py:355 app/admin/views.py:430
 #: app/templates/issue/grid.html:37
 msgid "Número"
 msgstr ""
 
-#: app/admin/views.py:386
-#, fuzzy
+#: app/admin/views.py:358
 msgid "Tipo"
-msgstr "Article"
+msgstr ""
 
-#: app/admin/views.py:387
+#: app/admin/views.py:359
 msgid "Texto do suplemento"
 msgstr ""
 
-#: app/admin/views.py:388
+#: app/admin/views.py:360
 msgid "Texto do especial"
 msgstr ""
 
-#: app/admin/views.py:389
+#: app/admin/views.py:361
 msgid "Mês inicial"
 msgstr ""
 
-#: app/admin/views.py:390
+#: app/admin/views.py:362
 msgid "Mês final"
 msgstr ""
 
-#: app/admin/views.py:391 app/templates/issue/grid.html:35
+#: app/admin/views.py:363 app/templates/issue/grid.html:35
 msgid "Ano"
 msgstr ""
 
-#: app/admin/views.py:392
+#: app/admin/views.py:364
 msgid "Etiqueta"
 msgstr ""
 
-#: app/admin/views.py:393
+#: app/admin/views.py:365
 msgid "Ordem"
 msgstr ""
 
-#: app/admin/views.py:394
+#: app/admin/views.py:366
 msgid "Legenda bibliográfica"
 msgstr ""
 
-#: app/admin/views.py:404
+#: app/admin/views.py:376
 msgid "Fascículo(s) publicado(s) com sucesso!!"
-msgstr "Issue(s) successfully published!!"
+msgstr ""
 
-#: app/admin/views.py:407 app/admin/views.py:496
+#: app/admin/views.py:379 app/admin/views.py:468
 #, python-format
 msgid "Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s"
-msgstr "An error occurred trying to publish the issue(s)!! Error %(ex)s"
+msgstr ""
 
-#: app/admin/views.py:416
+#: app/admin/views.py:388
 msgid "Fascículo(s) despublicado(s) com sucesso!!"
-msgstr "Issue(s) successfully unpublished!!"
+msgstr ""
 
-#: app/admin/views.py:419 app/admin/views.py:508
+#: app/admin/views.py:391 app/admin/views.py:480
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s"
-msgstr "An error occurred trying to unpublish the issue(s)!! Error %(ex)s"
+msgstr ""
 
-#: app/admin/views.py:457
+#: app/admin/views.py:429
 msgid "Id Artigo"
-msgstr "Article Id"
+msgstr ""
 
-#: app/admin/views.py:461
+#: app/admin/views.py:433
 msgid "Seção"
 msgstr ""
 
-#: app/admin/views.py:462
+#: app/admin/views.py:434
 msgid "É AOP?"
 msgstr ""
 
-#: app/admin/views.py:465
+#: app/admin/views.py:437
 msgid "HTML's"
 msgstr ""
 
-#: app/admin/views.py:466
+#: app/admin/views.py:438
 msgid "Chave de domínio"
 msgstr ""
 
-#: app/admin/views.py:471
+#: app/admin/views.py:443
 msgid "Reconstruir HTML"
-msgstr "Rebuild HTML"
+msgstr ""
 
-#: app/admin/views.py:479
+#: app/admin/views.py:451
 msgid "Artigo(s) reconstruido com sucesso!!"
-msgstr "Article(s) successfully rebuilt!!"
+msgstr ""
 
-#: app/admin/views.py:482
+#: app/admin/views.py:454
 #, python-format
 msgid "Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s"
-msgstr "An error occurred trying to rebuild the article(s)!! Error %(ex)s"
+msgstr ""
 
-#: app/admin/views.py:492
+#: app/admin/views.py:464
 msgid "Artigo(s) publicado com sucesso!!"
-msgstr "Article(s) successfully published!!"
+msgstr ""
 
-#: app/admin/views.py:505
+#: app/admin/views.py:477
 msgid "Artigo(s) despublicado com sucesso!!"
-msgstr "Article(s) successfully unpublished!!"
+msgstr ""
 
 #: app/main/views.py:29
 msgid "Código de idioma inválido"
-msgstr "Invalid language code"
+msgstr ""
 
 #: app/main/views.py:75 app/main/views.py:87
 msgid "Periódico não encontrado"
-msgstr "Journal not found"
+msgstr ""
 
 #: app/main/views.py:110
 msgid "Fascículo não encontrado"
-msgstr "Issue not found"
+msgstr ""
 
 #: app/main/views.py:127 app/main/views.py:142 app/main/views.py:154
 msgid "Artigo não encontrado"
-msgstr "Article not found"
+msgstr ""
 
 #: app/templates/403.html:24
 msgid "Acesso não autorizado!"
@@ -477,9 +473,8 @@ msgid "Por favor entre en contato com o administrador."
 msgstr ""
 
 #: app/templates/404.html:24
-#, fuzzy
 msgid "Página não encontrada"
-msgstr "User not found"
+msgstr ""
 
 #: app/templates/500.html:24
 msgid "Erro interno do servidor"
@@ -487,63 +482,62 @@ msgstr ""
 
 #: app/templates/admin/index.html:7
 msgid "da coleção"
-msgstr "of collection"
+msgstr ""
 
 #: app/templates/admin/index.html:12
 msgid "Periódicos"
-msgstr "Journals"
+msgstr ""
 
 #: app/templates/admin/index.html:15 app/templates/admin/index.html:22
 #: app/templates/admin/index.html:35 app/templates/admin/index.html:42
 #: app/templates/admin/index.html:55 app/templates/admin/index.html:62
 msgid "Publicados"
-msgstr "Published"
+msgstr ""
 
 #: app/templates/admin/index.html:16 app/templates/admin/index.html:36
 #: app/templates/admin/index.html:56
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
 #: app/templates/admin/index.html:32
 msgid "Fascícluos"
-msgstr "Issues"
+msgstr ""
 
 #: app/templates/admin/index.html:52
 msgid "Artigos"
-msgstr "Articles"
+msgstr ""
 
 #: app/templates/admin/opac_base.html:22 app/templates/admin/auth/reset.html:9
 #: app/templates/admin/auth/reset_with_token.html:9
 msgid "Recuperar a senha"
-msgstr "Reset password"
+msgstr ""
 
 #: app/templates/admin/opac_base.html:23
 msgid "Terminar sessão"
-msgstr "Logout"
+msgstr ""
 
 #: app/templates/admin/opac_base.html:27 app/templates/admin/auth/login.html:11
 #: app/templates/admin/auth/login.html:20
 msgid "Iniciar sessão"
-msgstr "Login"
+msgstr ""
 
 #: app/templates/admin/auth/login.html:13
 msgid "Você já iniciou sessão!"
-msgstr "You’re already logged in!"
+msgstr ""
 
 #: app/templates/admin/auth/login.html:24
 #: app/templates/admin/auth/reset.html:13
 #: app/templates/admin/auth/reset_with_token.html:13
 msgid "Enviar"
-msgstr "Send"
+msgstr ""
 
 #: app/templates/admin/auth/login.html:28
 msgid "Esqueci a senha?"
-msgstr "Forgot the password?"
+msgstr ""
 
 #: app/templates/admin/auth/unconfirm_email.html:7
-#, fuzzy
 msgid "Email não confirmado!"
-msgstr "Send confirmation email"
+msgstr ""
 
 #: app/templates/admin/auth/unconfirm_email.html:9
 msgid ""
@@ -559,7 +553,7 @@ msgstr ""
 #: app/templates/collection/list_theme.html:13 app/templates/issue/grid.html:11
 #: app/templates/issue/toc.html:11 app/templates/journal/detail.html:11
 msgid "Compartilhe"
-msgstr "Share"
+msgstr ""
 
 #: app/templates/article/abstract.html:24 app/templates/article/detail.html:24
 #: app/templates/collection/index.html:19
@@ -568,7 +562,7 @@ msgstr "Share"
 #: app/templates/collection/list_theme.html:19 app/templates/issue/grid.html:17
 #: app/templates/issue/toc.html:17 app/templates/journal/detail.html:17
 msgid "Outras redes sociais"
-msgstr "Other social networks"
+msgstr ""
 
 #: app/templates/article/abstract.html:35 app/templates/article/detail.html:35
 msgid "Versões"
@@ -606,15 +600,13 @@ msgid "Permissões"
 msgstr ""
 
 #: app/templates/article/includes/alternative_header.html:42
-#, fuzzy
 msgid "Artigos de"
-msgstr "Articles"
+msgstr ""
 
 #: app/templates/article/includes/alternative_header.html:43
 #: app/templates/article/includes/levelMenu.html:10
-#, fuzzy
 msgid "sumário"
-msgstr "User"
+msgstr ""
 
 #: app/templates/article/includes/alternative_header.html:44
 #: app/templates/article/includes/levelMenu.html:11
@@ -627,9 +619,8 @@ msgstr ""
 #: app/templates/article/includes/levelMenu.html:12
 #: app/templates/journal/includes/alternative_header.html:38
 #: app/templates/journal/includes/levelMenu.html:12
-#, fuzzy
 msgid "atual"
-msgstr "Total"
+msgstr ""
 
 #: app/templates/article/includes/alternative_header.html:52
 #: app/templates/article/includes/alternative_header.html:62
@@ -674,7 +665,7 @@ msgstr ""
 
 #: app/templates/collection/index.html:8 app/templates/journal/detail.html:156
 msgid "Notícias"
-msgstr "News"
+msgstr ""
 
 #: app/templates/collection/list_alpha.html:10
 #: app/templates/collection/includes/header.html:12
@@ -733,7 +724,7 @@ msgid "Para"
 msgstr ""
 
 #: app/templates/collection/includes/email_modal.html:15
-msgid "Utilize ; (ponto e vírgula) para inserir mais emails."
+msgid "Use ; (semicolon) to insert more emails."
 msgstr ""
 
 #: app/templates/collection/includes/email_modal.html:19
@@ -838,9 +829,8 @@ msgid "Buscar"
 msgstr ""
 
 #: app/templates/collection/includes/levelMenu.html:13
-#, fuzzy
 msgid "Lista de Periódicos"
-msgstr "Journals"
+msgstr ""
 
 #: app/templates/collection/includes/levelMenu.html:15
 msgid "Alfabética"
@@ -926,9 +916,8 @@ msgid "Veja toda a equipe editorial"
 msgstr ""
 
 #: app/templates/issue/toc.html:71 app/templates/journal/detail.html:62
-#, fuzzy
 msgid "Sumário"
-msgstr "User"
+msgstr ""
 
 #: app/templates/issue/toc.html:73
 msgid "vol."
@@ -1010,9 +999,8 @@ msgstr ""
 
 #: app/templates/journal/includes/alternative_header.html:50
 #: app/templates/journal/includes/header.html:78
-#, fuzzy
 msgid "Sobre o periódico"
-msgstr "Journal"
+msgstr ""
 
 #: app/templates/journal/includes/alternative_header.html:51
 #: app/templates/journal/includes/header.html:79
@@ -1020,18 +1008,16 @@ msgid "Contato"
 msgstr ""
 
 #: app/templates/journal/includes/contact_footer.html:30
-#, fuzzy
 msgid "Siga este periódico nas redes sociais"
-msgstr "Other social networks"
+msgstr ""
 
 #: app/templates/journal/includes/contact_footer.html:34
 msgid "Acompanhe os números deste periódico no seu leitor de RSS"
 msgstr ""
 
 #: app/templates/journal/includes/header.html:58
-#, fuzzy
 msgid "Publicação de"
-msgstr "Published"
+msgstr ""
 
 #: app/templates/journal/includes/levelMenu.html:5
 msgid "home"
@@ -1044,82 +1030,4 @@ msgstr ""
 #: app/templates/journal/includes/levelMenu.html:22
 msgid "métricas"
 msgstr ""
-
-#~ msgid "JID"
-#~ msgstr "JID"
-
-#~ msgid "Coleções"
-#~ msgstr "Collections"
-
-#~ msgid "Título"
-#~ msgstr "Title"
-
-#~ msgid "Criado"
-#~ msgstr "Created"
-
-#~ msgid "Atualizado"
-#~ msgstr "Updated"
-
-#~ msgid "Acrônimo"
-#~ msgstr "Acronym"
-
-#~ msgid "Issn"
-#~ msgstr "Issn"
-
-#~ msgid "Periódico anterior"
-#~ msgstr "Previous journal"
-
-#~ msgid "Estado atual"
-#~ msgstr "Current state"
-
-#~ msgid "Publicado?"
-#~ msgstr "Published?"
-
-#~ msgid "IID"
-#~ msgstr "IID"
-
-#~ msgid "Volume"
-#~ msgstr "Volume"
-
-#~ msgid "Número"
-#~ msgstr "Number"
-
-#~ msgid "Tipo"
-#~ msgstr "Type"
-
-#~ msgid "Ano"
-#~ msgstr "Year"
-
-#~ msgid "AID"
-#~ msgstr "AID"
-
-#~ msgid "%(name)s"
-#~ msgstr "%(name)s"
-
-#~ msgid "É Pública"
-#~ msgstr "Unpublish"
-
-#~ msgid "Colecções"
-#~ msgstr ""
-
-#~ msgid "Código nacional"
-#~ msgstr ""
-
-#~ msgid "Categorias de assunto "
-#~ msgstr ""
-
-#~ msgid "Direção da editora"
-#~ msgstr ""
-
-#~ msgid "Número do fascículos"
-#~ msgstr ""
-
-#~ msgid "Lenda bibliográfica"
-#~ msgstr ""
-
-#~ msgid "É AOP"
-#~ msgstr ""
-
-#~ msgid "Use ; (semicolon) to insert more emails."
-#~ msgstr ""
 
