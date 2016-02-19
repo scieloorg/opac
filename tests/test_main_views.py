@@ -3,7 +3,7 @@
 import flask
 import warnings
 from flask.ext.testing import TestCase
-from flask_babelex import gettext as _
+# #from flask_babelex import gettext as _
 from flask import url_for, request
 from app import create_app, dbsql, dbmongo
 
@@ -30,7 +30,7 @@ class MainTestCase(BaseTestCase):
         o template ``collection/index.html``.
         """
         response = self.client.get(url_for('main.index'))
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertEqual('text/html; charset=utf-8', response.content_type)
         self.assert_template_used("collection/index.html")
 
@@ -56,7 +56,7 @@ class MainTestCase(BaseTestCase):
             response = c.get(url_for('main.set_locale', lang_code='es_ES'),
                              headers={'Referer': '/journals'},
                              follow_redirects=True)
-            self.assertEqual(200, response.status_code)
+            self.assertStatus(response, 200)
 
             self.assertTemplateUsed('collection/list_alpha.html')
 
@@ -71,7 +71,7 @@ class MainTestCase(BaseTestCase):
         with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='en_US'))
             self.assertEqual(400, response.status_code)
-            self.assertIn('Código de idioma inválido'.decode('utf-8'),
+            self.assertIn(u'Código de idioma inválido',
                           response.data.decode('utf-8'))
             self.assertTemplateUsed('errors/400.html')
 
@@ -90,7 +90,7 @@ class MainTestCase(BaseTestCase):
 
         response = self.client.get(url_for('main.collection_list_alpha'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_alpha.html')
 
         for journal in journals:
@@ -109,10 +109,10 @@ class MainTestCase(BaseTestCase):
 
         response = self.client.get(url_for('main.collection_list_alpha'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_alpha.html')
 
-        self.assertIn('Nenhum periódico encontrado'.decode('utf-8'),
+        self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     def test_collection_list_theme(self):
@@ -131,7 +131,7 @@ class MainTestCase(BaseTestCase):
 
         response = self.client.get(url_for('main.collection_list_theme'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_theme.html')
 
         for journal in journals:
@@ -146,10 +146,10 @@ class MainTestCase(BaseTestCase):
         """
         response = self.client.get(url_for('main.collection_list_theme'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_theme.html')
 
-        self.assertIn('Nenhum periódico encontrado'.decode('utf-8'),
+        self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     def test_collection_list_institution(self):
@@ -163,7 +163,7 @@ class MainTestCase(BaseTestCase):
 
         response = self.client.get(url_for('main.collection_list_institution'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_institution.html')
 
     def test_collection_list_institution_without_journals(self):
@@ -175,10 +175,10 @@ class MainTestCase(BaseTestCase):
 
         response = self.client.get(url_for('main.collection_list_institution'))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_institution.html')
 
-        self.assertIn('Nenhum periódico encontrado'.decode('utf-8'),
+        self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     # JOURNAL
@@ -190,14 +190,14 @@ class MainTestCase(BaseTestCase):
         corpo da página.
         """
 
-        journal = utils.makeOneJournal(attrib={'title': 'Revista X'})
+        journal = utils.makeOneJournal({'title': 'Revista X'})
 
         response = self.client.get(url_for('main.journal_detail',
                                            journal_id=journal.id))
 
         self.assertTrue(200, response.status_code)
         self.assertTemplateUsed('journal/detail.html')
-        self.assertIn('Revista X'.decode('utf-8'),
+        self.assertIn(u'Revista X',
                       response.data.decode('utf-8'))
         self.assertEqual(self.get_context_variable('journal').id, journal.id)
 
@@ -215,8 +215,8 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.journal_detail',
                                    journal_id=unknow_id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Periódico não encontrado'.decode('utf-8'),
+        self.assertStatus(response, 404)
+        self.assertIn(u'Periódico não encontrado',
                       response.data.decode('utf-8'))
 
     def test_journal_detail_with_attrib_is_public_false(self):
@@ -226,14 +226,15 @@ class MainTestCase(BaseTestCase):
         404 e msg cadastrada no atributo ``reason``.
         """
 
-        journal = utils.makeOneJournal(attrib={'is_public': False,
-                                               'unpublish_reason': 'plágio'})
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'plágio'})
 
         response = self.client.get(url_for('main.journal_detail',
                                            journal_id=journal.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('plágio'.decode('utf-8'), response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'plágio', response.data.decode('utf-8'))
 
     # ISSUE
 
@@ -252,16 +253,16 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.issue_grid',
                                    journal_id=journal.id))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('issue/grid.html')
 
         for issue in issues:
             self.assertIn('/issues/%s' % issue.id, response.data.decode('utf-8'))
 
-    def test_issue_grid_without_ussues(self):
+    def test_issue_grid_without_issues(self):
         """
         Teste para avaliar o retorno da ``view function`` ``issue_grid``
-        quando não existe fascículo cadastrado deve retornar ``status_code`` 404
+        quando não existe fascículo cadastrado deve retornar ``status_code`` 200
         e a msg ``Nenhum fascículo encontrado para esse perióico``
         """
 
@@ -270,10 +271,10 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.issue_grid',
                                    journal_id=journal.id))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('issue/grid.html')
 
-        self.assertIn('Nenhum fascículo encontrado para esse perióico'.decode('utf-8'),
+        self.assertIn(u'Nenhum fascículo encontrado para esse perióico',
                       response.data.decode('utf-8'))
 
     def test_issue_grid_with_unknow_journal_id(self):
@@ -292,9 +293,9 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.issue_grid',
                                    journal_id=unknow_id))
 
-        self.assertEqual(404, response.status_code)
+        self.assertStatus(response, 404)
 
-        self.assertIn('Periódico não encontrado'.decode('utf-8'),
+        self.assertIn(u'Periódico não encontrado',
                       response.data.decode('utf-8'))
 
     def test_issue_grid_with_attrib_is_public_false(self):
@@ -304,14 +305,14 @@ class MainTestCase(BaseTestCase):
         404 e msg cadastrada no atributo ``reason``.
         """
 
-        journal = utils.makeOneJournal(attrib={'is_public': False,
+        journal = utils.makeOneJournal({'is_public': False,
                                        'unpublish_reason': 'Problema de Direito Autoral'})
 
         response = self.client.get(url_for('main.issue_grid',
                                            journal_id=journal.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Problema de Direito Autoral'.decode('utf-8'),
+        self.assertStatus(response, 404)
+        self.assertIn(u'Problema de Direito Autoral',
                       response.data.decode('utf-8'))
 
     def test_issue_toc(self):
@@ -325,10 +326,9 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.issue_toc',
                                    issue_id=issue.id))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('issue/toc.html')
-        self.assertIn('Vol. 10 No. 31'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
         self.assertEqual(self.get_context_variable('issue').id, issue.id)
 
     def test_issue_toc_unknow_issue_id(self):
@@ -339,16 +339,13 @@ class MainTestCase(BaseTestCase):
         """
 
         issue = utils.makeOneIssue()
-
         unknow_id = '9wks9sjdu9j'
 
         response = self.client.get(url_for('main.issue_toc',
                                    issue_id=unknow_id))
 
-        self.assertEqual(404, response.status_code)
-
-        self.assertIn('Fascículo não encontrado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
 
     def test_issue_toc_with_attrib_is_public_false(self):
         """
@@ -357,15 +354,15 @@ class MainTestCase(BaseTestCase):
         404 e msg cadastrada no atributo ``reason``.
         """
 
-        issue = utils.makeOneIssue(attrib={'is_public': False,
-                                           'unpublish_reason': 'Fascículo incorreto'})
+        issue = utils.makeOneIssue({
+            'is_public': False,
+            'unpublish_reason': 'Fascículo incorreto'})
 
         response = self.client.get(url_for('main.issue_toc',
                                            issue_id=issue.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Fascículo incorreto'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
 
     def test_issue_toc_with_journal_attrib_is_public_false(self):
         """
@@ -375,17 +372,18 @@ class MainTestCase(BaseTestCase):
         cadastrada no atributo ``reason`` do periódico.
         """
 
-        journal = utils.makeOneJournal(attrib={'is_public': False,
-                                               'unpublish_reason': 'Revista removida da coleção'})
-        issue = utils.makeOneIssue(attrib={'is_public': True,
-                                           'journal': journal.id})
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'Revista removida da coleção'})
+        issue = utils.makeOneIssue({
+            'is_public': True,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.issue_toc',
                                            issue_id=issue.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Revista removida da coleção'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
 
     # ARTICLE
 
@@ -395,11 +393,11 @@ class MainTestCase(BaseTestCase):
         que usa o template ``article/detail.html``.
         """
 
-        article = utils.makeOneArticle(attrib={'title': 'Article Y'})
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
         response = self.client.get(url_for('main.article_detail',
                                            article_id=article.id))
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertTemplateUsed('article/detail.html')
         self.assertEqual(self.get_context_variable('article').id, article.id)
         self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
@@ -415,9 +413,8 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.article_detail',
                                            article_id='02ksn892hwytd8jh2'))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Artigo não encontrado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
 
     def test_article_detail_with_journal_attrib_is_public_false(self):
         """
@@ -427,21 +424,23 @@ class MainTestCase(BaseTestCase):
         cadastrada no atributo ``reason`` do periódico.
         """
 
-        journal = utils.makeOneJournal(attrib={'is_public': False,
-                                               'unpublish_reason': 'Revista removida da coleção'})
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'Revista removida da coleção'})
 
-        issue = utils.makeOneIssue(attrib={'is_public': True,
-                                           'journal': journal.id})
+        issue = utils.makeOneIssue({
+            'is_public': True,
+            'journal': journal.id})
 
-        article = utils.makeOneArticle(attrib={'issue': issue.id,
-                                               'journal': journal.id})
+        article = utils.makeOneArticle({
+            'issue': issue.id,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Revista removida da coleção'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
 
     def test_article_detail_with_issue_attrib_is_public_false(self):
         """
@@ -453,19 +452,20 @@ class MainTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue(attrib={'is_public': False,
-                                           'unpublish_reason': 'Facículo rejeitado',
-                                           'journal': journal.id})
+        issue = utils.makeOneIssue({
+            'is_public': False,
+            'unpublish_reason': 'Facículo rejeitado',
+            'journal': journal.id})
 
-        article = utils.makeOneArticle(attrib={'issue': issue.id,
-                                               'journal': journal.id})
+        article = utils.makeOneArticle({
+            'issue': issue.id,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Facículo rejeitado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Facículo rejeitado', response.data.decode('utf-8'))
 
     def test_article_detail_with_article_attrib_is_public_false(self):
         """
@@ -476,19 +476,19 @@ class MainTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue(attrib={'journal': journal.id})
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-        article = utils.makeOneArticle(attrib={'is_public': False,
-                                               'unpublish_reason': 'Artigo com problemas de licença',
-                                               'issue': issue.id,
-                                               'journal': journal.id})
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Artigo com problemas de licença',
+            'issue': issue.id,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Artigo com problemas de licença'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
     def test_article_html_by_aid(self):
         """
@@ -503,14 +503,13 @@ class MainTestCase(BaseTestCase):
                                     'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
                                 }
                             ]}
-        article = utils.makeOneArticle(attrib=article_attrib)
+        article = utils.makeOneArticle(article_attrib)
 
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id=article.id))
 
-        self.assertEqual(200, response.status_code)
-        self.assertIn('Cad Saude Publica'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 200)
+        self.assertIn(u'Cad Saude Publica', response.data.decode('utf-8'))
 
     def test_article_html_by_aid_without_html(self):
         """
@@ -518,14 +517,13 @@ class MainTestCase(BaseTestCase):
         página 404 com a msg ``HTML do artigo não encontrado``.
         """
 
-        article = utils.makeOneArticle(attrib={'title': 'Article Y'})
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('HTML do artigo não encontrado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'HTML do artigo não encontrado', response.data.decode('utf-8'))
 
     def test_article_html_by_aid_without_articles(self):
         """
@@ -536,9 +534,8 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id='9ajsd9shwqjks9syd'))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Artigo não encontrado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
 
     def test_article_html_by_aid_with_article_attrib_is_public_false(self):
         """
@@ -549,19 +546,19 @@ class MainTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue(attrib={'journal': journal.id})
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-        article = utils.makeOneArticle(attrib={'is_public': False,
-                                               'unpublish_reason': 'Artigo com problemas de licença',
-                                               'issue': issue.id,
-                                               'journal': journal.id})
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Artigo com problemas de licença',
+            'issue': issue.id,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Artigo com problemas de licença'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
     # ABSTRACT
 
@@ -578,12 +575,12 @@ class MainTestCase(BaseTestCase):
                                     'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
                                 }
                             ]}
-        article = utils.makeOneArticle(attrib=article_attrib)
+        article = utils.makeOneArticle(article_attrib)
 
         response = self.client.get(url_for('main.abstract_detail',
                                            article_id=article.id))
 
-        self.assertEqual(200, response.status_code)
+        self.assertStatus(response, 200)
         self.assertEqual(self.get_context_variable('article').id, article.id)
         self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
         self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
@@ -594,13 +591,13 @@ class MainTestCase(BaseTestCase):
         página 404 com a msg ``Resumo do artigo não encontrado``.
         """
 
-        article = utils.makeOneArticle(attrib={'title': 'Article Y'})
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
         response = self.client.get(url_for('main.abstract_detail',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Resumo do artigo não encontrado'.decode('utf-8'),
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo do artigo não encontrado',
                       response.data.decode('utf-8'))
 
     def test_abstract_detail_without_articles(self):
@@ -612,9 +609,8 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.abstract_detail',
                                            article_id='9ajsd9shwqjks9syd'))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Resumo não encontrado'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo não encontrado', response.data.decode('utf-8'))
 
     def test_abstract_detail_with_article_attrib_is_public_false(self):
         """
@@ -625,16 +621,16 @@ class MainTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue(attrib={'journal': journal.id})
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-        article = utils.makeOneArticle(attrib={'is_public': False,
-                                               'unpublish_reason': 'Resumo incorreto',
-                                               'issue': issue.id,
-                                               'journal': journal.id})
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Resumo incorreto',
+            'issue': issue.id,
+            'journal': journal.id})
 
         response = self.client.get(url_for('main.abstract_detail',
                                            article_id=article.id))
 
-        self.assertEqual(404, response.status_code)
-        self.assertIn('Resumo incorreto'.decode('utf-8'),
-                      response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))
