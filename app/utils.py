@@ -86,3 +86,5 @@ def create_user(user_email, user_password, user_email_confirmed):
         email_confirmed=user_email_confirmed)
     dbsql.session.add(new_user)
     dbsql.session.commit()
+
+    return new_user
