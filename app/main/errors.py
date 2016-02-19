@@ -4,10 +4,10 @@ from . import main
 
 
 @main.app_errorhandler(400)
-def forbidden(e):
+def bad_request(e):
     if request.accept_mimetypes.accept_json and \
             not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'bad request'})
+        response = jsonify({'error': e.get_description()})
         response.status_code = 400
         return response
     context = {'message': e.get_description()}
@@ -18,7 +18,7 @@ def forbidden(e):
 def forbidden(e):
     if request.accept_mimetypes.accept_json and \
             not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'forbidden'})
+        response = jsonify({'error': e.get_description()})
         response.status_code = 403
         return response
     context = {'message': e.get_description()}
@@ -29,7 +29,7 @@ def forbidden(e):
 def page_not_found(e):
     if request.accept_mimetypes.accept_json and \
             not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'not found'})
+        response = jsonify({'error': e.get_description()})
         response.status_code = 404
         return response
     context = {'message': e.get_description()}
@@ -40,7 +40,7 @@ def page_not_found(e):
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and \
             not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'internal server error'})
+        response = jsonify({'error':  'internal server error'})
         response.status_code = 500
         return response
     return render_template('errors/500.html'), 500

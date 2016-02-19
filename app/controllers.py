@@ -10,6 +10,7 @@
 import datetime
 from opac_schema.v1.models import Journal, Issue, Article, ArticleHTML
 from flask import current_app
+from flask_babelex import lazy_gettext as __
 from app import dbsql
 from . import models as sql_models
 
@@ -135,7 +136,12 @@ def get_journal_by_jid(jid, **kwargs):
 
     - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
     - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
     """
+
+    if not jid:
+        raise ValueError(__(u'Obrigatório um jid.'))
 
     return Journal.objects(jid=jid, **kwargs).first()
 
@@ -147,7 +153,7 @@ def get_journals_by_jid(jids):
 
     - ``jids``: lista de jids de periódicos a serem filtrados.
 
-    Em caso de não existir itens retorna None.
+    Em caso de não existir itens retorna {}.
 
     Exemplo do retorno:
         {
@@ -157,12 +163,28 @@ def get_journals_by_jid(jids):
         }
 
     """
+
     journals = Journal.objects.in_bulk(jids)
 
-    if not journals:
-        return None
-
     return journals
+
+
+def set_journal_is_public_bulk(jids, is_public=True, reason=''):
+    """
+    Atualiza uma lista de periódicos como público ou não público.
+    - ``jids``: lista de jids de periódicos a serem atualizados, caso seja,
+    lista vazia retorna um ValueError.
+    - ``is_public``: boolean, filtra por público e não público.
+    - ``reason``: string, indica o motivo pelo qual o periódico é despublicado.
+    """
+
+    if not jids:
+        raise ValueError(__(u'Obrigatório uma lista de ids.'))
+
+    for journal in get_journals_by_jid(jids).values():
+        journal.is_public = is_public
+        journal.unpublish_reason = reason
+        journal.save()
 
 
 # -------- ISSUE --------
@@ -196,6 +218,9 @@ def get_issue_by_iid(iid, **kwargs):
     - ``kwargs``: parâmetros de filtragem.
     """
 
+    if not iid:
+        raise ValueError(__(u'Obrigatório um iid.'))
+
     return Issue.objects.filter(iid=iid, **kwargs).first()
 
 
@@ -206,7 +231,7 @@ def get_issues_by_iid(iids):
 
     - ``iids``: lista de iids de fascículos a serem filtrados.
 
-    Em caso de não existir itens retorna None.
+    Em caso de não existir itens retorna {}.
 
     Exemplo do retorno:
         {
@@ -218,9 +243,6 @@ def get_issues_by_iid(iids):
 
     issues = Issue.objects.in_bulk(iids)
 
-    if not issues:
-        return None
-
     return issues
 
 
@@ -228,10 +250,14 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
     """
     Atualiza uma lista de fascículos como público ou não público.
 
-    - ``iids``: lista de iids de fascículos a serem atualizados.
+    - ``iids``: lista de iids de fascículos a serem atualizados, caso seja,
+    lista vazia retorna um ValueError.
     - ``is_public``: boolean, filtra por público e não público.
     - ``reason``: string, indica o motivo pelo qual o issue é despublicado.
     """
+
+    if not iids:
+        raise ValueError(__(u'Obrigatório uma lista de ids.'))
 
     for issue in get_issues_by_iid(iids).values():
         issue.is_public = is_public
@@ -249,6 +275,9 @@ def get_article_by_aid(aid, **kwargs):
     - ``kwargs``: parâmetros de filtragem.
     """
 
+    if not aid:
+        raise ValueError(__(u'Obrigatório um aid.'))
+
     return Article.objects(aid=aid, **kwargs).first()
 
 
@@ -259,7 +288,7 @@ def get_articles_by_aid(aids):
 
     - ``aids``: lista de aids de artigos a serem filtrados.
 
-    Em caso de não existir itens retorna None.
+    Em caso de não existir itens retorna {}.
 
     Exemplo do retorno:
         {
@@ -270,9 +299,6 @@ def get_articles_by_aid(aids):
 
     articles = Article.objects.in_bulk(aids)
 
-    if not articles:
-        return None
-
     return articles
 
 
@@ -280,10 +306,14 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
     """
     Atualiza uma lista de artigos como público ou não público.
 
-    - ``aids``: lista de aids de artigos a serem atualizados.
+    - ``aids``: lista de aids de artigos a serem atualizados, caso seja,
+    lista vazia retorna um ValueError.
     - ``is_public``: boolean, filtra por público e não público.
     - ``reason``: string, indica o motivo pelo qual o artigo é despublicado.
     """
+
+    if not aids:
+        raise ValueError(__(u'Obrigatório uma lista de ids.'))
 
     for article in get_articles_by_aid(aids).values():
         article.is_public = is_public
@@ -298,7 +328,12 @@ def get_articles_by_iid(iid, **kwargs):
 
     - ``iid``: chave primaria de fascículo para escolher os artigos.
     - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
     """
+
+    if not iid:
+        raise ValueError(__(u'Obrigatório uma lista de iid.'))
 
     return Article.objects(issue=iid, **kwargs)
 

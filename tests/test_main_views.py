@@ -3,7 +3,6 @@
 import flask
 import warnings
 from flask.ext.testing import TestCase
-# #from flask_babelex import gettext as _
 from flask import url_for, request
 from app import create_app, dbsql, dbmongo
 
