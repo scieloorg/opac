@@ -588,9 +588,12 @@ class ArticleControllerTestCase(BaseTestCase):
         lista de articles.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82'})
+        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
+                              'journal': 'oak,ajimn1'})
 
         expected = [u'012ijs9y24', u'2183ikos90']
 

@@ -28,16 +28,17 @@ def makeOneJournal(attrib=None):
     return models.Journal(**journal).save()
 
 
-def makeAnyJournal(items=3):
+def makeAnyJournal(items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Journal`` com atributos ``jid``,
     ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
+    Param attrib para adicionar atributo aos objecto do tipo Journal
     """
     journals = []
 
     for item in range(items):
 
-        journal = makeOneJournal()
+        journal = makeOneJournal(attrib)
 
         journals.append(journal)
 
@@ -51,8 +52,6 @@ def makeOneIssue(attrib=None):
     Atualiza o objeto de retorno com os valores do param ``attrib``.
     """
 
-    journal = makeOneJournal()
-
     if not attrib:
         attrib = {}
 
@@ -61,8 +60,13 @@ def makeOneIssue(attrib=None):
     else:
         _id = attrib['_id']
 
+    if 'journal' not in attrib:
+        journal = makeOneJournal().id
+    else:
+        journal = attrib['journal']
+
     issue = {'_id': _id, 'iid': _id, 'is_public': True,
-             'journal': journal.id}
+             'journal': journal}
 
     if attrib and isinstance(attrib, dict):
         issue.update(attrib)
@@ -70,7 +74,7 @@ def makeOneIssue(attrib=None):
     return models.Issue(**issue).save()
 
 
-def makeAnyIssue(journal=None, items=3):
+def makeAnyIssue(journal=None, items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Issue`` com atributos ``iid``,
     ``journal`` limitando a quantidade pelo param ``items``e o param journal
@@ -84,7 +88,7 @@ def makeAnyIssue(journal=None, items=3):
 
     for item in range(items):
 
-        issue = makeOneIssue()
+        issue = makeOneIssue(attrib)
 
         issues.append(issue)
 
@@ -98,8 +102,6 @@ def makeOneArticle(attrib=None):
     Atualiza o objeto de retorno com os valores do param ``attrib``.
     """
 
-    issue = makeOneIssue()
-
     if not attrib:
         attrib = {}
 
@@ -108,9 +110,17 @@ def makeOneArticle(attrib=None):
     else:
         _id = attrib['_id']
 
+    if 'issue' not in attrib and 'journal' not in attrib:
+        issue = makeOneIssue()
+        issue_id = issue.id
+        journal_id = issue.journal
+    else:
+        issue_id = attrib['issue']
+        journal_id = attrib['journal']
+
     title = "article-%s" % _id
     article = {'_id': _id, 'aid': _id, 'is_public': True,
-               'issue': issue.id, 'title': title}
+               'journal': journal_id, 'issue': issue_id, 'title': title}
 
     if attrib and isinstance(attrib, dict):
         article.update(attrib)
@@ -118,7 +128,7 @@ def makeOneArticle(attrib=None):
     return models.Article(**article).save()
 
 
-def makeAnyArticle(issue=None, items=3):
+def makeAnyArticle(issue=None, items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Article`` com atributos ``aid``,
     ``issue`` limitando a quantidade pelo param ``items`` e o param issue
@@ -132,7 +142,7 @@ def makeAnyArticle(issue=None, items=3):
 
     for item in range(items):
 
-        article = makeOneArticle()
+        article = makeOneArticle(attrib)
 
         articles.append(article)
 

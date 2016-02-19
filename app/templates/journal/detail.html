@@ -26,8 +26,10 @@
       <div class="col-md-12 content journalHome">
         <div class="block mission">
           <div class="col-md-6 col-sm-6">
-            <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
-            <p>{{ journal.mission[0].description }}{# filtar pelo idioma #}</p>
+            {% if journal.mission %}
+              <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
+              <p>{{ journal.mission[0].description }}{# filtar pelo idioma #}</p>
+            {% endif %}
           </div>
           <div class="col-md-6 col-sm-6">
             <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
