@@ -471,9 +471,9 @@ class ArticleAdminView(OpacBaseAdminView):
     @action('rebuild_html', _(u'Reconstruir HTML'), ACTION_REBUILD_CONFIRMATION_MSG)
     def rebuild_html(self, ids):
         try:
-            articles = controllers.filter_articles_by_ids(ids)
+            articles = controllers.get_articles_by_aid(ids)
             count = 0
-            for article in articles:
+            for article in articles.itervalues():
                 rebuild_article_xml(article)
                 count += 1
             flash(_(u'Artigo(s) reconstruido com sucesso!!'))

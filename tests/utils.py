@@ -26,16 +26,17 @@ def makeOneJournal(attrib=None):
     return models.Journal(**journal).save()
 
 
-def makeAnyJournal(items=3):
+def makeAnyJournal(items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Journal`` com atributos ``jid``,
     ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
+    Param attrib para adicionar atributo aos objecto do tipo Journal
     """
     journals = []
 
     for item in range(items):
 
-        journal = makeOneJournal()
+        journal = makeOneJournal(attrib)
 
         journals.append(journal)
 
@@ -90,7 +91,7 @@ def makeOneIssue(attrib=None):
     return models.Issue(**issue).save()
 
 
-def makeAnyIssue(journal=None, items=3):
+def makeAnyIssue(journal=None, items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Issue`` com atributos ``iid``,
     ``journal`` limitando a quantidade pelo param ``items``e o param journal
@@ -104,7 +105,7 @@ def makeAnyIssue(journal=None, items=3):
 
     for item in range(items):
 
-        issue = makeOneIssue()
+        issue = makeOneIssue(attrib)
 
         issues.append(issue)
 
@@ -171,7 +172,7 @@ def makeOneArticle(attrib=None):
     return models.Article(**article).save()
 
 
-def makeAnyArticle(issue=None, items=3):
+def makeAnyArticle(issue=None, items=3, attrib=None):
     """
     Retorna uma lista de objetos ``Article`` com atributos ``aid``,
     ``issue`` limitando a quantidade pelo param ``items`` e o param issue
@@ -185,7 +186,7 @@ def makeAnyArticle(issue=None, items=3):
 
     for item in range(items):
 
-        article = makeOneArticle()
+        article = makeOneArticle(attrib)
 
         articles.append(article)
 

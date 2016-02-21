@@ -80,6 +80,8 @@
                                                 </li>
                                             </ul>
                                         </li>
+                                      {% else %}
+                                        {% trans %}Nenhum periódico encontrado{% endtrans %}.
                                     {% endfor %}
                                 </ul>
                             </td>
@@ -127,15 +129,17 @@
                                           <h2>{{ index }} ({{ journals|length }})</h2>
                                           <ul>
                                             {% for journal in journals %}
-                                            <table>
-                                                  {% include "includes/format_journal_row.html" %}
-                                            </table>
+                                              <table>
+                                                {% include "includes/format_journal_row.html" %}
+
+                                              </table>
                                             {% endfor %}
                                           </ul>
                                         </li>
+                                      {% else %}
+                                        {% trans %}Nenhum periódico encontrado{% endtrans %}.
                                     {% endfor %}
                                 </ul>
-
                             </td>
                         </tr>
                         </tbody>

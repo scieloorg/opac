@@ -2,11 +2,13 @@
 
 from uuid import uuid4
 
+from werkzeug.security import check_password_hash
+
 from base import BaseTestCase
 
 from opac_schema.v1 import models
 
-from app import controllers
+from app import controllers, dbsql, utils as ut
 
 import utils
 
@@ -233,6 +235,14 @@ class JournalControllerTestCase(BaseTestCase):
         self.assertEqual(controllers.get_journal_by_jid('jid123').id,
                          journal.id)
 
+    def test_get_journal_by_jid_without_id(self):
+        """
+        Testando a função controllers.get_journal_by_jid() com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_journal_by_jid, [])
+
     def test_get_journal_by_jid_with_some_params(self):
         """
         Testando a função controllers.get_journal_by_jid() deve retornar um
@@ -291,7 +301,7 @@ class JournalControllerTestCase(BaseTestCase):
         journals = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
 
-        self.assertIsNone(journals)
+        self.assertEqual(journals, {})
 
     def test_get_journals_by_jid_without_journal(self):
         """
@@ -301,7 +311,45 @@ class JournalControllerTestCase(BaseTestCase):
 
         journals = controllers.get_journals_by_jid(['jid1', 'jid12', 'jid123'])
 
-        self.assertIsNone(journals)
+        self.assertEqual(journals, {})
+
+    def test_set_journal_is_public_bulk(self):
+        """
+        Testando alterar o valor de um conjunto de journals.
+        """
+
+        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+
+        controllers.set_journal_is_public_bulk(
+            ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu'], is_public=False)
+
+        ids = ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu']
+
+        journals = controllers.get_journals_by_jid(ids)
+
+        for journal in journals.itervalues():
+            self.assertFalse(journal.is_public)
+
+    def test_set_journal_is_public_bulk_without_jids(self):
+        """
+        Testando alterar o valor de um conjunto de journals, sem ids.
+        """
+
+        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_journal_is_public_bulk, [], is_public=False)
+
+        ids = ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu']
+
+        journals = controllers.get_journals_by_jid(ids)
+
+        for journal in journals.itervalues():
+            self.assertTrue(journal.is_public)
 
 
 class IssueControllerTestCase(BaseTestCase):
@@ -367,6 +415,16 @@ class IssueControllerTestCase(BaseTestCase):
 
         self.assertListEqual(sorted(issues), sorted(['4', '3', '2', '1']))
 
+    def test_get_issues_by_jid_with_unknow_ids(self):
+        """
+        Teste da função controllers.get_issue_by_jid() com um jid desconhecido,
+        deve retornar um None.
+        """
+
+        issues = controllers.get_issues_by_jid('02i28wjs92u')
+
+        self.assertIsNone(issues)
+
     def test_get_issue_by_iid(self):
         """
         Teste da função controllers.get_issue_by_iid() para retornar um objeto:
@@ -374,6 +432,13 @@ class IssueControllerTestCase(BaseTestCase):
         """
         issue = self._makeOne()
         self.assertEqual(controllers.get_issue_by_iid(issue.id), issue)
+
+    def test_get_issue_by_iid_without_id(self):
+        """
+        Teste da função controllers.get_issue_by_iid() com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+        self.assertRaises(ValueError, controllers.get_issue_by_iid, [])
 
     def test_get_issue_by_iid_with_some_params(self):
         """
@@ -415,7 +480,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(['iid1', 'iid12', 'iid123'])
 
-        self.assertIsNone(issues)
+        self.assertEqual(issues, {})
 
     def test_set_issue_is_public_bulk(self):
         """
@@ -456,6 +521,25 @@ class IssueControllerTestCase(BaseTestCase):
         for issue in issues.itervalues():
             self.assertEqual(u'plágio', issue.unpublish_reason)
 
+    def test_set_issue_is_public_bulk_without_iids(self):
+        """
+        Testando alterar o valor de um conjunto de journals, sem ids.
+        """
+
+        self._makeOne(attrib={'_id': '0ow9sms9ms', 'is_public': True})
+        self._makeOne(attrib={'_id': '90k2ud90ds', 'is_public': True})
+        self._makeOne(attrib={'_id': '98jd9dhydk', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_issue_is_public_bulk, [], is_public=False)
+
+        ids = ['0ow9sms9ms', '90k2ud90ds', '98jd9dhydk']
+
+        issues = controllers.get_issues_by_iid(ids)
+
+        for issue in issues.itervalues():
+            self.assertTrue(issue.is_public)
+
 
 class ArticleControllerTestCase(BaseTestCase):
 
@@ -484,6 +568,14 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self.assertEqual(controllers.get_article_by_aid(article.id).id,
                          article.id)
+
+    def test_get_article_by_aid_without_aid(self):
+        """
+        Teste da função controllers.get_article_by_aid com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_article_by_aid, [])
 
     def test_get_article_by_aid_without_article(self):
         """
@@ -530,7 +622,7 @@ class ArticleControllerTestCase(BaseTestCase):
         articles = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
 
-        self.assertIsNone(articles)
+        self.assertEqual(articles, {})
 
     def test_get_articles_by_aid_without_article(self):
         """
@@ -540,7 +632,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
-        self.assertIsNone(articles)
+        self.assertEqual(articles, {})
 
     def test_set_article_is_public_bulk(self):
         """
@@ -561,18 +653,286 @@ class ArticleControllerTestCase(BaseTestCase):
         for article in articles.itervalues():
             self.assertFalse(article.is_public)
 
+    def test_set_article_is_public_bulk_without_aids(self):
+        """
+        Testando alterar o valor de um conjunto de journals sem iids, deve
+        retorna um ValueError.
+        """
+
+        self._makeOne(attrib={'_id': '9ms9kos9js', 'is_public': True})
+        self._makeOne(attrib={'_id': 'lksnsh8snk', 'is_public': True})
+        self._makeOne(attrib={'_id': '7153gj6ysb', 'is_public': True})
+
+        self.assertRaises(ValueError,
+                          controllers.set_article_is_public_bulk, [], is_public=False)
+
+        ids = ['9ms9kos9js', 'lksnsh8snk', '7153gj6ysb']
+
+        articles = controllers.get_articles_by_aid(ids)
+
+        for article in articles.itervalues():
+            self.assertTrue(article.is_public)
+
     def test_get_articles_by_iid(self):
         """
         Testando a função controllers.get_articles_by_iid(), deve retorna uma
         lista de articles.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83'})
-        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82'})
+        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
+                              'journal': 'oak,ajimn1'})
 
         expected = [u'012ijs9y24', u'2183ikos90']
 
         articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
 
         self.assertListEqual(sorted(articles), sorted(expected))
+
+    def test_get_articles_by_iid_without_iid(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), sem param iid deve
+        retorna um ValueError.
+        """
+        self.assertRaises(ValueError,
+                          controllers.get_articles_by_iid, [])
+
+
+    def test_new_article_html_doc(self):
+        """
+        Testando a função controllers.new_article_html_doc(), deve retornar um
+        objeto ArticleHTML.
+        """
+
+        article = self._makeOne()
+
+        articleHTML = controllers.new_article_html_doc('pt', '<html>anytags</html>')
+        article.htmls = [articleHTML]
+        article.save()
+
+        self.assertIsInstance(articleHTML, models.ArticleHTML)
+
+    def test_new_article_html_doc_param_language_not_string(self):
+        """
+        Testando a função controllers.new_article_html_doc() com o parâmetro
+        language sendo um inteiro,  deve retornar ValueError.
+        """
+
+        self.assertRaises(ValueError,
+                          controllers.new_article_html_doc, 123, '<html>anytags</html>')
+
+    def test_new_article_html_doc_param_source_not_string(self):
+        """
+        Testando a função controllers.new_article_html_doc() com o parâmetro
+        source sendo um inteiro,  deve retornar ValueError.
+        """
+
+        self.assertRaises(ValueError,
+                          controllers.new_article_html_doc, 'en', 989087867)
+
+
+class UserControllerTestCase(BaseTestCase):
+
+    def setUp(self):
+        dbsql.create_all()
+
+    def tearDown(self):
+        dbsql.session.remove()
+        dbsql.drop_all()
+
+    def test_get_user_by_email(self):
+        """
+        Testando a função controllers.get_user_by_email(), deve retornar um
+        usuários com o mesmo email do usuário cadastrado.
+        """
+        ut.create_user('xxx@yyyy.com', 'oaj9u2', True)
+
+        user = controllers.get_user_by_email('xxx@yyyy.com')
+
+        self.assertEqual(user.email, 'xxx@yyyy.com')
+
+    def test_get_user_by_email_with_param_email_not_string(self):
+        """
+        Testando a função controllers.get_user_by_email() com o param email como
+        inteiro, deve retornar um ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_user_by_email, 123)
+
+    def test_get_user_by_id(self):
+        """
+        Testando a função controllers.get_user_by_id(), deve retornar um
+        usuários com o mesmo email do usuário cadastrado.
+        """
+        new_user = ut.create_user('xxx@yyyy.com', 'oaj9u2', True)
+
+        returned_user = controllers.get_user_by_id(new_user.id)
+
+        self.assertEqual(new_user.email, returned_user.email)
+
+    def test_get_user_by_email_with_param_id_not_string(self):
+        """
+        Testando a função controllers.get_user_by_id() com o param id como
+        string, deve retornar um ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.get_user_by_id, 'blaus')
+
+    def test_set_user_email_confirmed(self):
+        """
+        Testando a função controllers.set_user_email_confirmed().
+        """
+        user = ut.create_user('oamsonm@lkakjs.com', '0akdnids', False)
+
+        controllers.set_user_email_confirmed(user)
+
+        modified_user = controllers.get_user_by_id(user.id)
+
+        self.assertTrue(modified_user.email_confirmed)
+
+    def test_set_user_email_confirmed_with_param_not_user(self):
+        """
+        Testando a função controllers.set_user_email_confirmed() com o param
+        user como string, deve retornar um ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.set_user_email_confirmed,
+                          'AnotherObject')
+
+    def test_set_user_password(self):
+        """
+        Testando a função controllers.set_user_password().
+        """
+        user = ut.create_user('oamsonm@lkakjs.com', '', True)
+
+        controllers.set_user_password(user, '123')
+
+        modified_user = controllers.get_user_by_id(user.id)
+
+        self.assertTrue(check_password_hash(modified_user.password, '123'))
+
+    def test_set_user_password_with_param_not_user(self):
+        """
+        Testando a função controllers.set_user_password() com o param
+        user como string, deve retornar um ValueError.
+        """
+
+        self.assertRaises(ValueError, controllers.set_user_password,
+                          'AnotherObject', '123')
+
+
+class FunctionsInControllerTestCase(BaseTestCase):
+
+    def test_count_elements_by_type_and_visibility_type_journal(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 20
+        periódicos cadastrados, deve retornar apenas 20 periódicos.
+        """
+
+        utils.makeAnyJournal(items=20)
+
+        total_journal = controllers.count_elements_by_type_and_visibility('journal')
+
+        self.assertEqual(total_journal, 20)
+
+    def test_count_elements_by_type_and_visibility_type_issue(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 20
+        fascículos cadastrados, deve retornar apenas 20 fascículos.
+        """
+
+        utils.makeAnyIssue(items=20)
+
+        total_issue = controllers.count_elements_by_type_and_visibility('issue')
+
+        self.assertEqual(total_issue, 20)
+
+    def test_count_elements_by_type_and_visibility_type_article(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 20
+        artigos cadastrados, deve retornar apenas 20 artigos.
+        """
+
+        utils.makeAnyArticle(items=20)
+
+        total_article = controllers.count_elements_by_type_and_visibility('article')
+
+        self.assertEqual(total_article, 20)
+
+    def test_count_elements_by_type_and_visibility_journal_public_only(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 20
+        periódicos cadastrados com atributo puclic=true e 6 public=false,
+        deve retornar apenas 20 periódicos(somente os periódicos marcados como
+        publicos).
+        """
+
+        utils.makeAnyJournal(items=20)
+        utils.makeOneJournal({'is_public': False})
+        utils.makeOneJournal({'is_public': False})
+        utils.makeOneJournal({'is_public': False})
+        utils.makeOneJournal({'is_public': False})
+        utils.makeOneJournal({'is_public': False})
+        utils.makeOneJournal({'is_public': False})
+
+        total_journal = controllers.count_elements_by_type_and_visibility('journal',
+                                public_only=True)
+
+        self.assertEqual(total_journal, 20)
+
+    def test_count_elements_by_type_and_visibility_issue_public_only(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 50
+        fascículos cadastrados com atributo puclic=true e 6 public=false,
+        deve retornar apenas 20 fascículo(somente os fascículos marcados como
+        publicos).
+        """
+
+        utils.makeAnyIssue(items=50)
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+
+        total_issue = controllers.count_elements_by_type_and_visibility('issue',
+                                public_only=True)
+
+        self.assertEqual(total_issue, 50)
+
+    def test_count_elements_by_type_and_visibility_article_public_only(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com 98
+        artigos cadastrados com atributo puclic=true e 6 public=false,
+        deve retornar apenas 20 artigo(somente os artigos marcados como
+        publicos).
+        """
+
+        utils.makeAnyArticle(items=98)
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+
+        total_article = controllers.count_elements_by_type_and_visibility('article',
+                                public_only=True)
+
+        self.assertEqual(total_article, 98)
+
+    def test_count_elements_by_type_and_visibility_wrong_param_type(self):
+        """
+        Testando a função count_elements_by_type_and_visibility() com um termo
+        desconhecido, deve retornar um ValueError
+        """
+
+        self.assertRaises(ValueError,
+            controllers.count_elements_by_type_and_visibility, 'ksjkadjkajsdkja')
+
+
+

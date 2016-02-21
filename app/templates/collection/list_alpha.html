@@ -56,6 +56,12 @@
             <tbody>
               {% for journal in journals %}
                 {% include "includes/format_journal_row.html" %}
+                {% else %}
+                <tr>
+                  <td colspan="2">
+                    {% trans %}Nenhum periódico encontrado{% endtrans %}.
+                  </td>
+                </tr>
               {% endfor %}
             </tbody>
           </table>

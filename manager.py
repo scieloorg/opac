@@ -124,10 +124,10 @@ def test(coverage=False, verbosity=2):
         COV.save()
         print('Coverage Summary:')
         COV.report()
-        # basedir = os.path.abspath(os.path.dirname(__file__))
-        # covdir = 'tmp/coverage'
-        # COV.html_report(directory=covdir)
-        # print('HTML version: file://%s/index.html' % covdir)
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        covdir = 'tmp/coverage'
+        COV.html_report(directory=covdir)
+        print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
 
     if result.wasSuccessful():
