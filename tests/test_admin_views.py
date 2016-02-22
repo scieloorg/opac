@@ -12,10 +12,12 @@ from app.admin import forms
 from app.controllers import get_user_by_email
 from app.notifications import send_confirmation_email
 from base import BaseTestCase
+from opac_schema.v1.models import Sponsor
 from tests.utils import (
     makeOneJournal, makeAnyJournal,
     makeOneIssue, makeAnyIssue,
-    makeOneArticle, makeAnyArticle
+    makeOneArticle, makeAnyArticle,
+    makeOneCollection, makeOneSponsor
 )
 
 reset_pwd_url_pattern = re.compile('href="(.*)">')
@@ -2026,6 +2028,114 @@ class JournalAdminViewTests(BaseTestCase):
             self.assertFalse(journal.is_public)
             self.assertEqual(expected_reason, journal.unpublish_reason)
 
+    def test_admin_journal_action_publish_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Journal no banco (is_public=False)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de periódicos: /admin/journal/
+            - realizamos a ação de publicacar, mas é levantada uma exceção no processo
+        Verificamos:
+            - o periódico deve ficar como não público (is_public=False)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        journal = makeOneJournal({'is_public': False})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        journal_index_url = url_for('journal.index_view')
+        action_url = '%saction/' % journal_index_url
+        expected_msg = u'Ocorreu um erro tentando publicar o(s) periódico(s)!!'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de periódicos
+            journal_list_response = client.get(journal_index_url)
+            self.assertStatus(journal_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': journal_index_url,
+                        'action': 'publish',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                journal.reload()
+                self.assertTrue(journal.is_public)
+
+    def test_admin_journal_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Journal no banco (is_public=True)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de periódicos: /admin/journal/
+            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+        Verificamos:
+            - o periódico deve ficar como público (is_public=True)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        journal = makeOneJournal({'is_public': True})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        journal_index_url = url_for('journal.index_view')
+        action_url = '%saction/' % journal_index_url
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) periódico(s)!!'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de periódicos
+            journal_list_response = client.get(journal_index_url)
+            self.assertStatus(journal_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': journal_index_url,
+                        'action': 'unpublish_plagiarism',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                journal.reload()
+                self.assertTrue(journal.is_public)
+
 
 class IssueAdminViewTests(BaseTestCase):
 
@@ -2913,6 +3023,114 @@ class IssueAdminViewTests(BaseTestCase):
             self.assertFalse(issue.is_public)
             self.assertEqual(expected_reason, issue.unpublish_reason)
 
+    def test_admin_issue_action_publish_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Issue no banco (is_public=False)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Issues: /admin/issue/
+            - realizamos a ação de publicacar, mas é levantada uma exceção no processo
+        Verificamos:
+            - o Issue deve ficar como não público (is_public=False)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        issue = makeOneIssue({'is_public': False})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        issue_index_url = url_for('issue.index_view')
+        action_url = '%saction/' % issue_index_url
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de periódicos
+            issue_list_response = client.get(issue_index_url)
+            self.assertStatus(issue_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': issue_index_url,
+                        'action': 'publish',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                issue.reload()
+                self.assertTrue(issue.is_public)
+
+    def test_admin_issue_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Issue no banco (is_public=True)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Issues: /admin/issue/
+            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+        Verificamos:
+            - o issue deve ficar como público (is_public=True)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        issue = makeOneIssue({'is_public': True})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        issue_index_url = url_for('issue.index_view')
+        action_url = '%saction/' % issue_index_url
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de Issues
+            issue_list_response = client.get(issue_index_url)
+            self.assertStatus(issue_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': issue_index_url,
+                        'action': 'unpublish_plagiarism',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                issue.reload()
+                self.assertTrue(issue.is_public)
+
 
 class ArticleAdminViewTests(BaseTestCase):
 
@@ -3780,3 +3998,889 @@ class ArticleAdminViewTests(BaseTestCase):
             article.reload()
             self.assertFalse(article.is_public)
             self.assertEqual(expected_reason, article.unpublish_reason)
+
+    def test_admin_article_action_publish_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Article no banco (is_public=False)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Articles: /admin/article/
+            - realizamos a ação de publicacar, mas é levantada uma exceção no processo
+        Verificamos:
+            - o Article deve ficar como não público (is_public=False)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        article = makeOneArticle({'is_public': False})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        article_index_url = url_for('article.index_view')
+        action_url = '%saction/' % article_index_url
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de periódicos
+            article_list_response = client.get(article_index_url)
+            self.assertStatus(article_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': article_index_url,
+                        'action': 'publish',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                article.reload()
+                self.assertTrue(article.is_public)
+
+    def test_admin_article_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Article no banco (is_public=True)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Articles: /admin/article/
+            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+        Verificamos:
+            - o article deve ficar como público (is_public=True)
+            - o usuario é notificado que houve um erro na operação
+        """
+        # with
+        article = makeOneArticle({'is_public': True})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        article_index_url = url_for('article.index_view')
+        action_url = '%saction/' % article_index_url
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acessamos a listagem de Issues
+            article_list_response = client.get(article_index_url)
+            self.assertStatus(article_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # executamos ação publicar:
+            with self.assertRaises(Exception):
+                action_response = client.post(
+                    action_url,
+                    data={
+                        'url': article_index_url,
+                        'action': 'unpublish_plagiarism',
+                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                    },
+                    follow_redirects=True
+                )
+                self.assertStatus(action_response, 200)
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                article.reload()
+                self.assertTrue(article.is_public)
+
+
+class CollectionAdminViewTests(BaseTestCase):
+
+    def test_admin_collection_list_records(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Collection no banco
+        Quando:
+            - fazemos login e
+            - acessamos a pagina /admin/collection/
+        Verificamos:
+            - o Collection criado deve estar listado nessa página
+            - e o template utilizado é o esperado
+        """
+        # with
+        collection = makeOneCollection()
+
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            self.assertTemplateUsed('admin/index.html')
+            self.assertTrue(current_user.is_authenticated)
+            # acesso a aba de collection
+            collection_list_response = client.get(url_for('collection.index_view'))
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # verificamos a resposta
+            # que tem a id para acessar ao collection
+            self.assertIn(collection.id, collection_list_response.data.decode('utf-8'))
+            # que tem a url para acessar ao collection
+            expected_collection_detail_url = u"/admin/collection/details/?url=%2Fadmin%2Fcollection%2F&amp;id={}".format(collection.id)
+            expected_anchor = '<a class="icon" href="%s"' % expected_collection_detail_url
+            self.assertIn(expected_anchor, collection_list_response.data.decode('utf-8'))
+
+    def test_admin_collection_details(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Collection no banco
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de detalhe do Collection: /admin/collection/details/
+        Verificamos:
+            - a pagina mostra o Collection certo
+        """
+        # with
+        collection = makeOneCollection()
+
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_detail_url = url_for('collection.details_view', id=collection.id)
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            self.assertTemplateUsed('admin/index.html')
+            self.assertTrue(current_user.is_authenticated)
+            # acesso a aba de Collection
+            collection_detail_response = client.get(collection_detail_url)
+            self.assertStatus(collection_detail_response, 200)
+            self.assertTemplateUsed('admin/model/details.html')
+            # then
+            # verificamos a resposta
+            # que tem a id para acessar ao Collection
+            self.assertIn(collection.id, collection_detail_response.data.decode('utf-8'))
+
+    def test_admin_collection_check_column_exclude_list(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de collections: /admin/collection/
+        Verificamos:
+            - que contém todos os campos excluidos da listagem são os esperados
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+        expected_column_exclude_list = ('_id', )
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de collections
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
+            self.assertEqual(len(expected_column_exclude_list), len(column_exclude_list))
+            for expected_excluded_field in expected_column_exclude_list:
+                self.assertIn(expected_excluded_field, column_exclude_list)
+
+    def test_admin_collection_check_form_excluded_columns(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de collections: /admin/collection/
+        Verificamos:
+            - que contém todos os campos excluidos do formulario são os esperados
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+        expected_form_excluded_columns = ('acronym', )
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de collections
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            form_excluded_columns = self.get_context_variable('admin_view').form_excluded_columns
+            self.assertEqual(len(expected_form_excluded_columns), len(form_excluded_columns))
+            for expected_form_excluded_column in expected_form_excluded_columns:
+                self.assertIn(expected_form_excluded_column, form_excluded_columns)
+
+    def test_admin_collection_check_can_create_is_false(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Article: /admin/collection/
+        Verificamos:
+            - que não permite criar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_create = self.get_context_variable('admin_view').can_create
+            self.assertFalse(can_create)
+
+    def test_admin_collection_check_can_edit_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Article: /admin/collection/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_edit = self.get_context_variable('admin_view').can_edit
+            self.assertTrue(can_edit)
+
+    def test_admin_collection_check_can_delete_is_false(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de collections: /admin/collection/
+        Verificamos:
+            - que não permite apagar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_delete = self.get_context_variable('admin_view').can_delete
+            self.assertFalse(can_delete)
+
+    def test_admin_collection_check_create_modal_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de periódicos: /admin/collection/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            create_modal = self.get_context_variable('admin_view').create_modal
+            self.assertTrue(create_modal)
+
+    def test_admin_collection_check_edit_modal_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de periódicos: /admin/collection/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            edit_modal = self.get_context_variable('admin_view').edit_modal
+            self.assertTrue(edit_modal)
+
+    def test_admin_collection_check_can_view_details_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de collections: /admin/collection/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        collection_index_url = url_for('collection.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            collection_list_response = client.get(collection_index_url)
+            self.assertStatus(collection_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_view_details = self.get_context_variable('admin_view').can_view_details
+            self.assertTrue(can_view_details)
+
+
+class SponsorAdminViewTests(BaseTestCase):
+
+    def test_admin_sponsor_list_records(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Collection no banco
+        Quando:
+            - fazemos login e
+            - acessamos a pagina /admin/sponsor/
+        Verificamos:
+            - o Collection criado deve estar listado nessa página
+            - e o template utilizado é o esperado
+        """
+        # with
+        sponsor = makeOneSponsor()
+
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            self.assertTemplateUsed('admin/index.html')
+            self.assertTrue(current_user.is_authenticated)
+            # acesso a aba de Sponsor
+            sponsor_list_response = client.get(url_for('sponsor.index_view'))
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # then
+            # verificamos a resposta
+            # que tem a id para acessar ao sponsor
+            self.assertIn(sponsor.id, sponsor_list_response.data.decode('utf-8'))
+            # que tem a url para acessar ao sponsor
+            expected_sponsor_detail_url = u"/admin/sponsor/details/?url=%2Fadmin%2Fsponsor%2F&amp;id={}".format(sponsor.id)
+            expected_anchor = '<a class="icon" href="%s"' % expected_sponsor_detail_url
+            self.assertIn(expected_anchor, sponsor_list_response.data.decode('utf-8'))
+
+    def test_admin_sponsor_details(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Sponsor no banco
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de detalhe do Sponsor: /admin/sponsor/details/
+        Verificamos:
+            - a pagina mostra o Sponsor certo
+        """
+        # with
+        sponsor = makeOneSponsor()
+
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_detail_url = url_for('sponsor.details_view', id=sponsor.id)
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            self.assertTemplateUsed('admin/index.html')
+            self.assertTrue(current_user.is_authenticated)
+            # acesso a aba de Sponsor
+            sponsor_detail_response = client.get(sponsor_detail_url)
+            self.assertStatus(sponsor_detail_response, 200)
+            self.assertTemplateUsed('admin/model/details.html')
+            # then
+            # verificamos a resposta
+            # que tem a id para acessar ao Sponsor
+            self.assertIn(sponsor.id, sponsor_detail_response.data.decode('utf-8'))
+
+    def test_admin_sponsor_check_column_exclude_list(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsors: /admin/sponsor/
+        Verificamos:
+            - que contém todos os campos excluidos da listagem são os esperados
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+        expected_column_exclude_list = ('_id', )
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de Sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
+            self.assertEqual(len(expected_column_exclude_list), len(column_exclude_list))
+            for expected_excluded_field in expected_column_exclude_list:
+                self.assertIn(expected_excluded_field, column_exclude_list)
+
+    def test_admin_sponsor_check_form_excluded_columns(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsors: /admin/sponsor/
+        Verificamos:
+            - que contém todos os campos excluidos do formulario são os esperados
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de Sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            form_excluded_columns = self.get_context_variable('admin_view').form_excluded_columns
+            self.assertEqual(None, form_excluded_columns)
+
+    def test_admin_sponsor_check_can_create_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Sponsor: /admin/sponsor/
+        Verificamos:
+            - que não permite criar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de Sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_create = self.get_context_variable('admin_view').can_create
+            self.assertTrue(can_create)
+
+    def test_admin_sponsor_check_can_edit_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de Article: /admin/sponsor/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de Sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_edit = self.get_context_variable('admin_view').can_edit
+            self.assertTrue(can_edit)
+
+    def test_admin_sponsor_check_can_delete_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsors: /admin/sponsor/
+        Verificamos:
+            - que não permite apagar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_delete = self.get_context_variable('admin_view').can_delete
+            self.assertTrue(can_delete)
+
+    def test_admin_sponsor_check_create_modal_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsor: /admin/sponsor/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            create_modal = self.get_context_variable('admin_view').create_modal
+            self.assertTrue(create_modal)
+
+    def test_admin_sponsor_check_edit_modal_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsor: /admin/sponsor/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            edit_modal = self.get_context_variable('admin_view').edit_modal
+            self.assertTrue(edit_modal)
+
+    def test_admin_sponsor_check_can_view_details_is_true(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsors: /admin/sponsor/
+        Verificamos:
+            - que não permite editar registros
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de periódicos
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            can_view_details = self.get_context_variable('admin_view').can_view_details
+            self.assertTrue(can_view_details)
+
+    def test_admin_sponsor_check_searchable_columns(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de listagem de sponsors: /admin/sponsor/
+        Verificamos:
+            - que contém todos os campos de busca esperados
+        """
+        # with
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        sponsor_index_url = url_for('sponsor.index_view')
+        expected_column_searchable_list = ('name',)
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de sponsor
+            sponsor_list_response = client.get(sponsor_index_url)
+            self.assertStatus(sponsor_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            column_searchable_list = self.get_context_variable('admin_view').column_searchable_list
+            self.assertEqual(len(expected_column_searchable_list), len(column_searchable_list))
+            for expected_searchable_field in expected_column_searchable_list:
+                self.assertIn(expected_searchable_field, column_searchable_list)

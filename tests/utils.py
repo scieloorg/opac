@@ -1,8 +1,55 @@
 # coding: utf-8
 import datetime
 from uuid import uuid4
-
+from flask import current_app
 from opac_schema.v1 import models
+
+
+def makeOneCollection(attrib=None):
+    """
+    Retorna um objeto ``Collection`` com os atributos obrigatórios:
+    ``_id``, ``acronym``, ``name``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    config_acronym = current_app.config['OPAC_COLLECTION']
+
+    name = attrib.get('name', 'collection of %s' % config_acronym)
+    license_code = attrib.get('license_code', 'CC-BY')
+    acronym = attrib.get('acronym', config_acronym)
+
+    collection = {
+        '_id': default_id,
+        'name': name,
+        'acronym': acronym,
+        'license_code': license_code,
+        'logo_url': attrib.get('logo_url', None),
+        'sponsors': attrib.get('sponsors', None),
+    }
+    for k, v in attrib.iteritems():
+        if k not in collection.keys():
+            collection[k] = v
+    return models.Collection(**collection).save()
+
+
+def makeOneSponsor(attrib=None):
+    """
+    Retorna um objeto ``Sponsor`` com os atributos obrigatórios:
+    ``_id``, ``acronym``, ``name``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    name = attrib.get('name', 'sponsor (%s)' % default_id)
+
+    collection = {
+        '_id': default_id,
+        'name': name,
+        'url': attrib.get('url', None),
+        'logo_url': attrib.get('logo_url', None),
+    }
+    return models.Sponsor(**collection).save()
 
 
 def makeOneJournal(attrib=None):
