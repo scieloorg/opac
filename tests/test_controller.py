@@ -30,12 +30,6 @@ class JournalControllerTestCase(BaseTestCase):
         """
         return utils.makeAnyJournal(items=items)
 
-    def tearDown(self):
-        """
-        Remove todos os objectos ``Journal`` ao terminar cada teste.
-        """
-        models.Journal.objects.delete()
-
     def test_get_journal(self):
         """
         Teste da função controllers.get_journals() para retornar um objeto:
@@ -375,13 +369,6 @@ class IssueControllerTestCase(BaseTestCase):
         """
         return utils.makeAnyIssue(journal=journal, items=items)
 
-    def tearDown(self):
-        """
-        Remove todos os objectos ``Issue`` ao terminar cada teste.
-        """
-        models.Journal.objects.delete()
-        models.Issue.objects.delete()
-
     def test_get_issues_by_jid(self):
         """
         Teste da função controllers.get_issue_by_jid() para retornar um objeto:
@@ -570,14 +557,6 @@ class ArticleControllerTestCase(BaseTestCase):
         ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
         """
         return utils.makeAnyArticle(issue=issue, items=items)
-
-    def tearDown(self):
-        """
-        Remove todos os objectos ``Article`` ao terminar cada teste.
-        """
-        models.Journal.objects.delete()
-        models.Issue.objects.delete()
-        models.Article.objects.delete()
 
     def test_get_article_by_aid(self):
         """

@@ -148,13 +148,6 @@ class UserAdminView(sqla.ModelView):
 
     column_filters = ['email']
 
-    # def get_create_form(self):
-    #     """
-    #         Create form class for model creation view.
-    #         Override to implement customized behavior.
-    #     """
-    #     return forms.EmailForm
-
     def after_model_change(self, form, model, is_created):
         if is_created:
             try:
@@ -195,8 +188,6 @@ class UserAdminView(sqla.ModelView):
             flash(_(u'Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
 
 class OpacBaseAdminView(mongoengine.ModelView):
@@ -335,8 +326,6 @@ class JournalAdminView(OpacBaseAdminView):
             flash(_(u'Periódico(s) publicado(s) com sucesso!!'))
         except Exception as ex:
             flash(_(u'Ocorreu um erro tentando publicar o(s) periódico(s)!!'), 'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     def unpublish_journals(self, ids, reason):
         try:
@@ -347,8 +336,6 @@ class JournalAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando despublicar o(s) periódico(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_by_copyright(self, ids):
@@ -413,8 +400,6 @@ class IssueAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     def unpublish_issues(self, ids, reason):
         try:
@@ -425,8 +410,6 @@ class IssueAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_by_copyright(self, ids):
@@ -488,8 +471,6 @@ class ArticleAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
@@ -502,8 +483,6 @@ class ArticleAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     def unpublish_articles(self, ids, reason):
         try:
@@ -514,8 +493,6 @@ class ArticleAdminView(OpacBaseAdminView):
             flash(_(u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
-            if not self.handle_view_exception(ex):
-                raise
 
     @action('unpublish_by_copyright', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_by_copyright(self, ids):

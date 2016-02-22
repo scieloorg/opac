@@ -1,8 +1,55 @@
 # coding: utf-8
-
+import datetime
 from uuid import uuid4
-
+from flask import current_app
 from opac_schema.v1 import models
+
+
+def makeOneCollection(attrib=None):
+    """
+    Retorna um objeto ``Collection`` com os atributos obrigatórios:
+    ``_id``, ``acronym``, ``name``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    config_acronym = current_app.config['OPAC_COLLECTION']
+
+    name = attrib.get('name', 'collection of %s' % config_acronym)
+    license_code = attrib.get('license_code', 'CC-BY')
+    acronym = attrib.get('acronym', config_acronym)
+
+    collection = {
+        '_id': default_id,
+        'name': name,
+        'acronym': acronym,
+        'license_code': license_code,
+        'logo_url': attrib.get('logo_url', None),
+        'sponsors': attrib.get('sponsors', None),
+    }
+    for k, v in attrib.iteritems():
+        if k not in collection.keys():
+            collection[k] = v
+    return models.Collection(**collection).save()
+
+
+def makeOneSponsor(attrib=None):
+    """
+    Retorna um objeto ``Sponsor`` com os atributos obrigatórios:
+    ``_id``, ``acronym``, ``name``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    name = attrib.get('name', 'sponsor (%s)' % default_id)
+
+    collection = {
+        '_id': default_id,
+        'name': name,
+        'url': attrib.get('url', None),
+        'logo_url': attrib.get('logo_url', None),
+    }
+    return models.Sponsor(**collection).save()
 
 
 def makeOneJournal(attrib=None):
@@ -11,20 +58,18 @@ def makeOneJournal(attrib=None):
     ``_id``, ``jid``, ``is_public``.
     Atualiza o objeto de retorno com os valores do param ``attrib``.
     """
-    if not attrib:
-        attrib = {}
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
 
-    if '_id' not in attrib:
-        _id = str(uuid4().hex)
-    else:
-        _id = attrib['_id']
-
-    acron = "journal-%s" % _id
-    journal = {'_id': _id, 'jid': _id, 'is_public': True, 'acronym': acron}
-
-    if attrib and isinstance(attrib, dict):
-        journal.update(attrib)
-
+    journal = {
+        '_id': default_id,
+        'jid': attrib.get('jid', default_id),
+        'is_public': attrib.get('is_public', True),
+        'created': attrib.get('created', datetime.datetime.now()),
+        'updated': attrib.get('updated', datetime.datetime.now()),
+        'acronym': attrib.get('acronym', "journal-%s" % default_id)
+    }
+    journal.update(attrib)
     return models.Journal(**journal).save()
 
 
@@ -52,24 +97,43 @@ def makeOneIssue(attrib=None):
     Atualiza o objeto de retorno com os valores do param ``attrib``.
     """
 
-    if not attrib:
-        attrib = {}
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    default_volume = attrib.get('volume', '1')  # improve para evitar dups
+    default_number = attrib.get('number', '1')  # improve para evitar dups
+    default_year = attrib.get('year', datetime.datetime.now().year)
+    default_label = attrib.get('label', '%s (%s)' % (default_volume, default_number))
+    journal = attrib.get('journal', None)
 
-    if '_id' not in attrib:
-        _id = str(uuid4().hex)
+    if not journal:
+        journal = makeOneJournal()
+    elif isinstance(journal, str) or isinstance(journal, unicode):
+        # o valor de: journal é o Id do journal
+        try:
+            journal = models.Journal.objects.get(_id=journal)
+        except models.Journal.DoesNotExist:
+            journal = makeOneJournal({'_id': journal})
+    elif isinstance(journal, models.Journal):
+        pass
     else:
-        _id = attrib['_id']
+        raise ValueError('WTF is journal?')
 
-    if 'journal' not in attrib:
-        journal = makeOneJournal().id
-    else:
-        journal = attrib['journal']
+    issue = {
+        '_id': default_id,
+        'iid': default_id,
+        'volume': default_volume,
+        'number': default_number,
+        'year': default_year,
+        'label': default_label,
+        'is_public': attrib.get('is_public', True),
+        'created': attrib.get('created', datetime.datetime.now()),
+        'updated': attrib.get('updated', datetime.datetime.now()),
+        'journal': journal.id
+    }
 
-    issue = {'_id': _id, 'iid': _id, 'is_public': True,
-             'journal': journal}
-
-    if attrib and isinstance(attrib, dict):
-        issue.update(attrib)
+    for k, v in attrib.iteritems():
+        if k not in issue.keys():
+            issue[k] = v
 
     return models.Issue(**issue).save()
 
@@ -102,28 +166,55 @@ def makeOneArticle(attrib=None):
     Atualiza o objeto de retorno com os valores do param ``attrib``.
     """
 
-    if not attrib:
-        attrib = {}
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    default_title = "article-%s" % default_id
+    default_domain_key = "article-domain_key-%s" % default_id
+    issue = attrib.get('issue', None)
+    journal = attrib.get('journal', None)
 
-    if '_id' not in attrib:
-        _id = str(uuid4().hex)
+    if not journal:
+        journal = makeOneJournal()
+    elif isinstance(journal, str) or isinstance(journal, unicode):
+        # o valor de: journal é o Id do journal
+        try:
+            journal = models.Journal.objects.get(_id=journal)
+        except models.Journal.DoesNotExist:
+            journal = makeOneJournal({'_id': journal})
+    elif isinstance(journal, models.Journal):
+        pass
     else:
-        _id = attrib['_id']
+        raise ValueError('WTF is journal?')
 
-    if 'issue' not in attrib and 'journal' not in attrib:
-        issue = makeOneIssue()
-        issue_id = issue.id
-        journal_id = issue.journal
+    if not issue:
+        issue = makeOneIssue({'journal': journal})
+    elif isinstance(issue, str) or isinstance(issue, unicode):
+        # o valor de: issue é o Id do issue
+        try:
+            issue = models.Issue.objects.get(_id=issue, journal=journal.id)
+        except models.Issue.DoesNotExist:
+            issue = makeOneIssue({'_id': issue, 'journal': journal.id})
+    elif isinstance(issue, models.Issue):
+        pass
     else:
-        issue_id = attrib['issue']
-        journal_id = attrib['journal']
+        raise ValueError('WTF is issue?')
 
-    title = "article-%s" % _id
-    article = {'_id': _id, 'aid': _id, 'is_public': True,
-               'journal': journal_id, 'issue': issue_id, 'title': title}
+    article = {
+        '_id': default_id,
+        'aid': default_id,
+        'title': attrib.get('title', default_title),
+        'domain_key': attrib.get('domain_key', default_domain_key),
+        'is_aop': attrib.get('is_aop', False),
+        'is_public': attrib.get('is_public', True),
+        'created': attrib.get('created', datetime.datetime.now()),
+        'updated': attrib.get('updated', datetime.datetime.now()),
+        'issue': issue.id,
+        'journal': journal.id,
+    }
 
-    if attrib and isinstance(attrib, dict):
-        article.update(attrib)
+    for k, v in attrib.iteritems():
+        if k not in article.keys():
+            article[k] = v
 
     return models.Article(**article).save()
 
