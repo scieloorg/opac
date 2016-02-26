@@ -7,10 +7,13 @@ import os
 DEBUG = True
 ASSETS_DEBUG = DEBUG
 
+MONGODB_HOST = os.environ.get('MONGO_1_PORT_27017_TCP_ADDR', 'localhost')
+MONGODB_PORT = os.environ.get('MONGO_1_PORT_27017_TCP_PORT', 27017)
+
 MONGODB_SETTINGS = {
     'db': 'manager2mongo',
-    'host': os.environ.get('MONGO_1_PORT_27017_TCP_ADDR', 'localhost'),
-    'port': os.environ.get('MONGO_1_PORT_27017_TCP_PORT', 27017)
+    'host': MONGODB_HOST,
+    'port': int(MONGODB_PORT),
 }
 
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
