@@ -252,18 +252,16 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'use_licenses', 'national_code', 'init_year', 'final_year', 'init_vol', 'final_vol',
-        'init_num', 'final_num', 'current_status', 'index_at', 'is_public', 'unpublish_reason'
+        'use_licenses', 'current_status', 'index_at', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
         '_id', 'title', 'title_iso', 'short_title', 'print_issn', 'eletronic_issn', 'acronym',
     ]
     column_exclude_list = [
-        '_id', 'timeline', 'use_licenses', 'national_code', 'subject_categories',
+        '_id', 'timeline', 'use_licenses', 'subject_categories',
         'study_areas', 'social_networks', 'title_iso', 'short_title',
-        'subject_descriptors', 'init_year', 'init_vol', 'init_num',
-        'final_num', 'final_vol', 'final_year', 'copyrighter',
-        'online_submission_url', 'cover_url', 'logo_url', 'previous_journal_id',
+        'subject_descriptors', 'copyrighter','online_submission_url',
+        'cover_url', 'logo_url', 'previous_journal_id',
         'publisher_name', 'publisher_country', 'publisher_state',
         'publisher_city', 'publisher_address', 'publisher_telephone',
         'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles',
@@ -278,7 +276,6 @@ class JournalAdminView(OpacBaseAdminView):
         jid=__(u'Id Periódico'),
         collections=__(u'Coleções'),
         timeline=__(u'Linha do tempo'),
-        national_code=__(u'Código IBICT - CCN'),
         subject_categories=__(u'Categorias de assunto'),
         study_areas=__(u'Áreas de estudo'),
         social_networks=__(u'Redes sociais'),
@@ -292,12 +289,6 @@ class JournalAdminView(OpacBaseAdminView):
         print_issn=__(u'ISSN impresso'),
         eletronic_issn=__(u'ISSN eletrônico'),
         subject_descriptors=__(u'Descritores de assunto'),
-        init_year=__(u'Ano inicial'),
-        init_vol=__(u'Volume inicial'),
-        init_num=__(u'Número inicial'),
-        final_year=__(u'Ano final'),
-        final_vol=__(u'Volume final'),
-        final_num=__(u'Número final'),
         online_submission_url=__(u'Url da submissão online'),
         cover_url=__(u'Url do capa'),
         logo_url=__(u'Url do logotipo'),
