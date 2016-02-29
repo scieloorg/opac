@@ -18,4 +18,4 @@ Flask-Testing==0.4.2
 Flask-Migrate==1.7.0
 coverage==4.0.3
 packtools==0.9.0dev-20160202
--e git+https://git@github.com/scieloorg/opac_schema@v1.1#egg=opac_schema
+-e git+https://git@github.com/scieloorg/opac_schema@v1.2#egg=opac_schema
