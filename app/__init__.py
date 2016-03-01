@@ -11,6 +11,7 @@ import flask_admin
 from flask_mail import Mail
 from flask_babelex import Babel
 from flask_babelex import lazy_gettext
+from werkzeug.contrib.fixers import ProxyFix
 
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 
@@ -92,5 +93,7 @@ def create_app(config_name=None):
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
+
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 
     return app

@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import os
 """
     EXEMPLO de configuração da instância
 """
@@ -7,10 +7,13 @@
 DEBUG = True
 ASSETS_DEBUG = DEBUG
 
+MONGODB_HOST = os.environ.get('MONGO_PORT_27017_TCP_ADDR', 'localhost')
+MONGODB_PORT = os.environ.get('MONGO_PORT_27017_TCP_PORT', 27017)
+
 MONGODB_SETTINGS = {
     'db': 'manager2mongo',
-    # 'host': '127.0.0.1',
-    # 'port': 27017
+    'host': MONGODB_HOST,
+    'port': int(MONGODB_PORT),
 }
 
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
