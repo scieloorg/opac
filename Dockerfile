@@ -2,37 +2,27 @@ FROM centos:7
 
 RUN yum install -y epel-release
 RUN yum install -y python-pip python-devel gcc nginx git libxslt-devel libxml2-devel supervisor
-
-RUN mkdir -p /var/www
+RUN mkdir -p /var/www && mkdir -p /var/run/nginx
 
 WORKDIR /var/www
 
-ADD . /var/www/opac
-#RUN git clone https://github.com/scieloorg/opac.git
+COPY . /var/www/opac
+VOLUME /var/www/opac/data
+RUN chown -R nginx:nginx /var/www/opac
 RUN cp opac/instance/config.py.template opac/instance/config.py
 
 # dependêcias:
-RUN pip install -r opac/requirements.txt
-RUN pip install -r opac/requirements.production.txt
-
-# serviço opac
-RUN cat opac/deploy/supervisord.conf >> /etc/supervisord.conf
-#RUN cp opac/deploy/supervisord.conf /etc/supervisord.conf
-RUN supervisorctl start opac_gunicorn
-#RUN cp opac/deploy/opac_site.service /etc/systemd/system/opac_site.service
-#RUN systemctl start opac_site
-#RUN systemctl enable opac_site
+RUN pip install -r opac/requirements.txt && pip install -r opac/requirements.production.txt
 
 # configuração nginx
-RUN cp opac/deploy/opac_nginx.conf /etc/nginx/conf.d/opac.conf
-RUN nginx -t
-#RUN systemctl start nginx
-#RUN systemctl enable nginx
+RUN cat opac/deploy/nginx/opac_nginx.conf > /etc/nginx/nginx.conf && nginx -t
 
-# porta
-EXPOSE 5000
+# configuração do serviço opac no supervisor
+RUN cp opac/deploy/supervisord_opac.ini /etc/supervisord.d/opac.ini && supervisorctl start opac_gunicorn
+RUN chown -R nginx:nginx /var/log/nginx && chown -R nginx:nginx /var/run/nginx
 
-#CMD cd opac && python manager.py runserver -h 0.0.0.0 -p 5000
-#CMD cd opac && gunicorn --bind 0.0.0.0:5000 manager:app
-CMD cd opac && supervisord -c /etc/supervisord.conf -n
+# portas
+EXPOSE 8000
+EXPOSE 8080
 
+CMD supervisord -c /etc/supervisord.conf -n
