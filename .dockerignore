@@ -1,0 +1,5 @@
+*.sqlite
+*.db
+*.log
+*.pid
+tmp/*

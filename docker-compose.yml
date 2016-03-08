@@ -1,12 +1,19 @@
 mongo:
     image: mongo
+    restart: always
     ports:
       - "27017:27017"
 
 web:
     build: .
-    working_dir: /var/www
+    restart: always
+    working_dir: /var/www/opac
+    volumes:
+        - ./data:/var/www/opac/data
     ports:
-        - "5000:5000"
+        - "80:8000"
+        - "8080:8080"
     links:
         - mongo:mongo
+    environment:
+        - DBSQL_DATABASE_DIR=/var/www/opac/data
