@@ -1,0 +1,5 @@
+recursive-include app/templates *
+recursive-include app/static *
+recursive-include app/translation *
+recursive-include config *.ini
+include *.rst *.txt Makefile LICENSE

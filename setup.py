@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+from setuptools import setup, find_packages
+
+long_description = open('README.rst', 'r').read()
+
+install_requirements = [
+    'Flask>=0.10.1',
+    'mongoengine>=0.10.0',
+    'flask-mongoengine>=0.7.4',
+    'Flask-Assets>=0.11',
+    'jsmin>=2.1.6',
+    'cssmin>=0.2.0',
+    'webassets>=0.11.1',
+    'Flask-Admin>=1.4.0',
+    'Flask-SQLAlchemy>=2.1',
+    'Flask-Security>=1.7.4',
+    'Flask-Login>=0.3.2',
+    'Flask-Script>=2.0.5',
+    'Flask-Mail>=0.9.1',
+    'lxml>=3.5.0',
+    'Flask-BabelEx>=0.9.2',
+    'Flask-Testing>=0.4.2',
+    'Flask-Migrate>=1.7.0',
+    'packtools>=0.9.0dev-20160202',
+    'opac_schema',  # por enquanto só essa versão 1.1
+    # for production production
+    'chaussette>=1.3',
+    'gevent>=1.1.0',
+]
+
+dependency_links = [
+    'http://github.com/scieloorg/opac_schema/tarball/v1.1#egg=opac_schema-1.1'
+]
+
+setup(
+    name='OPAC',
+    version='0.1-dev',
+    long_description=long_description,
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=install_requirements,
+    dependency_links=dependency_links,
+)
