@@ -96,6 +96,5 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         dbsql.session.remove()
         dbsql.drop_all()
-        # drop todas as bases mongo
-        for db_name in self.conn.database_names():
-            self.conn.drop_database(db_name)
+        mongo_db_name = current_app.config['MONGODB_SETTINGS']['db']
+        self.conn.drop_database(mongo_db_name)
