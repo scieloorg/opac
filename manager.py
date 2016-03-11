@@ -139,5 +139,10 @@ def test(coverage=False, verbosity=2):
     else:
         return sys.exit(1)
 
+
+def get_wsgi_app():
+    return app
+
+
 if __name__ == '__main__':
     manager.run()

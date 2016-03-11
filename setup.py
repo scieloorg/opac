@@ -35,7 +35,7 @@ dependency_links = [
 ]
 
 setup(
-    name='OPAC',
+    name='opac',
     version='0.1-dev',
     long_description=long_description,
     packages=find_packages(),
@@ -43,4 +43,9 @@ setup(
     zip_safe=False,
     install_requires=install_requirements,
     dependency_links=dependency_links,
+    entry_points={
+        'console_scripts': [
+            "opac_wsgi_app = manager:get_wsgi_app"
+        ]
+    }
 )
