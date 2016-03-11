@@ -1,6 +1,6 @@
 # coding: utf-8
 import os
-import logging.config
+#import logging.config
 from flask import Flask
 from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
@@ -29,10 +29,10 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'admin.login_view'
 
-logging.config.fileConfig(os.path.join(os.path.dirname(
-                          os.path.abspath(__file__)), '../config/logger.ini'))
+#logging.config.fileConfig(os.path.join(os.path.dirname(
+#                          os.path.abspath(__file__)), '../config/logger.ini'))
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 def create_app(config_name=None):
