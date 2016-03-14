@@ -18,7 +18,7 @@ import notifications
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    _password = db.Column(db.String(128), nullable=False)
+    _password = db.Column(db.String(128), nullable=True)  # deve ser possível add novo user sem setar senha
     email_confirmed = db.Column(db.Boolean, nullable=False, default=False)
 
     @hybrid_property
@@ -33,13 +33,34 @@ class User(UserMixin, db.Model):
         """
         Compara a string ``plaintext`` com a senha "hasheada" armazenada para este usuário.
         """
-        return check_password_hash(self._password, plaintext)
+        if not self._password:
+            return False
+        else:
+            return check_password_hash(self._password, plaintext)
 
     def send_confirmation_email(self):
-        return notifications.send_confirmation_email(self.email)
+        if not self._check_valid_email():
+            raise ValueError(u'Usuário deve ter email válido para realizar o envío')
+        else:
+            return notifications.send_confirmation_email(self.email)
 
     def send_reset_password_email(self):
-        return notifications.send_reset_password_email(self.email)
+        if not self._check_valid_email():
+            raise ValueError(u'Usuário deve ter email válido para realizar o envío')
+        else:
+            return notifications.send_reset_password_email(self.email)
+
+    def _check_valid_email(self):
+        """
+        retorna True quando a instância (self) do usuário, tem um email válido.
+        retorna False em outro caso.
+        """
+        from app.admin.forms import EmailForm
+        if not self.email or self.email == '' or self.email == u'':
+            return False
+        else:
+            form = EmailForm(data={'email': self.email})
+            return form.validate()
 
     # Required for administrative interface
     def __unicode__(self):
