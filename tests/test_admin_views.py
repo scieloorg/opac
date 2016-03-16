@@ -2272,7 +2272,6 @@ class IssueAdminViewTests(BaseTestCase):
         issue_index_url = url_for('issue.index_view')
         expected_col_filters = [
             'journal',
-            'use_licenses',
             'volume',
             'number',
             'type',
@@ -2280,7 +2279,7 @@ class IssueAdminViewTests(BaseTestCase):
             'end_month',
             'year',
             'is_public',
-            'unpublish_reason'
+            'unpublish_reason',
         ]
         # when
         with self.client as client:
@@ -3344,8 +3343,8 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         expected_column_exclude_list = [
-            '_id', 'section', 'is_aop', 'htmls',
-            'domain_key', 'xml', 'unpublish_reason'
+            '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
+            'unpublish_reason', 'translated_titles', 'sections'
         ]
         # when
         with self.client as client:
