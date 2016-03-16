@@ -2272,7 +2272,6 @@ class IssueAdminViewTests(BaseTestCase):
         issue_index_url = url_for('issue.index_view')
         expected_col_filters = [
             'journal',
-            'use_licenses',
             'volume',
             'number',
             'type',

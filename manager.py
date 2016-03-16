@@ -3,12 +3,16 @@
 import os
 import sys
 import unittest
-import coverage
 
-COV = None
-if os.environ.get('FLASK_COVERAGE'):
-    COV = coverage.coverage(branch=True, include='app/*')
-    COV.start()
+if os.getenv('OPAC_CONFIG') == 'config.development' or os.getenv('OPAC_CONFIG') == 'config.testing':
+    import coverage
+
+    COV = None
+    if os.environ.get('FLASK_COVERAGE'):
+        COV = coverage.coverage(branch=True, include='app/*')
+        COV.start()
+else:
+    COV = None
 
 from app import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
@@ -112,7 +116,7 @@ def test(coverage=False, verbosity=2):
     Lembre de definir a variável: OPAC_CONFIG="config.testing" antes de executar este comando:
     > export OPAC_CONFIG="config.testing" && python manager.py test
     """
-    if coverage and not os.environ.get('FLASK_COVERAGE'):
+    if COV and coverage and not os.environ.get('FLASK_COVERAGE'):
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
 
@@ -124,16 +128,21 @@ def test(coverage=False, verbosity=2):
         COV.save()
         print('Coverage Summary:')
         COV.report()
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        covdir = 'tmp/coverage'
-        COV.html_report(directory=covdir)
-        print('HTML version: file://%s/index.html' % covdir)
+        # basedir = os.path.abspath(os.path.dirname(__file__))
+        # covdir = 'tmp/coverage'
+        # COV.html_report(directory=covdir)
+        # print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
 
     if result.wasSuccessful():
         return sys.exit()
     else:
         return sys.exit(1)
+
+
+def get_wsgi_app():
+    return app
+
 
 if __name__ == '__main__':
     manager.run()

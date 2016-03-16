@@ -1,9 +1,8 @@
 # coding: utf-8
 import os
-import logging.config
+#import logging.config
 from flask import Flask
 from flask_assets import Environment, Bundle
-from flask_debugtoolbar import DebugToolbarExtension
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -15,8 +14,12 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 
+
+if os.getenv('OPAC_CONFIG') == 'config.development':
+    from flask_debugtoolbar import DebugToolbarExtension
+    toolbar = DebugToolbarExtension()
+
 assets = Environment()
-toolbar = DebugToolbarExtension()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
 mail = Mail()
@@ -26,10 +29,10 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'admin.login_view'
 
-logging.config.fileConfig(os.path.join(os.path.dirname(
-                          os.path.abspath(__file__)), '../config/logger.ini'))
+#logging.config.fileConfig(os.path.join(os.path.dirname(
+#                          os.path.abspath(__file__)), '../config/logger.ini'))
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 def create_app(config_name=None):
@@ -65,8 +68,9 @@ def create_app(config_name=None):
     babel.init_app(app)
     # login
     login_manager.init_app(app)
-    # Toolbar
-    toolbar.init_app(app)
+    if os.getenv('OPAC_CONFIG') == 'config.development':
+        # Toolbar
+        toolbar.init_app(app)
     # Mongo
     dbmongo.init_app(app)
     # SQLAlchemy

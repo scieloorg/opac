@@ -1,16 +1,16 @@
 # coding: utf-8
 
 import traceback
-from flask.ext.testing import TestCase
 from flask_babelex import lazy_gettext as __
 from flask import current_app, abort
 from app import dbsql
-
+from base import BaseTestCase
 
 ERROR_MSG = __(u'Mensagem de erro explicativo para o usuário')
 
 
-class ErrorsTestCase(TestCase):
+class ErrorsTestCase(BaseTestCase):
+
     def _silence_traceback_print_exception(self):
         """
         Redefine a função encarregada para imprimir
@@ -37,16 +37,6 @@ class ErrorsTestCase(TestCase):
 
         if self._previous_print_stack:
             traceback.print_exception = self._previous_print_stack
-
-    def setUp(self):
-        dbsql.create_all()
-
-    def create_app(self):
-        return current_app
-
-    def tearDown(self):
-        dbsql.session.remove()
-        dbsql.drop_all()
 
     @current_app.route('/bad_request')
     def bad_request():

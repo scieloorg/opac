@@ -344,7 +344,7 @@ class JournalAdminView(OpacBaseAdminView):
 class IssueAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'journal', 'use_licenses', 'volume', 'number', 'type', 'start_month',
+        'journal', 'volume', 'number', 'type', 'start_month',
         'end_month', 'year', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [

@@ -1,1 +1,2 @@
-gunicorn
+chaussette==1.3.0
+gevent==1.1.0
