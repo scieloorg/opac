@@ -700,7 +700,6 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertRaises(ValueError,
                           controllers.get_articles_by_iid, [])
 
-
     def test_new_article_html_doc(self):
         """
         Testando a função controllers.new_article_html_doc(), deve retornar um
@@ -878,8 +877,7 @@ class FunctionsInControllerTestCase(BaseTestCase):
         utils.makeOneJournal({'is_public': False})
         utils.makeOneJournal({'is_public': False})
 
-        total_journal = controllers.count_elements_by_type_and_visibility('journal',
-                                public_only=True)
+        total_journal = controllers.count_elements_by_type_and_visibility('journal', public_only=True)
 
         self.assertEqual(total_journal, 20)
 
@@ -899,8 +897,7 @@ class FunctionsInControllerTestCase(BaseTestCase):
         utils.makeOneIssue({'is_public': False})
         utils.makeOneIssue({'is_public': False})
 
-        total_issue = controllers.count_elements_by_type_and_visibility('issue',
-                                public_only=True)
+        total_issue = controllers.count_elements_by_type_and_visibility('issue', public_only=True)
 
         self.assertEqual(total_issue, 50)
 
@@ -920,8 +917,7 @@ class FunctionsInControllerTestCase(BaseTestCase):
         utils.makeOneArticle({'is_public': False})
         utils.makeOneArticle({'is_public': False})
 
-        total_article = controllers.count_elements_by_type_and_visibility('article',
-                                public_only=True)
+        total_article = controllers.count_elements_by_type_and_visibility('article', public_only=True)
 
         self.assertEqual(total_article, 98)
 
@@ -931,8 +927,7 @@ class FunctionsInControllerTestCase(BaseTestCase):
         desconhecido, deve retornar um ValueError
         """
 
-        self.assertRaises(ValueError,
-            controllers.count_elements_by_type_and_visibility, 'ksjkadjkajsdkja')
-
-
-
+        self.assertRaises(
+            ValueError,
+            controllers.count_elements_by_type_and_visibility,
+            'ksjkadjkajsdkja')

@@ -45,7 +45,7 @@ def send_reset_password_email(recipient_email):
     except Exception, e:
         return (False, 'Invalid Token: %s' % str(e))
     else:
-        recover_url = url_for('.reset_with_token', token=token, _external=True)
+        recover_url = url_for('admin.reset_with_token', token=token, _external=True)
         utils.send_email(
             recipient_email,
             "Instruções para recuperar sua senha",

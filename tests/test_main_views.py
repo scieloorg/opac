@@ -15,13 +15,6 @@ from base import BaseTestCase
 
 
 class MainTestCase(BaseTestCase):
-    def setUp(self):
-        dbsql.create_all()
-
-    def tearDown(self):
-        models.Journal.objects.delete()
-        dbsql.session.remove()
-        dbsql.drop_all()
 
     def test_home_page(self):
         """
