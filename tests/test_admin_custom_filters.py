@@ -12,7 +12,6 @@ from opac_schema.v1.models import Journal, Issue, Article
 from tests.utils import makeOneJournal, makeOneIssue, makeOneArticle
 
 
-
 class CustomFiltersTestCase(BaseTestCase):
 
     def test_flt_reference_journal(self):
@@ -59,12 +58,8 @@ class CustomFiltersTestCase(BaseTestCase):
         expected |= Q(**{'use_licenses__reference_url__%s' % op: term})
         expected |= Q(**{'use_licenses__disclaimer__%s' % op: term})
         expected_children = [i.query for i in expected.children]
-        
-        result = get_flt(Journal.use_licenses, term, op)
-        self.assertEqual(expected.operation, result.operation)
-        self.assertEqual(expected_children, [i.query for i in result.children])
 
-        result = get_flt(Issue.use_licenses, term, op)
+        result = get_flt(Journal.use_licenses, term, op)
         self.assertEqual(expected.operation, result.operation)
         self.assertEqual(expected_children, [i.query for i in result.children])
 
@@ -172,36 +167,6 @@ class CustomFiltersTestCase(BaseTestCase):
         term, data = parse_like_term(journal.title)
         journals = Journal.objects.filter(Q(**{'title__not__%s' % term: data}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
-
-        self.assertItemsEqual(expected, result)
-
-    def test_custom_filter_empty(self):
-
-        makeOneJournal({'use_licenses': None})
-        column = Journal.use_licenses
-        custom_filter = CustomFilterEmpty(column=column, name=__(u'Licença de uso'))
-
-        result = custom_filter.apply(Journal.objects, '1')
-
-        use_licenses = Q(**{'%s__license_code__' % column.name: None})
-        use_licenses |= Q(**{'%s__reference_url__' % column.name: None})
-        use_licenses |= Q(**{'%s__disclaimer__' % column.name: None})
-        expected = Journal.objects.filter(use_licenses)
-
-        self.assertItemsEqual(expected, result)
-
-    def test_custom_filter_not_empty(self):
-
-        makeOneJournal({'use_licenses': None})
-        column = Journal.use_licenses
-        custom_filter = CustomFilterEmpty(column=column, name=__(u'Licença de uso'))
-
-        result = custom_filter.apply(Journal.objects, '')
-
-        use_licenses = Q(**{'%s__license_code__ne' % column.name: None})
-        use_licenses &= Q(**{'%s__reference_url__ne' % column.name: None})
-        use_licenses &= Q(**{'%s__disclaimer__ne' % column.name: None})
-        expected = Journal.objects.filter(use_licenses)
 
         self.assertItemsEqual(expected, result)
 
