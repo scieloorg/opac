@@ -7,6 +7,7 @@
 
 from flask import url_for, render_template
 import utils
+import six
 
 
 def send_confirmation_email(recipient_email):
@@ -14,9 +15,9 @@ def send_confirmation_email(recipient_email):
     Envia um email de confirmação para ``recipient_email``
     Retorna:
      - (True, '') em caso de sucesso.
-     - (Flase, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
+     - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-    if not recipient_email:
+    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(recipient_email):
         raise ValueError(u'recipient_email é inválido!')
     try:
         ts = utils.get_timed_serializer()
@@ -37,8 +38,10 @@ def send_reset_password_email(recipient_email):
     Envia um email com as intruccões para recuperar a senha para: ``recipient_email``
     Retorna:
      - (True, '') em caso de sucesso.
-     - (Flase, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
+     - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
+    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(recipient_email):
+        raise ValueError(u'recipient_email é inválido!')
     try:
         ts = utils.get_timed_serializer()
         token = ts.dumps(recipient_email, salt='recover-key')
