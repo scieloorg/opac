@@ -4,11 +4,17 @@ import os
 import sys
 import unittest
 
-if os.getenv('OPAC_CONFIG') == 'config.development' or os.getenv('OPAC_CONFIG') == 'config.testing':
-    import coverage
 
+FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE', None)
+
+if FLASK_COVERAGE:
+    try:
+        import coverage
+    except ImportError:
+        msg = u'A variável de ambiente %r esta indicando que você quer executar tests com coverage, porém não é possível importar o modulo coverage'
+        raise RuntimeError(msg % variable_name)
     COV = None
-    if os.environ.get('FLASK_COVERAGE'):
+    if FLASK_COVERAGE:
         COV = coverage.coverage(branch=True, include='app/*')
         COV.start()
 else:
@@ -22,7 +28,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 from app.admin.forms import EmailForm
 from flask import current_app
 
-app = create_app(os.getenv('OPAC_CONFIG'))
+app = create_app()
 migrate = Migrate(app, dbsql)
 manager = Manager(app)
 manager.add_command('dbsql', MigrateCommand)
@@ -55,12 +61,12 @@ def reset_dbsql(force_delete=False):
     db_path = app.config['DATABASE_PATH']
     if not os.path.exists(db_path) or force_delete:
         utils.reset_db()
-        print 'O banco esta limpo!'
-        print 'Para criar um novo usuário execute o comando: create_superuser'
-        print 'python manager.py create_superuser --help'
+        print u'O banco esta limpo!'
+        print u'Para criar um novo usuário execute o comando: create_superuser'
+        print u'python manager.py create_superuser --help'
     else:
-        print 'O banco já existe (em %s).' % db_path
-        print 'remova este arquivo manualmente ou utilize --force.'
+        print u'O banco já existe (em %s).' % db_path
+        print u'remova este arquivo manualmente ou utilize --force.'
 
 
 @manager.command
@@ -111,12 +117,13 @@ def create_superuser():
 
 @manager.command
 @manager.option('-v', '--verbosity', dest='verbosity', default=2)
-def test(coverage=False, verbosity=2):
+def test(verbosity=2):
     """ Executa tests unitarios.
-    Lembre de definir a variável: OPAC_CONFIG="config.testing" antes de executar este comando:
-    > export OPAC_CONFIG="config.testing" && python manager.py test
+    Lembre de definir a variável: OPAC_CONFIG="path do arquivo de conf para testing" antes de executar este comando:
+    > export OPAC_CONFIG="/foo/bar/config.testing" && python manager.py test
     """
-    if COV and coverage and not os.environ.get('FLASK_COVERAGE'):
+
+    if COV and not FLASK_COVERAGE:
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
 

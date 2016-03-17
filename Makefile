@@ -31,7 +31,7 @@ compile_messages:
 #########
 
 test:
-	export OPAC_CONFIG="config.testing" && python manager.py test
+	export OPAC_CONFIG="config.testing.templates" && python manager.py test
 
 test_coverage:
-	export OPAC_CONFIG="config.testing" && export FLASK_COVERAGE="1" && python manager.py test
+	export OPAC_CONFIG="config.testing.templates" && export FLASK_COVERAGE="1" && python manager.py test
