@@ -424,8 +424,8 @@ class ArticleAdminView(OpacBaseAdminView):
         'aid', 'issue', 'journal', 'title', 'domain_key'
     ]
     column_exclude_list = [
-        '_id', 'section', 'is_aop', 'htmls',
-        'domain_key', 'xml', 'unpublish_reason'
+        '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
+        'unpublish_reason', 'translated_titles', 'sections'
     ]
     column_details_exclude_list = [
         'xml',

@@ -72,9 +72,10 @@
                   <div class="collapse-content issueIndent">
                       <strong class="issueName">{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }} {{ issue.start_month }}/{{ issue.end_month }} {{ issue.year }}</strong>
                       <ul>
-                        {% for section in issue.sections %}
-                          <li><a href="#{{ section.subjects[0].name|upper }}">{{ section.subjects[0].name }}</a></li>
-                        {% endfor %}
+                      {% for section in journal.last_issue.sections %}
+                        <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                      {% endfor %}
+                      <!-- lista te seções ordenadas -->
                       </ul>
                   </div>
               </div>
