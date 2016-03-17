@@ -8,8 +8,6 @@ install:
   - pip install -r requirements.txt
   - pip install -r requirements.dev.txt
   - pip install -r requirements.production.txt
-before_script:
-  - cp instance/config.py.template instance/config.py
 script:
   - python manager.py test
 services:
