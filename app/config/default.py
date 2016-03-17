@@ -124,7 +124,8 @@ DATABASE_FILE = os.environ.get('OPAC_DATABASE_FILE', 'opac.sqlite')
 DATABASE_DIR = os.environ.get('OPAC_DATABASE_DIR', '/tmp')  # Caminho absoluto da pasta que vai conter o arquivo sqlite
 DATABASE_PATH = '%s/%s' % (DATABASE_DIR, DATABASE_FILE)
 SQLALCHEMY_DATABASE_URI = os.environ.get('OPAC_DATABASE_FILE', 'sqlite:////%s' % DATABASE_PATH)
-SQLALCHEMY_ECHO = DEBUG
+SQLALCHEMY_ECHO = False
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 # Tempo de expiração para os tokens

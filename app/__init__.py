@@ -25,14 +25,14 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'admin.login_view'
 
 
-def create_app(config_name=None):
+def create_app():
     app = Flask(__name__,
                 static_url_path='/static',
                 static_folder='static',
-                instance_relative_config=True)
+                instance_relative_config=False)
 
     # Configurações
-    app.config.from_object('config.default')  # Configuração basica
+    app.config.from_object('app.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
 
     # Assets
