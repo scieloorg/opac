@@ -1,7 +1,7 @@
 sudo: false
 language: python
 env:
-  - OPAC_CONFIG="config.testing.templates"
+  - OPAC_CONFIG="config/templates/testing.template"
 python:
   - "2.7"
 install:
