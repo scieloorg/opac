@@ -12,7 +12,7 @@ RUN chown -R nginx:nginx /var/www/opac
 RUN cp opac/instance/config.py.template opac/instance/config.py
 
 # dependêcias:
-RUN pip install -r opac/requirements.txt && pip install -r opac/requirements.production.txt
+RUN pip install -r opac/requirements.txt && pip install -r opac/requirements.production.txt && pip install -r opac/requirements.dev.txt
 
 # configuração nginx
 RUN cat opac/deploy/nginx/opac_nginx.conf > /etc/nginx/nginx.conf && nginx -t

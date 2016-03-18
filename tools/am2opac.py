@@ -26,6 +26,16 @@ XML_CSS = "/static/css/style_article_html.css"
 
 XML_SAMPLE = etree.parse(open('xml_sample.xml'))
 
+MONGODB_DBNAME = os.environ.get('MONGO_DB_DBNAME', 'manager2mongo')
+MONGODB_HOST = os.environ.get('MONGO_PORT_27017_TCP_ADDR', 'localhost')
+MONGODB_PORT = os.environ.get('MONGO_PORT_27017_TCP_PORT', 27017)
+
+MONGODB_SETTINGS = {
+    'db': MONGODB_DBNAME,
+    'host': MONGODB_HOST,
+    'port': int(MONGODB_PORT),
+}
+
 
 def _config_logging(logging_level='INFO', logging_file=None):
 
@@ -118,7 +128,7 @@ class AM2Opac(object):
 
         self.articlemeta = clients.ArticleMeta('articlemeta.scielo.org', 11720)
 
-        self.m_conn = connect('manager2mongo')
+        self.m_conn = connect(**MONGODB_SETTINGS)
 
     def _duration(self):
         """
@@ -351,7 +361,7 @@ class AM2Opac(object):
 
         htmls = []
         try:
-            for lang, output in packtools.HTMLGenerator(XML_SAMPLE, valid_only=False, css=XML_CSS):
+            for lang, output in packtools.HTMLGenerator.parse(XML_SAMPLE, valid_only=False, css=XML_CSS):
                 source = etree.tostring(output, encoding="utf-8",
                                         method="html", doctype=u"<!DOCTYPE html>")
                 html_doc = models.ArticleHTML()
