@@ -10,14 +10,14 @@ from itsdangerous import URLSafeTimedSerializer
 
 class NotificationsTestCase(BaseTestCase):
 
-    def test_empty_recipient_email(self):
+    def test_send_confirmation_email_with_empty_recipient_email(self):
         """
         Com:
             - recipient_email = None
         Quando:
-            - Enviamos notificaciones de confirmación y cambio de contraseña
+            - Enviamos notificações de confiração de email
         Verificamos:
-            - Que ocurra una excepción por un valor incorrecto para recipient_email
+            - Que ocorra uma exeção por causa do email inválido para recipient_email
         """
 
         recipient_email = None
@@ -25,17 +25,29 @@ class NotificationsTestCase(BaseTestCase):
         with self.assertRaises(ValueError):
             send_confirmation_email(recipient_email)
 
+    def test_send_reset_password_email_with_empty_recipient_email(self):
+        """
+        Com:
+            - recipient_email = None
+        Quando:
+            - Enviamos notificações de resetar a senha
+        Verificamos:
+            - Que ocorra uma exeção por causa do email inválido para recipient_email
+        """
+
+        recipient_email = None
+
         with self.assertRaises(ValueError):
             send_reset_password_email(recipient_email)
 
-    def test_invalid_recipient_email(self):
+    def test_send_confirmation_email_with_invalid_recipient_email(self):
         """
         Com:
-            - recipient_email no valido 
+            - recipient_email inválido
         Quando:
-            - Enviamos notificaciones de confirmación y cambio de contraseña
+            - Enviamos notificações de confirmación de email
         Verifcamos:
-            - Que ocurra una excepción por un valor incorrecto para recipient_email
+            - Que ocorra uma exeção por causa do email inválido para recipient_email
         """
 
         recipient_email = 'foo@bar'
@@ -43,16 +55,28 @@ class NotificationsTestCase(BaseTestCase):
         with self.assertRaises(ValueError):
             send_confirmation_email(recipient_email)
 
+    def test__send_reset_password_email_with_invalid_recipient_email(self):
+        """
+        Com:
+            - recipient_email inválido
+        Quando:
+            - Enviamos notificações de resetar a senha
+        Verifcamos:
+            - Que ocorra uma exeção por causa do email inválido para recipient_email
+        """
+
+        recipient_email = 'foo@bar'
+
         with self.assertRaises(ValueError):
             send_reset_password_email(recipient_email)
 
     def test_invalid_token_confirmation_email(self):
         """
         Quando:
-            - current_app.config["SECRET_KEY"] no tiene un valor
+            - current_app.config["SECRET_KEY"] não tem valor
         Verifcamos:
-            - Que ocurra una excepción al crear un token con get_timed_serializer
-              al enviar notificación de confirmación
+            - Que ocorra uma exeção qunado é criado um token com
+              get_timed_serializer ao enviar a notificação de confirmação de email.
         """
 
         recipient_email = 'foo@bar.baz'
@@ -70,14 +94,13 @@ class NotificationsTestCase(BaseTestCase):
             result = send_confirmation_email(recipient_email)
             self.assertEqual(expected, result)
 
-
     def test_invalid_token_reset_password(self):
         """
         Quando:
-            - current_app.config["SECRET_KEY"] no tiene un valor
+            - current_app.config["SECRET_KEY"] não tem valor
         Verifcamos:
-            - Que ocurra una excepción al crear un token con get_timed_serializer
-              al enviar notificación para cambio de contraseña
+            - Que ocorra uma exeção qunado é criado um token com
+              get_timed_serializer ao enviar a notificação de resetar a senha.
         """
 
         recipient_email = 'foo@bar.baz'
@@ -98,15 +121,15 @@ class NotificationsTestCase(BaseTestCase):
     def test_send_confirmation_email(self):
         """
         Com:
-            - Un valor correcto para: recipient_email = 'foo@bar.baz'
+            - Um email válido para: recipient_email = 'foo@bar.baz'
         Quando:
-            - Enviamos notificación de confirmación
+            - Enviamos a notificação de confirmação de email.
         Verificamos:
-            - Que ``app.utils.send_email`` se llamado con los parámetros
-            - recipient = 'foo@bar.baz'
-            - subject =   "Confirmação de email"
-            - html = render_template('email/activate.html', confirm_url=confirm_url)
-            - que el valor de retorno para send_confirmation_email sea: (True, '')
+            - Que ``app.utils.send_email`` seja invocado como os parámetros:
+                - recipient = 'foo@bar.baz'
+                - subject =   "Confirmação de email"
+                - html = render_template('email/activate.html', confirm_url=confirm_url)
+            - Que o valor de retorno da função: send_confirmation_email seja: (True, '')
         """
 
         recipient_email = 'foo@bar.baz'
@@ -130,15 +153,15 @@ class NotificationsTestCase(BaseTestCase):
     def test_send_reset_password_email(self):
         """
         Com:
-            - Un valor correcto para: recipient_email = 'foo@bar.baz'
+            - Um email válido para: recipient_email = 'foo@bar.baz'
         Quando:
-            - Enviamos notificación de cambio de contraseña
+            - Enviamos a notificação de resetar a senha.
         Verificamos:
-            - Que ``app.utils.send_email`` se llamado con los parámetros
-            - recipient = 'foo@bar.baz'
-            - subject =   "Instruções para recuperar sua senha"
-            - html = render_template('email/recover.html', recover_url=recover_url)
-            - que el valor de retorno para send_confirmation_email sea: (True, '')
+            - Que ``app.utils.send_email`` seja invocado como os parámetros:
+                - recipient = 'foo@bar.baz'
+                - subject =   "Instruções para recuperar sua senha"
+                - html = render_template('email/recover.html', recover_url=recover_url)
+            - Que o valor de retorno da função: send_confirmation_email seja: (True, '')
         """
 
         recipient_email = 'foo@bar.baz'
