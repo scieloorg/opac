@@ -6,8 +6,10 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app
 from . import dbsql, controllers, mail, models
+import re
 
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
+REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE) #RFC 2822 (simplified)
 
 
 def get_timed_serializer():
