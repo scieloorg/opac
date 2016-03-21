@@ -1,16 +1,15 @@
 sudo: false
 language: python
 env:
-  - OPAC_CONFIG="config.testing"
+  - OPAC_CONFIG="config/templates/testing.template"
 python:
   - "2.7"
 install:
   - pip install -r requirements.txt
   - pip install -r requirements.dev.txt
   - pip install -r requirements.production.txt
-before_script:
-  - cp instance/config.py.template instance/config.py
 script:
   - python manager.py test
 services:
  - mongodb
+

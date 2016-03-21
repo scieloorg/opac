@@ -1,0 +1,97 @@
+# coding: utf-8
+import os
+
+"""
+    Este arquivo é um exemplo base para ter uma configuração de testing.
+
+    IMPORTANTE: para executar no modo dev
+    - deve definir DEBUG = False
+    - deve definir TESTING = True
+    - deve definir nome, caminho e credencias dos banco de dados para testing.
+    - deve definir um servidor de email de desenvolvimento (por exemplo com o modulo: DebuggingServer)
+        python -m smtpd -n -c DebuggingServer localhost:1025
+
+    Para ajustar configurações, copie o template que melhor se ajuste a seu ambiente,
+    e aponte o caminho absoluto com a env var OPAC_CONFIG:
+
+    1. copiar este template: ``cp opac/config/templates/testing.template /foo/var/baz/opac.config.py``
+    2. editar: ``vim /foo/var/baz/opac.config.py``, pode consultar o arquivo: opac/config/default.py
+    3. definir a variável de ambiente OPAC_CONFIG: ``export OPAC_CONFIG="/foo/var/baz/opac.config.py"``
+    4. iniciar/reiniciar o servidor web
+
+    Para saber mais sobre configuração, acesse a configuração base:
+        /opac/app/config/default.py
+"""
+
+
+# ativa/desativa o modo Debug da app
+# NUNCA deixar DEBUG = True em produção
+DEBUG = False
+
+
+# ativa/desativa o modo Testing da app
+# NUNCA deixar TESTING = True em produção
+TESTING = True
+
+
+# ativa/desativa o modo Debug dos assets
+# NUNCA deixar ASSETS_DEBUG = True em produção
+# ASSETS_DEBUG = DEBUG
+
+
+# Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
+# -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
+OPAC_COLLECTION = 'DUMMY_TEST'
+
+
+# Conta de email padrão para emails enviado do site - deve ser um email válido
+# DEFAULT_EMAIL = os.environ.get('OPAC_DEFAULT_EMAIL', 'scielo@scielo.org')
+
+
+# Credenciais para envio de emails
+# -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
+# MAIL_SERVER = 'localhost'
+# MAIL_PORT = 1025
+# MAIL_USE_TLS = False
+# MAIL_USE_SSL = False
+# MAIL_DEBUG = DEBUG
+# MAIL_USERNAME = None
+# MAIL_PASSWORD = None
+# MAIL_DEFAULT_SENDER = 'webmaster.test@opac.scielo.org'
+# MAIL_MAX_EMAILS = None
+# MAIL_SUPPRESS_SEND = default app.testing
+# MAIL_ASCII_ATTACHMENTS = False
+
+
+# sustituir o valor de SECRET_KEY,
+# -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
+# para gerar um novo key, pode utilizar: https://gist.github.com/jfunez/873c78890d55354739c8
+SECRET_KEY = 'a-dummy-testing-secret'
+
+
+# Configurações do banco de dados Mongodb
+# -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
+MONGODB_NAME = 'opac_test'
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+# MONGODB_USER = os.environ.get('OPAC_MONGODB_USER', None)
+# MONGODB_PASS = os.environ.get('OPAC_MONGODB_PASS', None)
+
+MONGODB_SETTINGS = {
+    'db': MONGODB_NAME,
+    'host': MONGODB_HOST,
+    'port': int(MONGODB_PORT),
+}
+
+# if MONGODB_USER and MONGODB_PASS:
+#     MONGODB_SETTINGS['username'] = MONGODB_USER
+#     MONGODB_SETTINGS['password'] = MONGODB_PASS
+
+
+# Configurações do banco de dados SQL
+# -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
+DATABASE_FILE = 'opac_test.sqlite'
+DATABASE_DIR = '/tmp'
+DATABASE_PATH = '%s/%s' % (DATABASE_DIR, DATABASE_FILE)
+SQLALCHEMY_DATABASE_URI = 'sqlite:////%s' % DATABASE_PATH
+# SQLALCHEMY_ECHO = DEBUG

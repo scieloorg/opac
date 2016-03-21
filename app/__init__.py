@@ -1,6 +1,6 @@
 # coding: utf-8
 import os
-#import logging.config
+
 from flask import Flask
 from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
@@ -14,11 +14,6 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 
-
-if os.getenv('OPAC_CONFIG') == 'config.development':
-    from flask_debugtoolbar import DebugToolbarExtension
-    toolbar = DebugToolbarExtension()
-
 assets = Environment()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
@@ -29,25 +24,16 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'admin.login_view'
 
-#logging.config.fileConfig(os.path.join(os.path.dirname(
-#                          os.path.abspath(__file__)), '../config/logger.ini'))
 
-#logger = logging.getLogger(__name__)
-
-
-def create_app(config_name=None):
+def create_app():
     app = Flask(__name__,
                 static_url_path='/static',
                 static_folder='static',
-                instance_relative_config=True)
+                instance_relative_config=False)
 
     # Configurações
-    app.config.from_object('config.default')  # Configuração basica
-    app.config.from_object(config_name)  # Configuração dependente do ambiente
-    if app.config['TESTING']:
-        app.config.from_pyfile('local_config_testing.py', silent=True)
-    else:
-        app.config.from_pyfile('config.py')  # Configuração local não versionada (chaves, segredos, senhas etc.)
+    app.config.from_object('app.config.default')  # Configuração basica
+    app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
@@ -68,8 +54,11 @@ def create_app(config_name=None):
     babel.init_app(app)
     # login
     login_manager.init_app(app)
-    if os.getenv('OPAC_CONFIG') == 'config.development':
+
+    if app.config['DEBUG']:
         # Toolbar
+        from flask_debugtoolbar import DebugToolbarExtension
+        toolbar = DebugToolbarExtension()
         toolbar.init_app(app)
     # Mongo
     dbmongo.init_app(app)
