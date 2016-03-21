@@ -24,7 +24,8 @@
                 {% trans %}Erro{% endtrans %}
               {% endblock %}
             </h2>
-            <p>{% trans %}Caso o problema persista, por favor entre em contato com o administrador.{% endtrans %}</p>
+
+            <p>{% trans %}Qualquer dúvida, por favor entre em contato com o administrador{% endtrans %}. <a href="mailto:{{config.WEBMASTER_EMAIL}}">{{config.WEBMASTER_EMAIL}}</a>.</p>
           </div>
         </div>
       </div>
