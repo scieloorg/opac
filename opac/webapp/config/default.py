@@ -70,6 +70,11 @@ TESTING = False
 ASSETS_DEBUG = DEBUG
 
 
+# Email do webmaster, este e-mail será utilizado para contato em caso de página
+# não encontrada e correções no conteúdo da aplicacão.
+WEBMASTER_EMAIL = "webmaster@scielo.org"
+
+
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
 OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'spa')

@@ -236,7 +236,8 @@ class AM2Opac(object):
         m_journal.updated = self._trydate(journal.update_date)
         m_journal.created = self._trydate(journal.creation_date)
         m_journal.copyrighter = journal.copyrighter
-        m_journal.publisher_country = journal.publisher_country[1]
+        if journal.publisher_country:
+            m_journal.publisher_country = journal.publisher_country[1]
         m_journal.online_submission_url = journal.submission_url
         m_journal.publisher_state = journal.publisher_state
         m_journal.sponsors = journal.sponsors
