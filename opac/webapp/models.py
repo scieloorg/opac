@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
         retorna True quando a instância (self) do usuário, tem um email válido.
         retorna False em outro caso.
         """
-        from app.admin.forms import EmailForm
+        from webapp.admin.forms import EmailForm
         if not self.email or self.email == '' or self.email == u'':
             return False
         else:

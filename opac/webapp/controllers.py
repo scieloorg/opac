@@ -11,9 +11,8 @@ import datetime
 from opac_schema.v1.models import Journal, Issue, Article, ArticleHTML
 from flask import current_app
 from flask_babelex import lazy_gettext as __
-from app import dbsql
+from webapp import dbsql
 from flask_babelex import lazy_gettext as __
-from . import models as sql_models
 from models import User
 
 
@@ -354,7 +353,7 @@ def get_user_by_email(email):
     if not isinstance(email, basestring):
         raise ValueError(__(u'Parâmetro email deve ser uma string'))
 
-    return dbsql.session.query(sql_models.User).filter_by(email=email).first()
+    return dbsql.session.query(User).filter_by(email=email).first()
 
 
 def get_user_by_id(id):
@@ -365,7 +364,7 @@ def get_user_by_id(id):
     if not isinstance(id, int):
         raise ValueError(__(u'Parâmetro email deve ser uma inteiro'))
 
-    return dbsql.session.query(sql_models.User).get(id)
+    return dbsql.session.query(User).get(id)
 
 
 def set_user_email_confirmed(user):

@@ -4,6 +4,10 @@ import os
 import sys
 import unittest
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+WEBAPP_PATH = os.path.abspath(os.path.join(HERE, 'webapp'))
+sys.path.insert(0, HERE)
+sys.path.insert(1, WEBAPP_PATH)
 
 FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE', None)
 
@@ -15,17 +19,17 @@ if FLASK_COVERAGE:
         raise RuntimeError(msg % variable_name)
     COV = None
     if FLASK_COVERAGE:
-        COV = coverage.coverage(branch=True, include='app/*')
+        COV = coverage.coverage(branch=True, include='opac/webapp/*')
         COV.start()
 else:
     COV = None
 
-from app import create_app, dbsql, dbmongo, mail
+from webapp import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
-from app import utils, controllers
+from webapp import utils, controllers
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
-from app.admin.forms import EmailForm
+from webapp.admin.forms import EmailForm
 from flask import current_app
 
 app = create_app()
@@ -145,10 +149,6 @@ def test(verbosity=2):
         return sys.exit()
     else:
         return sys.exit(1)
-
-
-def get_wsgi_app():
-    return app
 
 
 if __name__ == '__main__':

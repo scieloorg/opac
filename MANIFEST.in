@@ -1,5 +1,5 @@
-recursive-include app/templates *
-recursive-include app/static *
-recursive-include app/translation *
-recursive-include config *.ini *.template
+recursive-include opac/webapp/templates *
+recursive-include opac/webapp/static *
+recursive-include opac/webapp/translation *
+recursive-include opac/webapp/config *.ini *.template
 include *.rst *.txt Makefile LICENSE

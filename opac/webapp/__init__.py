@@ -32,7 +32,7 @@ def create_app():
                 instance_relative_config=False)
 
     # Configurações
-    app.config.from_object('app.config.default')  # Configuração basica
+    app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
 
     # Assets
@@ -69,7 +69,8 @@ def create_app():
 
     # Interface do admin
     from .models import User
-    from app.admin import views
+    # from .admin import views
+    from webapp.admin import views
 
     admin = flask_admin.Admin(
         app, 'OPAC admin',

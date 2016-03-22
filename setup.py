@@ -24,28 +24,23 @@ install_requirements = [
     'Flask-Testing>=0.4.2',
     'Flask-Migrate>=1.7.0',
     'packtools>=1.0.1',
-    'opac_schema==1.1',  # por enquanto só essa versão 1.1
+    'opac_schema',
     # for production production
     'chaussette>=1.3',
     'gevent>=1.1.0',
 ]
 
 dependency_links = [
-    'http://github.com/scieloorg/opac_schema/tarball/v1.1#egg=opac_schema-v1.1'
+    'http://github.com/scieloorg/opac_schema/tarball/v1.6#egg=opac_schema-v1.6'
 ]
 
 setup(
     name='opac',
-    version='0.1-dev',
+    version='0.3-dev',
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requirements,
     dependency_links=dependency_links,
-    entry_points={
-        'console_scripts': [
-            "opac_wsgi_app = manager:get_wsgi_app"
-        ]
-    }
 )
