@@ -12,6 +12,10 @@ from app import controllers
 
 logger = logging.getLogger(__name__)
 
+JOURNAL_UNPUBLISH = _(u"O periódico está indisponível por motivo de: ")
+ISSUE_UNPUBLISH = _(u"O fascículo está indisponível por motivo de: ")
+ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
+
 
 @babel.localeselector
 def get_locale():
@@ -75,7 +79,7 @@ def journal_detail(journal_id):
         abort(404, _(u'Periódico não encontrado'))
 
     if not journal.is_public:
-        abort(404, _(journal.unpublish_reason))
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     context = {'journal': journal}
 
@@ -90,7 +94,7 @@ def issue_grid(journal_id):
         abort(404, _(u'Periódico não encontrado'))
 
     if not journal.is_public:
-        abort(404, _(journal.unpublish_reason))
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     issues = controllers.get_issues_by_jid(journal_id, is_public=True)
 
@@ -116,10 +120,10 @@ def issue_toc(issue_id):
         abort(404, _(u'Fascículo não encontrado'))
 
     if not issue.is_public:
-        abort(404, _(issue.unpublish_reason))
+        abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
     if not issue.journal.is_public:
-        abort(404, _(issue.journal.unpublish_reason))
+        abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid)
@@ -139,13 +143,13 @@ def article_detail(article_id):
         abort(404, _(u'Artigo não encontrado'))
 
     if not article.is_public:
-        abort(404, _(article.unpublish_reason))
+        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
 
     if not article.issue.is_public:
-        abort(404, _(article.issue.unpublish_reason))
+        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
 
     if not article.journal.is_public:
-        abort(404, _(article.journal.unpublish_reason))
+        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
     context = {
         'article': article,
@@ -163,7 +167,7 @@ def article_html_by_aid(article_id):
         abort(404, _(u'Artigo não encontrado'))
 
     if not article.is_public:
-        abort(404, _(article.unpublish_reason))
+        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
 
     if not article.htmls:
         abort(404, _(u'HTML do artigo não encontrado'))
@@ -181,7 +185,7 @@ def abstract_detail(article_id):
         abort(404, _(u'Resumo não encontrado'))
 
     if not article.is_public:
-        abort(404, _(article.unpublish_reason))
+        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
 
     if not article.htmls:
         abort(404, _(u'Resumo do artigo não encontrado'))
