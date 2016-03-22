@@ -117,6 +117,7 @@ def create_superuser():
 
 @manager.command
 @manager.option('-v', '--verbosity', dest='verbosity', default=2)
+@manager.option('-s', '--specific', dest='specific', default='tests', help=u'Utilize -s para rodar com testes especificos.')
 def test(verbosity=2):
     """ Executa tests unitarios.
     Lembre de definir a variável: OPAC_CONFIG="path do arquivo de conf para testing" antes de executar este comando:
