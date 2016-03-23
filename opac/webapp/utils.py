@@ -5,11 +5,14 @@ import packtools
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app
-from . import dbsql, controllers, mail, models
+import controllers
+import models
+import webapp
 import re
 
+
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
-REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE) #RFC 2822 (simplified)
+REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
 
 
 def get_timed_serializer():
@@ -31,7 +34,7 @@ def send_email(recipient, subject, html):
                   sender=current_app.config['MAIL_DEFAULT_SENDER'],
                   recipients=[recipient, ],
                   html=html)
-    mail.send(msg)
+    webapp.mail.send(msg)
 
 
 def rebuild_article_xml(article):
@@ -70,9 +73,9 @@ def reset_db():
     Apaga todos os dados de todas as tabelas e cria novas tabelas, SEM DADOS!
     """
 
-    dbsql.drop_all()
-    dbsql.create_all()
-    dbsql.session.commit()
+    webapp.dbsql.drop_all()
+    webapp.dbsql.create_all()
+    webapp.dbsql.session.commit()
 
 
 def create_user(user_email, user_password, user_email_confirmed):
@@ -86,7 +89,7 @@ def create_user(user_email, user_password, user_email_confirmed):
         email=user_email,
         password=user_password,
         email_confirmed=user_email_confirmed)
-    dbsql.session.add(new_user)
-    dbsql.session.commit()
+    webapp.dbsql.session.add(new_user)
+    webapp.dbsql.session.commit()
 
     return new_user

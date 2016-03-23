@@ -8,7 +8,7 @@ from base import BaseTestCase
 
 from opac_schema.v1 import models
 
-from app import controllers, dbsql, utils as ut
+from webapp import controllers, dbsql, utils as ut
 
 import utils
 

@@ -2,7 +2,7 @@
 
 from flask_babelex import gettext as _
 from wtforms import form, fields, validators
-from app.controllers import get_user_by_email
+from webapp import controllers
 
 
 class LoginForm(form.Form):
@@ -10,7 +10,7 @@ class LoginForm(form.Form):
     password = fields.PasswordField(_(u'Senha'), validators=[validators.required()])
 
     def validate_password(self, field):
-        user = get_user_by_email(self.email.data)
+        user = controllers.get_user_by_email(self.email.data)
         if user is None:
             raise validators.ValidationError(_(u'Usuário inválido'))
         if not user.is_correct_password(self.password.data):

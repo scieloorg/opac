@@ -1,8 +1,8 @@
 # coding: utf-8
 
 from flask import url_for, render_template
-from app.notifications import send_confirmation_email, send_reset_password_email
-from app import utils
+from webapp.notifications import send_confirmation_email, send_reset_password_email
+from webapp import utils
 from base import BaseTestCase
 from mock import patch
 from itsdangerous import URLSafeTimedSerializer
@@ -81,7 +81,7 @@ class NotificationsTestCase(BaseTestCase):
 
         recipient_email = 'foo@bar.baz'
 
-        with patch('app.utils.get_timed_serializer') as mock:
+        with patch('webapp.utils.get_timed_serializer') as mock:
             mock.return_value = URLSafeTimedSerializer(None)
 
             expected = None
@@ -105,7 +105,7 @@ class NotificationsTestCase(BaseTestCase):
 
         recipient_email = 'foo@bar.baz'
 
-        with patch('app.utils.get_timed_serializer') as mock:
+        with patch('webapp.utils.get_timed_serializer') as mock:
             mock.return_value = URLSafeTimedSerializer(None)
 
             expected = None
@@ -137,7 +137,7 @@ class NotificationsTestCase(BaseTestCase):
         token = ts.dumps(recipient_email, salt='email-confirm-key')
         confirm_url = url_for('admin.confirm_email', token=token, _external=True)
 
-        with patch('app.utils.send_email') as mock:
+        with patch('webapp.utils.send_email') as mock:
 
             result = send_confirmation_email(recipient_email)
             expected = (True, '')
@@ -169,7 +169,7 @@ class NotificationsTestCase(BaseTestCase):
         token = ts.dumps(recipient_email, salt='recover-key')
         recover_url = url_for('admin.reset_with_token', token=token, _external=True)
 
-        with patch('app.utils.send_email') as mock:
+        with patch('webapp.utils.send_email') as mock:
 
             result = send_reset_password_email(recipient_email)
             expected = (True, '')

@@ -1,4 +1,5 @@
 # coding: utf-8
+
 from flask.ext.admin.contrib.mongoengine.filters import (
     FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
     FilterEmpty, FilterInList, FilterNotInList, FilterConverter)
@@ -110,12 +111,15 @@ class CustomFilterConverter(FilterConverter):
     # Campos dentro filtros ReferenceField, EmbeddedDocumentField, ListField
     # deve ser do tipo StringField
 
-    reference_filters = (CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
-                         CustomFilterNotEqual, CustomFilterInList, CustomFilterNotInList)
-    embedded_filters = (CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
-                         CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
-                         CustomFilterNotInList)
-    list_filters = (CustomFilterLike, CustomFilterNotLike, CustomFilterEmpty)
+    reference_filters = (
+        CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
+        CustomFilterNotEqual, CustomFilterInList, CustomFilterNotInList)
+    embedded_filters = (
+        CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
+        CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
+        CustomFilterNotInList)
+    list_filters = (
+        CustomFilterLike, CustomFilterNotLike, CustomFilterEmpty)
 
     @filters.convert('ReferenceField')
     def conv_reference(self, column, name):
