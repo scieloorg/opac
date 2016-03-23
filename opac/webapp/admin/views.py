@@ -13,10 +13,10 @@ from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from flask import current_app
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 
-from app import models, controllers, choices
-from app.admin import forms
-from app.admin.custom_filters import get_flt, CustomFilterConverter
-from app.utils import get_timed_serializer, rebuild_article_xml
+from webapp import models, controllers, choices
+from webapp.admin import forms
+from webapp.admin.custom_filters import get_flt, CustomFilterConverter
+from webapp.utils import get_timed_serializer, rebuild_article_xml
 from opac_schema.v1.models import Sponsor
 
 

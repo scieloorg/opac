@@ -7,8 +7,8 @@ from flask import render_template, abort, current_app, request, session, redirec
 
 from . import main
 from flask import current_app
-from app import babel
-from app import controllers
+from webapp import babel
+from webapp import controllers
 
 logger = logging.getLogger(__name__)
 

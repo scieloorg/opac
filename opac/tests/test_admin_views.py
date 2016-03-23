@@ -6,11 +6,11 @@ from flask.ext.testing import TestCase
 from flask import current_app, url_for
 from flask_admin.contrib.sqla import form as admin_form
 from flask_login import current_user, login_user
-from app import dbsql, mail
-from app.utils import create_user, get_timed_serializer
-from app.admin import forms
-from app.controllers import get_user_by_email
-from app.notifications import send_confirmation_email
+from webapp import dbsql, mail
+from webapp.utils import create_user, get_timed_serializer
+from webapp.admin import forms
+from webapp.controllers import get_user_by_email
+from webapp.notifications import send_confirmation_email
 from base import BaseTestCase
 from opac_schema.v1.models import Sponsor
 from tests.utils import (

@@ -4,7 +4,7 @@ import flask
 import warnings
 from flask.ext.testing import TestCase
 from flask import url_for, request
-from app import create_app, dbsql, dbmongo
+from webapp import create_app, dbsql, dbmongo
 
 from base import MongoInstance, BaseTestCase
 

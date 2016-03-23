@@ -11,7 +11,7 @@ import pymongo
 from opac_schema.v1 import models as schema_models
 from flask import current_app
 from flask.ext.testing import TestCase
-from app import dbsql
+from webapp import dbsql
 
 
 class MongoInstance(object):

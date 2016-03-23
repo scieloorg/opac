@@ -4,7 +4,7 @@ from base import BaseTestCase
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from flask_babelex import lazy_gettext as __
 from uuid import uuid4
-from app.admin.custom_filters import (
+from webapp.admin.custom_filters import (
     get_flt, CustomFilterConverter, CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
     CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList, CustomFilterNotInList)
 from mongoengine.queryset import Q
@@ -16,12 +16,13 @@ class CustomFiltersTestCase(BaseTestCase):
 
     def test_flt_reference_journal(self):
 
-        journal_fields = {'title': 'title-%s' % str(uuid4().hex),
-                         'title_iso': 'title_iso-%s' % str(uuid4().hex),
-                         'short_title': 'short_title-%s' % str(uuid4().hex),
-                         'acronym': 'acronym-%s' % str(uuid4().hex),
-                         'print_issn': 'print_issn-%s' % str(uuid4().hex),
-                         'eletronic_issn': 'eletronic_issn-%s' % str(uuid4().hex)}
+        journal_fields = {
+            'title': 'title-%s' % str(uuid4().hex),
+            'title_iso': 'title_iso-%s' % str(uuid4().hex),
+            'short_title': 'short_title-%s' % str(uuid4().hex),
+            'acronym': 'acronym-%s' % str(uuid4().hex),
+            'print_issn': 'print_issn-%s' % str(uuid4().hex),
+            'eletronic_issn': 'eletronic_issn-%s' % str(uuid4().hex)}
 
         journal = makeOneJournal(journal_fields)
         makeOneIssue({'journal': journal})
@@ -30,7 +31,7 @@ class CustomFiltersTestCase(BaseTestCase):
             op, term = parse_like_term(journal[field])
             result = get_flt(Issue.journal, term, op)
 
-            journals = Journal.objects.filter(Q(**{'%s__%s'% (field, op): term}))
+            journals = Journal.objects.filter(Q(**{'%s__%s' % (field, op): term}))
             expected = Q(**{'journal__in': journals})
 
             self.assertIn('journal__in', result.query)
@@ -45,7 +46,7 @@ class CustomFiltersTestCase(BaseTestCase):
         op, term = parse_like_term(issue.label)
         result = get_flt(Article.issue, term, op)
 
-        issues = Issue.objects.filter(Q(**{'label__%s'% op: term}))
+        issues = Issue.objects.filter(Q(**{'label__%s' % op: term}))
         expected = Q(**{'issue__in': issues})
 
         self.assertIn('issue__in', result.query)
@@ -80,8 +81,9 @@ class CustomFiltersTestCase(BaseTestCase):
     def test_filters_reference_field(self):
 
         filter_converter = CustomFilterConverter()
-        filtes_reference_field = (CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
-                         CustomFilterNotEqual, CustomFilterInList, CustomFilterNotInList)
+        filtes_reference_field = (
+            CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
+            CustomFilterNotEqual, CustomFilterInList, CustomFilterNotInList)
 
         result = filter_converter.convert('ReferenceField', Issue.journal, 'journal')
         expected = [f(Issue.journal, 'journal') for f in filtes_reference_field]
@@ -91,9 +93,10 @@ class CustomFiltersTestCase(BaseTestCase):
     def test_filters_embedded_field(self):
 
         filter_converter = CustomFilterConverter()
-        filtes_embedded_field = (CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
-                         CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
-                         CustomFilterNotInList)
+        filtes_embedded_field = (
+            CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
+            CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
+            CustomFilterNotInList)
 
         result = filter_converter.convert('EmbeddedDocumentField', Journal.use_licenses, 'use_licenses')
         expected = [f(Journal.use_licenses, 'use_licenses') for f in filtes_embedded_field]
@@ -109,7 +112,6 @@ class CustomFiltersTestCase(BaseTestCase):
         expected = [f(Journal.index_at, 'index_at') for f in filtes_list_field]
 
         self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
-
 
     def test_custom_filter_equal(self):
 

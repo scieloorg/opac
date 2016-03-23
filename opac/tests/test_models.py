@@ -2,7 +2,7 @@
 
 from base import BaseTestCase
 from sqlalchemy.exc import IntegrityError
-from app import models, dbsql
+from webapp import models, dbsql
 
 
 class UserModelTestCase(BaseTestCase):

@@ -9,7 +9,6 @@ install:
   - pip install -r requirements.dev.txt
   - pip install -r requirements.production.txt
 script:
-  - python manager.py test
+  - python opac/manager.py test
 services:
- - mongodb
-
+  - mongodb
