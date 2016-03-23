@@ -117,10 +117,12 @@ def create_superuser():
 
 @manager.command
 @manager.option('-v', '--verbosity', dest='verbosity', default=2)
-@manager.option('-s', '--specific', dest='specific', default='tests', help=u'Utilize -s para rodar com testes especificos.')
-def test(verbosity=2):
+@manager.option('-p', '--pattern', dest='pattern', default='test_*.py',
+                help=u'Utilize -p para rodar testes específicos, ex.: test_admin_*.')
+def test(pattern='test_*.py', verbosity=2):
     """ Executa tests unitarios.
-    Lembre de definir a variável: OPAC_CONFIG="path do arquivo de conf para testing" antes de executar este comando:
+    Lembre de definir a variável: OPAC_CONFIG="path do arquivo de conf para testing"
+    antes de executar este comando:
     > export OPAC_CONFIG="/foo/bar/config.testing" && python manager.py test
     """
 
@@ -128,7 +130,7 @@ def test(verbosity=2):
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
 
-    tests = unittest.TestLoader().discover('tests')
+    tests = unittest.TestLoader().discover('tests', pattern=pattern)
     result = unittest.TextTestRunner(verbosity=verbosity).run(tests)
 
     if COV:
