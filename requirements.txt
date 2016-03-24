@@ -16,4 +16,4 @@ Flask-BabelEx==0.9.2
 Flask-Migrate==1.7.0
 packtools==1.0.1
 -e git+https://git@github.com/scieloorg/opac_schema@v1.6#egg=opac_schema
--e git+https://git@github.com/scieloorg/opac@v0.2-dev#egg=opac
+-e git+https://git@github.com/scieloorg/opac@v0.4-dev#egg=opac
