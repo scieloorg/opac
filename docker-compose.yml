@@ -1,19 +1,42 @@
-mongo:
-    image: mongo
-    restart: always
-    ports:
-      - "27017:27017"
+version: '2'
 
-web:
-    build: .
-    restart: always
-    working_dir: /var/www/opac
-    volumes:
-        - ./data:/var/www/opac/data
-    ports:
-        - "80:8000"
-        - "8080:8080"
-    links:
-        - mongo:mongo
-    environment:
-        - DBSQL_DATABASE_DIR=/var/www/opac/data
+networks:
+   opac-network:
+    external: true
+
+services:
+
+    opac_mongo:
+        image: mongo
+        restart: always
+        ports:
+          - "27017:27017"
+        hostname: opac_mongo
+        networks:
+            - opac-network
+
+    opac_nginx:
+        build: deploy/nginx/.
+        restart: always
+        ports:
+            - "80:9000"
+        networks:
+            - opac-network
+        hostname: opac_nginx
+
+    opac_webapp_1:
+        build: .
+        restart: always
+        working_dir: /app
+        volumes:
+            - ./data:/app/data
+        links:
+            - opac_nginx:opac_nginx
+            - opac_mongo:opac_mongo
+        ports:
+            - "8000"
+        networks:
+            - opac-network
+        environment:
+            - MONGODB_HOST=opac_mongo
+            - DBSQL_DATABASE_DIR=/app/data
