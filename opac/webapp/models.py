@@ -6,13 +6,23 @@
     lib: opac_schema (ver requirements.txt)
 """
 
+import os
+from sqlalchemy.event import listens_for
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy_utils.types.choice import ChoiceType
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
-
+from flask import current_app
+from webapp.admin.custom_fields import thumbgen_filename
 from . import dbsql as db
 from . import login_manager
 import notifications
+
+LANGUAGES_CHOICES = [
+    (u'pt', u'Português'),
+    (u'en', u'English'),
+    (u'es', u'Español'),
+]
 
 
 class User(UserMixin, db.Model):
@@ -74,3 +84,69 @@ def load_user(user_id):
         Necessário para o login manager.
     """
     return User.query.get(int(user_id))
+
+
+class File(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Unicode(64), nullable=False)
+    path = db.Column(db.Unicode(256), nullable=False)
+    language = db.Column(ChoiceType(LANGUAGES_CHOICES), nullable=True)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def get_absolute_url(self):
+        media_url = current_app.config['MEDIA_URL']
+        return '%s/%s' % (media_url, self.path)
+
+
+# Delete hooks: remove arquivos quando o modelo é apagado
+@listens_for(File, 'after_delete')
+def delelte_file_hook(mapper, connection, target):
+    if target.path:
+        media_root = current_app.config['MEDIA_ROOT']
+        try:
+            os.remove(os.path.join(media_root, target.path))
+        except OSError:
+            pass  # Se der erro não importa, o arquivo já não existe
+
+
+class Image(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Unicode(64), nullable=False)
+    path = db.Column(db.Unicode(256), nullable=False)
+    language = db.Column(ChoiceType(LANGUAGES_CHOICES), nullable=True)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def get_absolute_url(self):
+        media_url = current_app.config['MEDIA_URL']
+        return '%s/%s' % (media_url, self.path)
+
+    @property
+    def get_thumbnail_absolute_url(self):
+        media_url = current_app.config['MEDIA_URL']
+        thumb_path = thumbgen_filename(self.path)
+        return '%s/%s' % (media_url, thumb_path)
+
+
+# Delete hooks: remove arquivos quando o modelo é apagado
+@listens_for(Image, 'after_delete')
+def delelte_file_hook(mapper, connection, target):
+    if target.path:
+        media_root = current_app.config['MEDIA_ROOT']
+        # Remover a imagem
+        try:
+            os.remove(os.path.join(media_root, target.path))
+        except OSError:
+            pass  # Se der erro não importa, o arquivo já não existe
+
+        # Remover o thumbnail
+        try:
+            thumb_path = thumbgen_filename(target.path)
+            os.remove(os.path.join(media_root, thumb_path))
+        except OSError:
+            pass  # Se der erro não importa, o arquivo já não existe

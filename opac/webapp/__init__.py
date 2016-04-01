@@ -68,7 +68,7 @@ def create_app():
     mail.init_app(app)
 
     # Interface do admin
-    from .models import User
+    from .models import User, File, Image
     # from .admin import views
     from webapp.admin import views
 
@@ -78,12 +78,14 @@ def create_app():
         template_mode='bootstrap3',
         base_template="admin/opac_base.html")
 
-    admin.add_view(views.CollectionAdminView(Collection, name=lazy_gettext(u'Coleção')))
-    admin.add_view(views.SponsorAdminView(Sponsor, name=lazy_gettext(u'Financiador')))
-    admin.add_view(views.JournalAdminView(Journal, name=lazy_gettext(u'Periódico')))
-    admin.add_view(views.IssueAdminView(Issue, name=lazy_gettext(u'Fascículo')))
-    admin.add_view(views.ArticleAdminView(Article, name=lazy_gettext(u'Artigo')))
-    admin.add_view(views.UserAdminView(User, dbsql.session, name=lazy_gettext(u'Usuário')))
+    admin.add_view(views.CollectionAdminView(Collection, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Coleção')))
+    admin.add_view(views.SponsorAdminView(Sponsor, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Financiador')))
+    admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Periódico')))
+    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Fascículo')))
+    admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Artigo')))
+    admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext(u'Ativos')))
+    admin.add_view(views.ImageAdminView(Image, dbsql.session, category=lazy_gettext(u'Ativos')))
+    admin.add_view(views.UserAdminView(User, dbsql.session, category=lazy_gettext(u'Gestão'), name=lazy_gettext(u'Usuário')))
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
