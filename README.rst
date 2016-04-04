@@ -33,7 +33,7 @@ Como executar os tests
 
 
 ============================
-Inslalação utilizando Docker
+Instalação utilizando Docker
 ============================
 
 Para executar o ambiente (de desenvolvimento) com Docker, utilizando as definições do arquivo **Dockerfile** e **docker-compose.yml** na raiz do projeto.
