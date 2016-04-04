@@ -3,8 +3,8 @@
 import os
 
 """
-  Configuração padrão, definimos estas configurações para deixar a app rodando como produção.
-  Porém é necessário ajustar algumas configuração para deixar uma instalação segura e
+  Na Configuração padrão, definimos estas configurações para deixar a app rodando em modo "produção".
+  Porém é recomendado ajustar algumas configuração para deixar uma instalação segura e
   funcional no seu ambiente, por exemplo definindo a coleção que o site deve atender.
 
   Para saber mais sobre configuração, visite:
@@ -13,13 +13,13 @@ import os
       - http://flask-sqlalchemy.pocoo.org/2.1/config/
       - https://flask-mongoengine.readthedocs.org/en/latest/#configuration
 
-  Para ajustar configurações, pode definir as variáveis de ambiante (ver abaixo) no seu host,
+  Para ajustar configurações, pode definir as variáveis de ambiente (ver abaixo) no seu host,
   ou copie o template que melhor se ajuste a seu ambiente, e apontando o caminho absoluto
-  na variável de ambiente: OPAC_CONFIG, por exemplo:
+  na variável de ambiente: **OPAC_CONFIG**, por exemplo:
 
       1. copiar este template: ``cp opac/config/templates/development.template /foo/var/baz/opac.config.py``
-      2. editar: ``vim /foo/var/baz/opac.config.py``, pode consultar o arquivo: opac/config/default.py
-      3. definir a variável de ambiente OPAC_CONFIG: ``export OPAC_CONFIG="/foo/var/baz/opac.config.py"``
+      2. editar: ``vim /foo/var/baz/opac.config.py``, pode consultar o arquivo: ``opac/webapp/config/default.py``
+      3. definir a variável de ambiente **OPAC_CONFIG**: ``export OPAC_CONFIG="/foo/var/baz/opac.config.py"``
       4. iniciar/reiniciar o servidor web
 
   Variavies de ambiente:
@@ -44,12 +44,13 @@ import os
         - OPAC_MONGODB_NAME:    nome do banco (default: 'opac')
         - OPAC_MONGODB_HOST:    host do banco (default: 'localhost')
         - OPAC_MONGODB_PORT:    porta do banco (default: 27017)
-        - OPAC_MONGODB_USER:    [opcional] usuário para acessar o banco (defaul: None)
-        - OPAC_MONGODB_PASS:    [opcional] password para acessar o banco (defaul: None)
+        - OPAC_MONGODB_USER:    [opcional] usuário para acessar o banco (default: None)
+        - OPAC_MONGODB_PASS:    [opcional] password para acessar o banco (default: None)
 
       - Banco SQL:
         - OPAC_DATABASE_FILE:   nome do arquivo (sqlite) (default: 'opac.sqlite')
         - OPAC_DATABASE_DIR:    pasta aonde fica o banco (sqlite) (default: '/tmp')
+        - OPAC_DATABASE_URI:    [opcional] URI do banco sql (default: 'sqlite:////tmp/opac.sqlite')
 
       - Google Analytics:
         - GA_TRACKING_CODE:     código de google analytics (acesse https://goo.gl/HE77SO para resgatar seu código)
@@ -128,7 +129,7 @@ if MONGODB_USER and MONGODB_PASS:
 DATABASE_FILE = os.environ.get('OPAC_DATABASE_FILE', 'opac.sqlite')
 DATABASE_DIR = os.environ.get('OPAC_DATABASE_DIR', '/tmp')  # Caminho absoluto da pasta que vai conter o arquivo sqlite
 DATABASE_PATH = '%s/%s' % (DATABASE_DIR, DATABASE_FILE)
-SQLALCHEMY_DATABASE_URI = os.environ.get('OPAC_DATABASE_FILE', 'sqlite:////%s' % DATABASE_PATH)
+SQLALCHEMY_DATABASE_URI = os.environ.get('OPAC_DATABASE_URI', 'sqlite:////%s' % DATABASE_PATH)
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
