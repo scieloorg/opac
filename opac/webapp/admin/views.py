@@ -1,20 +1,23 @@
 # coding: utf-8
+import os
 import logging
+from functools import partial
 from uuid import uuid4
+from werkzeug import secure_filename
+from jinja2 import Markup
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
-from flask import url_for, redirect, request, flash, abort
+from flask import url_for, redirect, request, flash, abort, current_app
 from flask.ext.admin.contrib import sqla, mongoengine
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
-from flask import current_app
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 
 from webapp import models, controllers, choices
-from webapp.admin import forms
+from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter
 from webapp.utils import get_timed_serializer, rebuild_article_xml
 from opac_schema.v1.models import Sponsor
@@ -145,7 +148,6 @@ class UserAdminView(sqla.ModelView):
     edit_modal = True
     create_modal = True
     form_excluded_columns = ('password', 'email_confirmed')
-
     column_filters = ['email']
 
     def after_model_change(self, form, model, is_created):
@@ -188,6 +190,70 @@ class UserAdminView(sqla.ModelView):
             flash(_(u'Ocorreu um erro no envio do emails de confirmação. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
+
+
+class AssetsMixin(object):
+    form_choices = {
+        'language': models.LANGUAGES_CHOICES,
+    }
+    column_searchable_list = ['name', ]
+
+    def is_accessible(self):
+        return login.current_user.is_authenticated
+
+
+class FileAdminView(AssetsMixin, sqla.ModelView):
+
+    def _path_formatter(self, context, model, name):
+        return Markup("<a href='{url}' target='_blank'>Download</a>".format(
+            url=model.get_absolute_url))
+
+    column_list = ('name', 'path', 'language')
+    column_formatters = {
+        'path': _path_formatter,
+    }
+
+    form_overrides = {
+        'path': custom_fields.MediaFileUploadField
+    }
+
+    column_labels = dict(
+        name=__(u'Nome'),
+        path=__(u'Link'),
+        language=__(u'Idioma'),
+    )
+
+
+class ImageAdminView(AssetsMixin, sqla.ModelView):
+
+    def _path_formatter(self, context, model, name):
+        return Markup(
+            "<a href='{url}' target='_blank'>Download</a>".format(
+                url=model.get_absolute_url))
+
+    def _preview_formatter(self, context, model, name):
+        if not model.path:
+            return ''
+        else:
+            return Markup("<img src='{url}'>".format(
+                url=model.get_thumbnail_absolute_url))
+
+    column_list = ('name', 'preview', 'path', 'language')
+    column_formatters = {
+        'preview': _preview_formatter,
+        'path': _path_formatter,
+    }
+
+    form_overrides = {
+        'path': custom_fields.MediaImageUploadField
+    }
+
+    column_labels = dict(
+        name=__(u'Nome'),
+        preview=__(u'Previsualização'),
+        path=__(u'Link'),
+        language=__(u'Idioma'),
+    )
 
 
 class OpacBaseAdminView(mongoengine.ModelView):

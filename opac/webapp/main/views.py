@@ -6,9 +6,11 @@ from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect
 
 from . import main
-from flask import current_app
+from flask import current_app, send_from_directory
 from webapp import babel
 from webapp import controllers
+from webapp import models
+import webapp
 
 logger = logging.getLogger(__name__)
 
@@ -156,6 +158,7 @@ def article_detail(article_id):
         'journal': article.journal,
         'issue': article.issue
     }
+
     return render_template("article/detail.html", **context)
 
 
@@ -196,3 +199,9 @@ def abstract_detail(article_id):
         'issue': article.issue
     }
     return render_template("article/abstract.html", **context)
+
+
+@main.route("/media/<path:filename>", methods=['GET'])
+def download_file_by_filename(filename):
+    media_root = current_app.config['MEDIA_ROOT']
+    return send_from_directory(media_root, filename)

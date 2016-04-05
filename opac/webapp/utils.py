@@ -78,6 +78,19 @@ def reset_db():
     webapp.dbsql.session.commit()
 
 
+def create_db_tables():
+    """
+    Cria as tabelas no banco SQL, SEM DADOS!
+    """
+
+    try:
+        webapp.dbsql.create_all()
+        webapp.dbsql.session.commit()
+    except Exception, e:
+        # TODO: melhorar o informe do erro
+        raise e
+
+
 def create_user(user_email, user_password, user_email_confirmed):
     """
     Cria um novo usuário, com acesso habilitado para acessar no admin.

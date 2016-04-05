@@ -69,3 +69,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# media images
+opac/webapp/media/files/*.*
+opac/webapp/media/images/*.*

@@ -54,7 +54,15 @@ import os
 
       - Google Analytics:
         - GA_TRACKING_CODE:     código de google analytics (acesse https://goo.gl/HE77SO para resgatar seu código)
+
+      - Upload de imagens:
+        - OPAC_MEDIA_ROOT:      path absoluto da pasta que vai armazenar as imagens subidas pelos usuários pelo admin. (default: /[repo dir]/opac/opac/webapp/media/)
+        - OPAC_MEDIA_URL:       URL para servir as imagens. (default: '/media')
+
 """
+
+PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 # ativa/desativa o modo Debug da app
 # NUNCA deixar DEBUG = True em produção
@@ -158,3 +166,8 @@ GA_TRACKING_CODE = os.environ.get('GA_TRACKING_CODE', None)
 
 # debug toolbar:
 DEBUG_TB_INTERCEPT_REDIRECTS = False
+
+# media files
+DEFAULT_MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, 'media'))
+MEDIA_ROOT = os.environ.get('OPAC_MEDIA_ROOT', DEFAULT_MEDIA_ROOT)
+MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')

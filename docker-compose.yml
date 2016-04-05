@@ -38,5 +38,5 @@ services:
         networks:
             - opac-network
         environment:
-            - MONGODB_HOST=opac_mongo
-            - DBSQL_DATABASE_DIR=/app/data
+            - OPAC_MONGODB_NAME=opac_mongo
+            - OPAC_DATABASE_DIR=/app/data

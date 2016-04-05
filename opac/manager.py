@@ -51,15 +51,14 @@ manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
 @manager.command
-@manager.option('-f', '--force', dest='force_delete', default=False,
-                help=u'Forçar a remoção dos dados')
+@manager.option('-f', '--force', dest='force_delete', default=False)
 def reset_dbsql(force_delete=False):
     """
     Remove todos os dados do banco de dados SQL.
-    Por padrão, se o banco SQL já existe, o banco não é modificado.
+    Por padrão: se o banco SQL já existe, o banco não sera modificado.
     Utilize o parametro --force=True para forçar a remoção dos dados.
 
-    Uma vez removidos os dados, todas as tabelas serão criadas.
+    Uma vez removidos os dados, todas as tabelas serão criadas vazias.
     """
 
     db_path = app.config['DATABASE_PATH']
@@ -67,10 +66,26 @@ def reset_dbsql(force_delete=False):
         utils.reset_db()
         print u'O banco esta limpo!'
         print u'Para criar um novo usuário execute o comando: create_superuser'
-        print u'python manager.py create_superuser --help'
+        print u'python manager.py create_superuser'
     else:
         print u'O banco já existe (em %s).' % db_path
         print u'remova este arquivo manualmente ou utilize --force.'
+
+
+@manager.command
+def create_tables_dbsql(force_delete=False):
+    """
+    Cria as tabelas necessárias no banco de dados SQL.
+    """
+
+    db_path = app.config['DATABASE_PATH']
+    if not os.path.exists(db_path):
+        utils.create_db_tables()
+        print u'As tabelas foram criadas com sucesso!'
+    else:
+        print u'O banco já existe (em %s).' % db_path
+        print u'Para remover e crias as tabelas use o camando:'
+        print u'python manager.py reset_dbsql --help'
 
 
 @manager.command
