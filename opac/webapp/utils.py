@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 from lxml import etree
 import packtools
 from itsdangerous import URLSafeTimedSerializer
@@ -10,9 +11,19 @@ import models
 import webapp
 import re
 
+try:
+    from PIL import Image, ImageOps
+except ImportError:
+    Image = None
+    ImageOps = None
+
+from unicodedata import normalize
+
 
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
 REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
 def get_timed_serializer():
@@ -20,6 +31,22 @@ def get_timed_serializer():
     Retorna uma instância do URLSafeTimedSerializer necessário para gerar tokens
     """
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+
+
+def slugify(text, delim=u''):
+    """
+    Generates an slightly worse ASCII-only slug.
+    Originally from:
+    http://flask.pocoo.org/snippets/5/
+    Generating Slugs
+    By Armin Ronacher filed in URLs
+    """
+    result = []
+    for word in _punct_re.split(text.lower()):
+        word = normalize('NFKD', word).encode('ascii', 'ignore')
+        if word:
+            result.append(word)
+    return unicode(delim.join(result))
 
 
 def send_email(recipient, subject, html):
@@ -106,3 +133,26 @@ def create_user(user_email, user_password, user_email_confirmed):
     webapp.dbsql.session.commit()
 
     return new_user
+
+
+def generate_thumbnail(input_filename, thumbnail_path, size=(100, 100)):
+    """
+    Parâmento input_filename matrix do thumbnail.
+    Parâmento thumbnail_path caminho completo para o thumbnail, o thumbnail
+    terá o mesmo nome do arquivo original concatenado com '_thumb'.
+    Parâmentro size tupla contendo o tamanho do thumbnail, padrão (100,100)
+
+    Caso a geração seja realizado com sucesso deve retorna o path do thumbnail,
+    caso contrário None.
+    """
+    name, ext = os.path.splitext(os.path.basename(input_filename))
+    image_path = os.path.join(thumbnail_path, '%s_thumb%s' % (name, ext))
+
+    try:
+        img = Image.open(input_filename)
+        img.thumbnail(size)
+        img.save(image_path)
+    except Exception as e:
+        print e
+    else:
+        return image_path
