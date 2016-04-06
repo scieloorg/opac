@@ -2,6 +2,8 @@
 # coding: utf-8
 import os
 import sys
+import shutil
+import fnmatch
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -168,6 +170,47 @@ def test(pattern='test_*.py'):
     else:
         return sys.exit(1)
 
+
+@manager.command
+@manager.option('-d', '--directory', dest="pattern")
+def upload_images(directory='.'):
+    """
+    Esse comando realiza um cadastro em massa de images com extensões:
+    ('*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp') de um diretório determinado
+    pelo parâmetro --diretory (It must be absolute path).
+
+    Cada imagem cadastrada receberá um nome que será o slug do nome do arquivo,
+    ex.:
+
+    Nome do arquivo no sistema de arquivo: logo-scielo-journal-brasil.png
+    Nome do arquivo após o cadastro na entidade Image: logo_scielo_journal_brasilpng
+    """
+
+    extensions = ('*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp')
+
+    print "Coletando todas a imagens da pasta: %s" % directory
+
+    for root, dirnames, filenames in os.walk(directory):
+        for extension in extensions:
+            for filename in fnmatch.filter(filenames, extension):
+
+                image_path = os.path.join(root, filename)
+
+                print "Imagem: %s" % image_path
+
+                dst_path = os.path.join(app.config['MEDIA_ROOT'], filename)
+
+                shutil.copyfile(image_path, dst_path)
+
+                tumb_path = utils.generate_thumbnail(image_path,
+                                                     app.config['MEDIA_ROOT'])
+
+                print "Thumbnail: %s" % tumb_path
+
+                img = Image(name=utils.slugify(filename), path=filename)
+
+                dbsql.session.add(img)
+                dbsql.session.commit()
 
 if __name__ == '__main__':
     manager.run()
