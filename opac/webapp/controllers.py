@@ -397,6 +397,7 @@ def set_user_password(user, password):
 
 # -------- FUNCTIONS --------
 
+
 def count_elements_by_type_and_visibility(type, public_only=False):
     """
     Retorna a quantidade de registros indicado pelo @type.

@@ -1,31 +1,10 @@
 # coding: utf-8
 
 import os
-from werkzeug import secure_filename
 from flask_admin.form.upload import ImageUploadField, FileUploadField, ImageUploadInput, FileUploadInput
 from flask import current_app
 
-FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx')
-IMAGES_ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif', 'webp')
-THUMBNAIL_HEIGHT = 100
-THUMBNAIL_WIDTH = 100
-
-
-def namegen_filename(obj, file_data):
-    """
-        Retorna um nome de arquivo seguro para o arquivo subido,
-        utilizando o nome (campo "name" do modelo) e mantendo a extensão original
-    """
-    _, extension = os.path.splitext(file_data.filename)
-    return secure_filename('%s%s' % (obj.name, extension))
-
-
-def thumbgen_filename(filename):
-    """
-        Gera o nome do arquivo do thumbnail a partir do  filename.
-    """
-    name, ext = os.path.splitext(filename)
-    return '%s_thumb%s' % (name, ext)
+from webapp.utils import namegen_filename, thumbgen_filename
 
 
 class MediaImageUploadInput(ImageUploadInput):
@@ -127,7 +106,7 @@ class MediaImageUploadField(ImageUploadField):
             namegen = namegen_filename
 
         if not allowed_extensions:
-            allowed_extensions = IMAGES_ALLOWED_EXTENSIONS
+            allowed_extensions = current_app.config['IMAGES_ALLOWED_EXTENSIONS']
 
         thumbgen = thumbgen_filename
         thumbnail_size = (100, 100, False)
@@ -200,7 +179,7 @@ class MediaFileUploadField(FileUploadField):
             namegen = namegen_filename
 
         if not allowed_extensions:
-            allowed_extensions = FILES_ALLOWED_EXTENSIONS
+            allowed_extensions = current_app.config['FILES_ALLOWED_EXTENSIONS']
 
         super(MediaFileUploadField, self).__init__(
             label,

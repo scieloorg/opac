@@ -16,15 +16,17 @@ def makeOneCollection(attrib=None):
     config_acronym = current_app.config['OPAC_COLLECTION']
 
     name = attrib.get('name', 'collection of %s' % config_acronym)
-    license_code = attrib.get('license_code', 'CC-BY')
+    license = attrib.get('license', {'license_code': 'CC-BY',
+                                     'reference_url': 'http://creativecommons.org/licenses/by/4.0/deed.en',
+                                     'disclaimer': 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons Attribution License'})
     acronym = attrib.get('acronym', config_acronym)
 
     collection = {
         '_id': default_id,
         'name': name,
         'acronym': acronym,
-        'license_code': license_code,
-        'logo_url': attrib.get('logo_url', None),
+        'license': license,
+        'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
     }
     for k, v in attrib.iteritems():
@@ -67,7 +69,7 @@ def makeOneSponsor(attrib=None):
         '_id': default_id,
         'name': name,
         'url': attrib.get('url', None),
-        'logo_url': attrib.get('logo_url', None),
+        'logo_resource': attrib.get('logo_resource', None),
     }
     return models.Sponsor(**collection).save()
 
