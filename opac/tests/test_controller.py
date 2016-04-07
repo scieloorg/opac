@@ -700,38 +700,6 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertRaises(ValueError,
                           controllers.get_articles_by_iid, [])
 
-    def test_new_article_html_doc(self):
-        """
-        Testando a função controllers.new_article_html_doc(), deve retornar um
-        objeto ArticleHTML.
-        """
-
-        article = self._makeOne()
-
-        articleHTML = controllers.new_article_html_doc('pt', '<html>anytags</html>')
-        article.htmls = [articleHTML]
-        article.save()
-
-        self.assertIsInstance(articleHTML, models.ArticleHTML)
-
-    def test_new_article_html_doc_param_language_not_string(self):
-        """
-        Testando a função controllers.new_article_html_doc() com o parâmetro
-        language sendo um inteiro,  deve retornar ValueError.
-        """
-
-        self.assertRaises(ValueError,
-                          controllers.new_article_html_doc, 123, '<html>anytags</html>')
-
-    def test_new_article_html_doc_param_source_not_string(self):
-        """
-        Testando a função controllers.new_article_html_doc() com o parâmetro
-        source sendo um inteiro,  deve retornar ValueError.
-        """
-
-        self.assertRaises(ValueError,
-                          controllers.new_article_html_doc, 'en', 989087867)
-
 
 class UserControllerTestCase(BaseTestCase):
 

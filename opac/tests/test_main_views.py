@@ -488,20 +488,18 @@ class MainTestCase(BaseTestCase):
         do artigo.
         """
 
+        resource = utils.makeOneResource()
+
         article_attrib = {'title': 'Article Y',
-                          'htmls': [
-                                {
-                                    'language': "pt",
-                                    'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
-                                }
-                            ]}
+                          'htmls': [resource]}
+
         article = utils.makeOneArticle(article_attrib)
 
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id=article.id))
 
         self.assertStatus(response, 200)
-        self.assertIn(u'Cad Saude Publica', response.data.decode('utf-8'))
+        self.assertIn(u'http://somedomain.com.br', response.data.decode('utf-8'))
 
     def test_article_html_by_aid_without_html(self):
         """
@@ -553,29 +551,6 @@ class MainTestCase(BaseTestCase):
         self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
     # ABSTRACT
-
-    def test_abstract_detail(self):
-        """
-        Teste da ``view function`` ``abstract_detail``, deve retornar o HTML
-        do artigo.
-        """
-
-        article_attrib = {'title': 'Article Y',
-                          'htmls': [
-                                {
-                                    'language': "pt",
-                                    'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
-                                }
-                            ]}
-        article = utils.makeOneArticle(article_attrib)
-
-        response = self.client.get(url_for('main.abstract_detail',
-                                           article_id=article.id))
-
-        self.assertStatus(response, 200)
-        self.assertEqual(self.get_context_variable('article').id, article.id)
-        self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-        self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
     def test_abstract_detail_without_html(self):
         """
