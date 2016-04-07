@@ -175,7 +175,7 @@ def article_html_by_aid(article_id):
     if not article.htmls:
         abort(404, _(u'HTML do artigo não encontrado'))
 
-    article_html = article.htmls[0].source
+    article_html = article.htmls[0].url
 
     return article_html
 

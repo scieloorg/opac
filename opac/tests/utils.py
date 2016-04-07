@@ -35,6 +35,26 @@ def makeOneCollection(attrib=None):
     return models.Collection(**collection).save()
 
 
+def makeOneResource(attrib=None):
+    """
+    Retorna um objeto ``Resource`` com os atributos obrigatórios:
+    ``_id``, ``url``, ``type``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+
+    resource = {
+            '_id': default_id,
+            'url': attrib.get('url', 'http://somedomain.com.br'),
+            'language': attrib.get('language', 'en'),
+            'type': attrib.get('type', 'html'),
+            'description': attrib.get('description', 'some description')
+        }
+
+    return models.Resource(**resource).save()
+
+
 def makeOneSponsor(attrib=None):
     """
     Retorna um objeto ``Sponsor`` com os atributos obrigatórios:
@@ -211,7 +231,7 @@ def makeOneArticle(attrib=None):
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
         'issue': issue.id,
-        'journal': journal.id,
+        'journal': journal.id
     }
 
     for k, v in attrib.iteritems():

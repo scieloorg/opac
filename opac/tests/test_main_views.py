@@ -379,250 +379,225 @@ class MainTestCase(BaseTestCase):
 
     # ARTICLE
 
-    # def test_article_detail(self):
-    #     """
-    #     Teste da ``view function`` ``article_detail``, deve retornar uma página
-    #     que usa o template ``article/detail.html``.
-    #     """
+    def test_article_detail(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
 
-    #     article = utils.makeOneArticle({'title': 'Article Y'})
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
-    #     response = self.client.get(url_for('main.article_detail',
-    #                                        article_id=article.id))
-    #     self.assertStatus(response, 200)
-    #     self.assertTemplateUsed('article/detail.html')
-    #     self.assertEqual(self.get_context_variable('article').id, article.id)
-    #     self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-    #     self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+        response = self.client.get(url_for('main.article_detail',
+                                           article_id=article.id))
+        self.assertStatus(response, 200)
+        self.assertTemplateUsed('article/detail.html')
+        self.assertEqual(self.get_context_variable('article').id, article.id)
+        self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+        self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
-    # def test_article_detail_without_articles(self):
-    #     """
-    #     Teste para avaliar o retorno da ``view function`` ``article_detail``
-    #     quando não existe artigos cadastrados deve retornar ``status_code`` 404
-    #     e a msg ``Artigo não encontrado``
-    #     """
+    def test_article_detail_without_articles(self):
+        """
+        Teste para avaliar o retorno da ``view function`` ``article_detail``
+        quando não existe artigos cadastrados deve retornar ``status_code`` 404
+        e a msg ``Artigo não encontrado``
+        """
 
-    #     response = self.client.get(url_for('main.article_detail',
-    #                                        article_id='02ksn892hwytd8jh2'))
+        response = self.client.get(url_for('main.article_detail',
+                                           article_id='02ksn892hwytd8jh2'))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
 
-    # def test_article_detail_with_journal_attrib_is_public_false(self):
-    #     """
-    #     Teste da ``view function`` ``article_detail`` acessando um artigo
-    #     com atributo is_public=True, porém com um periódico com atributo
-    #     is_public=False deve retorna uma página com ``status_code`` 404 e msg
-    #     cadastrada no atributo ``reason`` do periódico.
-    #     """
+    def test_article_detail_with_journal_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``article_detail`` acessando um artigo
+        com atributo is_public=True, porém com um periódico com atributo
+        is_public=False deve retorna uma página com ``status_code`` 404 e msg
+        cadastrada no atributo ``reason`` do periódico.
+        """
 
-    #     journal = utils.makeOneJournal({
-    #         'is_public': False,
-    #         'unpublish_reason': 'Revista removida da coleção'})
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'Revista removida da coleção'})
 
-    #     issue = utils.makeOneIssue({
-    #         'is_public': True,
-    #         'journal': journal.id})
+        issue = utils.makeOneIssue({
+            'is_public': True,
+            'journal': journal.id})
 
-    #     article = utils.makeOneArticle({
-    #         'issue': issue.id,
-    #         'journal': journal.id})
+        article = utils.makeOneArticle({
+            'issue': issue.id,
+            'journal': journal.id})
 
-    #     response = self.client.get(url_for('main.article_detail',
-    #                                        article_id=article.id))
+        response = self.client.get(url_for('main.article_detail',
+                                           article_id=article.id))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
 
-    # def test_article_detail_with_issue_attrib_is_public_false(self):
-    #     """
-    #     Teste da ``view function`` ``article_detail`` acessando um artigo
-    #     com atributo is_public=False, porém com um periódico com atributo
-    #     is_public=True deve retorna uma página com ``status_code`` 404 e msg
-    #     cadastrada no atributo ``reason`` do fascículo.
-    #     """
+    def test_article_detail_with_issue_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``article_detail`` acessando um artigo
+        com atributo is_public=False, porém com um periódico com atributo
+        is_public=True deve retorna uma página com ``status_code`` 404 e msg
+        cadastrada no atributo ``reason`` do fascículo.
+        """
 
-    #     journal = utils.makeOneJournal()
+        journal = utils.makeOneJournal()
 
-    #     issue = utils.makeOneIssue({
-    #         'is_public': False,
-    #         'unpublish_reason': 'Facículo rejeitado',
-    #         'journal': journal.id})
+        issue = utils.makeOneIssue({
+            'is_public': False,
+            'unpublish_reason': 'Facículo rejeitado',
+            'journal': journal.id})
 
-    #     article = utils.makeOneArticle({
-    #         'issue': issue.id,
-    #         'journal': journal.id})
+        article = utils.makeOneArticle({
+            'issue': issue.id,
+            'journal': journal.id})
 
-    #     response = self.client.get(url_for('main.article_detail',
-    #                                        article_id=article.id))
+        response = self.client.get(url_for('main.article_detail',
+                                           article_id=article.id))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Facículo rejeitado', response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Facículo rejeitado', response.data.decode('utf-8'))
 
-    # def test_article_detail_with_article_attrib_is_public_false(self):
-    #     """
-    #     Teste da ``view function`` ``article_detail`` acessando um artigo
-    #     com atributo is_public=False, deve retorna uma página com
-    #      ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
-    #     """
+    def test_article_detail_with_article_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``article_detail`` acessando um artigo
+        com atributo is_public=False, deve retorna uma página com
+         ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
+        """
 
-    #     journal = utils.makeOneJournal()
+        journal = utils.makeOneJournal()
 
-    #     issue = utils.makeOneIssue({'journal': journal.id})
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-    #     article = utils.makeOneArticle({
-    #         'is_public': False,
-    #         'unpublish_reason': 'Artigo com problemas de licença',
-    #         'issue': issue.id,
-    #         'journal': journal.id})
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Artigo com problemas de licença',
+            'issue': issue.id,
+            'journal': journal.id})
 
-    #     response = self.client.get(url_for('main.article_detail',
-    #                                        article_id=article.id))
+        response = self.client.get(url_for('main.article_detail',
+                                           article_id=article.id))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
-    # def test_article_html_by_aid(self):
-    #     """
-    #     Teste da ``view function`` ``article_html_by_aid``, deve retornar o HTML
-    #     do artigo.
-    #     """
+    def test_article_html_by_aid(self):
+        """
+        Teste da ``view function`` ``article_html_by_aid``, deve retornar o HTML
+        do artigo.
+        """
 
-    #     article_attrib = {'title': 'Article Y',
-    #                       'htmls': [
-    #                             {
-    #                                 'language': "pt",
-    #                                 'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
-    #                             }
-    #                         ]}
-    #     article = utils.makeOneArticle(article_attrib)
+        resource = utils.makeOneResource()
 
-    #     response = self.client.get(url_for('main.article_html_by_aid',
-    #                                        article_id=article.id))
+        article_attrib = {'title': 'Article Y',
+                          'htmls': [resource]}
 
-    #     self.assertStatus(response, 200)
-    #     self.assertIn(u'Cad Saude Publica', response.data.decode('utf-8'))
+        article = utils.makeOneArticle(article_attrib)
 
-    # def test_article_html_by_aid_without_html(self):
-    #     """
-    #     Teste da ``view function`` ``article_html_by_aid``, deve retornar uma
-    #     página 404 com a msg ``HTML do artigo não encontrado``.
-    #     """
+        response = self.client.get(url_for('main.article_html_by_aid',
+                                           article_id=article.id))
 
-    #     article = utils.makeOneArticle({'title': 'Article Y'})
+        self.assertStatus(response, 200)
+        self.assertIn(u'http://somedomain.com.br', response.data.decode('utf-8'))
 
-    #     response = self.client.get(url_for('main.article_html_by_aid',
-    #                                        article_id=article.id))
+    def test_article_html_by_aid_without_html(self):
+        """
+        Teste da ``view function`` ``article_html_by_aid``, deve retornar uma
+        página 404 com a msg ``HTML do artigo não encontrado``.
+        """
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'HTML do artigo não encontrado', response.data.decode('utf-8'))
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
-    # def test_article_html_by_aid_without_articles(self):
-    #     """
-    #     Teste da ``view function`` ``article_html_by_aid`` sem artigos
-    #     cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
-    #     """
+        response = self.client.get(url_for('main.article_html_by_aid',
+                                           article_id=article.id))
 
-    #     response = self.client.get(url_for('main.article_html_by_aid',
-    #                                        article_id='9ajsd9shwqjks9syd'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'HTML do artigo não encontrado', response.data.decode('utf-8'))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
+    def test_article_html_by_aid_without_articles(self):
+        """
+        Teste da ``view function`` ``article_html_by_aid`` sem artigos
+        cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
+        """
 
-    # def test_article_html_by_aid_with_article_attrib_is_public_false(self):
-    #     """
-    #     Teste da ``view function`` ``article_html_by_aid`` acessando um artigo
-    #     com atributo is_public=False, deve retorna uma página com
-    #      ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
-    #     """
+        response = self.client.get(url_for('main.article_html_by_aid',
+                                           article_id='9ajsd9shwqjks9syd'))
 
-    #     journal = utils.makeOneJournal()
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
 
-    #     issue = utils.makeOneIssue({'journal': journal.id})
+    def test_article_html_by_aid_with_article_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``article_html_by_aid`` acessando um artigo
+        com atributo is_public=False, deve retorna uma página com
+         ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
+        """
 
-    #     article = utils.makeOneArticle({
-    #         'is_public': False,
-    #         'unpublish_reason': 'Artigo com problemas de licença',
-    #         'issue': issue.id,
-    #         'journal': journal.id})
+        journal = utils.makeOneJournal()
 
-    #     response = self.client.get(url_for('main.article_html_by_aid',
-    #                                        article_id=article.id))
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Artigo com problemas de licença',
+            'issue': issue.id,
+            'journal': journal.id})
+
+        response = self.client.get(url_for('main.article_html_by_aid',
+                                           article_id=article.id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
     # ABSTRACT
 
-    # def test_abstract_detail(self):
-    #     """
-    #     Teste da ``view function`` ``abstract_detail``, deve retornar o HTML
-    #     do artigo.
-    #     """
+    def test_abstract_detail_without_html(self):
+        """
+        Teste da ``view function`` ``abstract_detail``, deve retornar uma
+        página 404 com a msg ``Resumo do artigo não encontrado``.
+        """
 
-    #     article_attrib = {'title': 'Article Y',
-    #                       'htmls': [
-    #                             {
-    #                                 'language': "pt",
-    #                                 'source': "<!DOCTYPE html><html lang=\"pt\"><head><title>Cad Saude Publica - As Ci\\u00eancias Sociais e Humanas em Sa\\u00fade na ABRASCO: a\\n\\t\\t\\t\\t\\tconstru\\u00e7\\u00e3o de um pensamento social em sa\\u00fade</title></head><body></body></html>"
-    #                             }
-    #                         ]}
-    #     article = utils.makeOneArticle(article_attrib)
+        article = utils.makeOneArticle({'title': 'Article Y'})
 
-    #     response = self.client.get(url_for('main.abstract_detail',
-    #                                        article_id=article.id))
+        response = self.client.get(url_for('main.abstract_detail',
+                                           article_id=article.id))
 
-    #     self.assertStatus(response, 200)
-    #     self.assertEqual(self.get_context_variable('article').id, article.id)
-    #     self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-    #     self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo do artigo não encontrado',
+                      response.data.decode('utf-8'))
 
-    # def test_abstract_detail_without_html(self):
-    #     """
-    #     Teste da ``view function`` ``abstract_detail``, deve retornar uma
-    #     página 404 com a msg ``Resumo do artigo não encontrado``.
-    #     """
+    def test_abstract_detail_without_articles(self):
+        """
+        Teste da ``view function`` ``abstract_detail`` sem artigos
+        cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
+        """
 
-    #     article = utils.makeOneArticle({'title': 'Article Y'})
+        response = self.client.get(url_for('main.abstract_detail',
+                                           article_id='9ajsd9shwqjks9syd'))
 
-    #     response = self.client.get(url_for('main.abstract_detail',
-    #                                        article_id=article.id))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo não encontrado', response.data.decode('utf-8'))
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Resumo do artigo não encontrado',
-    #                   response.data.decode('utf-8'))
+    def test_abstract_detail_with_article_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``abstract_detail`` acessando o resumo do
+        artigo com atributo is_public=False, deve retorna uma página com
+         ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
+        """
 
-    # def test_abstract_detail_without_articles(self):
-    #     """
-    #     Teste da ``view function`` ``abstract_detail`` sem artigos
-    #     cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
-    #     """
+        journal = utils.makeOneJournal()
 
-    #     response = self.client.get(url_for('main.abstract_detail',
-    #                                        article_id='9ajsd9shwqjks9syd'))
+        issue = utils.makeOneIssue({'journal': journal.id})
 
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Resumo não encontrado', response.data.decode('utf-8'))
+        article = utils.makeOneArticle({
+            'is_public': False,
+            'unpublish_reason': 'Resumo incorreto',
+            'issue': issue.id,
+            'journal': journal.id})
 
-    # def test_abstract_detail_with_article_attrib_is_public_false(self):
-    #     """
-    #     Teste da ``view function`` ``abstract_detail`` acessando o resumo do
-    #     artigo com atributo is_public=False, deve retorna uma página com
-    #      ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
-    #     """
+        response = self.client.get(url_for('main.abstract_detail',
+                                           article_id=article.id))
 
-    #     journal = utils.makeOneJournal()
-
-    #     issue = utils.makeOneIssue({'journal': journal.id})
-
-    #     article = utils.makeOneArticle({
-    #         'is_public': False,
-    #         'unpublish_reason': 'Resumo incorreto',
-    #         'issue': issue.id,
-    #         'journal': journal.id})
-
-    #     response = self.client.get(url_for('main.abstract_detail',
-    #                                        article_id=article.id))
-
-    #     self.assertStatus(response, 404)
-    #     self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))
+        self.assertStatus(response, 404)
+        self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))

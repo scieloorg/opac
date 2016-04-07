@@ -541,196 +541,164 @@ class IssueControllerTestCase(BaseTestCase):
             self.assertTrue(issue.is_public)
 
 
-# class ArticleControllerTestCase(BaseTestCase):
+class ArticleControllerTestCase(BaseTestCase):
 
-#     def _makeOne(self, attrib=None):
-#         """
-#         Retorna um objeto ``Article`` com os atributos obrigatórios:
-#         ``_id``, ``jid``, ``is_public`` e ``issue`` o param ``attrib`` atualiza
-#         os atributos do objeto.
-#         """
-#         return utils.makeOneArticle(attrib=attrib)
+    def _makeOne(self, attrib=None):
+        """
+        Retorna um objeto ``Article`` com os atributos obrigatórios:
+        ``_id``, ``jid``, ``is_public`` e ``issue`` o param ``attrib`` atualiza
+        os atributos do objeto.
+        """
+        return utils.makeOneArticle(attrib=attrib)
 
-#     def _makeAny(self, issue=None, items=3):
-#         """
-#         Retorna uma lista de objetos ``Article`` com atributos ``jid``,
-#         ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
-#         """
-#         return utils.makeAnyArticle(issue=issue, items=items)
+    def _makeAny(self, issue=None, items=3):
+        """
+        Retorna uma lista de objetos ``Article`` com atributos ``jid``,
+        ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
+        """
+        return utils.makeAnyArticle(issue=issue, items=items)
 
-#     def test_get_article_by_aid(self):
-#         """
-#         Teste da função controllers.get_article_by_aid para retornar um objeto:
-#         ``Article``.
-#         """
+    def test_get_article_by_aid(self):
+        """
+        Teste da função controllers.get_article_by_aid para retornar um objeto:
+        ``Article``.
+        """
 
-#         article = self._makeOne()
+        article = self._makeOne()
 
-#         self.assertEqual(controllers.get_article_by_aid(article.id).id,
-#                          article.id)
+        self.assertEqual(controllers.get_article_by_aid(article.id).id,
+                         article.id)
 
-#     def test_get_article_by_aid_without_aid(self):
-#         """
-#         Teste da função controllers.get_article_by_aid com uma lista vazia,
-#         deve retorna um exceção ValueError.
-#         """
+    def test_get_article_by_aid_without_aid(self):
+        """
+        Teste da função controllers.get_article_by_aid com uma lista vazia,
+        deve retorna um exceção ValueError.
+        """
 
-#         self.assertRaises(ValueError, controllers.get_article_by_aid, [])
+        self.assertRaises(ValueError, controllers.get_article_by_aid, [])
 
-#     def test_get_article_by_aid_without_article(self):
-#         """
-#         Testando controllers.get_article_by_aid() sem article, deve retornar
-#         None.
-#         """
-#         self.assertIsNone(controllers.get_article_by_aid('anyjid'))
+    def test_get_article_by_aid_without_article(self):
+        """
+        Testando controllers.get_article_by_aid() sem article, deve retornar
+        None.
+        """
+        self.assertIsNone(controllers.get_article_by_aid('anyjid'))
 
-#     def test_get_articles_by_aid(self):
-#         """
-#         Testando a função controllers.get_articles_by_aid() deve retornar uma
-#         lista contendo objetos ``Article`` .
-#         """
+    def test_get_articles_by_aid(self):
+        """
+        Testando a função controllers.get_articles_by_aid() deve retornar uma
+        lista contendo objetos ``Article`` .
+        """
 
-#         self._makeAny(items=5)
+        self._makeAny(items=5)
 
-#         self._makeOne(attrib={'_id': 'aid1'})
-#         self._makeOne(attrib={'_id': 'aid12'})
-#         self._makeOne(attrib={'_id': 'aid123'})
+        self._makeOne(attrib={'_id': 'aid1'})
+        self._makeOne(attrib={'_id': 'aid12'})
+        self._makeOne(attrib={'_id': 'aid123'})
 
-#         self._makeAny(items=5)
+        self._makeAny(items=5)
 
-#         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
+        articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
-#         expected = [u'aid1', u'aid12', u'aid123']
+        expected = [u'aid1', u'aid12', u'aid123']
 
-#         self.assertListEqual(sorted([article for article in articles.iterkeys()]),
-#                              sorted(expected))
+        self.assertListEqual(sorted([article for article in articles.iterkeys()]),
+                             sorted(expected))
 
-#     def test_get_articles_by_aid_with_not_found_jids(self):
-#         """
-#         Testando a função controllers.get_articles_by_aid() deve retornar um
-#         None.
-#         """
+    def test_get_articles_by_aid_with_not_found_jids(self):
+        """
+        Testando a função controllers.get_articles_by_aid() deve retornar um
+        None.
+        """
 
-#         self._makeAny(items=5)
+        self._makeAny(items=5)
 
-#         self._makeOne(attrib={'_id': 'aid1'})
-#         self._makeOne(attrib={'_id': 'aid12'})
-#         self._makeOne(attrib={'_id': 'aid123'})
+        self._makeOne(attrib={'_id': 'aid1'})
+        self._makeOne(attrib={'_id': 'aid12'})
+        self._makeOne(attrib={'_id': 'aid123'})
 
-#         self._makeAny(items=5)
+        self._makeAny(items=5)
 
-#         articles = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
-#                                                    '-012-js7jid123'])
+        articles = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
+                                                   '-012-js7jid123'])
 
-#         self.assertEqual(articles, {})
+        self.assertEqual(articles, {})
 
-#     def test_get_articles_by_aid_without_article(self):
-#         """
-#         Testando controllers.get_articles_by_aid() sem article, deve retornar
-#         None.
-#         """
+    def test_get_articles_by_aid_without_article(self):
+        """
+        Testando controllers.get_articles_by_aid() sem article, deve retornar
+        None.
+        """
 
-#         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
+        articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
-#         self.assertEqual(articles, {})
+        self.assertEqual(articles, {})
 
-#     def test_set_article_is_public_bulk(self):
-#         """
-#         Testando alterar o valor de um conjunto de article
-#         """
+    def test_set_article_is_public_bulk(self):
+        """
+        Testando alterar o valor de um conjunto de article
+        """
 
-#         self._makeOne(attrib={'_id': '012ijs9y24', 'is_public': True})
-#         self._makeOne(attrib={'_id': '2183ikos90', 'is_public': True})
-#         self._makeOne(attrib={'_id': '9298wjso89', 'is_public': True})
+        self._makeOne(attrib={'_id': '012ijs9y24', 'is_public': True})
+        self._makeOne(attrib={'_id': '2183ikos90', 'is_public': True})
+        self._makeOne(attrib={'_id': '9298wjso89', 'is_public': True})
 
-#         controllers.set_article_is_public_bulk(
-#             ['012ijs9y24', '2183ikos90', '9298wjso89'], is_public=False)
+        controllers.set_article_is_public_bulk(
+            ['012ijs9y24', '2183ikos90', '9298wjso89'], is_public=False)
 
-#         ids = ['012ijs9y24', '2183ikos90', '9298wjso89']
+        ids = ['012ijs9y24', '2183ikos90', '9298wjso89']
 
-#         articles = controllers.get_articles_by_aid(ids)
+        articles = controllers.get_articles_by_aid(ids)
 
-#         for article in articles.itervalues():
-#             self.assertFalse(article.is_public)
+        for article in articles.itervalues():
+            self.assertFalse(article.is_public)
 
-#     def test_set_article_is_public_bulk_without_aids(self):
-#         """
-#         Testando alterar o valor de um conjunto de journals sem iids, deve
-#         retorna um ValueError.
-#         """
+    def test_set_article_is_public_bulk_without_aids(self):
+        """
+        Testando alterar o valor de um conjunto de journals sem iids, deve
+        retorna um ValueError.
+        """
 
-#         self._makeOne(attrib={'_id': '9ms9kos9js', 'is_public': True})
-#         self._makeOne(attrib={'_id': 'lksnsh8snk', 'is_public': True})
-#         self._makeOne(attrib={'_id': '7153gj6ysb', 'is_public': True})
+        self._makeOne(attrib={'_id': '9ms9kos9js', 'is_public': True})
+        self._makeOne(attrib={'_id': 'lksnsh8snk', 'is_public': True})
+        self._makeOne(attrib={'_id': '7153gj6ysb', 'is_public': True})
 
-#         self.assertRaises(ValueError,
-#                           controllers.set_article_is_public_bulk, [], is_public=False)
+        self.assertRaises(ValueError,
+                          controllers.set_article_is_public_bulk, [], is_public=False)
 
-#         ids = ['9ms9kos9js', 'lksnsh8snk', '7153gj6ysb']
+        ids = ['9ms9kos9js', 'lksnsh8snk', '7153gj6ysb']
 
-#         articles = controllers.get_articles_by_aid(ids)
+        articles = controllers.get_articles_by_aid(ids)
 
-#         for article in articles.itervalues():
-#             self.assertTrue(article.is_public)
+        for article in articles.itervalues():
+            self.assertTrue(article.is_public)
 
-#     def test_get_articles_by_iid(self):
-#         """
-#         Testando a função controllers.get_articles_by_iid(), deve retorna uma
-#         lista de articles.
-#         """
+    def test_get_articles_by_iid(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), deve retorna uma
+        lista de articles.
+        """
 
-#         self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
-#                               'journal': 'oak,ajimn1'})
-#         self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
-#                               'journal': 'oak,ajimn1'})
-#         self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
-#                               'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
+                              'journal': 'oak,ajimn1'})
+        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
+                              'journal': 'oak,ajimn1'})
 
-#         expected = [u'012ijs9y24', u'2183ikos90']
+        expected = [u'012ijs9y24', u'2183ikos90']
 
-#         articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
+        articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
 
-#         self.assertListEqual(sorted(articles), sorted(expected))
+        self.assertListEqual(sorted(articles), sorted(expected))
 
-#     def test_get_articles_by_iid_without_iid(self):
-#         """
-#         Testando a função controllers.get_articles_by_iid(), sem param iid deve
-#         retorna um ValueError.
-#         """
-#         self.assertRaises(ValueError,
-#                           controllers.get_articles_by_iid, [])
-
-#     def test_new_article_html_doc(self):
-#         """
-#         Testando a função controllers.new_article_html_doc(), deve retornar um
-#         objeto ArticleHTML.
-#         """
-
-#         article = self._makeOne()
-
-#         articleHTML = controllers.new_article_html_doc('pt', '<html>anytags</html>')
-#         article.htmls = [articleHTML]
-#         article.save()
-
-#         self.assertIsInstance(articleHTML, models.ArticleHTML)
-
-#     def test_new_article_html_doc_param_language_not_string(self):
-#         """
-#         Testando a função controllers.new_article_html_doc() com o parâmetro
-#         language sendo um inteiro,  deve retornar ValueError.
-#         """
-
-#         self.assertRaises(ValueError,
-#                           controllers.new_article_html_doc, 123, '<html>anytags</html>')
-
-#     def test_new_article_html_doc_param_source_not_string(self):
-#         """
-#         Testando a função controllers.new_article_html_doc() com o parâmetro
-#         source sendo um inteiro,  deve retornar ValueError.
-#         """
-
-#         self.assertRaises(ValueError,
-#                           controllers.new_article_html_doc, 'en', 989087867)
+    def test_get_articles_by_iid_without_iid(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), sem param iid deve
+        retorna um ValueError.
+        """
+        self.assertRaises(ValueError,
+                          controllers.get_articles_by_iid, [])
 
 
 class UserControllerTestCase(BaseTestCase):
