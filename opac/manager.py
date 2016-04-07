@@ -2,6 +2,7 @@
 # coding: utf-8
 import os
 import sys
+import fnmatch
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +27,8 @@ else:
 
 from webapp import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
-from webapp import utils, controllers
+from webapp import controllers
+from webapp.utils import reset_db, create_db_tables, create_user, create_image
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 from webapp.admin.forms import EmailForm
@@ -63,7 +65,7 @@ def reset_dbsql(force_delete=False):
 
     db_path = app.config['DATABASE_PATH']
     if not os.path.exists(db_path) or force_delete:
-        utils.reset_db()
+        reset_db()
         print u'O banco esta limpo!'
         print u'Para criar um novo usuário execute o comando: create_superuser'
         print u'python manager.py create_superuser'
@@ -80,7 +82,7 @@ def create_tables_dbsql(force_delete=False):
 
     db_path = app.config['DATABASE_PATH']
     if not os.path.exists(db_path):
-        utils.create_db_tables()
+        create_db_tables()
         print u'As tabelas foram criadas com sucesso!'
     else:
         print u'O banco já existe (em %s).' % db_path
@@ -130,7 +132,7 @@ def create_superuser():
         print u'Deve enviar o email de confirmação pelo admin'
 
     # cria usuario
-    utils.create_user(user_email, user_password, email_confirmed)
+    create_user(user_email, user_password, email_confirmed)
     print u'Novo usuário criado com sucesso!'
 
 
@@ -168,6 +170,27 @@ def test(pattern='test_*.py'):
     else:
         return sys.exit(1)
 
+
+@manager.command
+@manager.option('-d', '--directory', dest="pattern")
+def upload_images(directory='.'):
+    """
+    Esse comando realiza um cadastro em massa de images com extensões contidas
+    na variável: app.config['IMAGES_ALLOWED_EXTENSIONS_RE'] de um diretório
+    determinado pelo parâmetro --directory (utilizar caminho absoluto).
+    """
+
+    extensions = app.config['IMAGES_ALLOWED_EXTENSIONS_RE']
+
+    print "Coletando todas a imagens da pasta: %s" % directory
+
+    for root, dirnames, filenames in os.walk(directory):
+        for extension in extensions:
+            for filename in fnmatch.filter(filenames, extension):
+
+                image_path = os.path.join(root, filename)
+
+                create_image(image_path, filename)
 
 if __name__ == '__main__':
     manager.run()

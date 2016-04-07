@@ -8,7 +8,7 @@
 """
 
 import datetime
-from opac_schema.v1.models import Journal, Issue, Article, ArticleHTML
+from opac_schema.v1.models import Journal, Issue, Article
 from flask import current_app
 from flask_babelex import lazy_gettext as __
 from webapp import dbsql
@@ -396,23 +396,6 @@ def set_user_password(user, password):
 
 
 # -------- FUNCTIONS --------
-
-
-def new_article_html_doc(language, source):
-    """
-    Retorna uma nova instância de ArticleHTML com os atributos definidos pelos
-    parâmetros:
-    - ``language`` o código de idioma do artigos;
-    - ``source`` a string como o HTML do artigos.
-    """
-
-    if not isinstance(language, basestring):
-        raise ValueError(__('Parâmetro language de ser do tipo string'))
-
-    if not isinstance(source, basestring):
-        raise ValueError(__('Parâmetro source de ser do tipo string'))
-
-    return ArticleHTML(language=language, source=source)
 
 
 def count_elements_by_type_and_visibility(type, public_only=False):
