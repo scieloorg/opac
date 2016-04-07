@@ -59,6 +59,12 @@ import os
         - OPAC_MEDIA_ROOT:      path absoluto da pasta que vai armazenar as imagens subidas pelos usuários pelo admin. (default: /[repo dir]/opac/opac/webapp/media/)
         - OPAC_MEDIA_URL:       URL para servir as imagens. (default: '/media')
 
+      - Extensions:
+        - FILES_ALLOWED_EXTENSIONS:  extensão dos arquivos permitidos para upload
+        - IMAGES_ALLOWED_EXTENSIONS:  extensão imagens permitidas para upload
+        - THUMBNAIL_HEIGHT:     altura do thumbnail
+        - THUMBNAIL_HEIGHT:     largura do thumbnail
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -170,4 +176,13 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 # media files
 DEFAULT_MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, 'media'))
 MEDIA_ROOT = os.environ.get('OPAC_MEDIA_ROOT', DEFAULT_MEDIA_ROOT)
+IMAGE_ROOT = os.path.join(MEDIA_ROOT, '/images')
+FILE_ROOT = os.path.join(MEDIA_ROOT, '/files')
 MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')
+
+# extensions
+FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx')
+IMAGES_ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif', 'webp')
+IMAGES_ALLOWED_EXTENSIONS_RE = tuple('*' + ext for ext in IMAGES_ALLOWED_EXTENSIONS)
+THUMBNAIL_HEIGHT = 100
+THUMBNAIL_WIDTH = 100

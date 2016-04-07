@@ -1,8 +1,10 @@
 # coding: utf-8
 
 import os
-from lxml import etree
+import shutil
 import packtools
+from lxml import etree
+from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app
@@ -23,7 +25,27 @@ from unicodedata import normalize
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
 REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
 
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+def namegen_filename(obj, file_data=None):
+    """
+        Retorna um nome de arquivo seguro para o arquivo subido,
+        utilizando o nome (campo "name" do modelo) e mantendo a extensão original
+    """
+
+    if isinstance(obj, basestring):
+        _, extension = os.path.splitext(obj)
+        return secure_filename('%s%s' % (_, extension))
+    else:
+        _, extension = os.path.splitext(file_data.filename)
+        return secure_filename('%s%s' % (obj.name, extension))
+
+
+def thumbgen_filename(filename):
+    """
+        Gera o nome do arquivo do thumbnail a partir do  filename.
+    """
+    name, ext = os.path.splitext(filename)
+    return '%s_thumb%s' % (name, ext)
 
 
 def get_timed_serializer():
@@ -31,22 +53,6 @@ def get_timed_serializer():
     Retorna uma instância do URLSafeTimedSerializer necessário para gerar tokens
     """
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
-
-
-def slugify(text, delim=u''):
-    """
-    Generates an slightly worse ASCII-only slug.
-    Originally from:
-    http://flask.pocoo.org/snippets/5/
-    Generating Slugs
-    By Armin Ronacher filed in URLs
-    """
-    result = []
-    for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', word).encode('ascii', 'ignore')
-        if word:
-            result.append(word)
-    return unicode(delim.join(result))
 
 
 def send_email(recipient, subject, html):
@@ -135,18 +141,20 @@ def create_user(user_email, user_password, user_email_confirmed):
     return new_user
 
 
-def generate_thumbnail(input_filename, thumbnail_path, size=(100, 100)):
+def generate_thumbnail(input_filename):
     """
     Parâmento input_filename matrix do thumbnail.
-    Parâmento thumbnail_path caminho completo para o thumbnail, o thumbnail
-    terá o mesmo nome do arquivo original concatenado com '_thumb'.
-    Parâmentro size tupla contendo o tamanho do thumbnail, padrão (100,100)
 
     Caso a geração seja realizado com sucesso deve retorna o path do thumbnail,
     caso contrário None.
     """
-    name, ext = os.path.splitext(os.path.basename(input_filename))
-    image_path = os.path.join(thumbnail_path, '%s_thumb%s' % (name, ext))
+
+    image_root = current_app.config['IMAGE_ROOT']
+
+    size = (current_app.config["THUMBNAIL_HEIGHT"],
+            current_app.config["THUMBNAIL_WIDTH"])
+
+    image_path = os.path.join(image_root, thumbgen_filename(input_filename))
 
     try:
         img = Image.open(input_filename)
@@ -156,3 +164,25 @@ def generate_thumbnail(input_filename, thumbnail_path, size=(100, 100)):
         print e
     else:
         return image_path
+
+
+def create_image(image_path, filename):
+    """
+    Função que cria uma imagen para o modelo Image.
+
+    Parâmento image_path caminho absoluto para a imagem.
+    Parâmento filename no para o arquivo com extensão.
+    """
+
+    image_root = current_app.config['IMAGE_ROOT']
+
+    image_destiation_path = os.path.join(image_root, filename)
+
+    shutil.copyfile(image_path, image_destiation_path)
+
+    generate_thumbnail(image_destiation_path)
+
+    img = models.Image(name=namegen_filename(filename), path='images/' + filename)
+
+    webapp.dbsql.session.add(img)
+    webapp.dbsql.session.commit()
