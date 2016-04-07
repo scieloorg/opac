@@ -19,9 +19,6 @@ except ImportError:
     Image = None
     ImageOps = None
 
-from unicodedata import normalize
-
-
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
 REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
 
