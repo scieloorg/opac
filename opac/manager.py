@@ -177,7 +177,7 @@ def upload_images(directory='.'):
     """
     Esse comando realiza um cadastro em massa de images com extensões:
     ('*.png', '*.jpg', '*.jpeg', '*.gif', '*.webp') de um diretório determinado
-    pelo parâmetro --diretory (It must be absolute path).
+    pelo parâmetro --directory (utilizar caminho absoluto).
 
     Cada imagem cadastrada receberá um nome que será o slug do nome do arquivo,
     ex.:
