@@ -9,6 +9,7 @@ from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
+from flask_admin.form import Select2Field
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, request, flash, abort, current_app
@@ -289,6 +290,34 @@ class OpacBaseAdminView(mongoengine.ModelView):
 
     def is_accessible(self):
         return login.current_user.is_authenticated
+
+
+class ResourceAdminView(OpacBaseAdminView):
+    can_create = True
+    can_edit = True
+    can_delete = True
+
+    def _url_formatter(self, context, model, name):
+        return Markup("<a href='{url}' target='_blank'>{url}</a>".format(
+            url=model.url))
+
+    column_formatters = {
+        'url': _url_formatter,
+    }
+
+    form_overrides = dict(
+        type=Select2Field,
+        language=Select2Field,
+    )
+    form_args = dict(
+        type=dict(choices=choices.RESOURCE_TYPE_CHOICES),
+        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+    )
+
+    def on_model_change(self, form, model, is_created):
+        # é necessario definir um valor para o campo ``_id`` na criação.
+        if is_created:
+            model._id = str(uuid4().hex)
 
 
 class SponsorAdminView(OpacBaseAdminView):
