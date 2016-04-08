@@ -327,6 +327,7 @@ class SponsorAdminView(OpacBaseAdminView):
     create_modal = True
     edit_modal = True
     can_view_details = True
+    form_excluded_columns = ('logo_resource')
     column_exclude_list = ('_id', )
     column_searchable_list = ('name',)
 
@@ -339,7 +340,8 @@ class SponsorAdminView(OpacBaseAdminView):
 class CollectionAdminView(OpacBaseAdminView):
     can_edit = True
     edit_modal = True
-    form_excluded_columns = ('acronym', )
+    form_excluded_columns = ('acronym', 'logo_resource',
+                             'header_logo_resource', 'footer_resource')
     column_exclude_list = ('_id', )
     inline_models = (InlineFormAdmin(Sponsor),)
 

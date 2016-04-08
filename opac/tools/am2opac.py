@@ -8,14 +8,17 @@ import optparse
 import datetime
 import logging.config
 from lxml import etree
+from StringIO import StringIO
 from uuid import uuid4
 from datetime import timedelta
+
+import requests
 
 import packtools
 from mongoengine import connect
 
 from opac_schema.v1 import models
-from mongoengine import Q
+from mongoengine import Q, DoesNotExist
 from thrift_clients import clients
 
 logger = logging.getLogger(__name__)
@@ -24,7 +27,9 @@ FROM_DATE = (datetime.datetime.now()-timedelta(60)).isoformat()[:10]
 
 XML_CSS = "/static/css/style_article_html.css"
 
-XML_SAMPLE = etree.parse(open('xml_sample.xml'))
+ARTICLE_META_URL = 'http://articlemeta.scielo.org/'
+
+APP_URL = 'http://localhost:5000'
 
 MONGODB_DBNAME = os.environ.get('MONGO_DB_DBNAME', 'manager2mongo')
 MONGODB_HOST = os.environ.get('MONGO_PORT_27017_TCP_ADDR', 'localhost')
@@ -162,8 +167,12 @@ class AM2Opac(object):
         m_collection.acronym = collection.acronym
         m_collection.name = collection.name
 
-        # Default license ``CC-BY`` need to get it from Article Meta.
-        m_collection.license_code = 'CC-BY'
+        ulicense = models.UseLicense()
+        ulicense.license_code = 'BY/3.0'
+        ulicense.reference_url = 'https://creativecommons.org/licenses/by/3.0/br/'
+        ulicense.disclaimer = 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons Attribution License'
+
+        m_collection.license = ulicense
 
         return m_collection
 
@@ -272,8 +281,11 @@ class AM2Opac(object):
         m_issue.unpublish_reason = issue.publisher_id
 
         # Get Journal of the issue
-        journal = models.Journal.objects.get(scielo_issn=issue.journal.scielo_issn)
-        m_issue.journal = journal
+        try:
+            journal = models.Journal.objects.get(scielo_issn=issue.journal.scielo_issn)
+            m_issue.journal = journal
+        except Exception as e:
+            print e
 
         m_issue.volume = issue.volume
         m_issue.number = issue.number
@@ -293,6 +305,13 @@ class AM2Opac(object):
 
         return m_issue
 
+    def _get_rsps(self, pid):
+        """
+        Get the XML from rsps.
+        """
+        return requests.get('%sapi/v1/article/?code=%s&format=xmlrsps' % (ARTICLE_META_URL, pid),
+                            timeout=10)
+
     def _transform_article(self, article):
         """
         Transform ``xylose.scielodocument.article`` to ``opac_scielo.Article``.
@@ -309,12 +328,15 @@ class AM2Opac(object):
             issue = models.Issue.objects.get(
                 pid=article.issue.publisher_id)
             m_article.issue = issue
-        except models.DoesNotExist as e:
+        except DoesNotExist as e:
             logger.warning("Article without issue %s" % str(article.publisher_id))
 
-        journal = models.Journal.objects.get(
-            scielo_issn=article.journal.scielo_issn)
-        m_article.journal = journal
+        try:
+            journal = models.Journal.objects.get(
+                scielo_issn=article.journal.scielo_issn)
+            m_article.journal = journal
+        except Exception as e:
+            print e
 
         m_article.title = article.original_title()
 
@@ -360,15 +382,33 @@ class AM2Opac(object):
         m_article.created = datetime.datetime.now()
         m_article.updated = datetime.datetime.now()
 
+        m_article.languages = article.languages()
+        m_article.original_language = article.original_language()
+
         htmls = []
         try:
-            for lang, output in packtools.HTMLGenerator.parse(XML_SAMPLE, valid_only=False, css=XML_CSS):
+
+            rsps_article = self._get_rsps(article.publisher_id).content
+
+            xml = etree.parse(StringIO(rsps_article))
+
+            for lang, output in packtools.HTMLGenerator.parse(xml, valid_only=False, css=XML_CSS):
                 source = etree.tostring(output, encoding="utf-8",
                                         method="html", doctype=u"<!DOCTYPE html>")
-                html_doc = models.ArticleHTML()
-                html_doc.language = lang
-                html_doc.source = source
-                htmls.append(html_doc)
+
+                fp = open('../webapp/media/files/%s-%s.html' % (lang, article.publisher_id), 'w')
+                fp.write(str(output))
+                fp.close()
+
+                resource = models.Resource()
+                resource._id = str(uuid4().hex)
+                resource.type = 'html'
+                resource.language = lang
+                resource.url = '%s/media/files/%s-%s.html' % (APP_URL, lang, article.publisher_id)
+                resource.save()
+
+                htmls.append(resource)
+
         except Exception as e:
             print "Article pid: %s, sem html, Error: %s" % (article.publisher_id, e.message)
 
