@@ -22,7 +22,7 @@ from webapp import models, controllers, choices
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
-from webapp.utils import get_timed_serializer, rebuild_article_xml
+from webapp.utils import get_timed_serializer
 from opac_schema.v1.models import Sponsor, Resource
 
 
@@ -550,7 +550,8 @@ class ArticleAdminView(OpacBaseAdminView):
     ]
     column_exclude_list = [
         '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
-        'unpublish_reason', 'translated_titles', 'sections'
+        'unpublish_reason', 'translated_titles', 'sections', 'pdfs', 'languages',
+        'original_language', 'created'
     ]
     column_details_exclude_list = [
         'xml',
@@ -573,20 +574,6 @@ class ArticleAdminView(OpacBaseAdminView):
         is_public=__(u'Publicado?'),
         unpublish_reason=__(u'Motivo de despublicação'),
     )
-
-    @action('rebuild_html', _(u'Reconstruir HTML'), ACTION_REBUILD_CONFIRMATION_MSG)
-    def rebuild_html(self, ids):
-        try:
-            articles = controllers.get_articles_by_aid(ids)
-            count = 0
-            for article in articles.itervalues():
-                rebuild_article_xml(article)
-                count += 1
-            flash(_(u'Artigo(s) reconstruido com sucesso!!'))
-        except Exception, ex:
-            flash(_(u'Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s',
-                    ex=str(ex)),
-                  'error')
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
