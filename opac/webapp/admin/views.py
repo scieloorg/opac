@@ -16,12 +16,14 @@ from flask import url_for, redirect, request, flash, abort, current_app
 from flask.ext.admin.contrib import sqla, mongoengine
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
+from mongoengine.base.datastructures import BaseList
 
 from webapp import models, controllers, choices
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter
+from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer, rebuild_article_xml
-from opac_schema.v1.models import Sponsor
+from opac_schema.v1.models import Sponsor, Resource
 
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -327,6 +329,15 @@ class SponsorAdminView(OpacBaseAdminView):
     create_modal = True
     edit_modal = True
     can_view_details = True
+
+    form_ajax_refs = {
+        'logo_resource': CustomQueryAjaxModelLoader(
+            name='logo_resource',
+            model=Resource,
+            fields=['url', 'type', 'language', 'description']
+        )
+    }
+
     column_exclude_list = ('_id', )
     column_searchable_list = ('name',)
 
@@ -340,6 +351,25 @@ class CollectionAdminView(OpacBaseAdminView):
     can_edit = True
     edit_modal = True
     form_excluded_columns = ('acronym', )
+
+    form_ajax_refs = {
+        'logo_resource': CustomQueryAjaxModelLoader(
+            name='logo_resource',
+            model=Resource,
+            fields=['url', 'type', 'language', 'description']
+        ),
+        'header_logo_resource': CustomQueryAjaxModelLoader(
+            name='header_logo_resource',
+            model=Resource,
+            fields=['url', 'type', 'language', 'description']
+        ),
+        'footer_resource': CustomQueryAjaxModelLoader(
+            name='footer_resource',
+            model=Resource,
+            fields=['url', 'type', 'language', 'description']
+        )
+    }
+
     column_exclude_list = ('_id', )
     inline_models = (InlineFormAdmin(Sponsor),)
 
