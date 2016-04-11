@@ -3,7 +3,7 @@
 import flask
 import warnings
 from flask.ext.testing import TestCase
-from flask import url_for, request
+from flask import url_for, request, g, current_app
 from webapp import create_app, dbsql, dbmongo
 
 from base import MongoInstance, BaseTestCase
@@ -25,6 +25,29 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 200)
         self.assertEqual('text/html; charset=utf-8', response.content_type)
         self.assert_template_used("collection/index.html")
+
+    def test_g_object_has_collection_object(self):
+        """
+        COM:
+            - uma nova collection criada com o mesmo acronimo da setting: OPAC_CONFIG
+        QUANDO:
+            - solicitamo uma pagina
+        VERIFICAMOS:
+            - que no contexto, a variável 'g' tenha asociado uma instancia da collection
+        """
+
+        with current_app.app_context():
+            # with
+            collection_db_record = utils.makeOneCollection()
+
+            # when
+            with self.client as c:
+                response = self.client.get(url_for('main.index'))
+                # then
+                self.assertStatus(response, 200)
+                self.assertTrue(hasattr(g, 'collection'))
+                g_collection = g.get('collection')
+                self.assertEqual(g_collection._id, collection_db_record._id)
 
     def test_change_set_locale(self):
         """
@@ -601,3 +624,31 @@ class MainTestCase(BaseTestCase):
 
         self.assertStatus(response, 404)
         self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))
+
+    # HOMEPAGE
+
+    def test_collection_sponsors_at_homepage(self):
+        """
+        acessar na homepage deve mostrar os sponsors no rodapé
+        """
+        # with
+        collection = utils.makeOneCollection()
+        sponsor1 = utils.makeOneSponsor({'name': 'spo1', 'url': 'http://sponsor1.com', 'logo_url': 'http://sponsor1.com/logo1.png'})
+        sponsor2 = utils.makeOneSponsor({'name': 'spo2', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
+        sponsor3 = utils.makeOneSponsor({'name': 'spo3', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
+        collection.sponsors = [
+            sponsor1,
+            sponsor2,
+            sponsor3,
+        ]
+        collection.save()
+        # when
+        response = self.client.get(url_for('main.index'))
+        # then
+        self.assertStatus(response, 200)
+        self.assertIn('<div class="partners">', response.data.decode('utf-8'))
+
+        for sponsor in [sponsor1, sponsor2, sponsor3]:
+            self.assertIn(sponsor.name, response.data.decode('utf-8'))
+            self.assertIn(sponsor.url, response.data.decode('utf-8'))
+            self.assertIn(sponsor.logo_url, response.data.decode('utf-8'))

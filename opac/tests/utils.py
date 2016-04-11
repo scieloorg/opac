@@ -69,7 +69,7 @@ def makeOneSponsor(attrib=None):
         '_id': default_id,
         'name': name,
         'url': attrib.get('url', None),
-        'logo_resource': attrib.get('logo_resource', None),
+        'logo_url': attrib.get('logo_url', None),
     }
     return models.Sponsor(**collection).save()
 
