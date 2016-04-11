@@ -2,7 +2,6 @@
 
 import os
 import shutil
-import packtools
 from lxml import etree
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
@@ -67,37 +66,6 @@ def send_email(recipient, subject, html):
     webapp.mail.send(msg)
 
 
-def rebuild_article_xml(article):
-    """
-    Método auxilixar para regerar o HTML de um artigo, a partir do atributo xml (``article.xml``).
-    Caso exista algum problema no processo, levanta a exceção.
-    Caso o artigo recebido por parametro, não tenha atribute ``xml``, levanta um ValueError
-    """
-
-    if article.xml:
-        try:
-            htmls = []
-            xml_etree = etree.ElementTree(etree.XML(article.xml.encode('utf-8')))
-            html_iterator = packtools.HTMLGenerator.parse(xml_etree, valid_only=False, css=CSS)
-            for lang, output in html_iterator:
-                article_html_doc = controllers.new_article_html_doc(**{
-                    "language": str(lang),
-                    "source": etree.tostring(
-                        output,
-                        encoding="utf-8",
-                        method="html",
-                        doctype=u"<!DOCTYPE html>")
-                })
-                htmls.append(article_html_doc)
-            article.htmls = htmls
-            article.save()
-        except Exception as e:
-            # print "Article aid: %s, sem html, Error: %s" % (article.aid, e.message)
-            raise
-    else:
-        raise ValueError('article.xml is None')
-
-
 def reset_db():
     """
     Apaga todos os dados de todas as tabelas e cria novas tabelas, SEM DADOS!
@@ -140,7 +108,7 @@ def create_user(user_email, user_password, user_email_confirmed):
 
 def generate_thumbnail(input_filename):
     """
-    Parâmento input_filename matrix do thumbnail.
+    Parâmento input_filename matriz do thumbnail.
 
     Caso a geração seja realizado com sucesso deve retorna o path do thumbnail,
     caso contrário None.
@@ -165,7 +133,7 @@ def generate_thumbnail(input_filename):
 
 def create_image(image_path, filename):
     """
-    Função que cria uma imagen para o modelo Image.
+    Função que cria uma imagem para o modelo Image.
 
     Parâmento image_path caminho absoluto para a imagem.
     Parâmento filename no para o arquivo com extensão.
