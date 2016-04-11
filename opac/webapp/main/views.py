@@ -23,19 +23,23 @@ ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
 def get_locale():
     langs = current_app.config.get('LANGUAGES')
     lang_from_headers = request.accept_languages.best_match(langs.keys())
+
     if 'lang' not in session.keys():
         session['lang'] = lang_from_headers
+
     return session['lang']
 
 
 @main.route('/set_locale/<string:lang_code>')
 def set_locale(lang_code):
     langs = current_app.config.get('LANGUAGES')
+
     if lang_code not in langs.keys():
         abort(400, _(u'Código de idioma inválido'))
 
     # salvar o lang code na sessão
     session['lang'] = lang_code
+
     return redirect(request.referrer)
 
 
