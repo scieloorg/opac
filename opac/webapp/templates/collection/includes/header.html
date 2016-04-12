@@ -47,8 +47,22 @@
         </h1>
       </div>
       <div class="col-md-3 col-sm-4 language">
-        <a href="{{ url_for('.index') }}" class="lang-en" lang="en">English</a>
-        <a href="{{ url_for('.index') }}" class="lang-es" lang="es">Español</a>
+
+        {% if session.lang == 'pt_BR' %}
+          <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">{% trans %}Inglês{% endtrans %}</a>
+          <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">{% trans %}Espanhol{% endtrans %}</a>
+        {% endif %}
+
+        {% if session.lang == 'en' %}
+          <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">{% trans %}Português{% endtrans %}</a>
+          <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">{% trans %}Espanhol{% endtrans %}</a>
+        {% endif %}
+
+        {% if session.lang == 'es' %}
+          <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">{% trans %}Português{% endtrans %}</a>
+          <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">{% trans %}Inglês{% endtrans %}</a>
+        {% endif %}
+
       </div>
       <div class="clearfix"></div>
     </div>
