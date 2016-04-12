@@ -21,7 +21,7 @@ from mongoengine.base.datastructures import BaseList
 
 from webapp import models, controllers, choices
 from webapp.admin import forms, custom_fields
-from webapp.admin.custom_filters import get_flt, CustomFilterConverter
+from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer
 from opac_schema.v1.models import Sponsor, Resource
@@ -202,6 +202,8 @@ class AssetsMixin(object):
     }
     column_searchable_list = ['name', ]
 
+    filter_converter = CustomFilterConverterSqla()
+
     def is_accessible(self):
         return login.current_user.is_authenticated
 
@@ -216,6 +218,9 @@ class FileAdminView(AssetsMixin, sqla.ModelView):
     column_formatters = {
         'path': _path_formatter,
     }
+    column_filters = [
+        'language'
+    ]
 
     form_overrides = {
         'path': custom_fields.MediaFileUploadField
@@ -247,6 +252,9 @@ class ImageAdminView(AssetsMixin, sqla.ModelView):
         'preview': _preview_formatter,
         'path': _path_formatter,
     }
+    column_filters = [
+        'language'
+    ]
 
     form_overrides = {
         'path': custom_fields.MediaImageUploadField
