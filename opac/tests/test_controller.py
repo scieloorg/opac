@@ -793,6 +793,11 @@ class UserControllerTestCase(BaseTestCase):
 
 class FunctionsInControllerTestCase(BaseTestCase):
 
+    def test_get_current_collection(self):
+        collection = utils.makeOneCollection()
+        controller_col = controllers.get_current_collection()
+        self.assertEqual(collection, controller_col)
+
     def test_count_elements_by_type_and_visibility_type_journal(self):
         """
         Testando a função count_elements_by_type_and_visibility() com 20

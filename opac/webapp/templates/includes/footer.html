@@ -12,13 +12,25 @@
             </div>
         </div>
     </div>
-    <div class="partners">
-        <a href="http://www.fapesp.br/" target="_blank"><img src="../static/img/partner-fapesp.png" alt="FAPESP"></a>
-        <a href="http://www.cnpq.br/" target="_blank"><img src="../static/img/partner-cnpq.png" alt="CNPQ"></a>
-        <a href="http://regional.bvsalud.org/php/index.php?lang=pt" target="_blank"><img src="../static/img/partner-bvs.png" alt="Biblioteca Virtual em Saúde"></a>
-        <a href="http://regional.bvsalud.org/bvs/bireme/homepage.htm" target="_blank"><img src="../static/img/partner-bireme.png" alt="BIREME - OPAS - OMS"></a>
-        <img src="../static/img/partner-fap.png" alt="FAP UNIFESP">
-    </div>
+    {% if g.collection %}
+        <div class="partners">
+            {% for sponsor in g.collection.sponsors %}
+                {% if sponsor.url and sponsor.logo_url %}
+                    <a href="{{ sponsor.url }}" target="_blank">
+                        {% if sponsor.logo_url %}
+                            <img src="{{ sponsor.logo_url }}" alt="{{ sponsor.name }}">
+                        {% else %}
+                            {{ sponsor.name }}
+                        {% endif %}
+                    </a>
+                {% elif sponsor.logo_url %}
+                    <img src="{{ sponsor.logo_url }}" alt="{{ sponsor.name }}">
+                {% else %}
+                    {{ sponsor.name }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="container collectionLicense">
         <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
             <img src="../static/img/cc-license.png" alt="Creative Common - BY" />
