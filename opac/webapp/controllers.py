@@ -19,6 +19,10 @@ from models import User
 # -------- COLLECTION --------
 
 def get_current_collection():
+    """
+    Retorna o objeto coleção filtrando pela coleção cadastrada no arquivo de
+    configuração ``OPAC_COLLECTION``.
+    """
     current_collection_acronym = current_app.config['OPAC_COLLECTION']
     collection = Collection.objects.get(acronym=current_collection_acronym)
     return collection

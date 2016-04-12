@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 <header>
   <div class="container">
     <div class="topFunction">
@@ -43,26 +45,12 @@
       </div>
       <div class="col-md-6 col-sm-4 brandLogo">
         <h1>
-          <a href="{{ url_for('.index') }}"><img src="{{ url_for('static', filename='img/collection/logo-scielo-br-pt.png') }}" alt="SciELO Brazil"></a>
+          <a href="{{ url_for('.index') }}">
+          <img src="{{ macros.get_resources_url(g.collection.logo_resource, 'img', session.lang) }}" alt="{% trans %}SciELO Brazil{% endtrans %}" data-lang="{{ session.lang }}"></a>
         </h1>
       </div>
       <div class="col-md-3 col-sm-4 language">
-
-        {% if session.lang == 'pt_BR' %}
-          <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">{% trans %}Inglês{% endtrans %}</a>
-          <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">{% trans %}Espanhol{% endtrans %}</a>
-        {% endif %}
-
-        {% if session.lang == 'en' %}
-          <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">{% trans %}Português{% endtrans %}</a>
-          <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">{% trans %}Espanhol{% endtrans %}</a>
-        {% endif %}
-
-        {% if session.lang == 'es' %}
-          <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">{% trans %}Português{% endtrans %}</a>
-          <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">{% trans %}Inglês{% endtrans %}</a>
-        {% endif %}
-
+          {% include "includes/language.html" %}
       </div>
       <div class="clearfix"></div>
     </div>

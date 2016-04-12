@@ -100,7 +100,7 @@ class MainTestCase(BaseTestCase):
         contendo elementos esperado também deve retornar o template
         ``collection/list_alpha.html``.
         """
-
+        collecton = utils.makeOneCollection()
         journals = utils.makeAnyJournal(items=10)
 
         response = self.client.get(url_for('main.collection_list_alpha'))
@@ -122,6 +122,7 @@ class MainTestCase(BaseTestCase):
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
 
+        collecton = utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list_alpha'))
 
         self.assertStatus(response, 200)
@@ -138,6 +139,7 @@ class MainTestCase(BaseTestCase):
         ``collection/list_theme.html``.
         """
 
+        collecton = utils.makeOneCollection()
         journals = utils.makeAnyJournal(items=30,
                                         attrib={"study_areas": ["Engineering"]})
         journals = utils.makeAnyJournal(items=30,
@@ -159,6 +161,8 @@ class MainTestCase(BaseTestCase):
         quando não existe periódicos cadastrados deve retorna a msg
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
+
+        collecton = utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list_theme'))
 
         self.assertStatus(response, 200)
@@ -174,6 +178,7 @@ class MainTestCase(BaseTestCase):
         instituição no manager.
         """
 
+        collecton = utils.makeOneCollection()
         warnings.warn("Necessário definir o atributo instituição no modelo do Manager")
 
         response = self.client.get(url_for('main.collection_list_institution'))
@@ -188,6 +193,7 @@ class MainTestCase(BaseTestCase):
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
 
+        collecton = utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list_institution'))
 
         self.assertStatus(response, 200)
@@ -632,23 +638,24 @@ class MainTestCase(BaseTestCase):
         acessar na homepage deve mostrar os sponsors no rodapé
         """
         # with
-        collection = utils.makeOneCollection()
-        sponsor1 = utils.makeOneSponsor({'name': 'spo1', 'url': 'http://sponsor1.com', 'logo_url': 'http://sponsor1.com/logo1.png'})
-        sponsor2 = utils.makeOneSponsor({'name': 'spo2', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
-        sponsor3 = utils.makeOneSponsor({'name': 'spo3', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
-        collection.sponsors = [
-            sponsor1,
-            sponsor2,
-            sponsor3,
-        ]
-        collection.save()
-        # when
-        response = self.client.get(url_for('main.index'))
-        # then
-        self.assertStatus(response, 200)
-        self.assertIn('<div class="partners">', response.data.decode('utf-8'))
+        with current_app.app_context():
+            collection = utils.makeOneCollection()
+            sponsor1 = utils.makeOneSponsor({'name': 'spo1', 'url': 'http://sponsor1.com', 'logo_url': 'http://sponsor1.com/logo1.png'})
+            sponsor2 = utils.makeOneSponsor({'name': 'spo2', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
+            sponsor3 = utils.makeOneSponsor({'name': 'spo3', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
+            collection.sponsors = [
+                sponsor1,
+                sponsor2,
+                sponsor3,
+            ]
+            collection.save()
+            # when
+            response = self.client.get(url_for('main.index'))
+            # then
+            self.assertStatus(response, 200)
+            self.assertIn('<div class="partners">', response.data.decode('utf-8'))
 
-        for sponsor in [sponsor1, sponsor2, sponsor3]:
-            self.assertIn(sponsor.name, response.data.decode('utf-8'))
-            self.assertIn(sponsor.url, response.data.decode('utf-8'))
-            self.assertIn(sponsor.logo_url, response.data.decode('utf-8'))
+            for sponsor in [sponsor1, sponsor2, sponsor3]:
+                self.assertIn(sponsor.name, response.data.decode('utf-8'))
+                self.assertIn(sponsor.url, response.data.decode('utf-8'))
+                self.assertIn(sponsor.logo_url, response.data.decode('utf-8'))
