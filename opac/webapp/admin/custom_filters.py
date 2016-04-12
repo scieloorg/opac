@@ -5,9 +5,11 @@ from flask.ext.admin.contrib.mongoengine.filters import (
     FilterEmpty, FilterInList, FilterNotInList, FilterConverter)
 from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
 from flask.ext.admin.model import filters
+from flask.ext.admin.contrib import sqla
 from mongoengine import ReferenceField, EmbeddedDocumentField, ListField, StringField
 from mongoengine.queryset import Q
 from opac_schema.v1.models import Journal, Issue
+from webapp import models
 
 
 def get_flt(column=None, value=None, term=''):
@@ -132,3 +134,20 @@ class CustomFilterConverter(FilterConverter):
     @filters.convert('ListField')
     def conv_list(self, column, name):
         return [f(column, name) for f in self.list_filters]
+
+
+class CustomFilterConverterSqla(sqla.filters.FilterConverter):
+
+    choice_filters = (sqla.filters.FilterEqual, sqla.filters.FilterNotEqual,
+                      sqla.filters.FilterEmpty, sqla.filters.FilterInList, 
+                      sqla.filters.FilterNotInList)
+
+    choices = {
+        'language': models.LANGUAGES_CHOICES,
+    }
+
+    @filters.convert('ChoiceType')
+    def conv_choice(self, column, name, options):
+        if not options:
+            options = self.choices[column.name]
+        return [f(column, name, options) for f in self.choice_filters]
