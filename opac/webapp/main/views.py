@@ -6,7 +6,7 @@ from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect
 
 from . import main
-from flask import current_app, send_from_directory
+from flask import current_app, send_from_directory, g
 from webapp import babel
 from webapp import controllers
 from webapp import models
@@ -17,6 +17,15 @@ logger = logging.getLogger(__name__)
 JOURNAL_UNPUBLISH = _(u"O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _(u"O fascículo está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
+
+
+@main.before_request
+def add_collection_to_g():
+    if not hasattr(g, 'collection'):
+        try:
+            g.collection = controllers.get_current_collection()
+        except Exception, e:
+            pass  # discutir o que fazer aqui
 
 
 @babel.localeselector

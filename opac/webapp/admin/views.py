@@ -10,6 +10,7 @@ from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
 from flask_admin.form import Select2Field
+from wtforms import fields as wtforms_fields
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, request, flash, abort, current_app
@@ -208,7 +209,7 @@ class AssetsMixin(object):
 class FileAdminView(AssetsMixin, sqla.ModelView):
 
     def _path_formatter(self, context, model, name):
-        return Markup("<a href='{url}' target='_blank'>Download</a>".format(
+        return Markup("<a href='{url}' target='_blank'>Open</a>".format(
             url=model.get_absolute_url))
 
     column_list = ('name', 'path', 'language')
@@ -231,7 +232,7 @@ class ImageAdminView(AssetsMixin, sqla.ModelView):
 
     def _path_formatter(self, context, model, name):
         return Markup(
-            "<a href='{url}' target='_blank'>Download</a>".format(
+            "<a href='{url}' target='_blank'>Open</a>".format(
                 url=model.get_absolute_url))
 
     def _preview_formatter(self, context, model, name):
@@ -300,7 +301,7 @@ class ResourceAdminView(OpacBaseAdminView):
     can_delete = True
 
     def _url_formatter(self, context, model, name):
-        return Markup("<a href='{url}' target='_blank'>{url}</a>".format(
+        return Markup("<a href='{url}' target='_blank'>Open</a>".format(
             url=model.url))
 
     column_formatters = {
@@ -329,15 +330,6 @@ class SponsorAdminView(OpacBaseAdminView):
     create_modal = True
     edit_modal = True
     can_view_details = True
-
-    form_ajax_refs = {
-        'logo_resource': CustomQueryAjaxModelLoader(
-            name='logo_resource',
-            model=Resource,
-            fields=['url', 'type', 'language', 'description']
-        )
-    }
-
     column_exclude_list = ('_id', )
     column_searchable_list = ('name',)
 
@@ -385,7 +377,7 @@ class JournalAdminView(OpacBaseAdminView):
     column_exclude_list = [
         '_id', 'timeline', 'use_licenses', 'subject_categories',
         'study_areas', 'social_networks', 'title_iso', 'short_title',
-        'subject_descriptors', 'copyrighter','online_submission_url',
+        'subject_descriptors', 'copyrighter', 'online_submission_url',
         'cover_url', 'logo_url', 'previous_journal_id',
         'publisher_name', 'publisher_country', 'publisher_state',
         'publisher_city', 'publisher_address', 'publisher_telephone',
