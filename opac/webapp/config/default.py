@@ -176,8 +176,8 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 # media files
 DEFAULT_MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, 'media'))
 MEDIA_ROOT = os.environ.get('OPAC_MEDIA_ROOT', DEFAULT_MEDIA_ROOT)
-IMAGE_ROOT = os.path.join(MEDIA_ROOT, '/images')
-FILE_ROOT = os.path.join(MEDIA_ROOT, '/files')
+IMAGE_ROOT = os.path.join(MEDIA_ROOT, 'images')
+FILE_ROOT = os.path.join(MEDIA_ROOT, 'files')
 MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')
 
 # extensions
