@@ -1,9 +1,11 @@
+{% import 'macros/resources.html' as mresources %}
+
 <header>
   <div class="container">
     <div class="topFunction">
       <div class="col-md-2 col-sm-3 mainNav">
         <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
-        <h2><a href="{{ url_for('.index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png') }}" alt="SciELO Brasil"></a></h2>
+        <h2><a href="{{ url_for('.index') }}" title="Ir para a homepage da Coleção SciELO Brasil"><img src="{{ mresources.get_resource_url(g.collection.header_logo_resource, 'img', session.lang) }}" alt="{% trans %}SciELO Brazil{% endtrans %}" data-lang="{{ session.lang }}"></a></h2>
         <div class="mainMenu" id="mainMenu">
           <div class="row">
             <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
@@ -69,8 +71,7 @@
       </div>
       <div class="col-md-2 col-sm-3 journalMenu">
         <div class="language">
-          <a href="index.en.html" class="lang-en" lang="en">English</a>
-          <a href="index.es.html" class="lang-es" lang="es">Español</a>
+          {% include "includes/language.html" %}
         </div>
         <ul>
           <li><a href="secundaria.html"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>

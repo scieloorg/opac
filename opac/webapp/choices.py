@@ -18,7 +18,7 @@ RESOURCE_TYPE_CHOICES = [
 ]
 
 RESOURCE_LANGUAGES_CHOICES = [
-    ('pt', _(u'Português')),
+    ('pt_BR', _(u'Português')),
     ('en', _(u'Inglês')),
     ('es', _(u'Español')),
 ]

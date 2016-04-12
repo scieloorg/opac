@@ -36,7 +36,7 @@ dependency_links = [
 
 setup(
     name='opac',
-    version='0.5-dev',
+    version='0.6-dev',
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,

@@ -363,6 +363,11 @@ class CollectionAdminView(OpacBaseAdminView):
             model=Resource,
             fields=['url', 'type', 'language', 'description']
         ),
+        'header_alter_logo_resource': CustomQueryAjaxModelLoader(
+            name='header_alter_logo_resource',
+            model=Resource,
+            fields=['url', 'type', 'language', 'description']
+        ),
         'footer_resource': CustomQueryAjaxModelLoader(
             name='footer_resource',
             model=Resource,
