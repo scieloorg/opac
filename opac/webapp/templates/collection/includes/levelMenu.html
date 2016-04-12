@@ -1,34 +1,64 @@
+{% import 'macros/menu.html' as mmenu %}
 <section class="levelMenu">
   <div class="container">
-    <a href="#" class="onlineSubmission"><span class="glyphBtn authorInfo"></span> {% trans %}Portal do Autor{% endtrans %}</a>
+    <a href="#" class="onlineSubmission">
+      <span class="glyphBtn authorInfo"></span> {% trans %}Portal do Autor{% endtrans %}
+    </a>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.index') }}" class="btn single"><span class="glyphBtn home"></span> {% trans %}Home{% endtrans %}</a>
+      <a href="{{ url_for('.index') }}"
+         class="btn single {{ mmenu.endpoint_selected(view_name='main.index') }}">
+        <span class="glyphBtn home"></span> {% trans %}Home{% endtrans %}
+      </a>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="/Colecao/buscar.html" class="btn single"><span class="glyphBtn search"></span> <span class="hidden-sm">{% trans %}Buscar artigos{% endtrans %}</span> <span class="hidden-md hidden-lg">{% trans %}Buscar{% endtrans %}</span></a>
+      <a href="{{ url_for('.search') }}"
+         class="btn single {{ mmenu.endpoint_selected(view_name='main.search') }}">
+        <span class="glyphBtn search"></span>
+        <span class="hidden-sm">{% trans %}Buscar artigos{% endtrans %}</span>
+        <span class="hidden-md hidden-lg">{% trans %}Buscar{% endtrans %}</span>
+      </a>
     </div>
     <div class="col-md-4 col-sm-4">
-      <h2><span class="glyphBtn numbers"></span> {% trans %}Lista de Periódicos{% endtrans %}:</h2>
+      <h2>
+        <span class="glyphBtn numbers"></span> {% trans %}Lista de Periódicos{% endtrans %}:
+      </h2>
       <div class="btn-group">
-          <a href="{{ url_for('.collection_list_alpha') }}" class="btn group selected">{% trans %}Alfabética{% endtrans %}</a>
-          <a href="{{ url_for('.collection_list_theme') }}" class="btn group">{% trans %}Temática{% endtrans %}</a>
-          <a href="{{ url_for('.collection_list_institution') }}" class="btn group">{% trans %}Por instituição{% endtrans %}</a>
+          <a href="{{ url_for('.collection_list_alpha') }}"
+             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_alpha') }}">
+            {% trans %}Alfabética{% endtrans %}
+          </a>
+          <a href="{{ url_for('.collection_list_theme') }}"
+             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_theme') }}">
+            {% trans %}Temática{% endtrans %}
+          </a>
+          <a href="{{ url_for('.collection_list_institution') }}"
+             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_institution') }}">
+            {% trans %}Por instituição{% endtrans %}
+          </a>
       </div>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="/Colecao/metricas.html" class="btn single"><span class="glyphBtn metrics"></span> {% trans %}Métricas{% endtrans %}</a>
+      <a href="{{ url_for('.metrics') }}"
+         class="btn single {{ mmenu.endpoint_selected(view_name='main.metrics') }}">
+        <span class="glyphBtn metrics"></span> {% trans %}Métricas{% endtrans %}
+      </a>
     </div>
     <div class="col-md-2 col-sm-2 dropdown-container">
       <h2>&#160;</h2>
-      <a href="/Colecao/sobre.html" class="btn single dropdown-toggle"><span class="glyphBtn infoMenu"></span> <span class="hidden-sm">{% trans %}Sobre o SciELO{% endtrans %}</span> <span class="hidden-md hidden-lg">Sobre</span></a>
+      <a href="{{ url_for('.about') }}"
+         class="btn single dropdown-toggle {{ mmenu.endpoint_selected(view_name='main.about') }}">
+        <span class="glyphBtn infoMenu"></span>
+        <span class="hidden-sm">{% trans %}Sobre o SciELO{% endtrans %}</span>
+        <span class="hidden-md hidden-lg">Sobre</span>
+      </a>
       <ul class="dropdown-menu">
-          <li><a href="/Colecao/sobre.html#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
-          <li><a href="/Colecao/sobre.html#about-network">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
-          <li><a href="/Colecao/sobre.html#evaluation">{% trans %}Avaliação de periódicos{% endtrans %}</a></li>
-          <li><a href="/Colecao/sobre.html#team">{% trans %}Equipe{% endtrans %} SciELO Brasil</a></li>
+          <li><a href="{{ url_for('.about') }}#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
+          <li><a href="{{ url_for('.about') }}#about-network">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about') }}#evaluation">{% trans %}Avaliação de periódicos{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about') }}#team">{% trans %}Equipe{% endtrans %} SciELO Brasil</a></li>
       </ul>
     </div>
   </div>

@@ -218,3 +218,21 @@ def abstract_detail(article_id):
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
+
+
+@main.route("/search", methods=['GET'])
+def search():
+    context = {}
+    return render_template("collection/search.html", **context)
+
+
+@main.route("/about", methods=['GET'])
+def about():
+    context = {}
+    return render_template("collection/about.html", **context)
+
+
+@main.route("/metrics", methods=['GET'])
+def metrics():
+    context = {}
+    return render_template("collection/metrics.html", **context)

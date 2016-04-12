@@ -1,0 +1,10 @@
+{#
+    retorna "selected" se o parametro view_name é igual ao {{ request.endpoint }}
+    http://flask.pocoo.org/docs/0.10/api/#flask.Request.endpoint
+    @param view_mame deve ser o nome completo, por exemplo: "main.index" e não ".index"
+#}
+{% macro endpoint_selected(view_name) -%}
+    {%- if request.endpoint == view_name -%}
+        selected
+    {%- endif -%}
+{%- endmacro %}
