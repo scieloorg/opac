@@ -659,3 +659,57 @@ class MainTestCase(BaseTestCase):
                 self.assertIn(sponsor.name, response.data.decode('utf-8'))
                 self.assertIn(sponsor.url, response.data.decode('utf-8'))
                 self.assertIn(sponsor.logo_url, response.data.decode('utf-8'))
+
+    def test_collection_address_at_homepage_footer(self):
+        """
+        acessar na homepage deve mostrar o endereço da coleção
+        """
+        # with
+        with current_app.app_context():
+            collection_data = {
+                'address1': 'foo address',
+                'address2': 'foo address',
+            }
+            collection = utils.makeOneCollection(attrib=collection_data)
+            # when
+            response = self.client.get(url_for('main.index'))
+            # then
+            self.assertStatus(response, 200)
+            self.assertIn(collection['address1'], response.data.decode('utf-8'))
+            self.assertIn(collection['address2'], response.data.decode('utf-8'))
+
+    def test_collection_address_at_about_page_footer(self):
+        """
+        acessar na pagina Sobre o SciELO deve mostrar o endereço da coleção
+        """
+        # with
+        with current_app.app_context():
+            collection_data = {
+                'address1': 'foo address',
+                'address2': 'foo address',
+            }
+            collection = utils.makeOneCollection(attrib=collection_data)
+            # when
+            response = self.client.get(url_for('main.about'))
+            # then
+            self.assertStatus(response, 200)
+            self.assertIn(collection['address1'], response.data.decode('utf-8'))
+            self.assertIn(collection['address2'], response.data.decode('utf-8'))
+
+    def test_collection_address_at_journal_list_page_footer(self):
+        """
+        acessar na pagina Alfabética deve mostrar o endereço da coleção
+        """
+        # with
+        with current_app.app_context():
+            collection_data = {
+                'address1': 'foo address',
+                'address2': 'foo address',
+            }
+            collection = utils.makeOneCollection(attrib=collection_data)
+            # when
+            response = self.client.get(url_for('main.collection_list_alpha'))
+            # then
+            self.assertStatus(response, 200)
+            self.assertIn(collection['address1'], response.data.decode('utf-8'))
+            self.assertIn(collection['address2'], response.data.decode('utf-8'))
