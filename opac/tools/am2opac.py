@@ -167,12 +167,7 @@ class AM2Opac(object):
         m_collection.acronym = collection.acronym
         m_collection.name = collection.name
 
-        ulicense = models.UseLicense()
-        ulicense.license_code = 'BY/3.0'
-        ulicense.reference_url = 'https://creativecommons.org/licenses/by/3.0/br/'
-        ulicense.disclaimer = 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons Attribution License'
-
-        m_collection.license = ulicense
+        m_collection.license = 'BY/3.0'
 
         return m_collection
 

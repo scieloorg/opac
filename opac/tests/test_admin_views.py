@@ -4197,7 +4197,11 @@ class CollectionAdminViewTests(BaseTestCase):
         create_user(admin_user['email'], admin_user['password'], True)
         login_url = url_for('admin.login_view')
         collection_index_url = url_for('collection.index_view')
-        expected_column_exclude_list = ('_id', )
+        expected_column_exclude_list = [
+            'logo_resource', 'header_alter_logo_resource',
+            'header_logo_resource', 'footer_resource', '_id'
+            ]
+
         # when
         with self.client as client:
             # login do usuario admin

@@ -16,9 +16,7 @@ def makeOneCollection(attrib=None):
     config_acronym = current_app.config['OPAC_COLLECTION']
 
     name = attrib.get('name', 'collection of %s' % config_acronym)
-    license = attrib.get('license', {'license_code': 'CC-BY',
-                                     'reference_url': 'http://creativecommons.org/licenses/by/4.0/deed.en',
-                                     'disclaimer': 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons Attribution License'})
+    license = attrib.get('license', 'BY/3.0')
     acronym = attrib.get('acronym', config_acronym)
 
     collection = {
