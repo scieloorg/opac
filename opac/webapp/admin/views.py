@@ -351,6 +351,18 @@ class CollectionAdminView(OpacBaseAdminView):
     can_edit = True
     edit_modal = True
     form_excluded_columns = ('acronym', )
+    column_exclude_list = [
+        'logo_resource', 'header_alter_logo_resource', 'header_logo_resource',
+        'footer_resource', '_id'
+        ]
+
+    form_overrides = dict(
+        license=Select2Field,
+    )
+
+    form_args = dict(
+        license=dict(choices=choices.LICENSE_CHOICES),
+    )
 
     form_ajax_refs = {
         'logo_resource': CustomQueryAjaxModelLoader(
@@ -375,17 +387,18 @@ class CollectionAdminView(OpacBaseAdminView):
         )
     }
 
-    column_exclude_list = ('_id', )
     inline_models = (InlineFormAdmin(Sponsor),)
 
 
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'use_licenses', 'current_status', 'index_at', 'is_public', 'unpublish_reason'
+        'use_licenses', 'current_status', 'index_at', 'is_public',
+        'unpublish_reason'
     ]
     column_searchable_list = [
-        '_id', 'title', 'title_iso', 'short_title', 'print_issn', 'eletronic_issn', 'acronym',
+        '_id', 'title', 'title_iso', 'short_title', 'print_issn',
+        'eletronic_issn', 'acronym',
     ]
     column_exclude_list = [
         '_id', 'timeline', 'use_licenses', 'subject_categories',

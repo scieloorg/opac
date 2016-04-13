@@ -31,14 +31,17 @@
             {% endfor %}
         </div>
     {% endif %}
+
     <div class="container collectionLicense">
-        <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank">
-            <img src="../static/img/cc-license.png" alt="Creative Common - BY" />
+
+        <a href="https://creativecommons.org/licenses/{{ g.collection.license|lower }}/" target="_blank">
+            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/{{ g.collection.license|lower }}/88x31.png" />
             <span>
-                {% trans %}Todo o conteúdo de www.scielo.br, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.{% endtrans %}<br/>
+                {% trans host=request.headers['Host'] %}Todo o conteúdo de {{ host }}, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.{% endtrans %}<br/>
                 <strong>{% trans %}saiba mais{% endtrans %} »</strong>
             </span>
         </a>
 
     </div>
+
 </footer>

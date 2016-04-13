@@ -31,12 +31,12 @@ install_requirements = [
 ]
 
 dependency_links = [
-    'http://github.com/scieloorg/opac_schema/tarball/v1.9#egg=opac_schema-v1.9'
+    'http://github.com/scieloorg/opac_schema/tarball/v2.1#egg=opac_schema-v2.1'
 ]
 
 setup(
     name='opac',
-    version='0.6-dev',
+    version='0.7-dev',
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,
