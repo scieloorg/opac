@@ -1,0 +1,41 @@
+<nav>
+  <ul>
+    <li>
+      <a href="{{ url_for('.index') }}"><strong>SciELO Brasil</strong></a>
+      <ul>
+          <li><a href="{{ url_for('.collection_list_alpha') }}">{% trans %}Lista alfabética de periódicos{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.collection_list_theme') }}">{% trans %}Lista temática de periódicos{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.collection_list_institution') }}">{% trans %}Lista de periódicos por editoras{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.search') }}">{% trans %}Busca{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.metrics') }}">{% trans %}Métricas{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about') }}">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
+          <li><a href="#">{% trans %}Contatos{% endtrans %}</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#"><strong>{% trans %}SciELO.org - Rede SciELO{% endtrans %}</strong></a>
+      <ul>
+        <li><a href="http://www.scielo.org/php/index.php">{% trans %}Coleções nacionais e temáticas{% endtrans %}</a></li>
+        <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">{% trans %}Lista alfabética de periódicos{% endtrans %}</a></li>
+        <li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">{% trans %}Lista de periódicos por assunto{% endtrans %}</a></li>
+        <li><a href="http://search.scielo.org/">{% trans %}Busca{% endtrans %}</a></li>
+        <li><a href="http://www.scielo.org/applications/scielo-org/php/siteUsage.php">{% trans %}Métricas{% endtrans %}</a></li>
+        <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">{% trans %}Acesso OAI e RSS{% endtrans %}</a></li>
+        <li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
+        <li><a href="#">{% trans %}Contatos{% endtrans %}</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#"><strong>{% trans %}Portal do Autor{% endtrans %}</strong></a>
+    </li>
+    <li>
+      {% if session.lang == 'pt_BR' %}
+        <a href="http://blog.scielo.org/">
+      {% else  %}
+        <a href="http://blog.scielo.org/{{ session.lang }}/">
+      {% endif %}
+          <strong>{% trans %}Blog SciELO em Perspectiva{% endtrans %}</strong>
+        </a>
+    </li>
+  </ul>
+</nav>

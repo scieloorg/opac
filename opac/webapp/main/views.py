@@ -25,7 +25,8 @@ def add_collection_to_g():
         try:
             g.collection = controllers.get_current_collection()
         except Exception, e:
-            pass  # discutir o que fazer aqui
+            # discutir o que fazer aqui
+            g.collection = {}
 
 
 @babel.localeselector
