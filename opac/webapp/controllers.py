@@ -11,8 +11,8 @@ import datetime
 from opac_schema.v1.models import Journal, Issue, Article, Collection
 from flask import current_app
 from flask_babelex import lazy_gettext as __
+
 from webapp import dbsql
-from flask_babelex import lazy_gettext as __
 from models import User
 
 
