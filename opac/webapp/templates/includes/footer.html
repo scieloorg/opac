@@ -7,12 +7,12 @@
             </div>
             <div class="col-md-8 col-sm-9">
                 <strong>SciELO - Scientific Electronic Library Online</strong><br/>
-                Av. Onze de Junho, 269 - Vila Clementino 04041-050 São Paulo SP - Brasil<br/>
-                Tel.: (55 11) 5083-3639 - Email: scielo@scielo.org
+                {{ g.collection.address1}}<br/>
+                {{ g.collection.address2}}
             </div>
         </div>
     </div>
-    {% if g.collection %}
+    {% if g.collection and g.collection.sponsors %}
         <div class="partners">
             {% for sponsor in g.collection.sponsors %}
                 {% if sponsor.url and sponsor.logo_url %}
