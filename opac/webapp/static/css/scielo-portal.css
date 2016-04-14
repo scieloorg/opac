@@ -701,6 +701,8 @@ button.btn:active {
   font-size: .9em;
   color: #7b7469;
   line-height: 22px;
+  font-size: 1.3em;
+  margin-bottom: 12px;
 }
 .levelMenu a.selected,
 .levelMenu a.btn:hover,

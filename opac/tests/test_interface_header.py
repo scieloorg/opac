@@ -246,7 +246,7 @@ class MenuTestCase(BaseTestCase):
         expected_anchor17 = u"""<a href="#"><strong>Portal do Autor</strong></a>"""
         self.assertIn(expected_anchor17, response.data.decode('utf-8'))
 
-    def test_blog_link_in_hamburger_manu(self):
+    def test_blog_link_in_hamburger_menu(self):
         """
         Verificamos que o link para o blog em perspectiva fique
         apontando ao link certo considerando o idioma da sessão
