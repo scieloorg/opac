@@ -19,6 +19,8 @@ def makeOneCollection(attrib=None):
     license = attrib.get('license', 'BY/3.0')
     acronym = attrib.get('acronym', config_acronym)
 
+    resource = makeOneResource({'type': 'img'})
+
     collection = {
         '_id': default_id,
         'name': name,
@@ -26,6 +28,7 @@ def makeOneCollection(attrib=None):
         'license': license,
         'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
+        'header_logo_resource': attrib.get('header_logo_resource', resource)
     }
     for k, v in attrib.iteritems():
         if k not in collection.keys():

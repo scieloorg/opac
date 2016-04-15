@@ -211,16 +211,20 @@ class MainTestCase(BaseTestCase):
         corpo da página.
         """
 
-        journal = utils.makeOneJournal({'title': 'Revista X'})
+        with current_app.app_context():
 
-        response = self.client.get(url_for('main.journal_detail',
-                                           journal_id=journal.id))
+            collection = utils.makeOneCollection()
 
-        self.assertTrue(200, response.status_code)
-        self.assertTemplateUsed('journal/detail.html')
-        self.assertIn(u'Revista X',
-                      response.data.decode('utf-8'))
-        self.assertEqual(self.get_context_variable('journal').id, journal.id)
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(url_for('main.journal_detail',
+                                               journal_id=journal.id))
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('journal/detail.html')
+            self.assertIn(u'Revista X',
+                          response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('journal').id, journal.id)
 
     def test_journal_detail_with_unknow_id(self):
         """
@@ -267,18 +271,21 @@ class MainTestCase(BaseTestCase):
         ``issue/grid.html``.
         """
 
-        journal = utils.makeOneJournal()
+        with current_app.app_context():
+            collection = utils.makeOneCollection()
 
-        issues = utils.makeAnyIssue(attrib={'journal': journal.id})
+            journal = utils.makeOneJournal()
 
-        response = self.client.get(url_for('main.issue_grid',
-                                   journal_id=journal.id))
+            issues = utils.makeAnyIssue(attrib={'journal': journal.id})
 
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('issue/grid.html')
+            response = self.client.get(url_for('main.issue_grid',
+                                       journal_id=journal.id))
 
-        for issue in issues:
-            self.assertIn('/issues/%s' % issue.id, response.data.decode('utf-8'))
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+
+            for issue in issues:
+                self.assertIn('/issues/%s' % issue.id, response.data.decode('utf-8'))
 
     def test_issue_grid_without_issues(self):
         """
@@ -287,16 +294,20 @@ class MainTestCase(BaseTestCase):
         e a msg ``Nenhum fascículo encontrado para esse perióico``
         """
 
-        journal = utils.makeOneJournal()
+        with current_app.app_context():
 
-        response = self.client.get(url_for('main.issue_grid',
-                                   journal_id=journal.id))
+            collection = utils.makeOneCollection()
 
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('issue/grid.html')
+            journal = utils.makeOneJournal()
 
-        self.assertIn(u'Nenhum fascículo encontrado para esse perióico',
-                      response.data.decode('utf-8'))
+            response = self.client.get(url_for('main.issue_grid',
+                                       journal_id=journal.id))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+
+            self.assertIn(u'Nenhum fascículo encontrado para esse perióico',
+                          response.data.decode('utf-8'))
 
     def test_issue_grid_with_unknow_journal_id(self):
         """
@@ -341,16 +352,20 @@ class MainTestCase(BaseTestCase):
         Teste da ``view function`` ``issue_toc`` acessando a página do fascículo,
         deve retorna status_code 200 e o template ``issue/toc.html``.
         """
-        issue = utils.makeOneIssue({'number': '31',
-                                    'volume': '10'})
 
-        response = self.client.get(url_for('main.issue_toc',
-                                   issue_id=issue.id))
+        with current_app.app_context():
+            collection = utils.makeOneCollection()
 
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('issue/toc.html')
-        self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
-        self.assertEqual(self.get_context_variable('issue').id, issue.id)
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10'})
+
+            response = self.client.get(url_for('main.issue_toc',
+                                       issue_id=issue.id))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/toc.html')
+            self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('issue').id, issue.id)
 
     def test_issue_toc_unknow_issue_id(self):
         """
