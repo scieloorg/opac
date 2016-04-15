@@ -19,6 +19,8 @@ def makeOneCollection(attrib=None):
     license = attrib.get('license', 'BY/3.0')
     acronym = attrib.get('acronym', config_acronym)
 
+    resource = makeOneResource({'type': 'img'})
+
     collection = {
         '_id': default_id,
         'name': name,
@@ -26,6 +28,7 @@ def makeOneCollection(attrib=None):
         'license': license,
         'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
+        'header_logo_resource': attrib.get('header_logo_resource', resource)
     }
     for k, v in attrib.iteritems():
         if k not in collection.keys():
@@ -47,7 +50,7 @@ def makeOneResource(attrib=None):
             'url': attrib.get('url', 'http://somedomain.com.br'),
             'language': attrib.get('language', 'en'),
             'type': attrib.get('type', 'html'),
-            'description': attrib.get('description', 'some description')
+            'description': attrib.get('description', 'some description'),
         }
 
     return models.Resource(**resource).save()
@@ -87,7 +90,12 @@ def makeOneJournal(attrib=None):
         'is_public': attrib.get('is_public', True),
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
-        'acronym': attrib.get('acronym', "journal-%s" % default_id)
+        'acronym': attrib.get('acronym', "journal-%s" % default_id),
+        'use_licenses': attrib.get('use_licenses',
+                                   {'license_code': 'BY/3.0',
+                                    'reference_url': 'http://creativecommons.org/licenses/by/3.0/deed.en',
+                                    'disclaimer': 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons'
+                                    })
     }
     journal.update(attrib)
     return models.Journal(**journal).save()

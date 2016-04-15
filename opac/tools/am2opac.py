@@ -208,7 +208,12 @@ class AM2Opac(object):
             ulicense = models.UseLicense()
             ulicense.license_code = journal.permissions['id']
             ulicense.reference_url = journal.permissions['url']
-            ulicense.disclaimer = journal.permissions['text']
+
+            # Atualmente no Site SciELO existe um texto criado por nos para a
+            # lincença, irei manter vazio e montamos o texto no template com tag
+            # {% trans %} para tradução.
+            # IMPORTANTE: O chave text no Xylose retorna sempre ``None``.
+            ulicense.disclaimer = None
 
             m_journal.use_licenses = ulicense
 
