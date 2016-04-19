@@ -29,13 +29,13 @@
                   {% trans %}Navegue nos números{% endtrans %}
                   <div class="fakeButton">
                       <div class="col-xs-2">
-                          <a href="atual.html"><span class="glyphBtn whiteArrowLeft"></span></a>
+                        <a href="{{ url_for('.issue_toc', issue_id=previous_issue.iid) }}" class="btn group {% if not previous_issue %} disabled {% endif %}"><span class="glyphBtn whiteArrowLeft"></span></a>
                       </div>
                       <div class="col-xs-8">
                          {% trans %}Vol.{% endtrans %} {{ issue.volume }} {% trans %}No.{% endtrans %} {{ issue.number }} {{journal.short_title}}
                       </div>
                       <div class="col-xs-2">
-                          <a href="atual.html"><span class="glyphBtn whiteArrowRight"></span></a>
+                        <a href="{{ url_for('.issue_toc', issue_id=next_issue.iid) }}" class="btn group {% if not next_issue %} disabled {% endif %}"><span class="glyphBtn whiteArrowRight"></span></a>
                       </div>
                       <div class="clearfix"></div>
                   </div>

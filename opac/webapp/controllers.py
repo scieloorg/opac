@@ -217,7 +217,7 @@ def get_issues_by_jid(jid, **kwargs):
     if order_by:
         del kwargs['order_by']
     else:
-        order_by = ["-year", "-volume", "-number"]
+        order_by = ["-year", "-volume", "-order"]
 
     if get_journal_by_jid(jid):
         return Issue.objects(journal=jid, **kwargs).order_by(*order_by)
