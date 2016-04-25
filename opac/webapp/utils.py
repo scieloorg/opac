@@ -51,6 +51,51 @@ def get_timed_serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
 
+def get_prev_article(articles, article):
+    """
+    Considerando que a lista de artigos está ordenada pelo atributo ``order``,
+    que é um atributo crescente, ou seja, o último artigo é o artigo com maior
+    valor no atributo ``order``. A lógica é direta ou seja para retornar o
+    artigo anterior subtrai 1 do índice corrente.
+
+    IMPORTANTE: Quando o índice do artigo for igual a 0 devemos retornar None.
+
+    """
+    if len(articles) != 0:
+        try:
+            if articles.index(article) != 0:
+                return articles[articles.index(article)-1]
+            else:
+                return None
+        except IndexError:
+            return None
+    else:
+        return None
+
+
+def get_next_article(articles, article):
+    """
+    Considerando que a lista de artigos está ordenada pelo atributo ``order``,
+    que é um atributo crescente, ou seja, o último artigo é o artigo com maior
+    valor no atributo ``order``. A lógica é direta ou seja para retornar o
+    próximo artigo soma 1 ao índice corrente.
+
+
+    IMPORTANTE: Quando o índice do artigo for igual ao tamanho da lista
+    devemos retornar None.
+    """
+    if len(articles) != 0:
+        try:
+            if len(articles) != articles.index(article):
+                return articles[articles.index(article)+1]
+            else:
+                return None
+        except IndexError:
+            return None
+    else:
+        return None
+
+
 def get_prev_issue(issues, issue):
     """
     A lista de fascículos é ordenada pelos fascículos mais recentes para o mais

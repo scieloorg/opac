@@ -96,7 +96,6 @@ class MenuTestCase(BaseTestCase):
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
-
     def test_links_in_hamburger_menu(self):
         """
         no menú de hamurger, verificamos os links que apontam a views do opac
@@ -180,7 +179,7 @@ class MenuTestCase(BaseTestCase):
     def test_journal_detail_menu(self):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
-        ``próximo`` estão disponíveis no ``jorunal/detail.html``
+        ``próximo`` estão disponíveis no ``journal/detail.html``
         """
         journal = utils.makeOneJournal()
 
@@ -391,6 +390,123 @@ class MenuTestCase(BaseTestCase):
             expect_btn_atual = u'<a href="%s" class="btn group  ">atual</a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
             expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.issue_toc', issue_id=issue2.iid)
+
+            expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
+
+            # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            for btn in expected_btns:
+                self.assertIn(btn, response.data.decode('utf-8'))
+
+    # Article Menu
+    def test_article_detail_menu(self):
+        """
+        Teste para verificar se os botões estão ``anterior``, ``atual``,
+        ``próximo`` estão disponíveis no ``article/detail.html``.
+        """
+
+        journal = utils.makeOneJournal()
+
+        with current_app.app_context():
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            collection = utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'journal': journal,
+                                        'year': '2016', 'volume': '1',
+                                        'number': '1', 'order': '1', })
+
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               article_id=article2.aid))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.article_detail', article_id=article1.aid)
+
+            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+
+            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.article_detail', article_id=article3.aid)
+
+            expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
+
+            # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            for btn in expected_btns:
+                self.assertIn(btn, response.data.decode('utf-8'))
+
+    def test_article_detail_menu_when_last_article(self):
+        """
+        Teste para verificar se os botões estão ``anterior``, ``atual``,
+        ``próximo`` estão disponíveis no ``article/detail.html`` quando é o
+        último artigo. O botão próximo deve esta desativado.
+        """
+
+        journal = utils.makeOneJournal()
+
+        with current_app.app_context():
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            collection = utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'journal': journal,
+                                        'year': '2016', 'volume': '1',
+                                        'number': '1', 'order': '1', })
+
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               article_id=article3.aid))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.article_detail', article_id=article2.aid)
+
+            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+
+            expect_btn_proximo = u'<a href="/articles/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+
+            expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
+
+            # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            for btn in expected_btns:
+                self.assertIn(btn, response.data.decode('utf-8'))
+
+    def test_article_detail_menu_when_first_article(self):
+        """
+        Teste para verificar se os botões estão ``anterior``, ``atual``,
+        ``próximo`` estão disponíveis no ``article/detail.html`` quando é o
+        primeiro artigo. O botão anterior deve esta desativado.
+        """
+
+        journal = utils.makeOneJournal()
+
+        with current_app.app_context():
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            collection = utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'journal': journal,
+                                        'year': '2016', 'volume': '1',
+                                        'number': '1', 'order': '1', })
+
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               article_id=article1.aid))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+
+            expect_btn_anterior = u'<a href="/articles/" class="btn group  disabled ">\xab anterior</a>'
+
+            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+
+            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.article_detail', article_id=article2.aid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 

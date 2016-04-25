@@ -173,7 +173,7 @@ def issue_toc(issue_id):
         abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
     journal = issue.journal
-    articles = controllers.get_articles_by_iid(issue.iid)
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
@@ -211,10 +211,22 @@ def article_detail(article_id):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
+    journal = article.journal
+    issue = article.issue
+
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
+
+    previous_article = utils.get_prev_article(article_list, article)
+    next_article = utils.get_next_article(article_list, article)
+
     context = {
+        'next_article': next_article,
+        'previous_article': previous_article,
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': journal,
+        'issue': issue
     }
 
     return render_template("article/detail.html", **context)
@@ -251,10 +263,22 @@ def abstract_detail(article_id):
     if not article.htmls:
         abort(404, _(u'Resumo do artigo não encontrado'))
 
+    journal = article.journal
+    issue = article.issue
+
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
+
+    previous_article = utils.get_prev_article(article_list, article)
+    next_article = utils.get_next_article(article_list, article)
+
     context = {
+        'next_article': next_article,
+        'previous_article': previous_article,
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': journal,
+        'issue': issue
     }
     return render_template("article/abstract.html", **context)
 

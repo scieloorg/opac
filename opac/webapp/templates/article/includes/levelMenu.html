@@ -5,19 +5,28 @@
             <a href="{{ url_for('.journal_detail', journal_id=article.journal) }}" class="btn single"><span class="glyphBtn home"></span> home</a>
         </div>
         <div class="col-md-5 col-sm-5">
-            <h2><span class="glyphBtn articles"></span> {% trans yeara=issue.year, volume=issue.volume, number=issue.number %}Artigos do Ano {{ year }}, Volume {{ volume }} Número {{ number }}{% endtrans %}</h2>
+            <h2><span class="glyphBtn articles"></span> {% trans year=issue.year, volume=issue.volume, number=issue.number %}Artigos do Ano {{ year }}, Volume {{ volume }} Número {{ number }}{% endtrans %}</h2>
             <div class="btn-group">
-                <a href="{{ url_for('.issue_grid', journal_id=article.journal.jid) }}" class="btn group">{% trans %}sumário{% endtrans %}</a>
-                <a href="javascript:;" class="btn group">« {% trans %}anterior{% endtrans %}</a>
-                <a href="{{ url_for('.article_detail', article_id=article.aid) }}" class="btn group selected">{% trans %}atual{% endtrans %}</a>
-                <a href="javascript:;" class="btn group">{% trans %}próximo{% endtrans %} »</a>
+
+                {# Sumário #}
+                <a href="{{ url_for('.issue_toc', issue_id=issue.id) }}" class="btn group">{% trans %}sumário{% endtrans %}</a>
+
+                {# Anterior #}
+                <a href="{{ url_for('.article_detail', article_id=previous_article.aid) }}" class="btn group {% if not previous_article %} disabled {% endif %}">« {% trans %}anterior{% endtrans %}</a>
+
+                {# Atual #}
+                <a href="" class="btn group disabled">{% trans %}atual{% endtrans %}</a>
+
+                {# Próximo #}
+                <a href="{{ url_for('.article_detail', article_id=next_article.aid) }}" class="btn group {% if not next_article %} disabled {% endif %}">{% trans %}próximo{% endtrans %} »</a>
+
             </div>
         </div>
         <div class="col-md-5 col-sm-5 downloadOptions">
             <h2><span class="glyphBtn articleDownload"></span> {% trans %}Outras versões deste artigo{% endtrans %}</h2>
             <div class="btn-group">
                 <ul>
-                    <li class="group" style="width: 25%;">
+                    <li class="group" style="width: 33.3333%;">
                         <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span> PDF</a>
                         <ul class="dropdown-menu">
                             <li><a href="">{% trans %}Espanhol{% endtrans %}</a></li>
@@ -25,13 +34,11 @@
                             <li><a href="">{% trans %}Português{% endtrans %}</a></li>
                         </ul>
                     </li>
-                    <li class="group" style="width: 25%;">
-                        <a href="javascript:;" class="btn group"><span class="glyphBtn epubDownload"></span> ePUB</a>
-                    </li>
-                    <li class="group" style="width: 25%;">
+
+                    <li class="group" style="width: 33.3333%;">
                         <a href="javascript:;" class="btn group"><span class="glyphBtn readcubeView"></span> readcube</a>
                     </li>
-                    <li class="group" style="width: 25%;">
+                    <li class="group" style="width: 33.3333%;">
                         <a href="javascript:;" class="btn group"><span class="glyphBtn xmlDownload"></span> XML</a>
                         <ul class="dropdown-menu">
                             <li><a href="">{% trans %}Espanhol{% endtrans %}</a></li>
@@ -39,7 +46,6 @@
                             <li><a href="">{% trans %}Português{% endtrans %}</a></li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
         </div>
