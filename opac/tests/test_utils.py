@@ -152,7 +152,7 @@ class UtilsTestCase(BaseTestCase):
         article2 = utils.makeOneArticle({'order': '2', })
         article3 = utils.makeOneArticle({'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
 
         prev_article = wutils.get_prev_article(articles, article2)
@@ -168,7 +168,7 @@ class UtilsTestCase(BaseTestCase):
         article2 = utils.makeOneArticle({'order': '2', })
         article3 = utils.makeOneArticle({'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
 
         next_article = wutils.get_next_article(articles, article2)
@@ -185,7 +185,7 @@ class UtilsTestCase(BaseTestCase):
         article2 = utils.makeOneArticle({'order': '2', })
         article3 = utils.makeOneArticle({'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
 
         next_article = wutils.get_next_article(articles, article3)
@@ -202,7 +202,7 @@ class UtilsTestCase(BaseTestCase):
         article2 = utils.makeOneArticle({'order': '2', })
         article3 = utils.makeOneArticle({'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
 
         prev_article = wutils.get_prev_article(articles, article1)
