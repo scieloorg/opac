@@ -9,6 +9,7 @@ from webapp import utils as wutils
 
 class UtilsTestCase(BaseTestCase):
 
+    # Issue
     def test_get_prev_issue(self):
         """
         Teste da função utils.get_prev_issue().
@@ -140,3 +141,70 @@ class UtilsTestCase(BaseTestCase):
         next_issue = wutils.get_next_issue(issues, issue1)
 
         self.assertIsNone(next_issue)
+
+    # Article
+    def test_get_prev_article(self):
+        """
+        Teste da função utils.get_prev_article().
+        """
+
+        article1 = utils.makeOneArticle({'order': '1', })
+        article2 = utils.makeOneArticle({'order': '2', })
+        article3 = utils.makeOneArticle({'order': '3', })
+
+        # criando uma lista de fascículos ordenada
+        articles = [article1, article2, article3]
+
+        prev_article = wutils.get_prev_article(articles, article2)
+
+        self.assertEqual(prev_article, article1)
+
+    def test_get_next_article(self):
+        """
+        Teste da função utils.get_next_article().
+        """
+
+        article1 = utils.makeOneArticle({'order': '1', })
+        article2 = utils.makeOneArticle({'order': '2', })
+        article3 = utils.makeOneArticle({'order': '3', })
+
+        # criando uma lista de fascículos ordenada
+        articles = [article1, article2, article3]
+
+        next_article = wutils.get_next_article(articles, article2)
+
+        self.assertEqual(next_article, article3)
+
+    def test_get_next_article_when_last_article(self):
+        """
+        Teste da função utils.get_next_article(), quando é o último artigo
+        deve retorna None.
+        """
+
+        article1 = utils.makeOneArticle({'order': '1', })
+        article2 = utils.makeOneArticle({'order': '2', })
+        article3 = utils.makeOneArticle({'order': '3', })
+
+        # criando uma lista de fascículos ordenada
+        articles = [article1, article2, article3]
+
+        next_article = wutils.get_next_article(articles, article3)
+
+        self.assertIsNone(next_article)
+
+    def test_get_prev_article_when_first_article(self):
+        """
+        Teste da função utils.get_prev_article(), quando é o primeiro artigo
+        deve retorna None.
+        """
+
+        article1 = utils.makeOneArticle({'order': '1', })
+        article2 = utils.makeOneArticle({'order': '2', })
+        article3 = utils.makeOneArticle({'order': '3', })
+
+        # criando uma lista de fascículos ordenada
+        articles = [article1, article2, article3]
+
+        prev_article = wutils.get_prev_article(articles, article1)
+
+        self.assertIsNone(prev_article)
