@@ -63,10 +63,9 @@ def get_prev_article(articles, article):
     """
     if len(articles) != 0:
         try:
-            if articles.index(article) != 0:
-                return articles[articles.index(article)-1]
-            else:
+            if articles.index(article) == 0:
                 return None
+            return articles[articles.index(article)-1]
         except IndexError:
             return None
     else:
@@ -86,10 +85,9 @@ def get_next_article(articles, article):
     """
     if len(articles) != 0:
         try:
-            if len(articles) != articles.index(article):
-                return articles[articles.index(article)+1]
-            else:
+            if len(articles) == articles.index(article):
                 return None
+            return articles[articles.index(article)+1]
         except IndexError:
             return None
     else:
