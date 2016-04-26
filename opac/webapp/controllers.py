@@ -11,7 +11,7 @@ import datetime
 from opac_schema.v1.models import Journal, Issue, Article, Collection
 from flask import current_app
 from flask_babelex import lazy_gettext as __
-
+from flask.ext.mongoengine import Pagination
 from webapp import dbsql
 from models import User
 
@@ -39,6 +39,14 @@ def get_journals(is_public=True, order_by="title"):
     """
 
     return Journal.objects(is_public=is_public).order_by(order_by)
+
+
+def get_journals_paginated(title_query, is_public=True, order_by="title", page=1, per_page=20):
+    if not title_query or title_query.strip() == "":
+        qs = Journal.objects(is_public=is_public).order_by(order_by)
+    else:
+        qs = Journal.objects(is_public=is_public, title__icontains=title_query).order_by(order_by)
+    return Pagination(qs, page, per_page)
 
 
 def get_journals_by_study_area():

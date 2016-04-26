@@ -1,9 +1,7 @@
 {% extends "collection/base.html" %}
 
 {% block main_content %}
-  <section class="collection collectionList collectionListStart" data-action="../static/php/colecaoFinder.php" data-method="alphabetic" data-perpage="20" data-labels="números;Último:;Volume;Nº;Suppl.;Homepage;Submissão de manuscritos;Instruções aos autores;Sobre o periódico;Contato;(inativo);(total {total})">
-    <input type="hidden" name="currentPage" value="1" class="collectionCurrentPage" />
-    <input type="hidden" name="totalPages" value="" class="collectionTotalPages" />
+  <section class="collection collectionList collectionListStart">
 
     <div class="container">
       <div class="row sectionTitle">
@@ -13,30 +11,30 @@
           <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
           <span class="divisor"></span>
           {% trans %}Compartilhe{% endtrans %}
-          <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-          <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-          <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-          <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
+          <a href="#" class="sendViaMail showTooltip" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
+          <a href="#" class="shareFacebook showTooltip" title="{% trans %}Compartilhar no Facebook{% endtrans %}"><span class="glyphBtn facebook"></span></a>
+          <a href="#" class="shareTwitter showTooltip" title="{% trans %}Compartilhar no Twitter{% endtrans %}"><span class="glyphBtn twitter"></span></a>
+          <a href="#" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="{% trans %}Outras redes sociais{% endtrans %}"><span class="glyphBtn otherNetworks"></span></a>
           <ul class="dropdown-menu">
             <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
-            <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
-            <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
-            <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
-            <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
-            <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
-            <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
+            <li><a href="#" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
+            <li><a href="#" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
+            <li><a href="#" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
+            <li><a href="#" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
+            <li><a href="#" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
+            <li><a href="#" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
           </ul>
         </div>
       </div>
 
       <div class="row collectionListSearch">
         <div class="col-md-5 col-sm-6">
-          <input type="text" name="query" value="" class="form-control collectionSearch" placeholder="Digite uma ou mais palavras para filtrar a lista" />
+          <input type="text" id="query" name="query" value="" class="form-control collectionSearch" placeholder="Digite uma ou mais palavras para filtrar a lista" />
         </div>
       </div>
 
       <div class="row collectionListTable">
-        <table>
+        <table id="journals_table">
             <thead>
               <tr>
                 <th class="actions">
@@ -47,30 +45,147 @@
                   </div>
                   <div class="col-xs-6 right download">
                     {% trans %}download da lista{% endtrans %}
-                    <a href="" class="collectionListDownloadXLS showTooltip" title="Lista em arquivo para Excel"><span class="glyphBtn downloadXLS"></span></a>
-                    <a href="" class="collectionListDownloadCSV showTooltip" title="Lista em arquivo CSV"><span class="glyphBtn downloadCSV"></span></a>
+                    <a href="" class="collectionListDownloadXLS showTooltip" title="{% trans %}Lista em arquivo para Excel{% endtrans %}"><span class="glyphBtn downloadXLS"></span></a>
+                    <a href="" class="collectionListDownloadCSV showTooltip" title="{% trans %}Lista em arquivo CSV{% endtrans %}"><span class="glyphBtn downloadCSV"></span></a>
                   </div>
                 </th>
               </tr>
             </thead>
-            <tbody>
-              {% for journal in journals %}
-                {% include "includes/format_journal_row.html" %}
-                {% else %}
-                <tr>
-                  <td colspan="2">
-                    {% trans %}Nenhum periódico encontrado{% endtrans %}.
-                  </td>
-                </tr>
-              {% endfor %}
+            <tbody id="journals_table_body">
+              {# preenchido com a lista de periódicos com js #}
             </tbody>
           </table>
           <div class="collectionListLoading" style="display: none;"></div>
       </div>
-
-      </div>
       <div class="clearfix"></div>
     </div>
   </section>
+
+  <script id="template_row" type="text/template">
+    {% include "includes/tmpl_journal_row.html" %}
+  </script>
+
+{% endblock %}
+{% block extra_js %}
+
+  <script>
+
+    JournalListAlpha = {
+      page: 1,
+      url: "{{ url_for('main.journals_search_ajax') }}",
+      template_row_selector: '#template_row',
+      template_result_body_selector: '#journals_table_body',
+      query_input_selector: '#query',
+      loading_selector: '.collectionListLoading',
+      has_next: false,
+      next_num: 0,
+
+      clear_list:function(){
+        $(this.template_result_body_selector).html('');
+      },
+
+      search: function(clear){
+        if (clear) {
+          {# mudou a ultima query, então é uma nova busca #}
+          this.page = 1;
+        }
+
+        {# se estiver mostrando o gif de 'loading', então ainda não terminou de mostrar os resultados #}
+        var is_loading = $(this.loading_selector).css('display') != 'none';
+        if (is_loading) {
+          return;
+        }
+
+        var self = this;
+        var page = this.page;
+        var query = $.trim($(this.query_input_selector).val());
+        $(this.loading_selector).show();
+        $.getJSON(self.url, {
+          page: page,
+          query: query,
+        }).done(function(data){
+          self.render_results(data, clear);
+        }).fail(function(){
+          $(self.loading_selector).hide();
+          self.render_error_msg();
+        });
+      },
+
+      search_next_page: function(){
+        if (this.has_next) {
+          this.page = this.next_num;
+          this.search(false);
+        }
+      },
+
+      render_results: function(result_data, clear){
+        this.page = result_data['current_page'];
+        $('.collectionListTotalInfo').text('(total '+ result_data['total'] + ')');
+        this.has_next = result_data['has_next'];
+        this.next_num = result_data['next_num'];
+        {# listamos os resultados na tablela #}
+        this.render_list(result_data['journals'], clear);
+        {# ocultamos o gif de loading #}
+        $(this.loading_selector).hide();
+        $('[data-toggle="tooltip"]').tooltip();
+      },
+
+      render_list: function(result_list, clear){
+        if (clear){
+          this.clear_list();
+        }
+        if (result_list.length == 0) {
+          this.render_empty_list();
+        } else {
+          for (var i = 0; i < result_list.length; i++) {
+            this.render_row(result_list[i]);
+          }
+        }
+      },
+
+      render_row: function(result_row){
+        var compiled = _.template($(this.template_row_selector).html());
+        var row_html = compiled({'journal': result_row});
+        $(this.template_result_body_selector).append(row_html);
+      },
+
+      render_empty_list: function(){
+        var msg = "{% trans %}Nenhum periódico encontrado{% endtrans %}."
+        var row_html = "<tr><td colspan='2'>" + msg + "</td></tr>"
+        $(this.template_result_body_selector).append(row_html);
+      },
+
+      render_error_msg: function(){
+        this.clear_list();
+        var msg = "{% trans %}Ocorreu um erro obtendo a lista de periódicos. Tente mais tarde.{% endtrans %}."
+        var row_html = "<tr><td colspan='2'>" + msg + "</td></tr>"
+        $(this.template_result_body_selector).html(row_html);
+      },
+
+      initialize: function(){
+        var self = this;
+        this.page = parseInt($('#current_page').val(), 10);
+        $(this.query_input_selector).on("keyup", function(){
+          if (this.value.length >= 3 || $.trim(this.value).length === 0) {
+            self.search(true);
+          }
+        });
+        $(window).on("scroll",function() {
+          {# quando o scroll chega no limite abaixo dispara uma busca pela proxima pagina #}
+          var st = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+          if((st + document.documentElement.clientHeight) >= document.documentElement.scrollHeight){
+            self.search_next_page();
+          }
+        });
+        return this
+      }
+    }
+
+  $(function() {
+    var list = JournalListAlpha;
+    list.initialize();
+    list.search(false);
+  });
+  </script>
 
 {% endblock %}
