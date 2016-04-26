@@ -24,46 +24,47 @@
         </ul>
       </div>
       <div class="col-md-12 content issueList" id="issueList">
-        <div class="row">
-          <div class="col-md-6 col-sm-6">
-            <h1>{% trans %}Todos os números{% endtrans %}</h1>
+        {% if result_dict %}
+          <div class="row">
+            <div class="col-md-6 col-sm-6">
+              <h1>{% trans %}Todos os números{% endtrans %}</h1>
+            </div>
           </div>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <td class="col-xs-1">{% trans %}Ano{% endtrans %}</td>
-              <th class="col-xs-1">{% trans %}Volume{% endtrans %}</th>
-              <td class="col-xs-10 left">{% trans %}Número{% endtrans %}</td>
-            </tr>
-          </thead>
-          <tbody>
-
-            {% for year,v in result_dict.iteritems() %}
-              {% for volume, issue_list in v.iteritems() %}
-                <tr>
-                  <td>{{year}}</td>
-                  <th>{{volume}}</th>
-                  <td class="left">
-                    {% for issue in issue_list|sort(attribute='order') %}
-                      {% if issue.type == 'ahead' %}
-                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">ahead of print</a>
-                      {% elif issue.type == 'special' %}
-                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">spe.{{issue.suppl_text}}</a>
-                      {% elif issue.type == 'supplement' %}
-                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">suppl.{{issue.suppl_text}}</a>
-                      {% else %} {# issue.type == 'regular' #}
-                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">{{issue.number}}</a>
-                      {% endif %}
-                    {% endfor %}
-                  </td>
-                </tr>
+          <table>
+            <thead>
+              <tr>
+                <td class="col-xs-1">{% trans %}Ano{% endtrans %}</td>
+                <th class="col-xs-1">{% trans %}Volume{% endtrans %}</th>
+                <td class="col-xs-10 left">{% trans %}Número{% endtrans %}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {% for year,v in result_dict.iteritems() %}
+                {% for volume, issue_list in v.iteritems() %}
+                  <tr>
+                    <td>{{year}}</td>
+                    <th>{{volume}}</th>
+                    <td class="left">
+                      {% for issue in issue_list|sort(attribute='order') %}
+                        {% if issue.type == 'ahead' %}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn ahead">ahead of print</a>
+                        {% elif issue.type == 'special' %}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">spe.{{issue.suppl_text}}</a>
+                        {% elif issue.type == 'supplement' %}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">suppl.{{issue.suppl_text}}</a>
+                        {% else %} {# issue.type == 'regular' #}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">{{issue.number}}</a>
+                        {% endif %}
+                      {% endfor %}
+                    </td>
+                  </tr>
+                {% endfor %}
               {% endfor %}
-              {% else %}
-                {% trans %}Nenhum fascículo encontrado para esse perióico{% endtrans %}
-            {% endfor %}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        {% else %}
+          {% trans %}Nenhum fascículo encontrado para esse perióico{% endtrans %}
+        {% endif%}
         <div class="col-md-12">
           <h2>{% trans %}Histórico deste periódico na coleção{% endtrans %}</h2>
           <ul>

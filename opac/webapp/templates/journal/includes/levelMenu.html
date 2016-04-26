@@ -1,16 +1,27 @@
+{% import 'macros/menu.html' as mmenu %}
+
 <section class="levelMenu">
   <div class="container">
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="btn single selected"><span class="glyphBtn home"></span> {% trans %}home{% endtrans %}</a>
+      <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="btn single {{ mmenu.endpoint_selected(view_name='main.journal_detail') }}"><span class="glyphBtn home"></span> {% trans %}home{% endtrans %}</a>
     </div>
     <div class="col-md-6 col-sm-6">
       <h2><span class="glyphBtn numbers"></span> {% trans %}Números{% endtrans %}</h2>
       <div class="btn-group">
-        <a href="{{ url_for('.issue_grid', journal_id=journal.jid) }}" class="btn group">{% trans %}todos{% endtrans %}</a>
-        <a href="homepage.html" class="btn group">« {% trans %}anterior{% endtrans %}</a>
-        <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}" class="btn group">{% trans %}atual{% endtrans %}</a>
-        <a href="homepage.html" class="btn group disabled">{% trans %}próximo{% endtrans %} »</a>
+
+        {# Todos #}
+        <a href="{{ url_for('.issue_grid', journal_id=journal.jid) }}" class="btn group {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">{% trans %}todos{% endtrans %}</a>
+
+        {# Anterior #}
+        <a href="{{ url_for('.issue_toc', issue_id=previous_issue.iid) }}" class="btn group {% if not previous_issue %} disabled {% endif %}">« {% trans %}anterior{% endtrans %}</a>
+
+        {# Atual #}
+        <a href="{{ url_for('.issue_toc', issue_id=last_issue.iid) }}" class="btn group {% if last_issue == issue %} selected {% endif %} {% if not last_issue %} disabled {% endif %}">{% trans %}atual{% endtrans %}</a>
+
+        {# Próximo #}
+        <a href="{{ url_for('.issue_toc', issue_id=next_issue.iid) }}" class="btn group {% if not next_issue %} disabled {% endif %}">{% trans %}próximo{% endtrans %} »</a>
+
       </div>
     </div>
     <div class="col-md-2 col-sm-2">

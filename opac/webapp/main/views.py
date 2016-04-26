@@ -10,6 +10,7 @@ from flask import current_app, send_from_directory, g
 from webapp import babel
 from webapp import controllers
 from webapp import models
+from webapp import utils
 import webapp
 
 logger = logging.getLogger(__name__)
@@ -97,7 +98,24 @@ def journal_detail(journal_id):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    context = {'journal': journal}
+    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
+    issues = controllers.get_issues_by_jid(journal_id, is_public=True)
+
+    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # anterior e próximo
+    if len(issues) >= 2:
+        previous_issue = issues[1]
+    else:
+        previous_issue = None
+
+    context = {
+        'next_issue': None,
+        'previous_issue': previous_issue,
+        'journal': journal,
+        # o primiero item da lista é o último fascículo.
+        # condicional para verificar se issues contém itens
+        'last_issue': issues[0] if issues else None
+        }
 
     return render_template("journal/detail.html", **context)
 
@@ -112,6 +130,7 @@ def issue_grid(journal_id):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
     issues = controllers.get_issues_by_jid(journal_id, is_public=True)
 
     result_dict = OrderedDict()
@@ -121,9 +140,21 @@ def issue_grid(journal_id):
         result_dict.setdefault(key_year, OrderedDict())
         result_dict[key_year].setdefault(key_volume, []).append(issue)
 
+    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # anterior e próximo
+    if len(issues) >= 2:
+        previous_issue = issues[1]
+    else:
+        previous_issue = None
+
     context = {
+        'next_issue': None,
+        'previous_issue': previous_issue,
         'journal': journal,
         'result_dict': result_dict,
+        # o primiero item da lista é o último fascículo.
+        # condicional para verificar se issues contém itens
+        'last_issue': issues[0] if issues else None
     }
     return render_template("issue/grid.html", **context)
 
@@ -142,11 +173,24 @@ def issue_toc(issue_id):
         abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
     journal = issue.journal
-    articles = controllers.get_articles_by_iid(issue.iid)
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
-    context = {'journal': journal,
-               'issue': issue,
-               'articles': articles}
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+
+    issue_list = [_issue for _issue in issues]
+
+    previous_issue = utils.get_prev_issue(issue_list, issue)
+    next_issue = utils.get_next_issue(issue_list, issue)
+
+    context = {
+                'next_issue': next_issue,
+                'previous_issue': previous_issue,
+                'journal': journal,
+                'issue': issue,
+                'articles': articles,
+                # o primiero item da lista é o último fascículo.
+                'last_issue': issue_list[0]
+               }
 
     return render_template("issue/toc.html", **context)
 
@@ -167,10 +211,22 @@ def article_detail(article_id):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
+    journal = article.journal
+    issue = article.issue
+
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
+
+    previous_article = utils.get_prev_article(article_list, article)
+    next_article = utils.get_next_article(article_list, article)
+
     context = {
+        'next_article': next_article,
+        'previous_article': previous_article,
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': journal,
+        'issue': issue
     }
 
     return render_template("article/detail.html", **context)
@@ -207,10 +263,22 @@ def abstract_detail(article_id):
     if not article.htmls:
         abort(404, _(u'Resumo do artigo não encontrado'))
 
+    journal = article.journal
+    issue = article.issue
+
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
+
+    previous_article = utils.get_prev_article(article_list, article)
+    next_article = utils.get_next_article(article_list, article)
+
     context = {
+        'next_article': next_article,
+        'previous_article': previous_article,
         'article': article,
-        'journal': article.journal,
-        'issue': article.issue
+        'journal': journal,
+        'issue': issue
     }
     return render_template("article/abstract.html", **context)
 

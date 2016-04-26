@@ -217,7 +217,7 @@ def get_issues_by_jid(jid, **kwargs):
     if order_by:
         del kwargs['order_by']
     else:
-        order_by = ["-year", "-volume", "-number"]
+        order_by = ["-year", "-volume", "-order"]
 
     if get_journal_by_jid(jid):
         return Issue.objects(journal=jid, **kwargs).order_by(*order_by)
@@ -337,18 +337,19 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
 def get_articles_by_iid(iid, **kwargs):
     """
     Retorna uma lista de artigos aonde o atributo ``iid`` de cada um deles
-    é igual ao parâmetro: ``iid``.
+    é igual ao parâmetro: ``iid`` ordenado pelo atributo order.
 
     - ``iid``: chave primaria de fascículo para escolher os artigos.
     - ``kwargs``: parâmetros de filtragem.
 
     Em caso de não existir itens retorna {}.
+
     """
 
     if not iid:
-        raise ValueError(__(u'Obrigatório uma lista de iid.'))
+        raise ValueError(__(u'Obrigatório um iid.'))
 
-    return Article.objects(issue=iid, **kwargs)
+    return Article.objects(issue=iid, **kwargs).order_by('order')
 
 # -------- SLQALCHEMY --------
 

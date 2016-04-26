@@ -51,6 +51,99 @@ def get_timed_serializer():
     return URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
 
 
+def get_prev_article(articles, article):
+    """
+    Considerando que a lista de artigos está ordenada pelo atributo ``order``,
+    que é um atributo crescente, ou seja, o último artigo é o artigo com maior
+    valor no atributo ``order``. A lógica é direta ou seja para retornar o
+    artigo anterior subtrai 1 do índice corrente.
+
+    IMPORTANTE: Quando o índice do artigo for igual a 0 devemos retornar None.
+
+    """
+    if len(articles) != 0:
+        try:
+            if articles.index(article) == 0:
+                return None
+            return articles[articles.index(article)-1]
+        except IndexError:
+            return None
+    else:
+        return None
+
+
+def get_next_article(articles, article):
+    """
+    Considerando que a lista de artigos está ordenada pelo atributo ``order``,
+    que é um atributo crescente, ou seja, o último artigo é o artigo com maior
+    valor no atributo ``order``. A lógica é direta ou seja para retornar o
+    próximo artigo soma 1 ao índice corrente.
+
+
+    IMPORTANTE: Quando o índice do artigo for igual ao tamanho da lista
+    devemos retornar None.
+    """
+    if len(articles) != 0:
+        try:
+            if len(articles) == articles.index(article):
+                return None
+            return articles[articles.index(article)+1]
+        except IndexError:
+            return None
+    else:
+        return None
+
+
+def get_prev_issue(issues, issue):
+    """
+    A lista de fascículos é ordenada pelos fascículos mais recentes para o mais
+    antigos, portanto para retornarmos os fascículos mais antigos, devemos
+    caminhar pelo índice do valor menor para o maior, isso justifica
+    no preview soma 1 ao índice.
+
+    param: issues é a lista de issue (deve ser ordenado do fascículo mais
+    recente para o mais antigo)
+    param: issue é o issue corrente.
+
+    IMPORTANTE: A lista de fascículos deve ter mais do que 1 item para que
+    possa existir a ideia de anterior e próximo
+    """
+    if len(issues) >= 2:
+        try:
+            return issues[issues.index(issue)+1]
+        except IndexError:
+            return None
+    else:
+        return None
+
+
+def get_next_issue(issues, issue):
+    """
+    A lista de fascículos é ordenada pelos fascículos mais recentes para o mais
+    antigos, portanto para retornarmos os fascículos mais novos, devemos
+    caminhar pelo índice do valor maior para o menor, isso justifica
+    no preview subtrai 1 ao índice.
+
+    param: issues é a lista de issue (deve ser ordenado do fascículo mais
+    recente para o mais antigo)
+    param: issue é o issue corrente.
+
+    IMPORTANTE: A lista de fascículos deve ter mais do que 1 item para que
+    possa existir a ideia de anterior e próximo
+    """
+
+    if len(issues) >= 2:
+        try:
+            # Caso o fascículo seja o primeiro retorna None
+            if issues.index(issue) == 0:
+                return None
+            return issues[issues.index(issue)-1]
+        except IndexError:
+            return None
+    else:
+        return None
+
+
 def send_email(recipient, subject, html):
     """
     Método auxiliar para envio de emails

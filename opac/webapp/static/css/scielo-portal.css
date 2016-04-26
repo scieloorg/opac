@@ -695,12 +695,16 @@ button.btn:active {
 .levelMenu .col-md-4 a.group {
   width: 33.33%;
 }
+.portal .levelMenu h2 {
+    font-size: 1.3em;
+    margin-bottom: 12px;
+}
 .levelMenu h2 {
   margin: 0 0 5px;
   font-weight: normal;
   color: #7b7469;
   line-height: 22px;
-  font-size: 1.3em;
+  font-size: 0.9em;
   margin-bottom: 12px;
 }
 .levelMenu a.selected,
