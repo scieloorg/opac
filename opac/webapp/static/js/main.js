@@ -4,7 +4,7 @@ var Portal = {
 		Init: function() {
 			$(".showTooltip").tooltip({
 				container: 'body'
-			}); 
+			});
 
 			$(".mainNav .menu").on("click",function(e) {
 				e.preventDefault();
@@ -13,17 +13,17 @@ var Portal = {
 					d = t.data("rel");
 
 				d = $(d,".mainNav");
-				
+
 				if(d.is(":visible")) {
 					t.removeClass("opened");
 					d.slideUp("fast",function() {
-						Portal.MenuOpened = false;		
+						Portal.MenuOpened = false;
 					});
-					
+
 				} else {
 					t.addClass("opened");
 					d.slideDown("fast",function() {
-						Portal.MenuOpened = true;	
+						Portal.MenuOpened = true;
 					});
 				}
 			});
@@ -91,7 +91,7 @@ var Portal = {
 				if(cmd[1] != "null") {
 					$(this).addClass("selected");
 					$(cmd[1]).fadeIn("fast");
-				}			
+				}
 			});
 
 			$(".slider").each(function() {
@@ -109,7 +109,7 @@ var Portal = {
 
 				wrapper.width(wrapperWidth);
 				container.find(".slide-container").height(itemProps.h);
-				
+
 				prev.css("top",(itemProps.h/2)+"px");
 				next.css("top",(itemProps.h/2)+"px");
 
@@ -126,11 +126,11 @@ var Portal = {
 						left: "+="+itemProps.w
 					},300,function() {
 						var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-						if(nLeft == 0) 
+						if(nLeft == 0)
 							prev.hide();
 					});
 					next.show();
-				
+
 				});
 
 				next.on("click",function(e) {
@@ -141,7 +141,7 @@ var Portal = {
 						left: "-="+itemProps.w
 					},300,function() {
 						var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-						if(nLeft <= -(wrapperWidth-containerWidth-100)) 
+						if(nLeft <= -(wrapperWidth-containerWidth-100))
 							next.hide();
 					});
 					prev.show();
@@ -186,7 +186,7 @@ var Portal = {
 
 					t.removeClass("opened");
 					$(d).slideUp("fast",function() {
-						Portal.MenuOpened = false;		
+						Portal.MenuOpened = false;
 					});
 				}
 			});
@@ -215,7 +215,7 @@ var Portal = {
 						$(t).find(".glyphBtn").removeClass("closed").addClass("opened");
 					});
 				}
-				
+
 				$(t).tooltip("hide");
 
 			});
@@ -246,7 +246,7 @@ var Portal = {
 				},500);
 			});
 
-			
+
 			$(".trigger").on("click",function(e) {
 				e.preventDefault();
 				var obj = $(this).data("rel");
@@ -258,7 +258,7 @@ var Portal = {
 				$(this).select();
 				if (window.clipboardData && clipboardData.setData) {
 					clipboardData.setData('text', $(this).text());
-				} 
+				}
 			}).mouseup(function(e) {
 				e.preventDefault();
 			});
@@ -280,7 +280,7 @@ var Portal = {
   				e.preventDefault()
   				$(this).tab("show");
 			});
-			
+
 			if(typeof ZeroClipboard != "undefined")
 				client = new ZeroClipboard($("input[name='link-share'], a.copyLink"));
 		}
@@ -320,69 +320,17 @@ var Portal = {
 					}
 				}
 
-				/*
-				if(searchQuery != "") {
-					var cHistory = SearchForm.SearchHistory,
-						dHistory = [];
-
-					if(cHistory !== "") {
-						dHistory = JSON.parse(cHistory);
-					}
-
-					dHistory.splice(0, 0, searchQuery)
-					dHistory = dHistory.slice(0,10);
-
-					Cookie.Set("searchHistory",JSON.stringify(dHistory),1);
-				} */
-
 				return true;
 			});
 
-			/*
-			if(SearchForm.SearchHistory != "") {
-				var shObj = JSON.parse(SearchForm.SearchHistory),
-					shDropdown = $("#searchHistory",p);
-
-				if(shObj.length > 0) {
-					var inc = "";
-
-					inc += "<li><strong>"+shDropdown.data("title")+"</strong> <a href='javascript:;' class='inline cleanSearchHistory'></a></li>";
-
-					for(var i=0,l=shObj.length;i<l;i++) {
-						inc += '<li><a href="javascript:;" class="searchItem"><span>#'+(i+1)+':</span> '+shObj[i]+'</a></li>';
-					}
-
-					shDropdown.append(inc);
-				}
-			}
-
-			$("#searchHistory").on("click","a.searchItem",function(e) {
-				e.preventDefault();
-				var ref = $("#searchHistory").data("rel");
-				SearchForm.SearchHistoryClick(this,ref);
-			}).on("click","a.cleanSearchHistory",function(e) {
-				e.preventDefault();
-				SearchForm.SearchHistory = "";
-				Cookie.Set("searchHistory","",0);
-				$("#searchHistory").empty();
-			});
-			*/
-
-			/*
-			$("input[name='q[]']").on("focus",function() {
-				SearchForm.SearchHistoryFocusIn(this);
-			}).on("blur",function() {
-				SearchForm.SearchHistoryFocusOut(this);
-			});
-			*/
 
 			$("textarea.form-control:visible",p).on("keyup",SearchForm.TextareaAutoHeight).trigger("keyup");
 			$("a.clearIptText",p).on("click",SearchForm.ClearPrevInput);
 
-		
+
 			if($(".searchActions",p).length)
 				window.searchActionsStart = $(".searchActions",p).offset().top;
-			
+
 			$(".newSearchField",p).on("click",function(e) {
 				e.preventDefault();
 				SearchForm.InsertNewFieldRow(this,"#searchRow-matriz .searchRow",".searchForm .searchRow-container");
@@ -537,7 +485,7 @@ var Portal = {
 
 			$(".openNewWindow").on("click",function(e) {
 				e.preventDefault();
-				
+
 				window.open(this.href,'print','width=760,height=550');
 			});
 
@@ -571,7 +519,7 @@ var Portal = {
 
 				modTitle.html(t.text());
 				modContainer.empty();
-				
+
 				var c = $(".filterItem",rel).clone();
 				modContainer.append(c);
 				modContainer.find(".checkbox").each(function() {
@@ -600,7 +548,7 @@ var Portal = {
 						}
 					}
 
-					
+
 				});
 			});
 
@@ -617,7 +565,7 @@ var Portal = {
 				t.find(".link a").attr("href",csvLink);
 
 				chartBlock.html('<canvas id="chart" width="550" height="400"></canvas>');
-				
+
 				var canvas = $("#chart").get(0);
 
 				if(isOldIE) {
@@ -685,8 +633,8 @@ var Portal = {
 			});
 
 			$("form.validate").on("submit",function() {
-				var rtn = true; 
-				
+				var rtn = true;
+
 				$("input.valid",this).each(function() {
 					var ti = $(this);
 
@@ -694,7 +642,7 @@ var Portal = {
 						if(Validator.MultipleEmails(ti.val(),";") === false) {
 							ti.parent().addClass("has-error");
 							rtn = false;
-						} else 
+						} else
 							ti.parent().removeClass("has-error");
 					} else {
 						if(ti.val() === "") {
@@ -723,12 +671,12 @@ var Portal = {
 				$("#confirmEraseItem span.item").text($item);
 				$("#confirmEraseItem input.item").val($item);
 
-				$("#confirmEraseItem").modal("show");			
+				$("#confirmEraseItem").modal("show");
 			});
 			$(".searchHistoryIcon.eraseAll",p).on("click",function(e) {
 				e.preventDefault();
-				
-				$("#confirmEraseAll").modal("show");			
+
+				$("#confirmEraseAll").modal("show");
 			});
 
 			$("#iptQuery").on("keypress",function(e) {
@@ -739,7 +687,7 @@ var Portal = {
 			$("#searchHistoryForm").on("submit",function() {
 				var q = $.trim($("#iptQuery").text()),
 					ipt = $("#query");
-				
+
 				ipt.val(q);
 
 				return true;
@@ -818,7 +766,7 @@ var Portal = {
 					download = download.split(";;");
 					for(var i=0,l=download.length;i<l;i++) {
 						download[i] = download[i].split("::");
-						
+
 						downloadCtt += '<a href="'+download[i][1]+'" target="_blank" class="download">'+download[i][0]+'</a> ';
 					}
 
@@ -833,11 +781,11 @@ var Portal = {
 			$("input.onlyNumbers").on("keydown",function(e) {
 				if($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
 					// Ctrl+A
-					(e.keyCode == 65 && e.ctrlKey === true) || 
+					(e.keyCode == 65 && e.ctrlKey === true) ||
 					// Ctrl+V
-					(e.keyCode == 86 && e.ctrlKey === true) || 
+					(e.keyCode == 86 && e.ctrlKey === true) ||
 					// Ctrl+R
-					(e.keyCode == 82 && e.ctrlKey === true) || 
+					(e.keyCode == 82 && e.ctrlKey === true) ||
 					// home, end, left, right
 					(e.keyCode >= 35 && e.keyCode <= 39) ||
 					// macosX keycodes
@@ -857,7 +805,7 @@ var Portal = {
 			$(window).scroll(function() {
 				if($(window).scrollTop() > window.searchActionsStart)
 					$(".searchForm .searchActions").addClass("fixed");
-				else 
+				else
 					$(".searchForm .searchActions").removeClass("fixed");
 			});
 		},
@@ -959,7 +907,7 @@ var Portal = {
 		SearchHistoryClick: function(txt,t) {
 			var txt = $(txt).text();
 				txt = txt.substr((txt.indexOf(": ")+2),txt.length);
-			
+
 			$(t).val(txt).focus();
 		},
 		PlaceCaretToEnd: function(el) {
@@ -968,7 +916,7 @@ var Portal = {
 				var range = document.createRange();
 				range.selectNodeContents(el);
 				range.collapse(false);
-				
+
 				var sel = window.getSelection();
 				sel.removeAllRanges();
 				sel.addRange(range);
@@ -991,12 +939,12 @@ var Portal = {
 				articleTextP = articleText.offset(),
 				articleMenuW = $(".articleMenu").width(),
 				p = $(".paragraph",articleText);
-			
+
 			for(var i = 0, l = p.length; i<l; i++) {
 				var c = $("p",p[i]).outerHeight(), r = $(".refList",p[i]), rh = r.outerHeight();
 				if(rh > c) {
 					r.addClass("outer").css("height",c);
-				} 
+				}
 			}
 
 			$("sup",p).on("mouseenter mouseleave",function(e) {
@@ -1060,13 +1008,13 @@ var Portal = {
 					s = $(this).data("expandreducetext"),
 					tw = $(this).data("defaultwidth");
 
-				if(typeof tw == "undefined") 
+				if(typeof tw == "undefined")
 					$(this).data("defaultwidth",txt.outerWidth());
 
 				if(s == true) {
 					ref.hide();
 					txt.outerWidth("100%");
-					
+
 					/*
 					ref.stop(true,true).fadeOut(100,function() {
 						txt.animate({
@@ -1080,7 +1028,7 @@ var Portal = {
 				} else {
 					txt.width(tw);
 					ref.show();
-					
+
 					/*
 					txt.stop(true,true).animate({
 						width: tw
@@ -1095,10 +1043,10 @@ var Portal = {
 				var t = $(window).scrollTop();
 				setTimeout(function() {
 					Article.ArticleStructureBuilder();
-					Article.ArticleStructureSelect(t);	
+					Article.ArticleStructureSelect(t);
 				},100);
-				
-			
+
+
 			});
 
 			$(".articleTxt sup.xref:not(.big)").on("click",function() {
@@ -1127,7 +1075,7 @@ var Portal = {
 				var t = $(window).scrollTop();
 				if(t > articleTextP.top)
 					$(".articleMenu").addClass("fixed").width(articleMenuW);
-				else 
+				else
 					$(".articleMenu").removeClass("fixed");
 
 				Article.ArticleStructureSelect(t);
@@ -1135,7 +1083,7 @@ var Portal = {
 
 			var downloadOpt = $(".downloadOptions li.group"),
 				downloadOptW = 100/downloadOpt.length;
-		
+
 			downloadOpt.css("width",downloadOptW+"%");
 
 
@@ -1215,68 +1163,68 @@ var Portal = {
 	},
 	Collection = {
 		Init: function() {
-			var start = $(".collectionListStart");
+			// var start = $(".collectionListStart");
 
-			start.each(function() {
-				var t = $(this),
-					method = t.data("method"),
-					rp = t.data("perpage"),
-					labels = t.data("labels"),
-					search = $(".collectionSearch",t),
-					download = $(".collectionListDownloadXLS,.collectionListDownloadCSV",t),
-					loading = $(".collectionListLoading",t),
-					scroll = false,
-					param = "";
-			
-				window.timer;
+			// start.each(function() {
+			// 	var t = $(this),
+			// 		method = t.data("method"),
+			// 		rp = t.data("perpage"),
+			// 		labels = t.data("labels"),
+			// 		search = $(".collectionSearch",t),
+			// 		download = $(".collectionListDownloadXLS,.collectionListDownloadCSV",t),
+			// 		loading = $(".collectionListLoading",t),
+			// 		scroll = false,
+			// 		param = "";
 
-				if(typeof t.data("action") !== "undefined") {
-					labels = labels.split(";");
-					search.val("");
+			// 	window.timer;
 
-					$(".collectionCurrentPage",t).val("1");
+			// 	if(typeof t.data("action") !== "undefined") {
+			// 		labels = labels.split(";");
+			// 		search.val("");
 
-					if(method == "alphabetic") {
-						param = "method=alphabetic&rp="+rp;
-						scroll = true;
-					} else if(method == "theme") {
-						var param = "method=theme";
-					} else if(method == "publisher") {
-						var param = "method=publisher";
-					}
-					
-					Collection.JournalListFinder(param,loading,t,labels,true,scroll);
+			// 		$(".collectionCurrentPage",t).val("1");
 
-				}
+			// 		if(method == "alphabetic") {
+			// 			param = "method=alphabetic&rp="+rp;
+			// 			scroll = true;
+			// 		} else if(method == "theme") {
+			// 			var param = "method=theme";
+			// 		} else if(method == "publisher") {
+			// 			var param = "method=publisher";
+			// 		}
 
-				search.on("keyup change",function() {
-					var tt = $(this),
-						param = "method="+method+"&rp="+rp,
-						duringKeyChange = true;
+			// 		Collection.JournalListFinder(param,loading,t,labels,true,scroll);
 
-					clearTimeout(window.timer);
-					window.timer = setTimeout(function() {
-						var v = tt.val();
-						param += "&query="+v
-						$(".collectionCurrentPage",t).val("1");
+			// 	}
 
-						Collection.JournalListFinder(param,loading,t,labels,true,true);
-						duringKeyChange = false;
-						
-					},300);
-				});
+			// 	search.on("keyup change",function() {
+			// 		var tt = $(this),
+			// 			param = "method="+method+"&rp="+rp,
+			// 			duringKeyChange = true;
 
-				download.on("click",function(e) {
-					e.preventDefault();
+			// 		clearTimeout(window.timer);
+			// 		window.timer = setTimeout(function() {
+			// 			var v = tt.val();
+			// 			param += "&query="+v
+			// 			$(".collectionCurrentPage",t).val("1");
 
-					var output = $(this).is(".collectionListDownloadXLS") ? "xls" : "csv",
-						action = t.data("action"),
-						param = "?method=alphabetic"+"&output="+output+(search.val() != "" ? "&query="+search.val() : "");
+			// 			Collection.JournalListFinder(param,loading,t,labels,true,true);
+			// 			duringKeyChange = false;
 
-					window.open(action+param);
-				});
-			});
-				
+			// 		},300);
+			// 	});
+
+			// 	download.on("click",function(e) {
+			// 		e.preventDefault();
+
+			// 		var output = $(this).is(".collectionListDownloadXLS") ? "xls" : "csv",
+			// 			action = t.data("action"),
+			// 			param = "?method=alphabetic"+"&output="+output+(search.val() != "" ? "&query="+search.val() : "");
+
+			// 		window.open(action+param);
+			// 	});
+			// });
+
 		},
 		JournalListFinder: function(param,loading,container,labels,empty,scroll,callback,htmlFill) {
 			var currentPage = $(".collectionCurrentPage",container),
@@ -1289,7 +1237,23 @@ var Portal = {
 
 			if(typeof empty === "undefined") empty = false;
 
-			param += "&page="+currentPage.val();
+			if (param.indexOf("&page=") < 0) {
+				param += "&page="+currentPage.val();
+			} else {
+				var qs_array = param.split('&');
+
+				var qs = []
+				for (var i = qs_array.length - 1; i >= 0; i--) {
+					var param_value = qs_array[i].split('=');
+					var key = param_value[0];
+					var value = param_value[1];
+					if (key === 'page') {
+						value = currentPage.val();
+					}
+					qs.push(key + '=' + value);
+				}
+				param = qs.join('&');
+			}
 
 			$.ajax({
 				url: action,
@@ -1301,7 +1265,7 @@ var Portal = {
 				}
 			}).done(function(data) {
 				loading.hide();
-				
+
 				if(typeof data.journalList !== "undefined") {
 					if(param.indexOf("&theme=") == -1 && param.indexOf("&publisher=") == -1) {
 						totalInfo.html(labels[11].replace("{total}",data.total));
@@ -1491,12 +1455,11 @@ var Portal = {
 						var page = parseInt(currentPage.val());
 						page++;
 						currentPage.val(page);
-						param += "&page="+page;
 
 						Collection.JournalListFinder(param,loading,container,labels,false,false);
 					}
 				} else {
-					$("footer").show();		
+					$("footer").show();
 				}
 			});
 		},
@@ -1530,9 +1493,9 @@ var Portal = {
 							content.slideDown("fast");
 							loading.hide();
 							$(this).removeClass("closed");
-						}	
+						}
 					}
-					
+
 				}
 			});
 		},
@@ -1549,7 +1512,7 @@ var Validator = {
 		var error = true;
 
 		var aEmails = val.split(delimiter);
-		
+
 		for(var i = 0; i < aEmails.length; i++) {
 			aEmails[i] = aEmails[i].trim();
 			if(aEmails[i] == '' || filter.test(aEmails[i]) == false)
@@ -1588,7 +1551,7 @@ var Cookie = {
 	    	expires = "";
 	    if(typeof path === "undefined") path = "";
 	    else path = path + "/";
-	    
+
 	    if(Cookie.Get(cookieName) != "") {
 	    	document.cookie = path+cookieName + "=" + value + "expires=Thu, 01 Jan 1970 00:00:01 GMT" + "; path=/";
 	    }
@@ -1598,7 +1561,7 @@ var Cookie = {
 
 $(function() {
 	Portal.Init();
-	
+
 	if($("form.searchForm").length)
 		SearchForm.Init();
 

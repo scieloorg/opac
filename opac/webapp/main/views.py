@@ -3,7 +3,7 @@
 import logging
 from collections import OrderedDict
 from flask_babelex import gettext as _
-from flask import render_template, abort, current_app, request, session, redirect
+from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for
 
 from . import main
 from flask import current_app, send_from_directory, g
@@ -59,12 +59,57 @@ def index():
     return render_template("collection/index.html")
 
 
+@main.route("/journals/search/ajax/", methods=['GET', 'POST'])
+def journals_search_ajax():
+    per_page = 20
+    query = request.args.get('query', '', type=str)
+    page = request.args.get('page', 1, type=int)
+    journals = controllers.get_journals_paginated(
+        title_query=query,
+        page=page,
+        per_page=per_page,
+    )
+    current_page = page
+    total_pages = journals.pages
+    total = journals.total
+    journal_list = []
+    for journal in journals.items:
+        j_data = {
+            'title': journal.title,
+            'links': {
+                'detail': url_for('main.journal_detail', journal_id=journal.jid),
+                'submission': '#',
+                'instructions': '#',
+                'about': '#',
+                'contact': '#',
+            },
+            'is_active': journal.current_status == 'current',
+            'issues_count': journal.issue_count,
+            'last_issue': {
+                'volume': journal.last_issue.volume,
+                'number': journal.last_issue.number,
+                'year': journal.last_issue.year,
+            }
+        }
+        journal_list.append(j_data)
+
+    response_data = {
+        'current_page': current_page,
+        'total_pages': total_pages,
+        'total': total,
+        'has_prev': journals.has_prev,
+        'prev_num': journals.prev_num,
+        'has_next': journals.has_next,
+        'next_num': journals.next_num,
+        'journals': journal_list
+    }
+
+    return jsonify(response_data)
+
+
 @main.route('/journals')
 def collection_list_alpha():
-    journals = controllers.get_journals()
-    context = {
-        'journals': journals,
-    }
+    context = {}
     return render_template("collection/list_alpha.html", **context)
 
 
