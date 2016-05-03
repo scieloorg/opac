@@ -11,7 +11,7 @@ import utils
 class TOCTestCase(BaseTestCase):
 
     # TOC
-    def test_title_of_list_of_article_when_language_PT(self):
+    def test_the_title_of_the_article_list_when_language_PT(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Português.
@@ -47,7 +47,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Artigo com título em português",
                           response.data.decode('utf-8'))
 
-    def test_title_of_list_of_article_when_language_ES(self):
+    def ttest_the_title_of_the_article_list_when_language_ES(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Espanhol.
@@ -83,7 +83,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Título del artículo en portugués",
                           response.data.decode('utf-8'))
 
-    def test_title_of_list_of_article_when_language_EN(self):
+    def test_the_title_of_the_article_list_when_language_EN(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Inglês.
@@ -119,7 +119,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Article title in Portuguese",
                           response.data.decode('utf-8'))
 
-    def test_title_of_list_of_article_without_translated(self):
+    def test_the_title_of_the_article_list_without_translated(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma original quando não tem idioma.
@@ -153,7 +153,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Article Y",
                           response.data.decode('utf-8'))
 
-    def test_title_of_list_of_article_without_unknow_language_for_article(self):
+    def test_the_title_of_the_article_list_without_unknow_language_for_article(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma original quando não conhece o idioma.
@@ -187,7 +187,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Article Y",
                           response.data.decode('utf-8'))
 
-    def test_title_of_list_of_article_with_and_without_translated(self):
+    def test_the_title_of_the_article_list_with_and_without_translated(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma original para artigos que não tem tradução e o título traduzido
@@ -230,3 +230,4 @@ class TOCTestCase(BaseTestCase):
 
             self.assertIn(u"Título del artículo en portugués",
                           response.data.decode('utf-8'))
+
