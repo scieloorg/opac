@@ -52,7 +52,7 @@
             <div class="col-md-6 col-sm-6">
               <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}">
                 {% if journal.last_issue.cover_url %}
-                  <img src="{{ latest_issue.cover_url }}" alt="Capa do número mais recente" /> <!-- a imagem é opcional -->
+                  <img src="{{ latest_issue.cover_url }}" class="image" alt="Capa do número mais recente" /> <!-- a imagem é opcional -->
                 {% endif %}
                 <span class="text">
                   <small>{% trans %}Número mais recente{% endtrans %}</small>
