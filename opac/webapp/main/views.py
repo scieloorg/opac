@@ -292,7 +292,7 @@ def article_html_by_aid(article_id):
 
     article_html = article.htmls[0].url
 
-    return article_html
+    return redirect(article_html)
 
 
 @main.route('/abstract/<string:article_id>')

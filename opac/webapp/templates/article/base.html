@@ -10,5 +10,8 @@
 
   {% include "includes/footer.html" %}
 
-  {% include "article/includes/alternative_header.html" %}
+  {% if request.endpoint == 'main.article_detail' %}
+    {% include "article/includes/alternative_header.html" %}
+  {% endif %}
+
 {% endblock %}

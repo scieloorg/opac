@@ -70,7 +70,7 @@
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
-                      <strong class="issueName">{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }} {{ issue.start_month }}/{{ issue.end_month }} {{ issue.year }}</strong>
+                      <strong class="issueName">{{ journal.short_title }} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }} {{ issue.start_month }}/{{ issue.end_month }} {{ issue.year }}</strong>
                       <ul>
                       {% for section in journal.last_issue.sections %}
                         <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
@@ -117,6 +117,7 @@
   </section>
 
   {% include "issue/includes/license_footer.html" %}
+
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}

@@ -9,7 +9,7 @@
         <div class="mainMenu" id="mainMenu">
           <div class="row">
             <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-              <img src="{{ url_for('static', filename='img/logo-scielo-journal-brasil.png')}}" alt="SciELO Brasil">
+              <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" alt="SciELO Brasil">
             </div>
           </div>
           {% include "collection/includes/nav.html" %}
@@ -23,7 +23,7 @@
           <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
             <span class="theme">{{ journal.study_areas|join(', ') }}</span>
             <h1>{{ journal.title }}</h1>
-            <span class="publisher">{% trans %}Publicação de{% endtrans %} <strong>{{ journal.publisher_name}}</strong></span>
+            <span class="publisher">{% trans %}Copublicação da <strong class="scielo">SciELO Brasil</strong> e {% endtrans %}{% trans %}Publicação de{% endtrans %} <strong>{{ journal.publisher_name}}</strong></span>
             <span class="issn">
               ISSN
               {% if journal.eletronic_issn %}

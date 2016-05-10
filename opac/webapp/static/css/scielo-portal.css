@@ -2540,6 +2540,7 @@ button.btn:active {
 }
 .articleCtt {
   margin-top: 20px;
+  min-height: 500px;
 }
 .articleCtt .container {
   position: relative;

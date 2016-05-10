@@ -1,73 +1,90 @@
-        <div class="alternativeHeader">
-            <div class="container">
-                <div class="col-md-2 col-sm-3 mainNav">
-                    <a href="" class="menu" data-rel="#alternativeMainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
-                    <h2><a href="/Colecao/" title="Ir para a homepage da Coleção SciELO Brasil"><img src="../static/img/logo-scielo-alternative-brasil.png" alt="SciELO Brasil"></a></h2>
-                    <div class="mainMenu" id="alternativeMainMenu">
-                        <div class="row">
-                            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-                                <img src="../static/img/logo-scielo-journal-brasil.png" alt="SciELO Brasil">
-                            </div>
-                        </div>
-                        <nav>
-                            <ul>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-5 journalInfo">
-                    <ul>
-                        <li>
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="text">Induction of chagasic-like arrhythmias... <span class="glyphBtn grayArrowDown"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="dropdown-header">Braz J Med Biol Res vol.46 no.1 Ribeirão Preto Jan. 2013 Epub Jan 11, 2013</li>
-                                <li><strong>Induction of chagasic-like arrhythmias in the isolated beating hearts of healthy rats perfused with <em>Trypanosoma cruzi</em>-conditioned medium</strong></li>
-                                <li class="author">H. Rodríguez-Angulo; J. Toro-Mendoza; J. Marques; R. Bonfante-Cabarcas; A. Mijares;</li>
-                                <li class="listLink">
-                                    <a href="#authorInfo" class="goto trigger" data-rel="#authorInfoBtn">{% trans %}Sobre os autores{% endtrans %}</a>
-                                </li>
-                                <li class="listLink">
-                                    <a href="#authorInfo" class="goto trigger" data-rel="#copyrightInfoBtn">{% trans %}Permissões{% endtrans %}</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-6 col-md-5 menuItens">
-                    <ul>
-                        <li><a href="homepage.html" class="showTooltip" data-placement="bottom" title="Homepage do periódico"><span class="glyphBtn home"></span></a></li>
-                        <li>
-                            <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn articles"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="dropdown-header">{% trans %}Artigos de{% endtrans %} 2013, V.46 N.1</li>
-                                <li><a href="../Periodico/atual.html">• {% trans %}sumário{% endtrans %}</a></li>
-                                <li><a href="#">« {% trans %}anterior{% endtrans %}</a></li>
-                                <li><a href="#">• {% trans %}atual{% endtrans %}</a></li>
-                                <li><a href="#">» {{ ('próximo') }}</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="dropdown-header">{% trans %}Baixar{% endtrans %} PDF</li>
-                                <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
-                                <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
-                                <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#" class="showTooltip" data-placement="bottom" title="Visualizar no Readcube"><span class="glyphBtn readcubeView"></span></a></li>
-                        <li>
-                            <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn xmlDownload"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="dropdown-header">{% trans %}Baixar{% endtrans %} XML</li>
-                                <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
-                                <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
-                                <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#" class="showTooltip expandReduceText" data-expandreducetext="true" data-placement="bottom" title="Expandir/Reduzir texto"><span class="glyphBtn expandTextIcon"></span></a></li>
-                        <li><a href="#top" class="showTooltip goto" data-placement="bottom" title="Topo"><span class="glyphBtn gotoTopoIcon"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+{% import 'macros/resources.html' as mresources %}
+
+<div class="alternativeHeader">
+  <div class="container">
+      <div class="col-md-2 col-sm-3 mainNav">
+          <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
+          <h2>
+              <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da Coleção SciELO Brasil{% endtrans %}">
+              <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" alt="SciELO Brasil"></a>
+          </h2>
+          <div class="mainMenu" id="alternativeMainMenu">
+              <div class="row">
+                  <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
+                      <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" alt="SciELO Brasil">
+                  </div>
+              </div>
+              <nav>
+                  <ul>
+                  </ul>
+              </nav>
+          </div>
+      </div>
+      <div class="col-md-4 col-sm-5 journalInfo">
+          <ul>
+              <li>
+                  <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="text">
+                  {% if article.title %}
+                    {{ article.get_title_by_lang(session.lang)|truncate(40) }}<span class="glyphBtn grayArrowDown"></span></a>
+                  {% endif %}
+                  <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-header">{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ journal.last_issue.volume }} {% trans %}no.{% endtrans %}{{ journal.last_issue.number }} {{ journal.last_issue.publisher_city }} {{ journal.last_issue.start_month }}/{{ journal.last_issue.end_month }} {{ journal.last_issue.year }}</li>
+                      <li><strong>{{ article.get_title_by_lang(session.lang) }}</strong></li>
+                      <li class="author">H. Rodríguez-Angulo; J. Toro-Mendoza; J. Marques; R. Bonfante-Cabarcas; A. Mijares;</li>
+                      <li class="listLink">
+                          <a href="#authorInfo" class="goto trigger" data-rel="#authorInfoBtn">{% trans %}Sobre os autores{% endtrans %}</a>
+                      </li>
+                      <li class="listLink">
+                          <a href="#authorInfo" class="goto trigger" data-rel="#copyrightInfoBtn">{% trans %}Permissões{% endtrans %}</a>
+                      </li>
+                  </ul>
+              </li>
+          </ul>
+      </div>
+      <div class="col-md-6 col-md-5 menuItens">
+          <ul>
+              <li><a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="showTooltip" data-placement="bottom" title="Homepage do periódico"><span class="glyphBtn home"></span></a></li>
+              <li>
+                  <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn articles"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-header">{% trans %}Artigos de{% endtrans %} 2013, V.{{ journal.last_issue.volume }} N.{{ journal.last_issue.volume }}</li>
+
+                      {# Sumário #}
+                      <li><a href="{{ url_for('.issue_toc', issue_id=issue.id) }}">• {% trans %}sumário{% endtrans %}</a></li>
+
+                      {# Anterior #}
+                      <li class="{% if not previous_article %} disabled {% endif %}"><a href="{{ url_for('.article_detail', article_id=previous_article.aid) }}">« {% trans %}anterior{% endtrans %}</a></li>
+
+                      {# Atual #}
+                      <li><a href="" class="disabled">• {% trans %}atual{% endtrans %}</a></li>
+
+                      {# Próximo #}
+                      <li class="{% if not next_article %} disabled {% endif %}"><a href="{{ url_for('.article_detail', article_id=next_article.aid) }}">» {% trans %}próximo{% endtrans %}</a></li>
+
+                  </ul>
+              </li>
+              <li>
+                  <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-header">{% trans %}Baixar{% endtrans %} PDF</li>
+                      <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
+                      <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
+                      <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
+                  </ul>
+              </li>
+              <li><a href="#" class="showTooltip" data-placement="bottom" title="{% trans %}Visualizar no Readcube{% endtrans %}"><span class="glyphBtn readcubeView"></span></a></li>
+              <li>
+                  <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn xmlDownload"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li class="dropdown-header">{% trans %}Baixar{% endtrans %} XML</li>
+                      <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
+                      <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
+                      <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
+                  </ul>
+              </li>
+              <li><a href="#" class="showTooltip expandReduceText" data-expandreducetext="true" data-placement="bottom" title="{% trans %}Expandir/Reduzir texto{% endtrans %}"><span class="glyphBtn expandTextIcon"></span></a></li>
+              <li><a href="#top" class="showTooltip goto" data-placement="bottom" title="Topo"><span class="glyphBtn gotoTopoIcon"></span></a></li>
+          </ul>
+      </div>
+  </div>
+</div>
