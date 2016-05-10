@@ -1,0 +1,27 @@
+<tr>
+  <td class="collapseContainer">
+    <div class="themeItem">
+      <% var theme_id = _.uniqueId('collapseContent-'); %>
+      <!-- anchora grande area -->
+      <a data-target-id="<%= theme_id %>" class="collapseTitleBlock closed" href="#">
+        <strong><%= theme_items[0] %></strong> (<%= theme_items[1].length %>)
+      </a>
+      <!-- conteúdo -->
+      <div id="<%= theme_id %>" class="collapseContent" style='display:none;'>
+        <table>
+          <thead>
+            <tr>
+              <th class="actions"></th>
+              <th>{% trans %}Título{% endtrans %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% _.each( theme_items[1], function( journal ){ %>
+              <%= _.template($('#{{ template_journal_row_id }}').html())({'journal': journal}) %>
+            <%})%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </td>
+</tr>

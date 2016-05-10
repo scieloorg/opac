@@ -43,6 +43,12 @@
     {% block content %}{% endblock %}
     {% assets "js_all" %}
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+      <script>
+        $(function() {
+          $('.dropdown-toggle').dropdown();
+          $('[data-toggle="tooltip"], .dropdown-tooltip').tooltip();
+        });
+      </script>
     {% endassets %}
     {% block extra_js %}{% endblock %}
   </body>
