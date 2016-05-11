@@ -59,78 +59,55 @@ def index():
     return render_template("collection/index.html")
 
 
-@main.route("/journals/search/ajax/", methods=['GET', 'POST'])
-def journals_search_ajax():
-    per_page = 20
-    query = request.args.get('query', '', type=str)
-    page = request.args.get('page', 1, type=int)
-    journals = controllers.get_journals_paginated(
-        title_query=query,
-        page=page,
-        per_page=per_page,
-    )
-    current_page = page
-    total_pages = journals.pages
-    total = journals.total
-    journal_list = []
-    for journal in journals.items:
-        j_data = {
-            'title': journal.title,
-            'links': {
-                'detail': url_for('main.journal_detail', journal_id=journal.jid),
-                'submission': '#',
-                'instructions': '#',
-                'about': '#',
-                'contact': '#',
-            },
-            'is_active': journal.current_status == 'current',
-            'issues_count': journal.issue_count,
-            'last_issue': {
-                'volume': journal.last_issue.volume,
-                'number': journal.last_issue.number,
-                'year': journal.last_issue.year,
-            }
-        }
-        journal_list.append(j_data)
+@main.route("/journals/search/alpha/ajax/", methods=['GET', ])
+def journals_search_alpha_ajax():
 
-    response_data = {
-        'current_page': current_page,
-        'total_pages': total_pages,
-        'total': total,
-        'has_prev': journals.has_prev,
-        'prev_num': journals.prev_num,
-        'has_next': journals.has_next,
-        'next_num': journals.next_num,
-        'journals': journal_list
-    }
+    if not request.is_xhr:
+        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+
+    query = request.args.get('query', '', type=unicode)
+    page = request.args.get('page', 1, type=int)
+    response_data = controllers.get_alpha_list_from_paginated_journals(title_query=query, page=page)
 
     return jsonify(response_data)
 
 
+@main.route("/journals/search/group/by/filter/ajax/", methods=['GET'])
+def journals_search_by_theme_ajax():
+
+    if not request.is_xhr:
+        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+
+    query = request.args.get('query', '', type=unicode)
+    filter = request.args.get('filter', 'areas', type=unicode)
+
+    if filter == 'areas':
+        objects = controllers.get_journals_grouped_by('study_areas', query)
+    elif filter == 'wos':
+        objects = controllers.get_journals_grouped_by('index_at', query)
+    elif filter == 'publisher':
+        objects = controllers.get_journals_grouped_by('publisher_name', query)
+    else:
+        return jsonify({
+            'error': 401,
+            'message': u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".'
+        })
+    return jsonify(objects)
+
+
 @main.route('/journals')
 def collection_list_alpha():
-    context = {}
-    return render_template("collection/list_alpha.html", **context)
+    return render_template("collection/list_alpha.html")
 
 
 @main.route('/journals/theme')
 def collection_list_theme():
-    objects_by_area = controllers.get_journals_by_study_area()
-    objects_by_indexer = controllers.get_journals_by_indexer()
-
-    context = {
-        'objects_by_area': objects_by_area,
-        'objects_by_indexer': objects_by_indexer
-    }
-
-    return render_template("collection/list_theme.html", **context)
+    return render_template("collection/list_theme.html")
 
 
 @main.route('/journals/institution')
 def collection_list_institution():
-    context = controllers.get_journals_by_sponsor()
-
-    return render_template("collection/list_institution.html", **context)
+    return render_template("collection/list_institution.html")
 
 
 @main.route('/journals/<string:journal_id>')

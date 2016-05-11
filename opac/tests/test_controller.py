@@ -74,156 +74,261 @@ class JournalControllerTestCase(BaseTestCase):
         """
         self.assertEqual(len(controllers.get_journals()), 0)
 
-    def test_get_journals_by_study_area(self):
+    def test_get_journals_grouped_by_study_area(self):
         """
         Testando se o retorno da função controllers.get_journals_by_study_area()
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({"study_areas": ["Health Sciences"]})
-
-        journal2 = self._makeOne({"study_areas": ["Health Sciences",
-                                  "Biological Sciences"]})
-        journal3 = self._makeOne({"study_areas": ["Exact and Earth Sciences"]})
-        journal4 = self._makeOne({"study_areas": ["Human Sciences",
-                                  "Biological Sciences", "Engineering"]})
-        journal5 = self._makeOne({"study_areas": ["Linguistics"]})
-        journal6 = self._makeOne({"study_areas": ["Engineering"]})
-
-        expected = {
-                    'meta': {'total': 6},
-                    'objects': {
-                        u'Health Sciences': [journal1, journal2],
-                        u'Engineering': [journal4, journal6],
-                        u'Biological Sciences': [journal2, journal4],
-                        u'Linguistics': [journal5],
-                        u'Human Sciences': [journal4],
-                        u'Exact and Earth Sciences': [journal3]
-                    }
-                }
-
-        study_areas = controllers.get_journals_by_study_area()
-
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
-
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
-
-        for area, journals in expected['objects'].iteritems():
-            self.assertListEqual(sorted([journal.id for journal in expected['objects'][area]]),
-                                 sorted([journal.id for journal in journals]))
-
-    def test_get_journals_by_study_area_without_journal(self):
-        """
-        Testando controllers.get_journals_by_study_area() sem Journal
-        """
+        journal1 = self._makeOne({
+            "study_areas": ["Health Sciences"],
+            "last_issue": {"volume": "1", "number": "1", "year": "2016"}
+        })
+        journal2 = self._makeOne({
+            "study_areas": ["Health Sciences", "Biological Sciences"],
+            "last_issue": {"volume": "2", "number": "2", "year": "2016"}
+        })
+        journal3 = self._makeOne({
+            "study_areas": ["Exact and Earth Sciences"],
+            "last_issue": {"volume": "3", "number": "3", "year": "2016"}
+        })
+        journal4 = self._makeOne({
+            "study_areas": ["Human Sciences", "Biological Sciences", "Engineering"],
+            "last_issue": {"volume": "4", "number": "4", "year": "2016"}
+        })
+        journal5 = self._makeOne({
+            "study_areas": ["Linguistics"],
+            "last_issue": {"volume": "5", "number": "5", "year": "2016"}
+        })
+        journal6 = self._makeOne({
+            "study_areas": ["Engineering"],
+            "last_issue": {"volume": "6", "number": "6", "year": "2016"}
+        })
 
         expected = {
-                    'meta': {'total': 0},
-                    'objects': {
-                    }
-                }
+            'meta': {
+                'total': 6,
+                'themes_count': 6
+            },
+            'objects': {
+                u'Health Sciences': [
+                    controllers.get_journal_json_data(journal1),
+                    controllers.get_journal_json_data(journal2)
+                ],
+                u'Engineering': [
+                    controllers.get_journal_json_data(journal4),
+                    controllers.get_journal_json_data(journal6)
+                ],
+                u'Biological Sciences': [
+                    controllers.get_journal_json_data(journal2),
+                    controllers.get_journal_json_data(journal4)
+                ],
+                u'Linguistics': [
+                    controllers.get_journal_json_data(journal5)
+                ],
+                u'Human Sciences': [
+                    controllers.get_journal_json_data(journal4)
+                ],
+                u'Exact and Earth Sciences': [
+                    controllers.get_journal_json_data(journal3)
+                ]
+            }
+        }
 
-        study_areas = controllers.get_journals_by_study_area()
+        grouped_objects = controllers.get_journals_grouped_by('study_areas')
 
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
+        for grouper, journals in expected['objects'].iteritems():
+            self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
+                                 sorted([journal['id'] for journal in journals]))
 
-    def test_get_journals_by_indexer(self):
+    def test_get_journals_grouped_by_study_areas_without_journals(self):
         """
-        Testando se o retorno da função controllers.get_journals_by_indexer()
+        Testando controllers.get_journals_grouped_by('study_areas') sem Journal
+        """
+
+        expected = {
+            'meta': {
+                'total': 0,
+                'themes_count': 0
+            },
+            'objects': {}
+        }
+
+        grouped_objects = controllers.get_journals_grouped_by('study_areas')
+
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
+
+    def test_get_journals_grouped_by_index_at(self):
+        """
+        Testando se o retorno da função controllers.get_journals_grouped_by('index_at')
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({"index_at": ["SCIE"]})
-        journal2 = self._makeOne({"index_at": ["SCIE", "SSCI"]})
-        journal3 = self._makeOne({"index_at": ["SCIE"]})
-        journal4 = self._makeOne({"index_at": ["SSCI", "ICSE"]})
-        journal5 = self._makeOne({"index_at": ["SSCI", "SCIE"]})
-        journal6 = self._makeOne({"index_at": ["SSCI"]})
+        journal1 = self._makeOne({
+            "index_at": ["SCIE"],
+            "last_issue": {"volume": "1", "number": "1", "year": "2016"}
+        })
+        journal2 = self._makeOne({
+            "index_at": ["SCIE", "SSCI"],
+            "last_issue": {"volume": "2", "number": "2", "year": "2016"}
+        })
+        journal3 = self._makeOne({
+            "index_at": ["SCIE"],
+            "last_issue": {"volume": "3", "number": "3", "year": "2016"}
+        })
+        journal4 = self._makeOne({
+            "index_at": ["SSCI", "ICSE"],
+            "last_issue": {"volume": "4", "number": "4", "year": "2016"}
+        })
+        journal5 = self._makeOne({
+            "index_at": ["SSCI", "SCIE"],
+            "last_issue": {"volume": "5", "number": "5", "year": "2016"}
+        })
+        journal6 = self._makeOne({
+            "index_at": ["SSCI"],
+            "last_issue": {"volume": "6", "number": "6", "year": "2016"}
+        })
 
         expected = {
-                    'meta': {'total': 6},
-                    'objects': {
-                        u'SCIE': [journal1, journal2, journal3, journal5],
-                        u'SSCI': [journal2, journal4, journal5],
-                        u'ICSE': [journal4]
-                    }
-                }
+            'meta': {
+                'total': 6,
+                'themes_count': 3
+            },
+            'objects': {
+                u'SCIE': [
+                    controllers.get_journal_json_data(journal1),
+                    controllers.get_journal_json_data(journal2),
+                    controllers.get_journal_json_data(journal3),
+                    controllers.get_journal_json_data(journal5)
+                ],
+                u'SSCI': [
+                    controllers.get_journal_json_data(journal2),
+                    controllers.get_journal_json_data(journal4),
+                    controllers.get_journal_json_data(journal5)
+                ],
+                u'ICSE': [
+                    controllers.get_journal_json_data(journal4)
+                ]
+            }
+        }
 
-        study_areas = controllers.get_journals_by_indexer()
+        grouped_objects = controllers.get_journals_grouped_by('index_at')
 
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
+        for grouper, journals in expected['objects'].iteritems():
+            self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
+                                 sorted([journal['id'] for journal in journals]))
 
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
-
-        for area, journals in expected['objects'].iteritems():
-            self.assertListEqual(sorted([journal.id for journal in expected['objects'][area]]),
-                                 sorted([journal.id for journal in journals]))
-
-    def test_get_journals_by_indexer_without_journal(self):
+    def test_get_journals_grouped_by_index_at_without_journal(self):
         """
-        Testando controllers.test_get_journals_by_indexer() sem Journal.
+        Testando controllers.get_journals_grouped_by('index_at') sem Journal.
         """
         expected = {
-                    'meta': {'total': 0},
-                    'objects': {}
-                }
+            'meta': {
+                'total': 0,
+                'themes_count': 0
+            },
+            'objects': {}
+        }
 
-        study_areas = controllers.get_journals_by_indexer()
+        grouped_objects = controllers.get_journals_grouped_by('index_at')
 
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
-
-    def test_get_journals_by_sponsor(self):
+    def test_get_journals_grouped_by_publisher_name(self):
         """
-        Testando se o retorno da função controllers.get_journals_by_sponsor()
+        Testando se o retorno da função controllers.get_journals_grouped_by('publisher_name')
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({"sponsors": ["CNPQ"]})
-        journal2 = self._makeOne({"sponsors": ["SciELO", "FAPESP"]})
-        journal3 = self._makeOne({"sponsors": ["FAPESP", "SciELO"]})
-        journal4 = self._makeOne({"sponsors": ["FUNDAÇÃO XPTO", "SciELO"]})
-        journal5 = self._makeOne({"sponsors": ["FAPESP", "SciELO"]})
-        journal6 = self._makeOne({"sponsors": ["FUNDAÇÃO XPTO"]})
+        journal1 = self._makeOne({
+            "publisher_name": "CNPQ",
+            "last_issue": {"volume": "1", "number": "1", "year": "2016"}
+        })
+        journal2 = self._makeOne({
+            "publisher_name": "SciELO",
+            "last_issue": {"volume": "2", "number": "2", "year": "2016"}
+        })
+        journal3 = self._makeOne({
+            "publisher_name": "FAPESP",
+            "last_issue": {"volume": "3", "number": "3", "year": "2016"}
+        })
+        journal4 = self._makeOne({
+            "publisher_name": "FUNDAÇÃO XPTO",
+            "last_issue": {"volume": "4", "number": "4", "year": "2016"}
+        })
+        journal5 = self._makeOne({
+            "publisher_name": "FAPESP",
+            "last_issue": {"volume": "5", "number": "5", "year": "2016"}
+        })
+        journal6 = self._makeOne({
+            "publisher_name": "FUNDAÇÃO XPTO",
+            "last_issue": {"volume": "6", "number": "6", "year": "2016"}
+        })
 
         expected = {
-                    'meta': {'total': 6},
-                    'objects': {
-                        u'CNPQ': [journal1],
-                        u'SciELO': [journal2, journal3, journal4, journal5],
-                        u'FAPESP': [journal4],
-                        u'FUNDAÇÃO XPTO': [journal4, journal6]
-                    }
-                }
+            'meta': {
+                'total': 6,
+                'themes_count': 4
+            },
+            'objects': {
+                u'CNPQ': [
+                    controllers.get_journal_json_data(journal1)
+                ],
+                u'SciELO': [
+                    controllers.get_journal_json_data(journal2),
+                    controllers.get_journal_json_data(journal3),
+                    controllers.get_journal_json_data(journal4),
+                    controllers.get_journal_json_data(journal5)
+                ],
+                u'FAPESP': [
+                    controllers.get_journal_json_data(journal4)
+                ],
+                u'FUNDAÇÃO XPTO': [
+                    controllers.get_journal_json_data(journal4),
+                    controllers.get_journal_json_data(journal6)
+                ]
+            }
+        }
 
-        study_areas = controllers.get_journals_by_sponsor()
+        grouped_objects = controllers.get_journals_grouped_by('publisher_name')
 
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
+        for grouper, journals in expected['objects'].iteritems():
+            self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
+                                 sorted([journal['id'] for journal in journals]))
 
-        for area, journals in expected['objects'].iteritems():
-            self.assertListEqual(sorted([journal.id for journal in expected['objects'][area]]),
-                                 sorted([journal.id for journal in journals]))
-
-    def test_get_journals_by_sponsor_without_journal(self):
+    def test_get_journals_grouped_by_publisher_name_without_journal(self):
         """
-        Testando controllers.get_journals_by_sponsor() sem journal.
+        Testando controllers.get_journals_grouped_by('publisher_name') sem periódicos.
         """
 
         expected = {
-                    'meta': {'total': 0},
-                    'objects': {}
-                }
+            'meta': {
+                'total': 0,
+                'themes_count': 0
+            },
+            'objects': {}
+        }
 
-        study_areas = controllers.get_journals_by_sponsor()
+        grouped_objects = controllers.get_journals_grouped_by('publisher_name')
 
-        self.assertEqual(expected['meta']['total'], study_areas['meta']['total'])
-
-        self.assertEqual(len(expected['objects']), len(study_areas['objects']))
+        self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
+        self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
+        self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
     def test_get_journal_by_jid(self):
         """
@@ -253,8 +358,9 @@ class JournalControllerTestCase(BaseTestCase):
         journal3 = self._makeOne(attrib={'_id': 'jid3', 'is_public': False})
         journal4 = self._makeOne(attrib={'_id': 'jid4', 'is_public': False})
 
-        self.assertEqual(controllers.get_journal_by_jid('jid3',
-                         is_public=False).id, journal3.id)
+        self.assertEqual(
+            controllers.get_journal_by_jid('jid3', is_public=False).id,
+            journal3.id)
 
     def test_get_journal_by_jid_without_journal(self):
         """
