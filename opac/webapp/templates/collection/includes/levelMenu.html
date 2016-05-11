@@ -53,7 +53,7 @@
          class="btn single dropdown-toggle {{ mmenu.endpoint_selected(view_name='main.about') }}">
         <span class="glyphBtn infoMenu"></span>
         <span class="hidden-sm">{% trans %}Sobre o SciELO{% endtrans %}</span>
-        <span class="hidden-md hidden-lg">Sobre</span>
+        <span class="hidden-md hidden-lg">{% trans %}Sobre{% endtrans %}</span>
       </a>
       <ul class="dropdown-menu">
           <li><a href="{{ url_for('.about') }}#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>

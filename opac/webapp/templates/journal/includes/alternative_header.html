@@ -23,31 +23,41 @@
           <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="dropdown-toggle" data-toggle="dropdown">{{ journal['title_iso']}} <span class="glyphBtn grayArrowDown"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li class="dropdown-header">{% trans %}Número atual{% endtrans %}:</li>
-            <li><strong>Bol. Mus. Para. Emílio Goeldi. Ciênc. hum. vol.8 no.1 Belém jan./abr. 2013</strong></li>
+            <li><strong>{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ journal.last_issue.volume }} {% trans %}no.{% endtrans %}{{ journal.last_issue.number }} {{ journal.last_issue.publisher_city }} {{ journal.last_issue.start_month }}/{{ journal.last_issue.end_month }} {{ journal.last_issue.year }}</strong></li>
           </ul>
         </li>
       </ul>
     </div>
     <div class="col-md-4 col-md-5 menuItens">
       <ul>
-        <li><a href="" class="showTooltip" data-placement="bottom" title="Homepage do periódico"><span class="glyphBtn home"></span></a></li>
+        <li><a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="showTooltip" data-placement="bottom" title="Homepage do periódico"><span class="glyphBtn home"></span></a></li>
         <li>
           <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn numbers"></span></a>
           <ul class="dropdown-menu" role="menu">
+
             <li class="dropdown-header">{% trans %}Números{% endtrans %}</li>
+
+            {# Grid #}
             <li><a href="{{ url_for('.issue_grid', journal_id=journal.id) }}">• {% trans %}todos{% endtrans %}</a></li>
-            <li><a href="atual.html">« {% trans %}anterior{% endtrans %}</a></li>
-            <li><a href="atual.html">• {% trans %}atual{% endtrans %}</a></li>
-            <li><a href="atual.html">» {% trans %}próximo{% endtrans %}</a></li>
+
+            {# Anterior #}
+            <li class="{% if not previous_issue %} disabled {% endif %}"><a href="{{ url_for('.issue_toc', issue_id=previous_issue.iid) }}" >« {% trans %}anterior{% endtrans %}</a></li>
+
+            {# Atual #}
+            <li><a href="{{ url_for('.issue_toc', issue_id=last_issue.iid) }}">{% trans %}atual{% endtrans %}</a></li>
+
+            {# Próximo #}
+            <li class="{% if not next_issue %} disabled {% endif %}"><a href="{{ url_for('.issue_toc', issue_id=next_issue.iid) }}" >{% trans %}próximo{% endtrans %} »</a></li>
+
           </ul>
         </li>
-        <li><a href="buscar.html" class="showTooltip" data-placement="bottom" title="Buscar"><span class="glyphBtn search"></span></a></li>
-        <li><a href="metricas.html" class="showTooltip" data-placement="bottom" title="Métricas"><span class="glyphBtn metrics"></span></a></li>
+        <li><a href="{{ url_for('.search') }}" class="showTooltip" data-placement="bottom" title="Buscar"><span class="glyphBtn search"></span></a></li>
+        <li><a href="{{ url_for('.metrics') }}" class="showTooltip" data-placement="bottom" title="Métricas"><span class="glyphBtn metrics"></span></a></li>
         <li>
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn contents"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li class="dropdown-header">{% trans %}Periódico{% endtrans %}</li>
-            <li><a href="secundaria.html" class="icon"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+            <li><a href="{{ journal.online_submission_url }}" class="icon"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
             <li><a href="secundaria.html" class="icon"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
             <li><a href="secundaria.html" class="icon"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
             <li><a href="secundaria.html" class="icon"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>

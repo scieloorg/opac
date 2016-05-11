@@ -414,9 +414,14 @@ class MenuTestCase(BaseTestCase):
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+            resource = utils.makeOneResource()
+
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
+                                             'htmls': [resource]})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
+                                             'htmls': [resource]})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
+                                             'htmls': [resource]})
 
             response = self.client.get(url_for('main.article_detail',
                                                article_id=article2.aid))
@@ -453,9 +458,14 @@ class MenuTestCase(BaseTestCase):
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+            resource = utils.makeOneResource()
+
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
+                                             'htmls': [resource]})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
+                                             'htmls': [resource]})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
+                                             'htmls': [resource]})
 
             response = self.client.get(url_for('main.article_detail',
                                                article_id=article3.aid))
@@ -488,13 +498,18 @@ class MenuTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             collection = utils.makeOneCollection()
 
+            resource = utils.makeOneResource()
+
             issue = utils.makeOneIssue({'journal': journal,
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3})
+            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
+                                             'htmls': [resource]})
+            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
+                                             'htmls': [resource]})
+            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
+                                             'htmls': [resource]})
 
             response = self.client.get(url_for('main.article_detail',
                                                article_id=article1.aid))

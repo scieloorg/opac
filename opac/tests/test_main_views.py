@@ -432,8 +432,13 @@ class MainTestCase(BaseTestCase):
         que usa o template ``article/detail.html``.
         """
         with current_app.app_context():
+
             collection = utils.makeOneCollection()
-            article = utils.makeOneArticle({'title': 'Article Y'})
+
+            resource = utils.makeOneResource()
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'htmls': [resource]})
 
             response = self.client.get(url_for('main.article_detail',
                                                article_id=article.id))
@@ -546,7 +551,7 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(url_for('main.article_html_by_aid',
                                            article_id=article.id))
 
-        self.assertStatus(response, 200)
+        self.assertStatus(response, 302)
         self.assertIn(u'http://somedomain.com.br', response.data.decode('utf-8'))
 
     def test_article_html_by_aid_without_html(self):
