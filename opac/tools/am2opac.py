@@ -285,7 +285,7 @@ class AM2Opac(object):
             journal = models.Journal.objects.get(scielo_issn=issue.journal.scielo_issn)
             m_issue.journal = journal
         except Exception as e:
-            print e
+            logger.warning("Erro get journal with ISSN: %s, TraceBack: %s" % (issue.journal.scielo_issn, str(e)))
 
         m_issue.volume = issue.volume
         m_issue.number = issue.number
@@ -324,9 +324,7 @@ class AM2Opac(object):
         m_article.aid = _id
 
         try:
-            # artigo que referenciam ou são um ahead não devem ser cadastrados
-            issue = models.Issue.objects.get(
-                pid=article.issue.publisher_id)
+            issue = models.Issue.objects.get(pid=article.issue.publisher_id)
             m_article.issue = issue
         except DoesNotExist as e:
             logger.warning("Article without issue %s" % str(article.publisher_id))
@@ -342,34 +340,29 @@ class AM2Opac(object):
 
         # Corrigir é necessário cadastrarmos todos as seções com todos os idiomas
 
-        subjects = []
-        sections = []
-
         if article.translated_section():
-            for lang, label in article.translated_section().iteritems():
-                subject = models.Subject()
-                subject.name = label
-                subject.language = lang
-                subjects.append(subject)
+            translated_sections = []
 
-                section = models.Section()
-                section.subjects = subjects
-                sections.append(section)
+            for lang, title in article.translated_section().items():
+                translated_section = models.TranslatedSection()
+                translated_section.language = lang
+                translated_section.name = title
+                translated_sections.append(translated_section)
 
-            m_article.sections = sections
+            m_article.sections = translated_sections
+
+        m_article.section = article.original_section()
 
         if article.translated_titles():
             translated_titles = []
 
             for lang, title in article.translated_titles().items():
-                trasnlated_title = models.TranslatedTitle()
-                trasnlated_title.language = lang
-                trasnlated_title.name = title
-                translated_titles.append(trasnlated_title)
+                translated_title = models.TranslatedTitle()
+                translated_title.language = lang
+                translated_title.name = title
+                translated_titles.append(translated_title)
 
             m_article.translated_titles = translated_titles
-
-        m_article.section = article.original_section()
 
         try:
             m_article.order = int(article.order)
@@ -448,8 +441,6 @@ class AM2Opac(object):
                 continue
             self._transform_issue(issue).save()
 
-        logger.info('Get all articles...')
-
         # Get last issue for each Journal
         for journal in models.Journal.objects.all():
 
@@ -473,23 +464,21 @@ class AM2Opac(object):
                 sections = []
                 for code, items in last_issue.sections.iteritems():
                     if items:
-                        section = models.Section()
-                        subjects = []
                         for k, v in items.iteritems():
-                            subject = models.Subject()
-                            subject.name = v
-                            subject.language = k
-                            subjects.append(subject)
-                    section.subjects = subjects
+                            section = models.TranslatedSection()
+                            section.name = v
+                            section.language = k
                     sections.append(section)
 
-            m_last_issue.sections = sections
+                m_last_issue.sections = sections
 
             journal.last_issue = m_last_issue
             journal.issue_count = issue_count
             journal.save()
 
         # Article
+        logger.info('Get all articles...')
+
         for article in self.articlemeta.articles(collection=self.options.collection):
             self._transform_article(article).save()
 

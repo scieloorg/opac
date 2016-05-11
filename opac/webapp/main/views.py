@@ -204,14 +204,20 @@ def issue_toc(issue_id):
     previous_issue = utils.get_prev_issue(issue_list, issue)
     next_issue = utils.get_next_issue(issue_list, issue)
 
+    result_dict = OrderedDict()
+    for article in articles:
+        section = article.get_section_by_lang(session.get('lang')[:2])
+        result_dict.setdefault(section, [])
+        result_dict[section].append(article)
+
     context = {
                 'next_issue': next_issue,
                 'previous_issue': previous_issue,
                 'journal': journal,
                 'issue': issue,
-                'articles': articles,
+                'articles': result_dict,
                 # o primiero item da lista é o último fascículo.
-                'last_issue': issue_list[0]
+                'last_issue': issues[0] if issues else None
                }
 
     return render_template("issue/toc.html", **context)
