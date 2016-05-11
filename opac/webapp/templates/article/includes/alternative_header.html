@@ -47,7 +47,7 @@
               <li>
                   <a href="atual.html" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn articles"></span></a>
                   <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">{% trans %}Artigos de{% endtrans %} 2013, V.{{ journal.last_issue.volume }} N.{{ journal.last_issue.volume }}</li>
+                      <li class="dropdown-header">{% trans %}Artigos de{% endtrans %} {{ journal.last_issue.year }}, V.{{ journal.last_issue.volume }} N.{{ journal.last_issue.volume }}</li>
 
                       {# Sumário #}
                       <li><a href="{{ url_for('.issue_toc', issue_id=issue.id) }}">• {% trans %}sumário{% endtrans %}</a></li>

@@ -9,11 +9,12 @@
 
 import datetime
 from opac_schema.v1.models import Journal, Issue, Article, Collection
-from flask import current_app
+from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
 from flask.ext.mongoengine import Pagination
 from webapp import dbsql
 from models import User
+from choices import INDEX_NAME
 
 
 # -------- COLLECTION --------
@@ -30,125 +31,154 @@ def get_current_collection():
 
 # -------- JOURNAL --------
 
-def get_journals(is_public=True, order_by="title"):
+def get_journals(title_query='', is_public=True, order_by="title"):
     """
     Retorna uma lista de periódicos considerando os parâmetros:
+    - ``title_query`` texto para filtrar (usando i_contains) pelo titulo do periódicos;
     - ``is_public``: filtra por público e não público de cada periódico;
     - ``order_by``: que corresponde ao nome de um atributo pelo qual
                     deve estar ordenada a lista resultante.
     """
 
-    return Journal.objects(is_public=is_public).order_by(order_by)
+    if not title_query or title_query.strip() == "":
+        journals = Journal.objects(
+            is_public=is_public).order_by(order_by)
+    else:
+        journals = Journal.objects(
+            is_public=is_public,
+            title__icontains=title_query).order_by(order_by)
+
+    return journals
 
 
 def get_journals_paginated(title_query, is_public=True, order_by="title", page=1, per_page=20):
-    if not title_query or title_query.strip() == "":
-        qs = Journal.objects(is_public=is_public).order_by(order_by)
-    else:
-        qs = Journal.objects(is_public=is_public, title__icontains=title_query).order_by(order_by)
-    return Pagination(qs, page, per_page)
+    """
+    Retorna um objeto Pagination (flask-mongoengine) com a lista de periódicos filtrados
+    pelo titulo (title_query) e pelo parametro ``is_public``, ordenado pelo campo indicado
+    pelo parametro ``order_by``.
+    Os parametros:
+    - ``page`` indica o número da pagina;
+    - ``per_page`` indica o tamanho da pagina.
+    """
+
+    journals = get_journals(title_query, is_public, order_by)
+    return Pagination(journals, page, per_page)
 
 
-def get_journals_by_study_area():
+def get_journal_json_data(journal):
+    """
+    Para cada journal, retorna uma estrutura mais resumida para ser enviada como json
+    para o frontend.
+
+    Exemplo:
+
+    {
+        "id": "e3ad10cca39a466da771c8abe6591a9f",
+        "is_active": true,
+        "issues_count": 64,
+        "last_issue": {
+            "number": "123",
+            "volume": 456,
+            "year": 2016
+        },
+        "links": {
+            "about": "#",
+            "contact": "#",
+            "detail": "/journals/e3ad10cca39a466da771c8abe6591a9f",
+            "instructions": "#",
+            "submission": "#"
+        },
+        "title": "Interface - Comunica\u00e7\u00e3o, Sa\u00fade, Educa\u00e7\u00e3o"
+    },
+    """
+
+    j_data = {
+        'id': journal.id,
+        'title': journal.title,
+        'links': {
+            'detail': url_for('main.journal_detail', journal_id=journal.jid),
+            'submission': '#',
+            'instructions': '#',
+            'about': '#',
+            'contact': '#',
+        },
+        'is_active': journal.current_status == 'current',
+        'issues_count': journal.issue_count,
+        'last_issue': {
+            'volume': journal.last_issue.volume,
+            'number': journal.last_issue.number,
+            'year': journal.last_issue.year,
+        }
+    }
+    return j_data
+
+
+def get_alpha_list_from_paginated_journals(title_query, is_public=True, order_by="title", page=1, per_page=20):
+    """
+    Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
+    """
+
+    journals = get_journals_paginated(title_query=title_query, page=page, per_page=per_page)
+    journal_list = []
+
+    for journal in journals.items:
+        j_data = get_journal_json_data(journal)
+        journal_list.append(j_data)
+
+    response_data = {
+        'current_page': page,
+        'total_pages': journals.pages,
+        'total': journals.total,
+        'has_prev': journals.has_prev,
+        'prev_num': journals.prev_num,
+        'has_next': journals.has_next,
+        'next_num': journals.next_num,
+        'journals': journal_list
+    }
+    return response_data
+
+
+def get_journals_grouped_by(grouper_field, title_query='', is_public=True, order_by='title'):
     """
     Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
 
-    - ``meta`` é um dicionario de metadados, que contém o ``total`` de periódicos retornados;
+    - ``meta`` é um dicionario de metadados, que contém:
+        - ``total`` com a quantidade total de periódicos retornados;
+        - ``themes_count`` com a quantidade de chaves dentro do dict ``objects``
     - ``objects`` é um dicionario de periódicos agrupados pela área de conhecimento.
-
-    Exemplo:
-    ```
-    {
-        'meta': {'total':4},
-        'objects': {
-            'Health Sciences': [<Journal: aiss>, <Journal: bwho>],
-            'Engineering': [<Journal: ICSE>, <Journal: csp>]
-        }
-    }
-    ```
+        - cada chave é definida pelos valores do campo indicado pelo param: ``grouper_field``
+        que podem ser dados pelos campos: ``study_areas``, ``index_at``, ou ``publisher_name``
+        - para cada chave, se listam os periódicos nessa categoria, com a estrutura de dados
+        retornada pela função: ``get_journal_json_data``
     """
+    journals = get_journals(title_query, is_public, order_by)
 
-    journals = get_journals()
-
-    dict_journals = {}
-
-    meta = {
-        'total': len(journals),
-    }
+    groups_dict = {}
 
     for journal in journals:
-        for area in journal.study_areas:
-            dict_journals.setdefault(area, []).append(journal)
+        grouper_field_iterable = getattr(journal, grouper_field, None)
+        if grouper_field_iterable:
+            if isinstance(grouper_field_iterable, unicode):
+                grouper_field_iterable = [grouper_field_iterable]
+        else:
+            continue
 
-    return {'meta': meta, 'objects': dict_journals}
+        for grouper in grouper_field_iterable:
 
+            if grouper_field == 'index_at':
+                # tentavida de pegar o nome e não a sigla do index
+                # se não achar o nome (KeyError), ficamos com o nome da sigla
+                grouper = INDEX_NAME.get(grouper, grouper)
 
-def get_journals_by_indexer():
-    """
-    Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
-
-    - ``meta`` é um dicionario de metadados, que contem o ``total`` de periódicos retornados;
-    - ``objects`` é um dicionario de periódicos agrupados pelo indexador.
-
-    Exemplo:
-    ```
-    {
-        'meta': {'total':4},
-        'objects': {
-            'SCIE': [<Journal: aiss>, <Journal: bwho>],
-            'SSCI': [<Journal: ICSE>, <Journal: csp>]
-        }
-    }
-    ```
-    """
-
-    journals = get_journals()
-
-    dict_journals = {}
+            j_data = get_journal_json_data(journal)
+            groups_dict.setdefault(grouper, []).append(j_data)
 
     meta = {
-        'total': len(journals),
+        'total': journals.count(),
+        'themes_count': len(groups_dict.keys()),
     }
 
-    for journal in journals:
-        for indexer in journal.index_at:
-            dict_journals.setdefault(indexer, []).append(journal)
-
-    return {'meta': meta, 'objects': dict_journals}
-
-
-def get_journals_by_sponsor():
-    """
-    Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
-
-    - ``meta`` é um dicionario de metadados, que contem o ``total`` de periódicos retornados;
-    - ``objects`` é um dicionario de periódicos agrupados pelo patrocinador.
-
-    Exemplo:
-    ```
-    {
-        'meta': {'total':4},
-        'objects': {
-            'World Health Organization': [<Journal: aiss>, <Journal: bwho>],
-            'The Atlantic Philanthropies': [<Journal: ICSE>, <Journal: csp>]
-        }
-    }
-    ```
-    """
-
-    journals = get_journals()
-
-    dict_journals = {}
-
-    meta = {
-        'total': len(journals),
-    }
-
-    for journal in journals:
-        for indexer in journal.sponsors:
-            dict_journals.setdefault(indexer, []).append(journal)
-
-    return {'meta': meta, 'objects': dict_journals}
+    return {'meta': meta, 'objects': groups_dict}
 
 
 def get_journal_by_jid(jid, **kwargs):

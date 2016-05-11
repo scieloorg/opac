@@ -1,9 +1,10 @@
+{% import 'macros/resources.html' as mresources %}
 
 <footer>
     <div class="collectionSignature">
         <div class="container">
             <div class="col-md-2 col-sm-2">
-                <img src="../static/img/logo-scielo-signature.png" alt="Logo SciELO" />
+                <img src="{{ g.collection.footer_resource }}" class="image" alt="Logo SciELO" />
             </div>
             <div class="col-md-8 col-sm-9">
                 <strong>SciELO - Scientific Electronic Library Online</strong><br/>
@@ -35,7 +36,7 @@
     <div class="container collectionLicense">
 
         <a href="https://creativecommons.org/licenses/{{ g.collection.license|lower }}/" target="_blank">
-            <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/{{ g.collection.license|lower }}/88x31.png" />
+            <img alt="Creative Commons License" style="border-width:0" class="image" src="https://i.creativecommons.org/l/{{ g.collection.license|lower }}/88x31.png" />
             <span>
                 {% trans host=request.headers['Host'] %}Todo o conteúdo de {{ host }}, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.{% endtrans %}<br/>
                 <strong>{% trans %}saiba mais{% endtrans %} »</strong>

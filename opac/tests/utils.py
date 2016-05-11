@@ -91,10 +91,20 @@ def makeOneJournal(attrib=None):
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
         'acronym': attrib.get('acronym', "journal-%s" % default_id),
+        'mission': attrib.get('mission',
+                              [{'language': 'pt',
+                               'description': u'Esse periódico tem com objetivo xpto'
+                                },
+                               {'language': 'es',
+                               'description': u'Esta revista tiene como objetivo xpto'
+                                },
+                               {'language': 'en',
+                               'description': u'This journal is aiming xpto'
+                                }]),
         'use_licenses': attrib.get('use_licenses',
-                                   {'license_code': 'BY/3.0',
-                                    'reference_url': 'http://creativecommons.org/licenses/by/3.0/deed.en',
-                                    'disclaimer': 'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons'
+                                   {'license_code': u'BY/3.0',
+                                    'reference_url': u'http://creativecommons.org/licenses/by/3.0/deed.en',
+                                    'disclaimer': u'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons'
                                     })
     }
     journal.update(attrib)
@@ -239,7 +249,8 @@ def makeOneArticle(attrib=None):
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
         'issue': issue.id,
-        'journal': journal.id
+        'journal': journal.id,
+        'translated_titles': attrib.get('translated_titles', [])
     }
 
     for k, v in attrib.iteritems():

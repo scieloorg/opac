@@ -41,6 +41,7 @@ def create_app():
                 'js/vendor/bootstrap.min.js',
                 'js/vendor/jquery-ui.min.js',
                 'js/plugins.js',
+                'js/common.js',
                 'js/main.js',
                 filters='jsmin', output='js/bundle.js')
 

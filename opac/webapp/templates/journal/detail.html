@@ -5,14 +5,14 @@
   <section class="journalContent">
     <div class="container">
       <div class="col-md-4 col-md-offset-8 share">
-        <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
+        <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
         <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
         <span class="divisor"></span>
         {% trans %}Compartilhe{% endtrans %}
-        <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-        <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-        <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-        <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
+        <a href="" class="sendViaMail showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
+        <a href="" class="shareFacebook showTooltip" data-placement="top" title="{% trans %}Compartilhar no Facebook{% endtrans %}"><span class="glyphBtn facebook"></span></a>
+        <a href="" class="shareTwitter showTooltip" data-placement="top" title="{% trans %}Compartilhar no Twitter{% endtrans %}"><span class="glyphBtn twitter"></span></a>
+        <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="{% trans %}Outras redes sociais{% endtrans %}"><span class="glyphBtn otherNetworks"></span></a>
         <ul class="dropdown-menu">
           <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
           <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
@@ -28,7 +28,9 @@
           <div class="col-md-6 col-sm-6">
             {% if journal.mission %}
               <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
-              <p>{{ journal.mission[0].description }}{# filtar pelo idioma #}</p>
+              {% if session.lang %}
+                <p>{{ journal.get_mission_by_lang(session.lang[:2]) }}</p>
+              {% endif %}
             {% endif %}
           </div>
           <div class="col-md-6 col-sm-6">
@@ -52,7 +54,7 @@
             <div class="col-md-6 col-sm-6">
               <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}">
                 {% if journal.last_issue.cover_url %}
-                  <img src="{{ latest_issue.cover_url }}" alt="Capa do número mais recente" /> <!-- a imagem é opcional -->
+                  <img src="{{ latest_issue.cover_url }}" class="image" alt="{% trans %}Capa do número mais recente{% endtrans %}" /> <!-- a imagem é opcional -->
                 {% endif %}
                 <span class="text">
                   <small>{% trans %}Número mais recente{% endtrans %}</small>
@@ -63,8 +65,8 @@
             <div class="col-md-6 col-sm-6">
               <h3>{% trans %}Sumário{% endtrans %}</h3>
               <ul>
-                {% for section in journal.last_issue.sections|sort(attribute='subjects') %}
-                  <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section.subjects[0].name }}</a></li>
+                {% for section in journal.last_issue.sections %}
+                  <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
                 {% endfor %}
               </ul>
             </div>

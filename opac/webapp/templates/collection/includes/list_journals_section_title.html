@@ -1,0 +1,64 @@
+<div class="row sectionTitle">
+
+  <h1 class="col-md-8 col-sm-7">{{ section_title }}</h1>
+
+  <div class="col-md-4 col-sm-5 share">
+    <a data-toggle="tooltip" href="javascript:window.print();" class="sharePrint" title="Imprimir">
+      <span class="glyphBtn print"></span>
+    </a>
+    <a data-toggle="tooltip" href="#" title="RSS" target="blank">
+      <span class="glyphBtn rssMini"></span>
+    </a>
+
+    <span class="divisor"></span>
+    {% trans %}Compartilhe{% endtrans %}
+
+    <a data-toggle="tooltip" href="#" class="sendViaMail" title="{% trans %}Enviar link por e-mail{% endtrans %}">
+      <span class="glyphBtn sendMail"></span>
+    </a>
+    <a data-toggle="tooltip" href="#" class="shareFacebook" title="{% trans %}Compartilhar no Facebook{% endtrans %}">
+      <span class="glyphBtn facebook"></span>
+    </a>
+    <a data-toggle="tooltip" href="#" class="shareTwitter" title="{% trans %}Compartilhar no Twitter{% endtrans %}">
+      <span class="glyphBtn twitter"></span>
+    </a>
+    <a data-toggle="dropdown" href="#" class="dropdown-toggle dropdown-tooltip" title="{% trans %}Outras redes sociais{% endtrans %}">
+      <span class="glyphBtn otherNetworks"></span>
+    </a>
+    <ul class="dropdown-menu">
+      <li class="dropdown-header">
+        {% trans %}Outras redes sociais{% endtrans %}
+      </li>
+      <li>
+        <a href="#" class="shareGooglePlus">
+          <span class="glyphBtn googlePlus"></span> Google+
+        </a>
+      </li>
+      <li>
+        <a href="#" class="shareLinkedIn">
+          <span class="glyphBtn linkedIn"></span> LinkedIn
+        </a>
+      </li>
+      <li>
+        <a href="#" class="shareReddit">
+          <span class="glyphBtn reddit"></span> Reddit
+        </a>
+      </li>
+      <li>
+        <a href="#" class="shareStambleUpon">
+          <span class="glyphBtn stambleUpon"></span> StambleUpon
+        </a>
+      </li>
+      <li>
+        <a href="#" class="shareCiteULike">
+          <span class="glyphBtn citeULike"></span> CiteULike
+        </a>
+      </li>
+      <li>
+        <a href="#" class="shareMendeley">
+          <span class="glyphBtn mendeley"></span> Mendeley
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

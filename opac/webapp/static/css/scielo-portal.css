@@ -1899,7 +1899,7 @@ button.btn:active {
   padding-top: 25px;
 }
 .journal .mainMenu .logo img {
-  width: 100%;
+  /*width: 100%;*/
 }
 .journal .levelMenu {
   padding-bottom: 30px;
@@ -1921,7 +1921,7 @@ button.btn:active {
 }
 .journal .brandLogo img {
   margin-top: 15px;
-  width: 100%;
+  /*max-width: 80%;*/
 }
 .journal .brandLogo .theme {
   color: #7b7469;
@@ -2540,7 +2540,7 @@ button.btn:active {
 }
 .articleCtt {
   margin-top: 20px;
-  min-height: 500px;
+  min-height: 500px
 }
 .articleCtt .container {
   position: relative;
