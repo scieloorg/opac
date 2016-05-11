@@ -37,6 +37,7 @@ def create_app():
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
+                'js/vendor/underscore-min.js',
                 'js/vendor/bootstrap.min.js',
                 'js/vendor/jquery-ui.min.js',
                 'js/plugins.js',

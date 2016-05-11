@@ -139,7 +139,7 @@ class CustomFilterConverter(FilterConverter):
 class CustomFilterConverterSqla(sqla.filters.FilterConverter):
 
     choice_filters = (sqla.filters.FilterEqual, sqla.filters.FilterNotEqual,
-                      sqla.filters.FilterEmpty, sqla.filters.FilterInList, 
+                      sqla.filters.FilterEmpty, sqla.filters.FilterInList,
                       sqla.filters.FilterNotInList)
 
     choices = {

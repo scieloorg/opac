@@ -5,14 +5,14 @@
   <section class="journalContent">
       <div class="container">
           <div class="col-md-4 col-md-offset-8 share">
-              <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
+              <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
               <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
               <span class="divisor"></span>
               {% trans %}Compartilhe{% endtrans %}
-              <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-              <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-              <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-              <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
+              <a href="" class="sendViaMail showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
+              <a href="" class="shareFacebook showTooltip" data-placement="top" title="{% trans %}Compartilhar no Facebook{% endtrans %}"><span class="glyphBtn facebook"></span></a>
+              <a href="" class="shareTwitter showTooltip" data-placement="top" title="{% trans %}Compartilhar no Twitter{% endtrans %}"><span class="glyphBtn twitter"></span></a>
+              <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="{% trans %}Outras redes sociais{% endtrans %}"><span class="glyphBtn otherNetworks"></span></a>
               <ul class="dropdown-menu">
                   <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
                   <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
@@ -66,57 +66,57 @@
           </div>
 
           <div class="col-md-9 col-sm-8 content issueIndex" id="issueIndex">
-              <a href="" class="expandCollapseContent showTooltip" title="Expandir/recolher conteúdo"><span class="glyphBtn opened"></span></a>
+              <a href="" class="expandCollapseContent showTooltip" title="{% trans %}Expandir/recolher conteúdo{% endtrans %}"><span class="glyphBtn opened"></span></a>
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
                       <strong class="issueName">{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }} {{ issue.start_month }}/{{ issue.end_month }} {{ issue.year }}</strong>
                       <ul>
-                      {% for section in journal.last_issue.sections %}
-                        <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                      {% for section in articles.iterkeys() %}
+                        <li><a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
                       {% endfor %}
-                      <!-- lista te seções ordenadas -->
                       </ul>
                   </div>
               </div>
 
-                {% for group in articles|groupby('section') %}
+                {% for section, article_list in articles.iteritems() %}
 
-                  <a name="{{ group.grouper|upper }}"></a>
-                  <h1>{{ group.grouper }}</h1>
+                  <a name="{{ section|upper }}"></a>
+                  <h1>{{ section }}</h1>
 
                   <div class="issueIndent">
                     <ul class="articles">
-                      {% for article in group.list %}
+                      {% for article in article_list %}
                         <li>
-                            <h2>{{ article.title }}</h2>
+                            {% if session.lang %}
+                              <h2>{{ article.get_title_by_lang(session.lang[:2]) }}</h2>
+                            {% endif %}
                             <a href="../iAHx-Colecao/resultado.html">Schmidt, Morgan</a>
                             <ul class="links">
                                 <li>
-                                  Português:
-                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">Resumo</a> |
-                                  <a href="{{ url_for('.article_detail', article_id=article.aid) }}">Texto</a> |
+                                  {% trans %}Português{% endtrans %}:
+                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">{% trans %}Resumo{% endtrans %}</a> |
+                                  <a href="{{ url_for('.article_detail', article_id=article.aid) }}">{% trans %}Texto{% endtrans %}</a> |
                                   <a href="#" target="_blank">PDF</a> |
                                   <a href="#">Press-release</a>
                                 </li>
                                 <li>
-                                  English:
-                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">Abstract</a>
+                                  {% trans %}English{% endtrans %}:
+                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">{% trans %}Abstract{% endtrans %}</a>
                                 </li>
                             </ul>
                         </li>
-                      {% endfor %}
+                        {% endfor %}
                     </ul>
                   </div>
-
                 {% endfor %}
-
           </div>
           <div class="clearfix"></div>
       </div>
   </section>
 
   {% include "issue/includes/license_footer.html" %}
+
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}

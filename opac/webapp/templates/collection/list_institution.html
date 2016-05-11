@@ -2,82 +2,77 @@
 
 {% block main_content %}
 
+  <style>
+    .collectionList .collectionListTable td.collapseContainer .collapseContent table { margin-bottom: 0px; }
+    .collectionList .collectionListTable td.collapseContainer .collapseContent { padding-bottom: 0px; }
+    .collectionList .collectionListTable td.collapseContainer { padding: 0; }
+    .collectionList { min-height: 400px; }
+  </style>
+
   <section class="collection collectionList">
     <div class="container">
-      <div class="row sectionTitle">
-          <h1 class="col-md-8 col-sm-7">{% trans %}Lista periódicos por instituição{% endtrans %}</h1>
-          <div class="col-md-4 col-sm-5 share">
-              <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
-              <a href="#" class="showTooltip" data-placement="top" title="RSS" target="blank"><span class="glyphBtn rssMini"></span></a>
-              <span class="divisor"></span>
-              {% trans %}Compartilhe{% endtrans %}
-              <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-              <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-              <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-              <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
-              <ul class="dropdown-menu">
-                  <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
-                  <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
-                  <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
-                  <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
-                  <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
-                  <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
-                  <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
-              </ul>
-          </div>
-      </div>
+      {% with section_title=_('Lista periódicos por instituição') %}
+        {% include "collection/includes/list_journals_section_title.html" %}
+      {% endwith %}
 
-      <div class="row collectionListSearch">
-          <div class="col-md-5 col-sm-6">
-              <input type="text" name="query" value="" class="form-control collectionSearch" placeholder="Digite uma ou mais palavras para filtrar a lista" />
-          </div>
-      </div>
+      {% with input_id='query' %}
+        {% include "collection/includes/list_journals_search_input.html" %}
+      {% endwith %}
 
-      <div class="row collectionListTable">
-          <table>
-              <thead>
-                  <tr>
-                      <th>
-                          <div class="col-xs-6">
-                              {% trans %}Editoras{% endtrans %} <small class="collectionListTotalInfo">{% trans editoras=objects|length, periodicos=meta.total %}(Total {{ editoras }} editoras / {{ periodicos }} periódicos){% endtrans %}</small>
-                          </div>
-                          <div class="col-xs-6 right download">
-                              {% trans %}download da lista{% endtrans %}
-                              <a href="" class="collectionListDownloadXLS showTooltip" title="Lista em arquivo para Excel"><span class="glyphBtn downloadXLS"></span></a>
-                              <a href="" class="collectionListDownloadCSV showTooltip" title="Lista em arquivo CSV"><span class="glyphBtn downloadCSV"></span></a>
-                          </div>
-                      </th>
-                  </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                      <ul>
-                          {% for index, journals in objects.iteritems() %}
-                              <li>
-                                <h2>{{ index }} ({{ journals|length }})</h2>
-                                <ul>
-                                  {% for journal in journals %}
-                                  <table>
-                                        {% include "includes/format_journal_row.html" %}
-                                  </table>
-                                  {% endfor %}
-                                </ul>
-                              </li>
-                            {% else %}
-                              {% trans %}Nenhum periódico encontrado{% endtrans %}.
-                          {% endfor %}
-                      </ul>
-                  </td>
-                </tr>
-              </tbody>
-          </table>
-          <div class="collectionListLoading" style="display: none;"></div>
-      </div>
+      <div id="list_table_container" class="row collectionListTable"></div>
+      <div class="collectionListLoading" style="display: none;"></div>
 
-      </div>
       <div class="clearfix"></div>
     </div>
   </section>
+
+  {# templates js #}
+
+  <script id="template_collection_list_table" type="text/template">
+    {% with template_collection_list_table_body_id='template_collection_list_table_body' %}
+      {% include "collection/includes/tmpl_journal_list_grouper_table_container.html" %}
+    {% endwith %}
+  </script>
+
+  <script id="template_collection_list_table_body" type="text/template">
+    {% with template_journal_row_id='template_journal_row' %}
+      {% include "collection/includes/tmpl_journal_list_grouper_table_row.html" %}
+    {% endwith %}
+  </script>
+
+  <script id="template_journal_row" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_row.html" %}
+  </script>
+
+  <script id="template_empty_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_empty.html" %}
+  </script>
+
+  <script id="template_error_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_error.html" %}
+  </script>
+
+{% endblock %}
+
+{% block extra_js %}
+
+  <script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
+    <script>
+      $(function() {
+
+        var list = Object.create(JournalCategorizedList);
+        list.initialize(
+          '#list_table_container',
+          '#query',
+          '.collectionListLoading',
+          'publisher',
+          "{{ url_for('main.journals_search_by_theme_ajax') }}",
+          "#template_error_msg",
+          "#template_empty_msg",
+          "{% trans %}Editoras{% endtrans %}",
+          "{% trans %}editoras{% endtrans %}"
+        ).search();
+      });
+    </script>
 
 {% endblock %}

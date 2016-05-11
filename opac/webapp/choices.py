@@ -37,3 +37,9 @@ LICENSE_CHOICES = [
     ('BY-ND/3.0', u'BY-ND/3.0 '),
     ('BY-ND/4.0 ', u'BY-ND/4.0')
 ]
+
+INDEX_NAME = {
+    'SCIE':  u'Science Citation Index',
+    'SSCI':  u'Social Science Citation',
+    'A&HCI':  u'Arts & Humanities Citation',
+}
