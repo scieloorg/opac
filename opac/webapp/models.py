@@ -13,7 +13,7 @@ from sqlalchemy_utils.types.choice import ChoiceType
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
 from flask import current_app
-from webapp.admin.custom_fields import thumbgen_filename
+from webapp.utils import thumbgen_filename
 from . import dbsql as db
 from . import login_manager
 import notifications
