@@ -29,11 +29,11 @@ XML_CSS = "/static/css/style_article_html.css"
 
 ARTICLE_META_URL = 'http://articlemeta.scielo.org/'
 
-APP_URL = 'http://localhost:5000'
+APP_URL = 'http://homolog.opac.scielo.org'
 
-MONGODB_DBNAME = os.environ.get('MONGO_DB_DBNAME', 'manager2mongo')
-MONGODB_HOST = os.environ.get('MONGO_PORT_27017_TCP_ADDR', 'localhost')
-MONGODB_PORT = os.environ.get('MONGO_PORT_27017_TCP_PORT', 27017)
+MONGODB_DBNAME = os.environ.get('OPAC_MONGO_DB_DBNAME', 'manager2mongo')
+MONGODB_HOST = os.environ.get('OPAC_MONGO_PORT_27017_TCP_ADDR', 'localhost')
+MONGODB_PORT = os.environ.get('OPAC_MONGO_PORT_27017_TCP_PORT', 27017)
 
 MONGODB_SETTINGS = {
     'db': MONGODB_DBNAME,
