@@ -31,7 +31,7 @@ ARTICLE_META_URL = 'http://articlemeta.scielo.org/'
 
 APP_URL = 'http://homolog.opac.scielo.org'
 
-MONGODB_DBNAME = os.environ.get('OPAC_MONGO_DB_DBNAME', 'manager2mongo')
+MONGODB_DBNAME = os.environ.get('OPAC_MONGO_DB_DBNAME', 'opac')
 MONGODB_HOST = os.environ.get('OPAC_MONGO_PORT_27017_TCP_ADDR', 'localhost')
 MONGODB_PORT = os.environ.get('OPAC_MONGO_PORT_27017_TCP_PORT', 27017)
 
