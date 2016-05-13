@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt && \
 # portas
 EXPOSE 8000
 
-CMD gunicorn --workers 3 --bind 0.0.0.0:8000 opac.manager:app --chdir=/app --log-level DEBUG
+CMD gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --log-level DEBUG
