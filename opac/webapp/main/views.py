@@ -1,9 +1,10 @@
 # coding: utf-8
 
 import logging
+from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
-from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for
+from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response
 
 from . import main
 from flask import current_app, send_from_directory, g
@@ -90,9 +91,29 @@ def journals_search_by_theme_ajax():
     else:
         return jsonify({
             'error': 401,
-            'message': u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".'
+            'message': _(u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".')
         })
     return jsonify(objects)
+
+
+@main.route("/journals/download/<string:list_type>/<string:extension>", methods=['GET', ])
+def download_journal_list(list_type, extension):
+    if extension.lower() not in ['csv', 'xls']:
+        abort(401, _(u'Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
+    elif list_type.lower() not in ['alpha', 'areas', 'wos', 'publisher']:
+        abort(401, _(u'Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
+    else:
+        if extension.lower() == 'xls':
+            mimetype = 'application/vnd.ms-excel'
+        else:
+            mimetype = 'text/csv'
+        query = request.args.get('query', '', type=unicode)
+        data = controllers.get_journal_generator_for_csv(list_type=list_type, title_query=query)
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        filename = 'journals_%s_%s.%s' % (list_type, timestamp, extension)
+        response = Response(data, mimetype=mimetype)
+        response.headers['Content-Disposition'] = u'attachment; filename=%s' % filename
+        return response
 
 
 @main.route('/journals')

@@ -24,6 +24,7 @@ install_requirements = [
     'Flask-Testing>=0.4.2',
     'Flask-Migrate>=1.7.0',
     'packtools>=1.0.1',
+    'unicodecsv>=0.14.1',
     'opac_schema',
     # for production production
     'chaussette>=1.3',

@@ -57,22 +57,37 @@
 {% block extra_js %}
 
   <script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
-    <script>
-      $(function() {
+  <script>
+    $(function() {
 
-        var list = Object.create(JournalCategorizedList);
-        list.initialize(
-          '#list_table_container',
-          '#query',
-          '.collectionListLoading',
-          'publisher',
-          "{{ url_for('main.journals_search_by_theme_ajax') }}",
-          "#template_error_msg",
-          "#template_empty_msg",
-          "{% trans %}Editoras{% endtrans %}",
-          "{% trans %}editoras{% endtrans %}"
-        ).search();
+      var list = Object.create(JournalCategorizedList);
+      list.initialize(
+        '#list_table_container',
+        '#query',
+        '.collectionListLoading',
+        'publisher',
+        "{{ url_for('main.journals_search_by_theme_ajax') }}",
+        "#template_error_msg",
+        "#template_empty_msg",
+        "{% trans %}Editoras{% endtrans %}",
+        "{% trans %}editoras{% endtrans %}"
+      ).search();
+
+      /* download links */
+      $('#list_table_container').on('results_loaded', function(event) {
+        $('.collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='xls') }}";
+          open_download_url(target_url, '#query');
+        });
+        $('.collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='csv') }}";
+          open_download_url(target_url, '#query');
+        });
       });
-    </script>
+
+    });
+  </script>
 
 {% endblock %}
