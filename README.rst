@@ -49,3 +49,4 @@ Reportar problemas, ou solicitar mudanças
 =========================================
 
 Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalidade, pode `criar um ticket <https://github.com/scieloorg/opac/issues>`_ com seus pedidos.
+
