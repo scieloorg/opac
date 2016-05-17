@@ -197,7 +197,7 @@ var JournalCategorizedList = {
 
     this.collaps_expand_rows();
 
-    $('[data-toggle="tooltip"]').tooltip();
+    $(this.results_container_selector).trigger('results_loaded');
 
   },
 
@@ -268,4 +268,13 @@ var JournalCategorizedList = {
     return this;
 
   }
+}
+
+/* download links with query */
+function open_download_url(target_url, query_input_selector) {
+  var query = $(query_input_selector).val();
+  if ($.trim(query) !== '') {
+    target_url += '?query=' + encodeURIComponent(query)
+  }
+  window.location = target_url;
 }

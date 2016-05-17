@@ -27,10 +27,10 @@
                 </div>
                 <div class="col-xs-6 right download">
                   {% trans %}download da lista{% endtrans %}
-                  <a data-toggle="tooltip" href="" class="collectionListDownloadXLS" title="{% trans %}Lista em arquivo para Excel{% endtrans %}">
+                  <a data-toggle="tooltip" href="#" class="collectionListDownloadXLS" title="{% trans %}Lista em arquivo para Excel{% endtrans %}">
                     <span class="glyphBtn downloadXLS"></span>
                   </a>
-                  <a data-toggle="tooltip" href="" class="collectionListDownloadCSV" title="{% trans %}Lista em arquivo CSV{% endtrans %}">
+                  <a data-toggle="tooltip" href="#" class="collectionListDownloadCSV" title="{% trans %}Lista em arquivo CSV{% endtrans %}">
                     <span class="glyphBtn downloadCSV"></span>
                   </a>
                 </div>
@@ -74,6 +74,19 @@
         "#template_error_msg",
         "#template_empty_msg"
       ).search(true);
+
+      /* download links */
+      $('.collectionListDownloadXLS').click(function(event) {
+        event.preventDefault();
+        var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
+        open_download_url(target_url, '#query');
+      });
+      $('.collectionListDownloadCSV').click(function(event) {
+        event.preventDefault();
+        var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
+        open_download_url(target_url, '#query');
+      });
+
     });
   </script>
 
