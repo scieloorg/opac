@@ -389,7 +389,8 @@ class AM2Opac(object):
                 source = etree.tostring(output, encoding="utf-8",
                                         method="html", doctype=u"<!DOCTYPE html>")
 
-                fp = open('../webapp/media/files/%s-%s.html' % (lang, article.publisher_id), 'w')
+                media = os.environ.get('OPAC_MEDIA_ROOT', '../webapp/media/')
+                fp = open(media + 'files/%s-%s.html' % (lang, article.publisher_id), 'w')
                 fp.write(str(output))
                 fp.close()
 
