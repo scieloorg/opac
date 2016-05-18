@@ -121,6 +121,35 @@
           "{% trans %}Título{% endtrans %}",
           "{% trans %}temas{% endtrans %}"
         ).search();
+
+
+        /* download links */
+        $('#areas_list_table_container').on('results_loaded', function(event) {
+          $('#areasConhecimento .collectionListDownloadXLS').click(function(event) {
+            event.preventDefault();
+            var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='xls') }}";
+            open_download_url(target_url, '#query_areas');
+          });
+          $('#areasConhecimento .collectionListDownloadCSV').click(function(event) {
+            event.preventDefault();
+            var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='csv') }}";
+            open_download_url(target_url, '#query_areas');
+          });
+        });
+
+        $('#temasWoS').on('results_loaded', function(event) {
+          $('#temasWoS .collectionListDownloadXLS').click(function(event) {
+            event.preventDefault();
+            var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='xls') }}";
+            open_download_url(target_url, '#query_wos');
+          });
+          $('#temasWoS .collectionListDownloadCSV').click(function(event) {
+            event.preventDefault();
+            var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='csv') }}";
+            open_download_url(target_url, '#query_wos');
+          });
+        });
+
       });
     </script>
 

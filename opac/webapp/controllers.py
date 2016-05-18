@@ -8,6 +8,9 @@
 """
 
 import datetime
+import unicodecsv
+import cStringIO
+
 from opac_schema.v1.models import Journal, Issue, Article, Collection
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
@@ -179,6 +182,52 @@ def get_journals_grouped_by(grouper_field, title_query='', is_public=True, order
     }
 
     return {'meta': meta, 'objects': groups_dict}
+
+
+def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title'):
+
+    def format_csv_row(list_type, journal):
+        common_fields = [
+            unicode(journal.title),
+            unicode(journal.issue_count),
+            unicode(journal.last_issue.volume) or u'',
+            unicode(journal.last_issue.number) or u'',
+            unicode(journal.last_issue.year) or u'',
+            unicode(journal.current_status == 'current'),
+        ]
+        if list_type == 'alpha':
+            return common_fields
+        elif list_type == 'areas':
+            return [','.join(journal.study_areas)] + common_fields
+        elif list_type == 'wos':
+            return [','.join(journal.index_at)] + common_fields
+        else:  # publisher_name
+            return [journal.publisher_name] + common_fields
+
+    common_headers = ['Title', '# issues', 'Last volume', 'Last number', 'Last year', 'Is active?']
+    if list_type == 'alpha':
+        CSV_HEADERS = common_headers
+        order_by = 'title'
+    elif list_type == 'areas':
+        CSV_HEADERS = ['areas', ] + common_headers
+        order_by = 'study_areas'
+    elif list_type == 'wos':
+        CSV_HEADERS = ['WoS', ] + common_headers
+        order_by = 'index_at'
+    elif list_type == 'publisher':
+        CSV_HEADERS = ['Publisher', ] + common_headers
+        order_by = 'publisher_name'
+
+    csv_file = cStringIO.StringIO()
+    csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
+    csv_writer.writerow(CSV_HEADERS)
+
+    journals = get_journals(title_query, is_public, order_by=order_by)
+
+    for journal in journals:
+        csv_writer.writerow(format_csv_row(list_type, journal))
+    csv_file.seek(0)
+    return csv_file.getvalue()
 
 
 def get_journal_by_jid(jid, **kwargs):
