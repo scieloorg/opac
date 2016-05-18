@@ -280,9 +280,6 @@ var Portal = {
   				e.preventDefault()
   				$(this).tab("show");
 			});
-
-			if(typeof ZeroClipboard != "undefined")
-				client = new ZeroClipboard($("input[name='link-share'], a.copyLink"));
 		}
 	},
 	SearchForm = {
@@ -728,18 +725,6 @@ var Portal = {
 				$(this).effect("transfer", { to: q }, 1000);
 				SearchForm.PlaceCaretToEnd(document.getElementById("iptQuery"));
 			});
-
-			if(typeof ZeroClipboard != "undefined") {
-				var client = new ZeroClipboard( document.getElementById("CopyToClipboard"));
-				client.on("ready", function( readyEvent ) {
-					client.on( "aftercopy", function( event ) {
-						$("#CopyToClipboard").addClass("success");
-						var t = setTimeout(function() {
-							$("#CopyToClipboard").removeClass("success");
-						},2000);
-					});
-				});
-			}
 
 			$(".openCitationModal").on("click",function() {
 				var modal = $("#CitationModal"),
