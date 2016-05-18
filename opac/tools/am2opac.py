@@ -328,13 +328,15 @@ class AM2Opac(object):
             m_article.issue = issue
         except DoesNotExist as e:
             logger.warning("Article without issue %s" % str(article.publisher_id))
+        except Exception as e:
+            logger.error("Erro ao tentar acessar o atributo issue do artigo: %s, Erro %s" % (str(article.publisher_id), e))
 
         try:
             journal = models.Journal.objects.get(
                 scielo_issn=article.journal.scielo_issn)
             m_article.journal = journal
         except Exception as e:
-            print e
+            logger.error("Erro: %s" % e)
 
         m_article.title = article.original_title()
 
