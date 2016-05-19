@@ -39,6 +39,7 @@ def create_app():
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
                 'js/vendor/underscore-min.js',
                 'js/vendor/bootstrap.min.js',
+                'js/vendor/iframeResizer.min.js',
                 'js/common.js',
                 'js/main.js',
                 filters='jsmin', output='js/bundle.js')
