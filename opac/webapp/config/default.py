@@ -186,3 +186,6 @@ IMAGES_ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif', 'webp')
 IMAGES_ALLOWED_EXTENSIONS_RE = tuple('*.' + ext for ext in IMAGES_ALLOWED_EXTENSIONS)
 THUMBNAIL_HEIGHT = 100
 THUMBNAIL_WIDTH = 100
+
+# search scielo
+URL_SEARCH = 'http://search.scielo.org/'

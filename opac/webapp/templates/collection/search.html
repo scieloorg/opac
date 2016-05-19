@@ -5,11 +5,19 @@
   {% include "collection/includes/levelMenu.html" %}
 
   {% block main_content %}
-      <h1>Search page: Not implemented yet</h1>
+
+    <iframe id="search_frame" src="{{config.URL_SEARCH}}?content_only=true" width="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+
   {% endblock %}
 
   {% include "includes/footer.html" %}
 
   {% include "collection/includes/email_modal.html" %}
 
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        iFrameResize();
+    </script>
 {% endblock %}
