@@ -91,7 +91,7 @@
                             {% if session.lang %}
                               <h2>{{ article.get_title_by_lang(session.lang[:2]) }}</h2>
                             {% endif %}
-                            <a href="../iAHx-Colecao/resultado.html">Schmidt, Morgan</a>
+                            <a href="{{ url_for('.article_detail', article_id=article.aid) }}">Schmidt, Morgan</a>
                             <ul class="links">
                                 <li>
                                   {% trans %}Português{% endtrans %}:

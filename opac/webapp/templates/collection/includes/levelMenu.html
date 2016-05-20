@@ -42,8 +42,7 @@
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.metrics') }}"
-         class="btn single {{ mmenu.endpoint_selected(view_name='main.metrics') }}">
+      <a target="_blank" href="//analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="btn single">
         <span class="glyphBtn metrics"></span> {% trans %}Métricas{% endtrans %}
       </a>
     </div>
