@@ -6,7 +6,7 @@
 
   {% block main_content %}
 
-    <iframe id="search_frame" src="{{config.URL_SEARCH}}?content_only=true&lang={{ session.lang[:2] }}{% if request.args.get('filter') %}&filter[ta_cluster][]={{request.args.get('filter')}}{% endif %}" width="100%" width="100%" frameborder="0" scrolling="no"></iframe>
+    <iframe id="search_frame" src="{{config.URL_SEARCH}}?content_only=true{% if session.lang %}&lang={{ session.lang[:2] }}{% endif %}{% if request.args.get('filter') %}&filter[ta_cluster][]={{request.args.get('filter')}}{% endif %}" width="100%" width="100%" frameborder="0" scrolling="no"></iframe>
 
   {% endblock %}
 
