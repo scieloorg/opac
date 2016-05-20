@@ -71,18 +71,6 @@ class MenuTestCase(BaseTestCase):
         expected_anchor = u'<a href="/journals/institution"\n             class="btn group selected">\n            Por instituição\n          </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
-    def test_metrics_link_is_selected_for_metric_view(self):
-        """
-        Verficamos que o link do menú "Métricas" tem o css:
-        "selected" quando acessamos a view "metrics"
-        """
-        response = self.client.get(url_for('main.metrics'))
-
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/metrics.html')
-        expected_anchor = u'<a href="/metrics"\n         class="btn single selected">\n        <span class="glyphBtn metrics"></span> Métricas\n      </a>'
-        self.assertIn(expected_anchor, response.data.decode('utf-8'))
-
     def test_about_link_is_selected_for_about_view(self):
         """
         Verficamos que o link do menú "Sobre o Scielo" tem o css:
@@ -100,43 +88,51 @@ class MenuTestCase(BaseTestCase):
         """
         no menú de hamurger, verificamos os links que apontam a views do opac
         """
-        response = self.client.get(url_for('main.index'))
-        self.assertStatus(response, 200)
-        expected_anchor1 = u"""<a href="%s"><strong>SciELO Brasil</strong></a>""" % url_for('.index')
-        self.assertIn(expected_anchor1, response.data.decode('utf-8'))
-        expected_anchor2 = u"""<li><a href="%s">Lista alfabética de periódicos</a></li>""" % url_for('.collection_list_alpha')
-        self.assertIn(expected_anchor2, response.data.decode('utf-8'))
-        expected_anchor3 = u"""<li><a href="%s">Lista temática de periódicos</a></li>""" % url_for('.collection_list_theme')
-        self.assertIn(expected_anchor3, response.data.decode('utf-8'))
-        expected_anchor4 = u"""<li><a href="%s">Busca</a></li>""" % url_for('.search')
-        self.assertIn(expected_anchor4, response.data.decode('utf-8'))
-        expected_anchor5 = u"""<li><a href="%s">Métricas</a></li>""" % url_for('.metrics')
-        self.assertIn(expected_anchor5, response.data.decode('utf-8'))
-        expected_anchor6 = u"""<li><a href="%s">Sobre o SciELO Brasil</a></li>""" % url_for('.about')
-        self.assertIn(expected_anchor6, response.data.decode('utf-8'))
-        expected_anchor7 = u"""<li><a href="#">Contatos</a></li>"""
-        self.assertIn(expected_anchor7, response.data.decode('utf-8'))
-        expected_anchor8 = u"""<a href="#"><strong>SciELO.org - Rede SciELO</strong></a>"""
-        # rede/scielo org
-        self.assertIn(expected_anchor8, response.data.decode('utf-8'))
-        expected_anchor9 = u"""<li><a href="http://www.scielo.org/php/index.php">Coleções nacionais e temáticas</a></li>"""
-        self.assertIn(expected_anchor9, response.data.decode('utf-8'))
-        expected_anchor10 = u"""<li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">Lista alfabética de periódicos</a></li>"""
-        self.assertIn(expected_anchor10, response.data.decode('utf-8'))
-        expected_anchor11 = u"""<li><a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">Lista de periódicos por assunto</a></li>"""
-        self.assertIn(expected_anchor11, response.data.decode('utf-8'))
-        expected_anchor12 = u"""<li><a href="http://search.scielo.org/">Busca</a></li>"""
-        self.assertIn(expected_anchor12, response.data.decode('utf-8'))
-        expected_anchor13 = u"""<li><a href="http://www.scielo.org/applications/scielo-org/php/siteUsage.php">Métricas</a></li>"""
-        self.assertIn(expected_anchor13, response.data.decode('utf-8'))
-        expected_anchor14 = u"""<li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">Acesso OAI e RSS</a></li>"""
-        self.assertIn(expected_anchor14, response.data.decode('utf-8'))
-        expected_anchor15 = u"""<li><a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">Sobre a Rede SciELO</a></li>"""
-        self.assertIn(expected_anchor15, response.data.decode('utf-8'))
-        expected_anchor16 = u"""<li><a href="#">Contatos</a></li>"""
-        self.assertIn(expected_anchor16, response.data.decode('utf-8'))
-        expected_anchor17 = u"""<a href="#"><strong>Portal do Autor</strong></a>"""
-        self.assertIn(expected_anchor17, response.data.decode('utf-8'))
+        with current_app.app_context():
+            collection = utils.makeOneCollection({'license': 'BY/4.0', 'name': 'dummy collection'})
+
+            with self.client as c:
+
+                response = self.client.get(url_for('main.index'))
+                response_data = response.data.decode('utf-8')
+                self.assertStatus(response, 200)
+                expected_anchor1 = u"""<a href="%s">\n        <strong>%s</strong>""" % (url_for('.index'), collection.name)
+                self.assertIn(expected_anchor1, response_data)
+                expected_anchor2 = u"""<li>\n            <a href="%s">\n              Lista alfabética de periódicos\n            </a>\n          </li>""" % url_for('.collection_list_alpha')
+                self.assertIn(expected_anchor2, response_data)
+                expected_anchor3 = u"""<li>\n            <a href="%s">\n              Lista temática de periódicos\n            </a>\n          </li>""" % url_for('.collection_list_theme')
+                self.assertIn(expected_anchor3, response_data)
+                expected_anchor4 = u"""<li>\n            <a href="%s">\n              Lista de periódicos por editoras\n            </a>\n          </li>""" % url_for('.collection_list_institution')
+                self.assertIn(expected_anchor4, response_data)
+                expected_anchor5 = u"""<li>\n            <a href="%s">\n              Busca\n            </a>\n          </li>""" % url_for('.search')
+                self.assertIn(expected_anchor5, response_data)
+                expected_anchor6 = u"""<li>\n            <a target="_blank" href="//analytics.scielo.org/?collection=%s">\n              M\xe9tricas\n            </a>\n          </li>\n          <li>""" % current_app.config['OPAC_COLLECTION']
+                self.assertIn(expected_anchor6, response_data)
+                expected_anchor7 = u"""<li><a href="%s#about-collection">Sobre o SciELO Brasil</a></li>""" % url_for('.about')
+                self.assertIn(expected_anchor7, response_data)
+                expected_anchor8 = u"""<li>\n            <a href="#">\n              Contatos\n            </a>\n          </li>"""
+                self.assertIn(expected_anchor8, response_data)
+                expected_anchor9 = u"""<a href="#">\n        <strong>SciELO.org - Rede SciELO</strong>\n      </a>"""
+                self.assertIn(expected_anchor9, response_data)
+                # rede/scielo org
+                expected_anchor10 = u"""<li>\n          <a href="http://www.scielo.org/php/index.php">\n            Coleções nacionais e temáticas\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor10, response_data)
+                expected_anchor11 = u"""<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">\n            Lista alfabética de periódicos\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor11, response_data)
+                expected_anchor12 = u"""<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">\n            Lista de periódicos por assunto\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor12, response_data)
+                expected_anchor13 = u"""<li>\n          <a href="http://search.scielo.org/">\n            Busca\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor13, response_data)
+                expected_anchor14 = u"""<li>\n          <a target="_blank" href="//analytics.scielo.org/">\n            Métricas\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor14, response_data)
+                expected_anchor15 = u"""<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">\n            Acesso OAI e RSS\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor15, response_data)
+                expected_anchor16 = u"""<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">\n            Sobre a Rede SciELO\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor16, response_data)
+                expected_anchor17 = u"""<li>\n          <a href="#">\n            Contatos\n          </a>\n        </li>"""
+                self.assertIn(expected_anchor17, response_data)
+                expected_anchor18 = u"""<li>\n      <a href="#"><strong>Portal do Autor</strong></a>\n    </li>"""
+                self.assertIn(expected_anchor18, response_data)
 
     def test_blog_link_in_hamburger_menu(self):
         """
@@ -197,17 +193,17 @@ class MenuTestCase(BaseTestCase):
                                          'year': '2016', 'volume': '1',
                                          'number': '3', 'order': '3', })
 
-            response = self.client .get(url_for('main.journal_detail',
-                                     journal_id=journal.jid))
+            response = self.client .get(
+                url_for('main.journal_detail', journal_id=journal.jid))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">atual</a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -232,17 +228,18 @@ class MenuTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\xab anterior</a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="/issues/" class="btn group   disabled ">atual</a>'
+            expect_btn_atual = u'<a href="/issues/" class="btn group   disabled ">\n          atual\n        </a>'
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          pr\xf3ximo &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            response_data = response.data.decode('utf-8')
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(btn, response_data)
 
     def test_journal_detail_menu_with_on_issue(self):
         """
@@ -265,17 +262,18 @@ class MenuTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\xab anterior</a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">atual</a>' % url_for('.issue_toc', issue_id=issue.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            response_data = response.data.decode('utf-8')
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(btn, response_data)
 
     def test_journal_detail_menu_access_issue_toc_on_any_issue(self):
         """
@@ -305,17 +303,18 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.issue_toc', issue_id=issue1.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue1.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">atual</a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          pr\xf3ximo &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
+            response_data = response.data.decode('utf-8')
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(btn, response_data)
 
     def test_journal_detail_menu_access_issue_toc_lastest_issue(self):
         """
@@ -345,11 +344,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  selected  ">atual</a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  selected  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -385,11 +384,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\xab anterior</a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">atual</a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          próximo &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -429,11 +428,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.article_detail', article_id=article1.aid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; anterior\n                </a>' % url_for('.article_detail', article_id=article1.aid)
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.article_detail', article_id=article3.aid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    próximo &raquo;\n                </a>' % url_for('.article_detail', article_id=article3.aid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -473,11 +472,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\xab anterior</a>' % url_for('.article_detail', article_id=article2.aid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; anterior\n                </a>' % url_for('.article_detail', article_id=article2.aid)
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="/articles/" class="btn group  disabled ">pr\xf3ximo \xbb</a>'
+            expect_btn_proximo = u'<a href="/articles/" class="btn group  disabled ">\n                    próximo &raquo;\n                </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -517,11 +516,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="/articles/" class="btn group  disabled ">\xab anterior</a>'
+            expect_btn_anterior = u'<a href="/articles/" class="btn group  disabled ">\n                    &laquo; anterior\n                </a>'
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">atual</a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">pr\xf3ximo \xbb</a>' % url_for('.article_detail', article_id=article2.aid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    pr\xf3ximo &raquo;\n                </a>' % url_for('.article_detail', article_id=article2.aid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 

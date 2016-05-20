@@ -348,9 +348,3 @@ def search():
 def about():
     context = {}
     return render_template("collection/about.html", **context)
-
-
-@main.route("/metrics", methods=['GET'])
-def metrics():
-    context = {}
-    return render_template("collection/metrics.html", **context)
