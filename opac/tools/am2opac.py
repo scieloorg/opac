@@ -371,17 +371,17 @@ class AM2Opac(object):
         except ValueError as e:
             logger.warning('Invalid order: %s-%s' % (e, article.publisher_id))
 
-        m_article.doi = article.doi
-        m_article.is_aop = article.is_ahead_of_print
-
-        m_article.created = datetime.datetime.now()
-        m_article.updated = datetime.datetime.now()
-
-        m_article.languages = article.languages()
-        m_article.original_language = article.original_language()
-
         htmls = []
+
         try:
+            m_article.doi = article.doi
+            m_article.is_aop = article.is_ahead_of_print
+
+            m_article.created = datetime.datetime.now()
+            m_article.updated = datetime.datetime.now()
+
+            m_article.languages = article.languages()
+            m_article.original_language = article.original_language()
 
             rsps_article = self._get_rsps(article.publisher_id).content
 
@@ -391,10 +391,10 @@ class AM2Opac(object):
                 source = etree.tostring(output, encoding="utf-8",
                                         method="html", doctype=u"<!DOCTYPE html>")
 
-                media = os.environ.get('OPAC_MEDIA_ROOT', '../webapp/media/')
-                fp = open(media + 'files/%s-%s.html' % (lang, article.publisher_id), 'w')
-                fp.write(str(output))
-                fp.close()
+                # media = os.environ.get('OPAC_MEDIA_ROOT', '../webapp/media/')
+                # fp = open(media + 'files/%s-%s.html' % (lang, article.publisher_id), 'w')
+                # fp.write(str(output))
+                # fp.close()
 
                 resource = models.Resource()
                 resource._id = str(uuid4().hex)
@@ -406,7 +406,7 @@ class AM2Opac(object):
                 htmls.append(resource)
 
         except Exception as e:
-            print "Article pid: %s, sem html, Error: %s" % (article.publisher_id, e.message)
+            logger.error("Erro inexperado: %s, %s" % (article.publisher_id, e))
 
         m_article.htmls = htmls
 

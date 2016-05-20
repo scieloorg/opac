@@ -88,6 +88,7 @@ def makeOneJournal(attrib=None):
         '_id': default_id,
         'jid': attrib.get('jid', default_id),
         'is_public': attrib.get('is_public', True),
+        'short_title': attrib.get('short_title', 'Jounal Ex.'),
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
         'acronym': attrib.get('acronym', "journal-%s" % default_id),
