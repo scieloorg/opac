@@ -383,27 +383,27 @@ class AM2Opac(object):
             m_article.languages = article.languages()
             m_article.original_language = article.original_language()
 
-            # rsps_article = self._get_rsps(article.publisher_id).content
+            rsps_article = self._get_rsps(article.publisher_id).content
 
-            # xml = etree.parse(StringIO(rsps_article))
+            xml = etree.parse(StringIO(rsps_article))
 
-            # for lang, output in packtools.HTMLGenerator.parse(xml, valid_only=False, css=XML_CSS):
-            #     source = etree.tostring(output, encoding="utf-8",
-            #                             method="html", doctype=u"<!DOCTYPE html>")
+            for lang, output in packtools.HTMLGenerator.parse(xml, valid_only=False, css=XML_CSS):
+                source = etree.tostring(output, encoding="utf-8",
+                                        method="html", doctype=u"<!DOCTYPE html>")
 
-            #     # media = os.environ.get('OPAC_MEDIA_ROOT', '../webapp/media/')
-            #     # fp = open(media + 'files/%s-%s.html' % (lang, article.publisher_id), 'w')
-            #     # fp.write(str(output))
-            #     # fp.close()
+                # media = os.environ.get('OPAC_MEDIA_ROOT', '../webapp/media/')
+                # fp = open(media + 'files/%s-%s.html' % (lang, article.publisher_id), 'w')
+                # fp.write(str(output))
+                # fp.close()
 
-            #     resource = models.Resource()
-            #     resource._id = str(uuid4().hex)
-            #     resource.type = 'html'
-            #     resource.language = lang
-            #     resource.url = '%s/media/files/%s-%s.html' % (APP_URL, lang, article.publisher_id)
-            #     resource.save()
+                resource = models.Resource()
+                resource._id = str(uuid4().hex)
+                resource.type = 'html'
+                resource.language = lang
+                resource.url = '%s/media/files/%s-%s.html' % (APP_URL, lang, article.publisher_id)
+                resource.save()
 
-            #     htmls.append(resource)
+                htmls.append(resource)
 
         except Exception as e:
             logger.error("Erro inexperado: %s, %s" % (article.publisher_id, e))

@@ -26,7 +26,7 @@
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="buscar.html" class="btn single"><span class="glyphBtn search"></span> {% trans %}buscar{% endtrans %}</a>
+      <a href="{{ url_for('main.search') }}?content_only=true&lang={{ session.lang[:2] }}&filter={{ journal.short_title }}" class="btn single"><span class="glyphBtn search"></span> {% trans %}buscar{% endtrans %}</a>
     </div>
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
