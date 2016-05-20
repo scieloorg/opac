@@ -65,7 +65,7 @@
             <div class="col-md-6 col-sm-6">
               <h3>{% trans %}Sumário{% endtrans %}</h3>
               <ul>
-                {% for section in journal.last_issue.sections %}
+                {% for section in journal.last_issue.sections|sort(attribute='name') %}
                   <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
                 {% endfor %}
               </ul>
