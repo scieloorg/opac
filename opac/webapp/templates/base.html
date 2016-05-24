@@ -46,5 +46,53 @@
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     {% block extra_js %}{% endblock %}
+
+
+    {% if config.DEBUG %}
+
+      <style type="text/css">
+
+        .bugherd {
+          position: fixed;
+          bottom: 0;
+          width: 15%;
+          height: 40px;
+          right: 0;
+          z-index:999999;
+        }
+        .bugherd-container {
+          width: auto;
+          max-width: 680px;
+          padding: 0 15px;
+        }
+        .bugherd-btn-danger {
+          color: #fff;
+          background-color: #d9534f;
+          border-color: #d43f3a;
+        }
+        .bugherd-btn-danger:focus,
+        .bugherd-btn-danger.focus {
+          color: #fff;
+          background-color: #c9302c;
+          border-color: #761c19;
+        }
+        .bugherd-btn-danger:hover {
+          color: #fff;
+          background-color: #c9302c;
+          border-color: #ac2925;
+        }
+
+      </style>
+
+      <div class="bugherd">
+        <div class="bugherd=container">
+          <div class="btn-group" role="group" aria-label="...">
+            <a href="https://github.com/scieloorg/opac/issues/new" target="_blank" class="btn bugherd-btn-danger">Reportar erro</a>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+
   </body>
 </html>
