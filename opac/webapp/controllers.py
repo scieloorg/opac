@@ -11,7 +11,7 @@ import datetime
 import unicodecsv
 import cStringIO
 
-from opac_schema.v1.models import Journal, Issue, Article, Collection
+from opac_schema.v1.models import Journal, Issue, Article, Collection, News
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
 from flask.ext.mongoengine import Pagination
@@ -437,6 +437,25 @@ def get_articles_by_iid(iid, **kwargs):
         raise ValueError(__(u'Obrigatório um iid.'))
 
     return Article.objects(issue=iid, **kwargs).order_by('order')
+
+# -------- NEWS --------
+
+
+def create_news_record(news_model_data):
+    try:
+        from uuid import uuid4
+        news = News(**news_model_data)
+        news._id = unicode(uuid4().hex)
+        news.save()
+    except Exception, e:
+        raise e
+
+
+def get_latest_news_by_lang(language):
+    limit = current_app.config['NEWS_LIST_LIMIT']
+    return News.objects.filter(
+        language=language,
+        is_public=True).order_by('-publication_date')[:limit]
 
 # -------- SLQALCHEMY --------
 

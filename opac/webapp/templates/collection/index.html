@@ -1,5 +1,5 @@
 {% extends "collection/base.html" %}
-
+{% block body_class %}portal collection{% endblock %}
 {% block main_content %}
 
   <section class="collection collectionNews">
@@ -27,54 +27,11 @@
         </div>
       </div>
       <div class="newsContainer">
-        <div class="row newsHighlight">
-            <a href="http://blog.scielo.org/blog/2014/05/05/registro-de-ensaios-clinicos-sera-unificado-na-uniao-europeia/" target="_blank">
-                <div class="col-md-5 col-sm-5"><img src="" /></div>
-                <div class="col-md-7 col-sm-7">
-                    <span class="pubDate">10/05/2014</span>
-                    <h2>Registro de ensaios clínicos será unificado na União Europeia</h2>
-                    <p>
-                        Em sessão do Parlamento Europeu no dia 2 de abril de 2014, foi aprovada por 594 votos contra 17, e 13 abstenções, o projeto de Lei que determina que companhias farmacêuticas e pesquisadores registrem os resultados de ensaios clínicos conduzidos nos países da Europa em bases de dados de acesso público. <span class="fakeLink">Continue lendo »</span>
-                    </p>
-                </div>
-            </a>
-        </div>
-        <div class="row">
-            <a href="http://humanas.blog.scielo.org/blog/2014/12/17/internacionalizacao-da-rae-revista-de-administracao-de-empresas/" target="_blank">
-                <div class="col-md-3 col-sm-3"><img src="" /></div>
-                <div class="col-md-9 col-sm-9">
-                    <span class="pubDate">10/05/2014</span>
-                    <h2>RAE abre chamada de trabalhos em Social Businesses</h2>
-                    <p>
-                        RAE está com a chamada de trabalhos, Social Businesses, organizada pelos professores Edgard Barki (FGV-EAESP), Graziella Comini (FEA-USP), Stuart Hart (Cornell University), Sudhanshu Rai (Copenhagen Business School), Ann L Cunliffe (Leeds University Business School). O prazo para submissões é 10/03/2014.  <span class="fakeLink">Continue lendo »</span>
-                    </p>
-                </div>
-            </a>
-        </div>
-        <div class="row">
-          <a href="http://humanas.blog.scielo.org/blog/2014/12/17/internacionalizacao-da-rae-revista-de-administracao-de-empresas/" target="_blank">
-              <div class="col-md-3 col-sm-3"><img src="" /></div>
-              <div class="col-md-9 col-sm-9">
-                  <span class="pubDate">22/03/2013</span>
-                  <h2>Uso de conhecimento científico na autogestão de riscos em DSTs</h2>
-                  <p>
-                      Interface – Comunicação Saúde Educação traz artigo que aborda as Doenças Sexualmente Transmissíveis HIV/AIDS voltado principalmente para homens que fazem sexo com homens. George Moraes de Luis, psicólogo social e pesquisador da PUC/SP, salienta que cada vez mais os homens pesquisam em fontes estrangeiras formas para se proteger, pois “os debates no exterior são mais francos, abertos, enquanto aqueles que ocorrem no Brasil prezam pela cautela na divulgação de informações que ainda estão em fase de estudo”.   <span class="fakeLink">Continue lendo »</span>
-                  </p>
-              </div>
-          </a>
-        </div>
-        <div class="row">
-          <a href="http://humanas.blog.scielo.org/blog/2014/02/14/entrevista-com-nikos-salingaros/" target="_blank">
-            <div class="col-md-3 col-sm-3"><img src="" /></div>
-            <div class="col-md-9 col-sm-9">
-              <span class="pubDate">05/02/2013</span>
-              <h2>Entrevista com Nikos Salíngaros</h2>
-              <p>
-                  Nikos Salíngaros, físico da Universidade do Texas e indicado como um dos 100 mais destacados pensadores urbanos pelo Planetizen, em entrevista concedida a urbe. Revista Brasileira de Gestão Urbana, fala como se interessou pelo projeto urbano e arquitetura, critica o desconstrutivismo na arquitetura e comenta sobre sua ligação com o novo urbanismo. <span class="fakeLink">Continue lendo »</span>
-              </p>
-            </div>
-          </a>
-        </div>
+        {% for item in news %}
+          {% with is_highlight = loop.index == 1 %}
+            {% include "news/includes/collection_news_row.html" %}
+          {% endwith %}
+        {% endfor %}
       </div>
     </div>
   </section>

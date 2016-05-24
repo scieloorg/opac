@@ -1,0 +1,21 @@
+<div class="row {% if is_highlight %}newsHighlight{% endif %}">
+  <a href="{{ item.url }}" target="_blank">
+
+    <div class="{% if is_highlight %}col-md-5 col-sm-5{% else %}col-md-3 col-sm-3{% endif %}">
+      {% if item.image_url %}
+        <img src="{{ item.image_url }}" alt="" class="news_image" />
+      {% endif %}
+    </div>
+    <div class="{% if is_highlight %}col-md-7 col-sm-7{% else %}col-md-9 col-sm-9{% endif %}">
+      <span class="pubDate">{{ item.publication_date }}</span>
+      <h2>{{ item.title }}</h2>
+      <p>
+        {% autoescape false %}
+          {{ item.description|striptags|title|replace('Read More →', '') }}
+        {% endautoescape %}
+        <span class="fakeLink">{% trans%}Continue lendo{% endtrans %} &raquo;</span>
+      </p>
+    </div>
+
+  </a>
+</div>

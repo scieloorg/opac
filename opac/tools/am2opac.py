@@ -93,8 +93,7 @@ class AM2Opac(object):
                       help='Update all Journals, Issues and Articles')
 
     parser.add_option('-r', '--rebuild_index', action='store_true',
-                      help='This will remove all data in MongoDB and load all\
-                      Journals, Issues and Articles')
+                      help='This will remove all data in MongoDB and load all Journals, Issues and Articles')
 
     parser.add_option(
         '--from_date',
