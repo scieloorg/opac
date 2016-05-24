@@ -189,3 +189,19 @@ THUMBNAIL_WIDTH = 100
 
 # search scielo
 URL_SEARCH = 'http://search.scielo.org/'
+
+NEWS_LIST_LIMIT = 4
+RSS_NEWS_FEEDS = {
+  'pt_BR': {
+    'display_name': u'SciELO em Perspectiva',
+    'url': 'http://blog.scielo.org/feed/'
+  },
+  'es': {
+    'display_name': u'SciELO en Perspectiva',
+    'url': 'http://blog.scielo.org/es/feed/',
+  },
+  'en': {
+    'display_name': 'SciELO in Perspective',
+    'url': 'http://blog.scielo.org/en/feed/',
+  },
+}

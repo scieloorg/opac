@@ -57,7 +57,13 @@ def set_locale(lang_code):
 
 @main.route('/')
 def index():
-    return render_template("collection/index.html")
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang)
+    news = controllers.get_latest_news_by_lang(language)
+    context = {
+        'news': news
+    }
+    return render_template("collection/index.html", **context)
 
 
 @main.route("/journals/search/alpha/ajax/", methods=['GET', ])
@@ -141,6 +147,11 @@ def journal_detail(journal_id):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    # todo: ajustar para que seja só noticias relacionadas ao periódico
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang)
+    news = controllers.get_latest_news_by_lang(language)
+
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal_id, is_public=True)
 
@@ -157,8 +168,9 @@ def journal_detail(journal_id):
         'journal': journal,
         # o primiero item da lista é o último fascículo.
         # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None
-        }
+        'last_issue': issues[0] if issues else None,
+        'news': news
+    }
 
     return render_template("journal/detail.html", **context)
 

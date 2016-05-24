@@ -6,6 +6,7 @@ from uuid import uuid4
 from werkzeug import secure_filename
 from jinja2 import Markup
 from flask_babelex import gettext as _
+from flask_babelex import ngettext
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
@@ -23,7 +24,7 @@ from webapp import models, controllers, choices
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
-from webapp.utils import get_timed_serializer
+from webapp.utils import get_timed_serializer, import_feed
 from opac_schema.v1.models import Sponsor, Resource
 
 
@@ -284,6 +285,7 @@ class OpacBaseAdminView(mongoengine.ModelView):
         ReferenceField
     )
     filter_converter = CustomFilterConverter()
+    object_id_converter = unicode
 
     def _search(self, query, search_term):
         op, term = parse_like_term(search_term)
@@ -329,6 +331,94 @@ class ResourceAdminView(OpacBaseAdminView):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
             model._id = str(uuid4().hex)
+
+
+class NewsAdminView(OpacBaseAdminView):
+    can_create = False
+    can_edit = True
+    can_delete = True
+    page_size = 30
+
+    list_template = 'admin/news/list.html'
+
+    def _url_formatter(self, context, model, name):
+        return Markup("<a href='{url}' target='_blank'>Open</a>".format(
+            url=model.url))
+
+    def _preview_formatter(self, context, model, name):
+        if not model.image_url:
+            return ''
+        else:
+            return Markup("<img src='{url}'>".format(
+                url=model.image_url))
+
+    column_formatters = {
+        'url': _url_formatter,
+        'image_url': _preview_formatter,
+    }
+
+    form_overrides = dict(
+        language=Select2Field,
+    )
+    form_args = dict(
+        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+    )
+    column_exclude_list = (
+        '_id', 'description',
+    )
+    column_filters = [
+        'language'
+    ]
+    column_searchable_list = [
+        '_id', 'title', 'description',
+    ]
+
+    @admin.expose('/feeds/import/from/<string:feed_name>/<string:feed_lang>')
+    def feeds_import_from(self, feed_name, feed_lang):
+        try:
+            feeds = current_app.config['RSS_NEWS_FEEDS']
+
+            if feed_lang not in feeds.keys():
+                msg = _(u'O idioma: %s, não consta no nosso cadastro de feeds.' % (
+                    feed_lang))
+                flash(msg, 'error')
+            elif feed_name not in feeds[feed_lang]['display_name']:
+                msg = _(u'O feed: "%s", no idioma: "%s", não consta no nosso cadastro de feeds.' % (
+                    feed_name, feed_lang))
+                flash(msg, 'error')
+            else:
+                feed_url = feeds[feed_lang]['url']
+                imported_ok, error_msg = import_feed(feed_url, feed_lang)
+                if imported_ok:
+                    msg = _(u'O feed: %s [%s], foi importado com sucesso !!' % (
+                        feed_name, feed_lang))
+                    flash(msg)
+                else:
+                    # logger.error(error_msg)
+                    msg = _(u'Ocorreu um erro tentando importar o feed: %s [%s].' % (
+                        feed_name, feed_lang))
+                    flash(msg, 'error')
+        except Exception as ex:
+            msg = _(u'Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex))
+            flash(msg, 'error')
+        return redirect(url_for('.index_view'))
+
+    @admin.expose('/feeds/import/all/')
+    def feeds_import_all(self):
+        try:
+            feeds = current_app.config['RSS_NEWS_FEEDS']
+            for language, feed in feeds.iteritems():
+                imported_ok, error_msg = import_feed(feed['url'], language)
+                if imported_ok:
+                    flash(_(u'O feed: %s [%s], foi importado com sucesso !!' % (
+                        feed['display_name'], language)))
+                else:
+                    # logger.error(error_msg)
+                    flash(_(u'Ocorreu um erro tentando importar o feed: %s [%s].' % (
+                        feed['display_name'], language)), 'error')
+        except Exception as ex:
+            flash(_(u'Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
+        return redirect(url_for('.index_view'))
 
 
 class SponsorAdminView(OpacBaseAdminView):

@@ -2,11 +2,12 @@
 
 import os
 import shutil
-from lxml import etree
+import feedparser
+import datetime
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
-from flask import current_app
+from flask import current_app, url_for
 import controllers
 import models
 import webapp
@@ -244,3 +245,37 @@ def create_image(image_path, filename):
 
     webapp.dbsql.session.add(img)
     webapp.dbsql.session.commit()
+
+
+def import_feed(feed_url, language):
+
+    def get_item_date(item):
+        if 'published_parsed' in item.keys():
+            return datetime.datetime(*item.published_parsed[:7])
+        else:
+            return datetime.datetime().now()
+
+    feed = feedparser.parse(feed_url)
+
+    if feed.bozo == 1:
+        msg = u'Não é possível parsear o feed (%s), possívelmente esteja malformado.' % feed_url
+        return (False, msg)
+    elif len(feed.entries) == 0:
+        msg = 'No tem entries para importar.'
+        return (True, msg)
+    else:
+        entries = feed['items']
+        entries_count = 0
+        for item in entries:
+            news_data = {
+                # '_id': item.get('id', None),
+                'url': item.link,
+                'image_url': url_for('static', filename='img/fallback_image.png', _external=True),
+                'publication_date': get_item_date(item),
+                'title': item.title[:256],
+                'description': item.summary,
+                'language': language,  # ignoramos o language do feed pq vem errado
+            }
+            controllers.create_news_record(news_data)
+            entries_count += 1
+        return (True, entries_count)

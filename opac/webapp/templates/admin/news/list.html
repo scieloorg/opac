@@ -1,0 +1,65 @@
+{% extends 'admin/model/list.html' %}
+
+{% block list_row_actions_header %}
+    <th class="col-md-1">
+        {% if config['RSS_NEWS_FEEDS'].keys() %}
+
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                {% trans %}Feeds{% endtrans %}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                {% for feed_language, feed_data in config['RSS_NEWS_FEEDS'].iteritems() %}
+                    <li>
+                        <a class="trigger_import_feed"
+                           href="{{ url_for('.feeds_import_from', feed_name=feed_data['display_name'], feed_lang=feed_language) }}"
+                           data-feed-lang="{{ feed_language }}"
+                           data-feed-name="{{ feed_data['display_name'] }}">
+                            {% trans %}Importar desde:{% endtrans %} "{{ feed_data['display_name'] }}"
+                            ({% trans %}idioma:{% endtrans%} {{ feed_language }})
+                        </a>
+                    </li>
+                {% endfor %}
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a id="feeds_import_all" href="{{ url_for('.feeds_import_all') }}">
+                        {% trans %}Importar todo {% endtrans %}
+                    </a>
+                </li>
+              </ul>
+            </div>
+        {% endif %}
+    </th>
+{% endblock %}
+
+{% block tail %}
+    {{ super() }}
+    <script language="javascript">
+        (function($) {
+            /* importar um feed especifico */
+            $('a.trigger_import_feed').click(function (e) {
+                e.preventDefault();
+                var target_url = $(this).attr('href');
+                var feed_lang = $(this).data('feed-lang');
+                var feed_name = $(this).data('feed-name');
+                var confirm_msg = "{% trans %}Tem certeza que deseja importar o feed: {% endtrans %}\"" + feed_name + '\" ({% trans %}idioma:{% endtrans%} ' + feed_lang + ')';
+
+                if(confirm(confirm_msg)) {
+                    window.location.href = target_url;
+                }
+            });
+
+            /* importar todos os feeds */
+            $('a#feeds_import_all').click(function (e) {
+                e.preventDefault();
+                var target_url = $(this).attr('href');
+                var confirm_msg = "{% trans %}Tem certeza que deseja importar todos os feeds de todas as fontes?{% endtrans %}";
+
+                if(confirm(confirm_msg)) {
+                    window.location.href = target_url;
+                }
+            });
+        })(jQuery);
+    </script>
+{% endblock %}

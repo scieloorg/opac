@@ -159,41 +159,9 @@
           <div class="col-md-12">
             <h2>{% trans %}Notícias{% endtrans %}</h2>
 
-            <a href="#">
-              <div class="col-md-2 col-sm-3">
-                <img src="" alt="" />
-              </div>
-              <div class="col-md-8 col-sm-8">
-                10/05/2013
-                <h3>RAE abre chamada de trabalhos em Social Businesses</h3>
-                RAE está com a chamada de trabalhos, Social Businesses, organizada pelos professores Edgard Barki (FGV-EAESP), Graziella Comini (FEA-USP), Stuart Hart (Cornell University), Sudhanshu Rai (Copenhagen Business School), Ann L Cunliffe (Leeds University Business School). O prazo para submissões é 10/03/2014. <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
-              </div>
-              <div class="clearfix"></div>
-            </a>
-
-            <a href="#">
-              <div class="col-md-2 col-sm-3">
-                <img src="" alt="" />
-              </div>
-              <div class="col-md-8 col-sm-8">
-                22/03/2013
-                <h3>Uso de conhecimento científico na autogestão de riscos em DSTs</h3>
-                Interface – Comunicação Saúde Educação traz artigo que aborda as Doenças Sexualmente Transmissíveis HIV/AIDS voltado principalmente para homens que fazem sexo com homens. George Moraes de Luis, psicólogo social e pesquisador da PUC/SP, salienta que cada vez mais os homens pesquisam em fontes estrangeiras formas para se proteger, pois "os debates no exterior são mais francos, abertos, enquanto aqueles que ocorrem no Brasil prezam pela cautela na divulgação de informações que ainda estão em fase de estudo".  <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
-              </div>
-              <div class="clearfix"></div>
-            </a>
-
-            <a href="#">
-              <div class="col-md-2 col-sm-3">
-                <img src="" alt="imagem de noticia" />
-              </div>
-              <div class="col-md-8 col-sm-8">
-                05/02/2013
-                <h3>Entrevista com Nikos Salíngaros</h3>
-                Nikos Salíngaros, físico da Universidade do Texas e indicado como um dos 100 mais destacados pensadores urbanos pelo Planetizen, em entrevista concedida a urbe. Revista Brasileira de Gestão Urbana, fala como se interessou pelo projeto urbano e arquitetura, critica o desconstrutivismo na arquitetura e comenta sobre sua ligação com o novo urbanismo. <strong>{% trans %}Continue lendo{% endtrans %} »</strong>
-              </div>
-              <div class="clearfix"></div>
-            </a>
+            {% for item in news  %}
+              {% include "news/includes/journal_news_row.html" %}
+            {% endfor %}
 
           </div>
           <div class="clearfix"></div>
