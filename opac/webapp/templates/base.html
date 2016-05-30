@@ -10,6 +10,8 @@
 
     <title>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</title>
 
+    <link rel="icon" href="/static/img/favicon.ico" />
+
     {% assets "css_all" %}
       <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" />
     {% endassets %}
@@ -46,7 +48,6 @@
       <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     {% block extra_js %}{% endblock %}
-
 
     {% if config.DEBUG %}
 
