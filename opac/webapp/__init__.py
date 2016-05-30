@@ -2,6 +2,7 @@
 import os
 
 from flask import Flask
+from flask.ext.htmlmin import HTMLMIN
 from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
@@ -34,6 +35,9 @@ def create_app():
     # Configurações
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+
+    # Minificando o HTML
+    HTMLMIN(app)
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',
