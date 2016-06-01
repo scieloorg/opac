@@ -73,7 +73,9 @@
                       <strong class="issueName">{{ journal.short_title }} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }} {{ issue.start_month }}/{{ issue.end_month }} {{ issue.year }}</strong>
                       <ul>
                       {% for section in articles.iterkeys() %}
+                        {% if section %}
                         <li><a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                        {% endif %}
                       {% endfor %}
                       </ul>
                   </div>
@@ -81,17 +83,23 @@
 
                 {% for section, article_list in articles.iteritems() %}
 
-                  <a name="{{ section|upper }}"></a>
-                  <h1>{{ section }}</h1>
+                  {% if section %}
+                    <a name="{{ section|upper }}"></a>
+                    <h1>{{ section }}</h1>
+                  {% endif %}
 
                   <div class="issueIndent">
                     <ul class="articles">
                       {% for article in article_list %}
                         <li>
                             {% if session.lang %}
-                              <h2>{{ article.get_title_by_lang(session.lang[:2]) }}</h2>
+                              <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags|title }}</h2>
                             {% endif %}
-                            <a href="{{ url_for('.article_detail', article_id=article.aid) }}">Schmidt, Morgan</a>
+
+                            {% for author in article.authors %}
+                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">{{ author }}</a>;
+                            {% endfor %}
+
                             <ul class="links">
                                 <li>
                                   {% trans %}Português{% endtrans %}:

@@ -384,6 +384,9 @@ class AM2Opac(object):
 
             rsps_article = self._get_rsps(article.publisher_id).content
 
+            if article.authors:
+                m_article.authors = ['%s, %s' % (author['surname'], author['given_names']) for author in article.authors]
+
             xml = etree.parse(StringIO(rsps_article))
 
             for lang, output in packtools.HTMLGenerator.parse(xml, valid_only=False, css=XML_CSS):
