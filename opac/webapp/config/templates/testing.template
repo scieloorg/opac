@@ -39,6 +39,10 @@ TESTING = True
 # ASSETS_DEBUG = DEBUG
 
 
+# ativa/desativa o modo Debug mimificado do HTML
+MINIFY_PAGE = DEBUG
+
+
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
 OPAC_COLLECTION = 'DUMMY_TEST'

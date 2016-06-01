@@ -85,6 +85,10 @@ TESTING = False
 ASSETS_DEBUG = DEBUG
 
 
+# ativa/desativa o modo Debug mimificado do HTML
+MINIFY_PAGE = True
+
+
 # Email do webmaster, este e-mail será utilizado para contato em caso de página
 # não encontrada e correções no conteúdo da aplicacão.
 WEBMASTER_EMAIL = "webmaster@scielo.org"
