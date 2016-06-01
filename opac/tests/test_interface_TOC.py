@@ -24,9 +24,9 @@ class TOCTestCase(BaseTestCase):
 
             issue = utils.makeOneIssue({'journal': journal})
 
-            translated_titles = [{'name': "Artigo com título em português", 'language': 'pt'},
-                                 {'name': "Título del artículo en portugués", 'language': 'es'},
-                                 {'name': "Article title in Portuguese", 'language': 'en'}]
+            translated_titles = [{'name': "Artigo Com Título Em Português", 'language': 'pt'},
+                                 {'name': "Título Del Artículo En Portugués", 'language': 'es'},
+                                 {'name': "Article Title In Portuguese", 'language': 'en'}]
 
             article = utils.makeOneArticle({'issue': issue,
                                             'title': 'Article Y',
@@ -44,7 +44,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'pt_BR')
 
-            self.assertIn(u"Artigo com título em português",
+            self.assertIn(u"Artigo Com Título Em Português",
                           response.data.decode('utf-8'))
 
     def ttest_the_title_of_the_article_list_when_language_ES(self):
@@ -60,9 +60,9 @@ class TOCTestCase(BaseTestCase):
 
             issue = utils.makeOneIssue({'journal': journal})
 
-            translated_titles = [{'name': "Artigo com título em português", 'language': 'pt'},
-                                 {'name': "Título del artículo en portugués", 'language': 'es'},
-                                 {'name': "Article title in Portuguese", 'language': 'en'}]
+            translated_titles = [{'name': "Artigo Com Título Em Português", 'language': 'pt'},
+                                 {'name': "Título Del Artículo En Portugués", 'language': 'es'},
+                                 {'name': "Article Title In Portuguese", 'language': 'en'}]
 
             article = utils.makeOneArticle({'issue': issue,
                                             'title': 'Article Y',
@@ -80,7 +80,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'es')
 
-            self.assertIn(u"Título del artículo en portugués",
+            self.assertIn(u"Título Del Artículo En Portugués",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_when_language_EN(self):
@@ -96,9 +96,9 @@ class TOCTestCase(BaseTestCase):
 
             issue = utils.makeOneIssue({'journal': journal})
 
-            translated_titles = [{'name': "Artigo com título em português", 'language': 'pt'},
-                                 {'name': "Título del artículo en portugués", 'language': 'es'},
-                                 {'name': "Article title in Portuguese", 'language': 'en'}]
+            translated_titles = [{'name': "Artigo Com Título Em Português", 'language': 'pt'},
+                                 {'name': "Título Del Artículo En Portugués", 'language': 'es'},
+                                 {'name': "Article Title In Portuguese", 'language': 'en'}]
 
             article = utils.makeOneArticle({'issue': issue,
                                             'title': 'Article Y',
@@ -116,7 +116,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'en')
 
-            self.assertIn(u"Article title in Portuguese",
+            self.assertIn(u"Article Title In Portuguese",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_without_translated(self):
@@ -201,9 +201,9 @@ class TOCTestCase(BaseTestCase):
 
             issue = utils.makeOneIssue({'journal': journal})
 
-            translated_titles = [{'name': "Artigo com título em português", 'language': 'pt'},
-                                 {'name': "Título del artículo en portugués", 'language': 'es'},
-                                 {'name': "Article title in Portuguese", 'language': 'en'}]
+            translated_titles = [{'name': "Artigo Com Título Em Português", 'language': 'pt'},
+                                 {'name': "Título Del Artículo En Portugués", 'language': 'es'},
+                                 {'name': "Article Title In Portuguese", 'language': 'en'}]
 
             article1 = utils.makeOneArticle({'issue': issue,
                                              'title': 'Article Y',
@@ -228,6 +228,5 @@ class TOCTestCase(BaseTestCase):
             self.assertIn(u"Article Y",
                           response.data.decode('utf-8'))
 
-            self.assertIn(u"Título del artículo en portugués",
+            self.assertIn(u"Título Del Artículo En Portugués",
                           response.data.decode('utf-8'))
-
