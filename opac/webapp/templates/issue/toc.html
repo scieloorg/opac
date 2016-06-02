@@ -97,7 +97,7 @@
                             {% endif %}
 
                             {% for author in article.authors %}
-                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">{{ author }}</a>;
+                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">{{ author|striptags|title }}</a>;
                             {% endfor %}
 
                             <ul class="links">

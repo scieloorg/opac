@@ -60,7 +60,7 @@ class ArticleMeta(object):
 
                 xjournal = Journal(jjournal)
 
-                logger.info('Journal loaded: %s_%s' % ( identifier.collection, identifier.code))
+                logger.info('Journal loaded: %s_%s' % (identifier.collection, identifier.code))
 
                 yield xjournal
 
@@ -107,19 +107,19 @@ class ArticleMeta(object):
             raise ServerError(msg)
 
         if not jarticle:
-            logger.warning('Document not found for : %s_%s' % ( collection, code))
+            logger.warning('Document not found for : %s_%s' % (collection, code))
             return None
 
         if fmt == 'xylose':
             xarticle = Article(jarticle)
-            logger.info('Document loaded: %s_%s' % ( collection, code))
+            logger.info('Document loaded: %s_%s' % (collection, code))
             return xarticle
         else:
-            logger.info('Document loaded: %s_%s' % ( collection, code))
+            logger.info('Document loaded: %s_%s' % (collection, code))
             return article
 
     def documents(self, collection=None, issn=None, from_date=None,
-        until_date=None, fmt='xylose'):
+                  until_date=None, fmt='xylose'):
         offset = 0
         while True:
             identifiers = self.client.get_article_identifiers(

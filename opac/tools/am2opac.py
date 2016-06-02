@@ -409,6 +409,7 @@ class AM2Opac(object):
 
         except Exception as e:
             logger.error("Erro inexperado: %s, %s" % (article.publisher_id, e))
+            raise
 
         m_article.htmls = htmls
 
@@ -485,7 +486,14 @@ class AM2Opac(object):
         logger.info('Get all articles...')
 
         for article in self.articlemeta.articles(collection=self.options.collection):
-            self._transform_article(article).save()
+            try:
+                m_article = self._transform_article(article).save()
+
+                logger.info("Artigo salvo com sucesso: PID: %s, _id: %s" % (article.publisher_id, m_article._id))
+
+            except Exception as e:
+                logger.warning("Erro inexperado: %s" % e)
+                continue
 
     def run(self):
         """
