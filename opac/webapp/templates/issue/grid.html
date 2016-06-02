@@ -70,7 +70,7 @@
           <ul>
             {% for event in journal.timeline %}
               {% if event.status == 'current'%}
-                <li>Em {{ event.since|dateformat('Y') }} {% trans %} admitido na coleção da SciELO{% endtrans %}</li>
+                <li>Em {{ event.since|dateformat('Y') }} {% trans %} admitido na coleção da SciELO{% endtrans %}.</li>
               {% elif event.status == 'rejected' %}
                 <li>Em {{ event.since|dateformat('Y') }} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
               {% elif event.status == 'suspended' %}
