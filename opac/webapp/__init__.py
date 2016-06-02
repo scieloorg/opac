@@ -13,6 +13,7 @@ from flask_babelex import Babel
 from flask_babelex import lazy_gettext
 from werkzeug.contrib.fixers import ProxyFix
 
+import jinja_filters
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, Resource, News
 
 assets = Environment()
@@ -38,6 +39,9 @@ def create_app():
 
     # Minificando o HTML
     HTMLMIN(app)
+
+    # Registrando os filtros
+    app.jinja_env.filters['abbrmonth'] = jinja_filters.abbrmonth
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',

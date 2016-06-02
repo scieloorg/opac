@@ -43,3 +43,18 @@ INDEX_NAME = {
     'SSCI':  u'Social Science Citation',
     'A&HCI':  u'Arts & Humanities Citation',
 }
+
+MONTHS = {
+          1: _('jan'),
+          2: _('fev'),
+          3: _('mar'),
+          4: _('abr'),
+          5: _('mai'),
+          6: _('jun'),
+          7: _('jul'),
+          8: _('aug'),
+          9: _('set'),
+          10: _('out'),
+          11: _('nov'),
+          12: _('dez')
+}
