@@ -34,7 +34,17 @@
             </li>
             <li>
               {# sustituir isto por uma property do journal por favor!  #}
-              <strong>{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ journal.last_issue.volume }} {% trans %}no.{% endtrans %}{{ journal.last_issue.number }} {{ journal.last_issue.publisher_city }} {{ journal.last_issue.start_month }}/{{ journal.last_issue.end_month }} {{ journal.last_issue.year }}</strong>
+              <strong>{{journal.short_title}} {% trans %}vol.{% endtrans %}{{ journal.last_issue.volume }} {% trans %}no.{% endtrans %}{{ journal.last_issue.number }} {{ journal.last_issue.publisher_city }}
+
+              {% if journal.last_issue.start_month and journal.last_issue.end_month %}
+                {{ journal.last_issue.start_month|abbrmonth }}./{{ journal.last_issue.end_month|abbrmonth }}.
+              {% elif journal.last_issue.start_month %}
+                {{ journal.last_issue.start_month|abbrmonth }}.
+              {% elif journal.last_issue.end_month %}
+                {{ journal.last_issue.end_month|abbrmonth }}.
+              {% endif %}
+
+               {{ journal.last_issue.year }}</strong>
             </li>
           </ul>
         </li>
