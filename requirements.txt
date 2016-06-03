@@ -19,6 +19,6 @@ Flask-Migrate==1.7.0
 packtools==1.0.1
 unicodecsv==0.14.1
 feedparser==5.2.1
--e git+https://git@github.com/scieloorg/opac_schema@v2.7#egg=opac_schema
+-e git+https://git@github.com/scieloorg/opac_schema@v2.8#egg=opac_schema
 # -e git+https://git@github.com/scieloorg/opac@v0.8-dev#egg=opac
 Flask-HTMLmin==1.1

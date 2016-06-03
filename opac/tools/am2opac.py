@@ -382,6 +382,7 @@ class AM2Opac(object):
             m_article.languages = article.languages()
             m_article.original_language = article.original_language()
 
+            m_article.abstract = article.original_abstract()
 
             rsps_article = self._get_rsps(article.publisher_id).content
 
