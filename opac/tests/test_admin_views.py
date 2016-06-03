@@ -3549,7 +3549,7 @@ class ArticleAdminViewTests(BaseTestCase):
         expected_column_exclude_list = [
             '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
             'unpublish_reason', 'translated_titles', 'sections', 'pdfs', 'languages',
-            'original_language', 'created'
+            'original_language', 'created', 'abstract',
         ]
         # when
         with self.client as client:
