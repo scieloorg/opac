@@ -121,7 +121,7 @@ def get_alpha_list_from_paginated_journals(title_query, is_public=True, order_by
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """
 
-    journals = get_journals_paginated(title_query=title_query, page=page, per_page=per_page)
+    journals = get_journals_paginated(title_query=title_query, order_by=order_by, page=page, per_page=per_page)
     journal_list = []
 
     for journal in journals.items:

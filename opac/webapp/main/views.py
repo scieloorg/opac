@@ -5,6 +5,8 @@ from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response
+from werkzeug.contrib.atom import AtomFeed
+from urlparse import urljoin
 
 from . import main
 from flask import current_app, send_from_directory, g
@@ -20,6 +22,9 @@ JOURNAL_UNPUBLISH = _(u"O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _(u"O fascículo está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
 
+def url_external(endpoint, **kwargs):
+    url = url_for(endpoint, **kwargs)
+    return urljoin(request.url_root, url)
 
 @main.before_request
 def add_collection_to_g():
@@ -137,6 +142,61 @@ def collection_list_institution():
     return render_template("collection/list_institution.html")
 
 
+@main.route('/journals/feed')
+def collection_list_feed():
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+
+    feed = AtomFeed('SciELO - %s' % g.collection.name,
+                    subtitle=_(u'Periódicos recientes'),
+                    logo=utils.get_resources_url(
+                        g.collection.logo_resource,
+                        'img', language),
+                    feed_url=request.url,
+                    url=request.url_root)
+
+    journals = controllers.get_journals_paginated(
+        title_query='', page=1, order_by='-updated', per_page=20
+    )
+
+    if not journals.items:
+        feed.add(u'Nenhum periódico encontrado',
+                 url=request.url,
+                 updated=datetime.now()
+            )
+
+    for journal in journals.items:
+        issues = controllers.get_issues_by_jid(journal.jid, is_public=True)
+        last_issue = issues[0] if issues else None
+
+        articles = []
+        if last_issue:
+            articles = controllers.get_articles_by_iid(last_issue.iid, is_public=True)
+
+        result_dict = OrderedDict()
+        for article in articles:
+            section = article.get_section_by_lang(language[:2])
+            result_dict.setdefault(section, [])
+            result_dict[section].append(article)
+
+        context = {
+            'journal': journal,
+            'articles': result_dict,
+            'language': language,
+            'last_issue': last_issue
+        }
+
+        feed.add(journal.title,
+                 render_template("collection/list_feed_content.html", **context),
+                 content_type='html',
+                 author=journal.publisher_name,
+                 url=url_external('main.journal_detail', journal_id=journal.jid),
+                 updated=journal.updated,
+                 published=journal.created)
+
+    return feed.get_response()
+
+
 @main.route('/journals/<string:journal_id>')
 def journal_detail(journal_id):
     journal = controllers.get_journal_by_jid(journal_id)
@@ -173,6 +233,37 @@ def journal_detail(journal_id):
     }
 
     return render_template("journal/detail.html", **context)
+
+
+@main.route('/journals/<string:journal_id>/feed')
+def journal_feed(journal_id):
+    journal = controllers.get_journal_by_jid(journal_id)
+
+    if not journal:
+        abort(404, _(u'Periódico não encontrado'))
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    issues = controllers.get_issues_by_jid(journal.jid, is_public=True)
+    last_issue = issues[0] if issues else None
+    articles = controllers.get_articles_by_iid(last_issue.iid, is_public=True)
+
+    feed = AtomFeed(journal.title,
+                    feed_url=request.url,
+                    url=request.url_root,
+                    subtitle=utils.get_label_issue(last_issue))
+
+    for article in articles:
+        feed.add(article.title,
+                 render_template("issue/feed_content.html", article=article),
+                 content_type='html',
+                 author=article.authors,
+                 url=url_external('main.article_detail', article_id=article.aid),
+                 updated=journal.updated,
+                 published=journal.created)
+
+    return feed.get_response()
 
 
 @main.route('/journals/<string:journal_id>/issues')
@@ -254,6 +345,38 @@ def issue_toc(issue_id):
                }
 
     return render_template("issue/toc.html", **context)
+
+@main.route('/issues/<string:issue_id>/feed')
+def issue_feed(issue_id):
+    issue = controllers.get_issue_by_iid(issue_id)
+
+    if not issue:
+        abort(404, _(u'Fascículo não encontrado'))
+
+    if not issue.is_public:
+        abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
+
+    if not issue.journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
+
+    journal = issue.journal
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    feed = AtomFeed(journal.title,
+                    feed_url=request.url,
+                    url=request.url_root,
+                    subtitle=utils.get_label_issue(issue))
+
+    for article in articles:
+        feed.add(article.title,
+                 render_template("issue/feed_content.html", article=article),
+                 content_type='html',
+                 author=article.authors,
+                 url=url_external('main.article_detail', article_id=article.aid),
+                 updated=journal.updated,
+                 published=journal.created)
+
+    return feed.get_response()
 
 
 @main.route('/articles/<string:article_id>')
