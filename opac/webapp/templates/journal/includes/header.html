@@ -7,7 +7,7 @@
         <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
         <h2>
           <a href="{{ url_for('.index') }}" title="{% trans %} Ir para a homepage da coleção {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-            <img src="{{ mresources.get_resource_url(g.collection.header_logo_resource, 'img', session.lang) }}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
+            <img src="{% if g.collection.header_logo_resource %}{{ mresources.get_resource_url(g.collection.header_logo_resource, 'img', session.lang) }}{% endif %}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
           </a>
         </h2>
         <div class="mainMenu" id="mainMenu">
