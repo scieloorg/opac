@@ -144,6 +144,14 @@ def get_next_issue(issues, issue):
     else:
         return None
 
+def get_label_issue(issue):
+
+    label = 'Vol. %s ' % issue.volume if issue.volume else ''
+    label += 'No. %s ' % issue.number if issue.number else ''
+    label += '- %s' % issue.year if issue.year else ''
+
+    return label
+
 
 def send_email(recipient, subject, html):
     """
@@ -246,6 +254,17 @@ def create_image(image_path, filename):
     webapp.dbsql.session.add(img)
     webapp.dbsql.session.commit()
 
+def get_resource_url(resource, type, lang):
+    if resource.language == lang and resource.type == type:
+        return resource.url
+    return None
+
+def get_resources_url(resource_list, type, lang):
+    for resource in resource_list:
+        resource_url = get_resource_url(resource, type, lang)
+        if resource_url:
+            return resource_url
+    return None
 
 def import_feed(feed_url, language):
 

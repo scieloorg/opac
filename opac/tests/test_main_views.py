@@ -206,6 +206,77 @@ class MainTestCase(BaseTestCase):
         self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
+    def test_collection_list_feed(self):
+        """
+        Teste para verificar a reposta da ``view funciton``collection_list_feed
+        Se cadastra 10 periódicos, deve retornar na interface do rss, utilizando
+        o template ``collection/list_feed_content.html```.
+        """
+
+        with current_app.app_context():
+
+            collection = utils.makeOneCollection()
+            journals = utils.makeAnyJournal(items=10)
+            issues = []
+
+            for journal in journals:
+                issue = utils.makeOneIssue({'journal': journal.id})
+                utils.makeAnyArticle(
+                    issue=issue,
+                    attrib={'journal': journal.id, 'issue': issue.id}
+                )
+                issues.append(issue)
+
+            response = self.client.get(url_for('main.collection_list_feed'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('collection/list_feed_content.html')
+
+            for journal in journals:
+                self.assertIn('journals/%s' % journal.id,
+                              response.data.decode('utf-8'))
+
+            for issue in issues:
+                self.assertIn('issues/%s' % issue.id,
+                              response.data.decode('utf-8'))
+
+    def test_collection_list_feed_without_journals(self):
+        """
+        Teste para avaliar o retorno da ``view function`` collection_list_feed
+        quando não existe periódicos cadastrados deve retorna a msg
+        ``Nenhum periódico encontrado`` no corpo da resposta.
+        """
+        with current_app.app_context():
+
+            collection = utils.makeOneCollection()
+
+            response = self.client.get(url_for('main.collection_list_feed'))
+
+            self.assertStatus(response, 200)
+            self.assertIn(u'Nenhum periódico encontrado',
+                          response.data.decode('utf-8'))
+
+    def test_collection_list_feed_without_issues(self):
+        """
+        Teste para verificar a reposta da ``view funciton``collection_list_feed
+        Se cadastra 10 periódicos sem fascículo, deve retornar na interface do
+        rss, utilizando o template ``collection/list_feed_content.html```.
+        """
+
+        with current_app.app_context():
+
+            collection = utils.makeOneCollection()
+            journals = utils.makeAnyJournal(items=10)
+
+            response = self.client.get(url_for('main.collection_list_feed'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('collection/list_feed_content.html')
+
+            for journal in journals:
+                self.assertIn('journals/%s' % journal.id,
+                              response.data.decode('utf-8'))
+
     # JOURNAL
 
     def test_journal_detail(self):
@@ -260,6 +331,63 @@ class MainTestCase(BaseTestCase):
             'unpublish_reason': 'plágio'})
 
         response = self.client.get(url_for('main.journal_detail',
+                                           journal_id=journal.id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'plágio', response.data.decode('utf-8'))
+
+    def test_journal_feed(self):
+        """
+        Teste da ``view function`` ``journal_feed``, deve retornar um rss
+        que usa o template ``issue/feed_content.html`` e o título do periódico no
+        corpo da página.
+        """
+
+        with current_app.app_context():
+            collection = utils.makeOneCollection()
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+            issue = utils.makeOneIssue({'journal': journal})
+            articles = utils.makeAnyArticle(
+                issue=issue,
+                attrib={'journal': journal.id, 'issue': issue.id}
+            )
+
+            response = self.client.get(url_for('main.journal_feed',
+                                               journal_id=journal.id))
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('issue/feed_content.html')
+
+    def test_journal_feed_with_unknow_id(self):
+        """
+        Teste da ``view function`` ``journal_feed`` com um id desconhecido
+        deve retornar uma página com ``status_code`` 404 e msg
+        ``Periódico não encontrado``.
+        """
+
+        journals = utils.makeAnyJournal(items=6)
+
+        unknow_id = '0k2qhs8slwnui8'
+
+        response = self.client.get(url_for('main.journal_feed',
+                                   journal_id=unknow_id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'Periódico não encontrado',
+                      response.data.decode('utf-8'))
+
+    def test_journal_feed_with_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``journal_feed`` acessando um periódico
+        com atributo is_public=False, deve retorna uma página com ``status_code``
+        404 e msg cadastrada no atributo ``reason``.
+        """
+
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'plágio'})
+
+        response = self.client.get(url_for('main.journal_feed',
                                            journal_id=journal.id))
 
         self.assertStatus(response, 404)
@@ -420,6 +548,85 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.issue_toc',
+                                           issue_id=issue.id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
+
+    def test_issue_feed(self):
+        """
+        Teste da ``view function`` ``issue_feed``, deve retornar um rss
+        que usa o template ``issue/feed_content.html`` e o título do periódico no
+        corpo da página.
+        """
+
+        with current_app.app_context():
+            collection = utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10'})
+            articles = utils.makeAnyArticle(
+                issue=issue,
+                attrib={'journal': issue.journal.id, 'issue': issue.id}
+            )
+
+            response = self.client.get(url_for('main.issue_feed',
+                                       issue_id=issue.id))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/feed_content.html')
+            self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
+
+
+    def test_issue_feed_unknow_issue_id(self):
+        """
+        Teste para avaliar o retorno da ``view function`` ``issue_feed``
+        quando é acessado utilizando um identificador do issue desconhecido,
+        deve retorna status_code 404 com a msg ``Fascículo não encontrado``.
+        """
+
+        issue = utils.makeOneIssue()
+        unknow_id = '9wks9sjdu9j'
+
+        response = self.client.get(url_for('main.issue_feed',
+                                   issue_id=unknow_id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
+
+    def test_issue_feed_with_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``issue_feed`` acessando um fascículo
+        com atributo is_public=False, deve retorna uma página com ``status_code``
+        404 e msg cadastrada no atributo ``reason``.
+        """
+
+        issue = utils.makeOneIssue({
+            'is_public': False,
+            'unpublish_reason': 'Fascículo incorreto'})
+
+        response = self.client.get(url_for('main.issue_feed',
+                                           issue_id=issue.id))
+
+        self.assertStatus(response, 404)
+        self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
+
+    def test_issue_feed_with_journal_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando um fascículo
+        com atributo is_public=True, porém com um periódico com atributo
+        is_public=False deve retorna uma página com ``status_code`` 404 e msg
+        cadastrada no atributo ``reason`` do periódico.
+        """
+
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': 'Revista removida da coleção'})
+        issue = utils.makeOneIssue({
+            'is_public': True,
+            'journal': journal.id})
+
+        response = self.client.get(url_for('main.issue_feed',
                                            issue_id=issue.id))
 
         self.assertStatus(response, 404)

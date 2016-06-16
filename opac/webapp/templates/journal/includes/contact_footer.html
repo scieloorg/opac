@@ -30,7 +30,7 @@
       <span class="text">{% trans %}Siga este periódico nas redes sociais{% endtrans %}</span>
     </div>
     <div class="col-md-3 col-sm-3 journalLinks">
-      <a href="" class="showTooltip" title="RSS"><span class="glyphBtn bigRSS"></span></a>
+      <a href="{{ url_for('main.journal_feed', journal_id=journal.jid)}}" class="showTooltip" title="Atom" target="_blank"><span class="glyphBtn bigRSS"></span></a>
       <span class="text" style="width: 70%;">{% trans %}Acompanhe os números deste periódico no seu leitor de RSS{% endtrans %}</span>
     </div>
     <div class="clearfix"></div>

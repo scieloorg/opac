@@ -1,0 +1,7 @@
+{% if article.authors %}
+    {% for author in article.authors %}
+        <em>{{ author|striptags|title }}</em>;
+    {% endfor %}
+<br/><br/>
+{% endif %}
+{% if article.abstract %}{{ article.abstract }}{% endif %}
