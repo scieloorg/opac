@@ -208,9 +208,9 @@ class MainTestCase(BaseTestCase):
 
     def test_collection_list_feed(self):
         """
-        Test para verficar la respuesta del ``view function`` collection_list_feed
-        Se registran 10 revistas, que deben ser regresados en la iterfaz como rss,
-        utilizando el template ``collection/list_feed_content.html``
+        Teste para verificar a reposta da ``view funciton``collection_list_feed
+        Se cadastra 10 periódicos, deve retornar na interface do rss, utilizando
+        o template ``collection/list_feed_content.html```.
         """
 
         with current_app.app_context():
@@ -222,7 +222,7 @@ class MainTestCase(BaseTestCase):
             for journal in journals:
                 issue = utils.makeOneIssue({'journal': journal.id})
                 utils.makeAnyArticle(
-                    issue=issue, 
+                    issue=issue,
                     attrib={'journal': journal.id, 'issue': issue.id}
                 )
                 issues.append(issue)
@@ -254,14 +254,13 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertIn(u'Nenhum periódico encontrado',
-                      response.data.decode('utf-8'))
-
+                          response.data.decode('utf-8'))
 
     def test_collection_list_feed_without_issues(self):
         """
-        Test para verficar la respuesta del ``view function`` collection_list_feed
-        Se registran 10 revistas sin issue, que deben ser regresados en la iterfaz
-        como rss utilizando el template ``collection/list_feed_content.html``
+        Teste para verificar a reposta da ``view funciton``collection_list_feed
+        Se cadastra 10 periódicos sem fascículo, deve retornar na interface do
+        rss, utilizando o template ``collection/list_feed_content.html```.
         """
 
         with current_app.app_context():
@@ -277,7 +276,6 @@ class MainTestCase(BaseTestCase):
             for journal in journals:
                 self.assertIn('journals/%s' % journal.id,
                               response.data.decode('utf-8'))
-
 
     # JOURNAL
 
@@ -377,7 +375,6 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 404)
         self.assertIn(u'Periódico não encontrado',
                       response.data.decode('utf-8'))
-
 
     def test_journal_feed_with_attrib_is_public_false(self):
         """
@@ -569,7 +566,7 @@ class MainTestCase(BaseTestCase):
             issue = utils.makeOneIssue({'number': '31',
                                         'volume': '10'})
             articles = utils.makeAnyArticle(
-                issue=issue, 
+                issue=issue,
                 attrib={'journal': issue.journal.id, 'issue': issue.id}
             )
 
@@ -596,7 +593,6 @@ class MainTestCase(BaseTestCase):
 
         self.assertStatus(response, 404)
         self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
-
 
     def test_issue_feed_with_attrib_is_public_false(self):
         """

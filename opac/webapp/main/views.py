@@ -22,9 +22,11 @@ JOURNAL_UNPUBLISH = _(u"O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _(u"O fascículo está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
 
+
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
+
 
 @main.before_request
 def add_collection_to_g():
@@ -152,23 +154,22 @@ def collection_list_feed():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
 
-    feed = AtomFeed('SciELO - %s' % g.collection.name,
-                    subtitle=_(u'Periódicos recientes'),
-                    logo=utils.get_resources_url(
-                        g.collection.logo_resource,
-                        'img', language),
-                    feed_url=request.url,
-                    url=request.url_root)
+    title = 'SciELO - %s - %s' % (g.collection.name, _(u'Últimos periódicos inseridos na coleção'))
+    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % g.collection.name)
+
+    feed = AtomFeed(title,
+                    subtitle=subtitle,
+                    logo=utils.get_resources_url(g.collection.logo_resource,
+                                                 'img', language),
+                    feed_url=request.url, url=request.url_root)
 
     journals = controllers.get_journals_paginated(
-        title_query='', page=1, order_by='-updated', per_page=20
-    )
+        title_query='', page=1, order_by='-created', per_page=10)
 
     if not journals.items:
         feed.add(u'Nenhum periódico encontrado',
                  url=request.url,
-                 updated=datetime.now()
-            )
+                 updated=datetime.now())
 
     for journal in journals.items:
         issues = controllers.get_issues_by_jid(journal.jid, is_public=True)
@@ -176,7 +177,8 @@ def collection_list_feed():
 
         articles = []
         if last_issue:
-            articles = controllers.get_articles_by_iid(last_issue.iid, is_public=True)
+            articles = controllers.get_articles_by_iid(last_issue.iid,
+                                                       is_public=True)
 
         result_dict = OrderedDict()
         for article in articles:
@@ -312,6 +314,13 @@ def issue_grid(journal_id):
 
 @main.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+
+    if not session.get('lang'):
+        lang = default_lang
+    else:
+        lang = session.get('lang')[:2]
+
     issue = controllers.get_issue_by_iid(issue_id)
 
     if not issue:
@@ -335,7 +344,7 @@ def issue_toc(issue_id):
 
     result_dict = OrderedDict()
     for article in articles:
-        section = article.get_section_by_lang(session.get('lang')[:2])
+        section = article.get_section_by_lang(lang)
         result_dict.setdefault(section, [])
         result_dict[section].append(article)
 
@@ -350,6 +359,7 @@ def issue_toc(issue_id):
                }
 
     return render_template("issue/toc.html", **context)
+
 
 @main.route('/issues/<string:issue_id>/feed')
 def issue_feed(issue_id):
