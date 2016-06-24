@@ -48,17 +48,17 @@
     </div>
     <div class="col-md-2 col-sm-2 dropdown-container">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.about') }}"
-         class="btn single dropdown-toggle {{ mmenu.endpoint_selected(view_name='main.about') }}">
+      <a href="{{ url_for('.about_collection') }}"
+         class="btn single dropdown-toggle {{ mmenu.endpoint_selected(view_name='main.about_collection') }}">
         <span class="glyphBtn infoMenu"></span>
         <span class="hidden-sm">{% trans %}Sobre o SciELO{% endtrans %}</span>
         <span class="hidden-md hidden-lg">{% trans %}Sobre{% endtrans %}</span>
       </a>
       <ul class="dropdown-menu">
-          <li><a href="{{ url_for('.about') }}#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
-          <li><a href="{{ url_for('.about') }}#about-network">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about') }}#evaluation">{% trans %}Avaliação de periódicos{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about') }}#team">{% trans %}Equipe{% endtrans %} SciELO Brasil</a></li>
+          <li><a href="{{ url_for('.about_collection') }}#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
+          <li><a href="{{ url_for('.about_collection') }}#about-network">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_collection') }}#evaluation">{% trans %}Avaliação de periódicos{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_collection') }}#team">{% trans %}Equipe{% endtrans %} SciELO Brasil</a></li>
       </ul>
     </div>
   </div>

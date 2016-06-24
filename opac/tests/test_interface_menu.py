@@ -76,11 +76,11 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Sobre o Scielo" tem o css:
         "selected" quando acessamos a view "about"
         """
-        response = self.client.get(url_for('main.about'))
+        response = self.client.get(url_for('main.about_collection'))
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/about.html')
-        expected_anchor = u'<a href="/about"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>\n        <span class="hidden-sm">Sobre o SciELO</span>'
+        expected_anchor = u'<a href="/collection/about"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>\n        <span class="hidden-sm">Sobre o SciELO</span>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
@@ -108,7 +108,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor5, response_data)
                 expected_anchor6 = u"""<li>\n            <a target="_blank" href="//analytics.scielo.org/?collection=%s">\n              M\xe9tricas\n            </a>\n          </li>\n          <li>""" % current_app.config['OPAC_COLLECTION']
                 self.assertIn(expected_anchor6, response_data)
-                expected_anchor7 = u"""<li><a href="%s#about-collection">Sobre o SciELO Brasil</a></li>""" % url_for('.about')
+                expected_anchor7 = u"""<li><a href="%s#about-collection">Sobre o SciELO Brasil</a></li>""" % url_for('.about_collection')
                 self.assertIn(expected_anchor7, response_data)
                 expected_anchor8 = u"""<li>\n            <a href="#">\n              Contatos\n            </a>\n          </li>"""
                 self.assertIn(expected_anchor8, response_data)

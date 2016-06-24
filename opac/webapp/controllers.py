@@ -11,7 +11,7 @@ import datetime
 import unicodecsv
 import cStringIO
 
-from opac_schema.v1.models import Journal, Issue, Article, Collection, News
+from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pages
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
 from flask.ext.mongoengine import Pagination
@@ -246,6 +246,22 @@ def get_journal_by_jid(jid, **kwargs):
     return Journal.objects(jid=jid, **kwargs).first()
 
 
+def get_journal_by_acron(acron, **kwargs):
+    """
+    Retorna um periódico considerando os parâmetros ``acron`` e ``kwargs``
+
+    - ``acron``: string, acrônimo do periódico
+    - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
+    """
+
+    if not acron:
+        raise ValueError(__(u'Obrigatório um acronym.'))
+
+    return Journal.objects(acronym=acron, **kwargs).first()
+
+
 def get_journals_by_jid(jids):
     """
     Retorna um dicionário de periódicos aonde o atributo ``jid`` de cada um deles
@@ -456,6 +472,13 @@ def get_latest_news_by_lang(language):
     return News.objects.filter(
         language=language,
         is_public=True).order_by('-publication_date')[:limit]
+
+
+def get_page_by_journal_acron_lang(acron, language):
+
+    page = Pages.objects(language=language, journal=acron).first()
+
+    return page
 
 # -------- SLQALCHEMY --------
 

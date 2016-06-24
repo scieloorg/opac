@@ -44,10 +44,10 @@
           {% include "includes/language.html" %}
         </div>
         <ul>
-          <li><a href="#"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
-          <li><a href="#"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
-          <li><a href="#"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
-          <li><a href="#"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
+          <li><a href="{{ journal.online_submission_url|default('', true) }}"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
         </ul>
       </div>
       <div class="clearfix"></div>

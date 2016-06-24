@@ -494,7 +494,55 @@ def search():
     return render_template("collection/search.html", **context)
 
 
-@main.route("/about", methods=['GET'])
-def about():
+@main.route("/collection/about", methods=['GET'])
+def about_collection():
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+
     context = {}
+
+    for page in g.collection.about:
+        if page.language == language:
+            context = {'content': page.content}
+
     return render_template("collection/about.html", **context)
+
+
+@main.route("/<string:journal_acron>/about", methods=['GET'])
+def about_journal(journal_acron):
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+
+    journal = controllers.get_journal_by_acron(journal_acron)
+
+    if not journal:
+        abort(404, _(u'Periódico não encontrado'))
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+
+    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # anterior e próximo
+    if len(issues) >= 2:
+        previous_issue = issues[1]
+    else:
+        previous_issue = None
+
+    page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
+
+    context = {
+        'next_issue': None,
+        'previous_issue': previous_issue,
+        'journal': journal,
+        # o primiero item da lista é o último fascículo.
+        # condicional para verificar se issues contém itens
+        'last_issue': issues[0] if issues else None,
+    }
+
+    if page:
+        context['content'] = page.content
+
+    return render_template("journal/about.html", **context)

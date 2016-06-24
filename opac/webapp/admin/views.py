@@ -11,6 +11,7 @@ from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
 from flask_admin.form import Select2Field
+from wtforms.fields import SelectField
 from wtforms import fields as wtforms_fields
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
@@ -26,7 +27,7 @@ from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFi
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer, import_feed
 from opac_schema.v1.models import Sponsor, Resource
-
+from webapp.admin.custom_widget import CKEditorField
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
 ACTION_UNPUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer despublicar os itens selecionados?')
@@ -443,7 +444,7 @@ class CollectionAdminView(OpacBaseAdminView):
     form_excluded_columns = ('acronym', )
     column_exclude_list = [
         'logo_resource', 'header_alter_logo_resource', 'header_logo_resource',
-        'footer_resource', '_id'
+        'footer_resource', '_id', 'about',
         ]
 
     form_overrides = dict(
@@ -716,3 +717,41 @@ class ArticleAdminView(OpacBaseAdminView):
     @action('unpublish_abuse', _(u'Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_abuse(self, ids):
         self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[2])
+
+
+class PagesAdminView(OpacBaseAdminView):
+    can_create = True
+    can_edit = True
+    edit_modal = False
+    can_delete = True
+    create_modal = False
+    edit_modal = False
+    can_view_details = True
+    column_exclude_list = ('_id', )
+    column_searchable_list = ('name', 'description')
+
+    column_exclude_list = [
+        '_id', 'content',
+    ]
+
+    create_template = 'admin/pages/edit.html'
+    edit_template = 'admin/pages/edit.html'
+
+    form_overrides = dict(
+        type=Select2Field,
+        language=Select2Field,
+        journal=SelectField,
+        content=CKEditorField
+    )
+
+    form_args = dict(
+        type=dict(choices=['html', 'htm']),
+        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+        journal=dict(choices=[('', '------')] +
+                     [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
+    )
+
+    def on_model_change(self, form, model, is_created):
+        # é necessario definir um valor para o campo ``_id`` na criação.
+        if is_created:
+            model._id = str(uuid4().hex)
