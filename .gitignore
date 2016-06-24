@@ -15,6 +15,9 @@ bundle.js
 bundle.css
 .webassets-cache
 
+# S.O
+.DS_Store
+
 # Flask config
 instance/config.py
 instance/local_config_testing.py

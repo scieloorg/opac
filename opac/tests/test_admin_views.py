@@ -4403,7 +4403,7 @@ class CollectionAdminViewTests(BaseTestCase):
         collection_index_url = url_for('collection.index_view')
         expected_column_exclude_list = [
             'logo_resource', 'header_alter_logo_resource',
-            'header_logo_resource', 'footer_resource', '_id'
+            'header_logo_resource', 'footer_resource', '_id', 'about'
             ]
 
         # when

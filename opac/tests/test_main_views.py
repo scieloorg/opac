@@ -922,7 +922,7 @@ class MainTestCase(BaseTestCase):
             }
             collection = utils.makeOneCollection(attrib=collection_data)
             # when
-            response = self.client.get(url_for('main.about'))
+            response = self.client.get(url_for('main.about_collection'))
             # then
             self.assertStatus(response, 200)
             self.assertIn(collection['address1'], response.data.decode('utf-8'))
