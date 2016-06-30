@@ -261,12 +261,24 @@ def journal_feed(journal_id):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(last_issue))
 
+    # ######### TODO: Revisar/Melhorar/Consertar #########
+    try:
+        feed_language = session['lang'][:2].lower()
+    except Exception, e:
+        feed_language = 'pt'
+
     for article in articles:
+
+        # ######### TODO: Revisar #########
+        article_lang = feed_language
+        if feed_language not in article.languages:
+            article_lang = article.original_language
+
         feed.add(article.title,
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
-                 url=url_external('main.article_detail', article_id=article.aid),
+                 url=url_external('main.article_detail', article_id=article.aid, lang_code=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
@@ -382,24 +394,38 @@ def issue_feed(issue_id):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(issue))
 
+    # ######### TODO: Revisar/Melhorar/Consertar #########
+    try:
+        feed_language = session['lang'][:2].lower()
+    except Exception, e:
+        feed_language = 'pt'
+
     for article in articles:
+        # ######### TODO: Revisar #########
+        article_lang = feed_language
+        if feed_language not in article.languages:
+            article_lang = article.original_language
+
         feed.add(article.title,
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
-                 url=url_external('main.article_detail', article_id=article.aid),
+                 url=url_external('main.article_detail', article_id=article.aid, lang_code=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
     return feed.get_response()
 
 
-@main.route('/articles/<string:article_id>')
-def article_detail(article_id):
+@main.route('/articles/<string:article_id>/<string:lang_code>')
+def article_detail(article_id, lang_code):
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
         abort(404, _(u'Artigo não encontrado'))
+
+    if lang_code not in article.languages:
+        abort(404, _(u'O Artigo não se encontra no idioma solicitado: %s' % lang_code))
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -425,36 +451,23 @@ def article_detail(article_id):
         'previous_article': previous_article,
         'article': article,
         'journal': journal,
-        'issue': issue
+        'issue': issue,
+        'article_lang': lang_code
     }
 
     return render_template("article/detail.html", **context)
 
 
-@main.route('/articles/html/<string:article_id>')
-def article_html_by_aid(article_id):
-    article = controllers.get_article_by_aid(article_id)
-
-    if not article:
-        abort(404, _(u'Artigo não encontrado'))
-
-    if not article.is_public:
-        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-    if not article.htmls:
-        abort(404, _(u'HTML do artigo não encontrado'))
-
-    article_html = article.htmls[0].url
-
-    return redirect(article_html)
-
-
-@main.route('/abstract/<string:article_id>')
-def abstract_detail(article_id):
+@main.route('/abstract/<string:article_id>/<string:lang_code>')
+def abstract_detail(article_id, lang_code):
+    # TODO: a view do abstract pode mudar ou incluso ser eliminada. Ver issue #234 do OPAC
     article = controllers.get_article_by_aid(article_id)
 
     if not article:
         abort(404, _(u'Resumo não encontrado'))
+
+    if lang_code not in article.languages:
+        abort(404, _(u'O Artigo não se encontra no idioma solicitado: %s' % lang_code))
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -477,7 +490,8 @@ def abstract_detail(article_id):
         'previous_article': previous_article,
         'article': article,
         'journal': journal,
-        'issue': issue
+        'issue': issue,
+        'article_lang': lang_code
     }
     return render_template("article/abstract.html", **context)
 

@@ -577,7 +577,6 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('issue/feed_content.html')
             self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
 
-
     def test_issue_feed_unknow_issue_id(self):
         """
         Teste para avaliar o retorno da ``view function`` ``issue_feed``
@@ -649,7 +648,8 @@ class MainTestCase(BaseTestCase):
                                             'htmls': [resource]})
 
             response = self.client.get(url_for('main.article_detail',
-                                               article_id=article.id))
+                                               article_id=article.id,
+                                               lang_code='pt'))
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
@@ -664,7 +664,8 @@ class MainTestCase(BaseTestCase):
         """
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id='02ksn892hwytd8jh2'))
+                                           article_id='02ksn892hwytd8jh2',
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
@@ -690,7 +691,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id))
+                                           article_id=article.id,
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
@@ -715,7 +717,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id))
+                                           article_id=article.id,
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Facículo rejeitado', response.data.decode('utf-8'))
@@ -738,75 +741,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
-
-    def test_article_html_by_aid(self):
-        """
-        Teste da ``view function`` ``article_html_by_aid``, deve retornar o HTML
-        do artigo.
-        """
-
-        resource = utils.makeOneResource()
-
-        article_attrib = {'title': 'Article Y',
-                          'htmls': [resource]}
-
-        article = utils.makeOneArticle(article_attrib)
-
-        response = self.client.get(url_for('main.article_html_by_aid',
-                                           article_id=article.id))
-
-        self.assertStatus(response, 302)
-        self.assertIn(u'http://somedomain.com.br', response.data.decode('utf-8'))
-
-    def test_article_html_by_aid_without_html(self):
-        """
-        Teste da ``view function`` ``article_html_by_aid``, deve retornar uma
-        página 404 com a msg ``HTML do artigo não encontrado``.
-        """
-
-        article = utils.makeOneArticle({'title': 'Article Y'})
-
-        response = self.client.get(url_for('main.article_html_by_aid',
-                                           article_id=article.id))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'HTML do artigo não encontrado', response.data.decode('utf-8'))
-
-    def test_article_html_by_aid_without_articles(self):
-        """
-        Teste da ``view function`` ``article_html_by_aid`` sem artigos
-        cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
-        """
-
-        response = self.client.get(url_for('main.article_html_by_aid',
-                                           article_id='9ajsd9shwqjks9syd'))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
-
-    def test_article_html_by_aid_with_article_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``article_html_by_aid`` acessando um artigo
-        com atributo is_public=False, deve retorna uma página com
-         ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
-        """
-
-        journal = utils.makeOneJournal()
-
-        issue = utils.makeOneIssue({'journal': journal.id})
-
-        article = utils.makeOneArticle({
-            'is_public': False,
-            'unpublish_reason': 'Artigo com problemas de licença',
-            'issue': issue.id,
-            'journal': journal.id})
-
-        response = self.client.get(url_for('main.article_html_by_aid',
-                                           article_id=article.id))
+                                           article_id=article.id,
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
@@ -822,7 +758,8 @@ class MainTestCase(BaseTestCase):
         article = utils.makeOneArticle({'title': 'Article Y'})
 
         response = self.client.get(url_for('main.abstract_detail',
-                                           article_id=article.id))
+                                           article_id=article.id,
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Resumo do artigo não encontrado',
@@ -835,7 +772,8 @@ class MainTestCase(BaseTestCase):
         """
 
         response = self.client.get(url_for('main.abstract_detail',
-                                           article_id='9ajsd9shwqjks9syd'))
+                                           article_id='9ajsd9shwqjks9syd',
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Resumo não encontrado', response.data.decode('utf-8'))
@@ -858,7 +796,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.abstract_detail',
-                                           article_id=article.id))
+                                           article_id=article.id,
+                                           lang_code='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))

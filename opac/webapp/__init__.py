@@ -38,7 +38,8 @@ def create_app():
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
 
     # Minificando o HTML
-    HTMLMIN(app)
+    if not app.config['DEBUG']:
+        HTMLMIN(app)
 
     # Registrando os filtros
     app.jinja_env.filters['abbrmonth'] = jinja_filters.abbrmonth

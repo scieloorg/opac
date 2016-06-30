@@ -253,7 +253,8 @@ def makeOneArticle(attrib=None):
         'updated': attrib.get('updated', datetime.datetime.now()),
         'issue': issue.id,
         'journal': journal.id,
-        'translated_titles': attrib.get('translated_titles', [])
+        'translated_titles': attrib.get('translated_titles', []),
+        'languages': attrib.get('languages', ['pt', ]),
     }
 
     for k, v in attrib.iteritems():

@@ -32,11 +32,8 @@ DEBUG = True
 # NUNCA deixar TESTING = True em produção
 TESTING = False
 
-
-# ativa/desativa o modo Debug dos assets
-# NUNCA deixar ASSETS_DEBUG = True em produção
-ASSETS_DEBUG = DEBUG
-
+# ativa/desativa o modo Debug mimificado do HTML
+MINIFY_PAGE = not DEBUG
 
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
