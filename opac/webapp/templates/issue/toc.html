@@ -1,4 +1,5 @@
 {% extends "issue/base.html" %}
+{% import 'macros/articles.html' as marticles %}
 
 {% block main_content %}
 
@@ -107,21 +108,26 @@
                             {% endif %}
 
                             {% for author in article.authors %}
-                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">{{ author|striptags|title }}</a>;
+                              {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
+                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">
+                                {{ author|striptags|title }}
+                              </a>{% if not loop.last %};{% endif %}
                             {% endfor %}
 
                             <ul class="links">
+                              {% for article_lang in article.languages %}
                                 <li>
-                                  {% trans %}Português{% endtrans %}:
-                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">{% trans %}Resumo{% endtrans %}</a> |
-                                  <a href="{{ url_for('.article_detail', article_id=article.aid) }}">{% trans %}Texto{% endtrans %}</a> |
-                                  <a href="#" target="_blank">PDF</a> |
-                                  <a href="#">Press-release</a>
+                                  {{ article_lang }}:
+                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Resumo{% endtrans %}</a>
+                                  | <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Texto{% endtrans %}</a>
+                                  {% with pdf_url = marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) %}
+                                    {% if pdf_url %}
+                                      | <a href="{{ pdf_url }}" target="_blank">PDF</a>
+                                    {% endif %}
+                                  {% endwith %}
+                                  {# | <a href="#">Press-release</a> #}
                                 </li>
-                                <li>
-                                  {% trans %}English{% endtrans %}:
-                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid) }}">{% trans %}Abstract{% endtrans %}</a>
-                                </li>
+                              {% endfor %}
                             </ul>
                         </li>
                         {% endfor %}

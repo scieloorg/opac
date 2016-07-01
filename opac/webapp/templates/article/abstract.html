@@ -1,60 +1,16 @@
 {% extends "article/base.html" %}
+{% import 'macros/articles.html' as marticles %}
 
 {% block main_content %}
 
   <section class="articleCtt">
       <div class="container">
           <div class="row">
-              <div class="col-md-9 col-sm-8 articleBlock">
+              <div class="col-md-12 col-sm-12 articleBlock">
                 <!-- article -->
-                <iframe id="article_frame" scrolling="no" width="100%" frameborder="0" src="{{ url_for('.article_html_by_aid', article_id=article.aid )}}" onload='javascript:resizeIframe(this);'></iframe>
+                <iframe scrolling="no" width="100%" height="1000px" frameborder="0"
+                        src="{{ marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) }}"></iframe>
                 <!-- article -->
-              </div>
-              <div class="col-md-3 col-sm-4 functionsBlock">
-              <div class="share">
-                {% trans %}Compartilhe{% endtrans %}
-                <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="" data-original-title="Imprimir"><span class="glyphBtn print"></span></a>
-                <a href="" class="sendViaMail showTooltip" data-placement="top" title="" data-original-title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-                <a href="" class="shareFacebook showTooltip" data-placement="top" title="" data-original-title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-                <a href="" class="shareTwitter showTooltip" data-placement="top" title="" data-original-title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-                <a href="" class="shareDelicious showTooltip" data-placement="top" title="" data-original-title="Compartilhar no Delicious"><span class="glyphBtn delicious"></span></a>
-              </div>
-                  <div class="collapseBlock">
-                      <a href="javascript:;" class="collapseTitle">
-                          <span class="glyphBtn versionIcon"></span> {% trans %}Versões{% endtrans %}
-                          <span class="glyphBtn collapseIcon opened"></span>
-                      </a>
-                      <div class="collapseContent">
-                          <ul>
-                              <li><a href="">{% trans %}Texto em inglês{% endtrans %}</a></li>
-                              <li><a href="">{% trans %}Texto em espanhol{% endtrans %}</a></li>
-                          </ul>
-                      </div>
-                  </div>
-                  <div class="collapseBlock">
-                      <a href="javascript:;" class="collapseTitle">
-                          <span class="glyphBtn translationIcon"></span> {% trans %}Tradução automática{% endtrans %}
-                          <span class="glyphBtn collapseIcon opened"></span>
-                      </a>
-                      <div class="collapseContent">
-                          <ul>
-                              <li><a href="">Google</a></li>
-                              <li><a href="">Microsoft</a></li>
-                          </ul>
-                      </div>
-                  </div>
-                  <div class="collapseBlock">
-                      <a href="javascript:;" class="collapseTitle">
-                          <span class="glyphBtn similarIcon"></span> {% trans %}Artigos similares{% endtrans %}
-                          <span class="glyphBtn collapseIcon opened"></span>
-                      </a>
-                      <div class="collapseContent">
-                          <ul>
-                              <li><a href="">SciELO</a></li>
-                              <li><a href="">Google Scholar</a></li>
-                          </ul>
-                      </div>
-                  </div>
               </div>
           </div>
       </div>
@@ -63,20 +19,3 @@
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}
-
-{% block extra_js %}
-  <script language="javascript" type="text/javascript">
-    function resizeIframe(obj) {
-      var frameDoc = obj.contentDocument;
-      /* removemos os blocos de conteúdo extra */
-      frameDoc.querySelector('.body-wrapper').remove();
-      frameDoc.querySelector('.acknowledgement-wrapper').remove();
-      frameDoc.querySelector('.references-wrapper').remove();
-      frameDoc.querySelector('.tables-wrapper').remove();
-      frameDoc.querySelector('.history-wrapper').remove();
-      /* auto ajuste de height */
-      obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-    }
-  </script>
-
-{% endblock extra_js %}

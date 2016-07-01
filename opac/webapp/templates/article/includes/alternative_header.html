@@ -71,7 +71,7 @@
 
                   {# Anterior #}
                   <li class="{% if not previous_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', article_id=previous_article.aid) }}">
+                    <a href="{{ url_for('.article_detail', article_id=previous_article.aid, lang_code=article_lang) }}">
                       &laquo; {% trans %}anterior{% endtrans %}
                     </a>
                   </li>
@@ -85,7 +85,7 @@
 
                   {# Próximo #}
                   <li class="{% if not next_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', article_id=next_article.aid) }}">
+                    <a href="{{ url_for('.article_detail', article_id=next_article.aid, lang_code=article_lang) }}">
                       &raquo; {% trans %}próximo{% endtrans %}
                     </a>
                   </li>

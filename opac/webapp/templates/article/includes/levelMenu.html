@@ -1,3 +1,5 @@
+{% import 'macros/resources.html' as mresources %}
+
 <section class="levelMenu">
     <div class="container">
         <div class="col-md-2 col-sm-2">
@@ -19,7 +21,7 @@
                 </a>
 
                 {# Anterior #}
-                <a href="{{ url_for('.article_detail', article_id=previous_article.aid) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
+                <a href="{{ url_for('.article_detail', article_id=previous_article.aid, lang_code=article_lang) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
                     &laquo; {% trans %}anterior{% endtrans %}
                 </a>
 
@@ -29,7 +31,7 @@
                 </a>
 
                 {# Próximo #}
-                <a href="{{ url_for('.article_detail', article_id=next_article.aid) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                <a href="{{ url_for('.article_detail', article_id=next_article.aid, lang_code=article_lang) }}" class="btn group {% if not next_article %} disabled {% endif %}">
                     {% trans %}próximo{% endtrans %} &raquo;
                 </a>
 
@@ -40,24 +42,36 @@
             <div class="btn-group">
                 <ul>
                     <li class="group" style="width: 33.3333%;">
-                        <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span> PDF</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="">{% trans %}Espanhol{% endtrans %}</a></li>
-                            <li><a href="">{% trans %}Inglês{% endtrans %}</a></li>
-                            <li><a href="">{% trans %}Português{% endtrans %}</a></li>
-                        </ul>
+                        {% if article.pdfs|length > 0 %}
+                            <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphBtn pdfDownload"></span> PDF
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for pdf_resource in article.pdfs %}
+                                    <li>
+                                        <a href="{{ mresources.get_resource_url(pdf_resource, 'PDF', pdf_resource.language) }}">
+                                            {{ pdf_resource.language|upper }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <a href="javascript:;" class="btn dropdown-toggle disabled" data-toggle="dropdown">
+                                <span class="glyphBtn pdfDownload"></span> PDF
+                            </a>
+                        {% endif %}
+
                     </li>
 
                     <li class="group" style="width: 33.3333%;">
-                        <a href="javascript:;" class="btn group"><span class="glyphBtn readcubeView"></span> readcube</a>
+                        <a href="javascript:;" class="btn group disabled"><span class="glyphBtn readcubeView"></span> readcube</a>
                     </li>
                     <li class="group" style="width: 33.3333%;">
-                        <a href="javascript:;" class="btn group"><span class="glyphBtn xmlDownload"></span> XML</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="">{% trans %}Espanhol{% endtrans %}</a></li>
-                            <li><a href="">{% trans %}Inglês{% endtrans %}</a></li>
-                            <li><a href="">{% trans %}Português{% endtrans %}</a></li>
-                        </ul>
+                        {% if article.xml %}
+                            <a href="{{ article.xml }}" class="btn group"><span class="glyphBtn xmlDownload"></span> XML</a>
+                        {% else %}
+                            <a href="javascript:;" class="btn group disabled"><span class="glyphBtn xmlDownload"></span> XML</a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
