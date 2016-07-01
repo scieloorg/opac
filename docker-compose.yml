@@ -16,7 +16,7 @@ services:
             - opac-network
 
     opac_nginx:
-        build: deploy/nginx/.
+        image: scieloorg/opac_nginx:stable
         restart: always
         ports:
             - "80:9000"
