@@ -23,14 +23,14 @@ def send_confirmation_email(recipient_email):
         ts = utils.get_timed_serializer()
         token = ts.dumps(recipient_email, salt='email-confirm-key')
     except Exception, e:
-        return (False, 'Invalid Token: %s' % str(e))
+        return (False, u'Token inválido: %s' % unicode(e))
     else:
         confirm_url = url_for('admin.confirm_email', token=token, _external=True)
-        utils.send_email(
+        sent_results = utils.send_email(
             recipient_email,
-            "Confirmação de email",
+            u"Confirmação de email",
             render_template('email/activate.html', confirm_url=confirm_url))
-        return (True, '')
+        return sent_results
 
 
 def send_reset_password_email(recipient_email):
@@ -46,11 +46,12 @@ def send_reset_password_email(recipient_email):
         ts = utils.get_timed_serializer()
         token = ts.dumps(recipient_email, salt='recover-key')
     except Exception, e:
-        return (False, 'Invalid Token: %s' % str(e))
+        return (False, u'Token inválido: %s' % unicode(e))
     else:
         recover_url = url_for('admin.reset_with_token', token=token, _external=True)
-        utils.send_email(
+        sent_results = utils.send_email(
             recipient_email,
-            "Instruções para recuperar sua senha",
+            u"Instruções para recuperar sua senha",
             render_template('email/recover.html', recover_url=recover_url))
-        return (True, '')
+
+        return sent_results

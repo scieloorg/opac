@@ -496,7 +496,7 @@ class AdminViewsTestCase(BaseTestCase):
                         'password': '123'
                     }
                     expected_email = {
-                        'subject': 'Instruções para recuperar sua senha',
+                        'subject': u'Instruções para recuperar sua senha',
                         'recipients': [credentials['email'], ],
                         'body_has_link': u'<a href="http://localhost%s' % reset_pwd_url
                     }
@@ -894,7 +894,9 @@ class AdminViewsTestCase(BaseTestCase):
                         email_msg = outbox[0]
                         # email enviado ao destinatario certo, com assunto certo
                         self.assertEqual(expected_email['recipients'], email_msg.recipients)
-                        self.assertEqual(expected_email['subject'], email_msg.subject.decode('utf-8'))
+                        # print "expected_email['subject']: ", expected_email['subject']
+                        # print "email_msg.subject.decode('utf-8')", email_msg.subject
+                        self.assertEqual(expected_email['subject'], email_msg.subject)
                         # pegamos o link com token
                         links_found = email_confirm_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
