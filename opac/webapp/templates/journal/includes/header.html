@@ -29,11 +29,12 @@
             <h1>{{ journal.title }}</h1>
             <span class="publisher">{% trans %}Publicação de: {% endtrans %} <strong>{{ journal.publisher_name}}</strong></span>
             <span class="issn">
-              ISSN
+              {% if journal.print_issn %}
+                {% trans %}versão impressa ISSN{% endtrans %} {{ journal.print_issn }}
+                {% if journal.eletronic_issn %}<br/>{% endif %}
+              {% endif %}
               {% if journal.eletronic_issn %}
-                {{ journal.eletronic_issn }}
-              {% else %}
-                {{ journal.print_issn }}
+                {% trans %}versão On-line ISSN{% endtrans %} {{ journal.eletronic_issn }}
               {% endif %}
             </span>
           </div>
