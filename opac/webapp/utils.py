@@ -144,6 +144,7 @@ def get_next_issue(issues, issue):
     else:
         return None
 
+
 def get_label_issue(issue):
 
     label = 'Vol. %s ' % issue.volume if issue.volume else ''
@@ -160,12 +161,20 @@ def send_email(recipient, subject, html):
     - subject: assunto
     - html: corpo da mensagem (formato html)
     Quem envía a mensagem é que for definido na configuração: 'MAIL_DEFAULT_SENDER'
+
+    Retorna:
+     - (True, '') em caso de sucesso.
+     - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-    msg = Message(subject=subject,
-                  sender=current_app.config['MAIL_DEFAULT_SENDER'],
-                  recipients=[recipient, ],
-                  html=html)
-    webapp.mail.send(msg)
+    try:
+        msg = Message(subject=subject,
+                      sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                      recipients=[recipient, ],
+                      html=html)
+        webapp.mail.send(msg)
+        return (True, '')
+    except Exception, e:
+        return (False, e.message)
 
 
 def reset_db():
@@ -254,10 +263,12 @@ def create_image(image_path, filename):
     webapp.dbsql.session.add(img)
     webapp.dbsql.session.commit()
 
+
 def get_resource_url(resource, type, lang):
     if resource.language == lang and resource.type == type:
         return resource.url
     return None
+
 
 def get_resources_url(resource_list, type, lang):
     for resource in resource_list:
@@ -265,6 +276,7 @@ def get_resources_url(resource_list, type, lang):
         if resource_url:
             return resource_url
     return None
+
 
 def import_feed(feed_url, language):
 

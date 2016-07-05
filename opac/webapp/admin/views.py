@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import logging
+import socket
 from functools import partial
 from uuid import uuid4
 from werkzeug import secure_filename
@@ -160,7 +161,7 @@ class UserAdminView(sqla.ModelView):
         if is_created:
             try:
                 was_sent, error_msg = model.send_confirmation_email()
-            except ValueError, e:
+            except (ValueError, socket.error) as e:
                 was_sent = False
                 error_msg = e.message
             # Enviamos o email de confirmação para o usuário.
