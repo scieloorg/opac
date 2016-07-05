@@ -25,9 +25,17 @@
             <img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
           </div>
           <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
-            <span class="theme">{{ journal.study_areas|join(', ') }}</span>
             <h1>{{ journal.title }}</h1>
             <span class="publisher">{% trans %}Publicação de: {% endtrans %} <strong>{{ journal.publisher_name}}</strong></span>
+            <span class="theme">
+              {% if journal.subject_categories %}
+                {{ journal.subject_categories|join(', ')|title }}
+                {% if journal.study_areas %}<br/>{% endif %}
+              {% endif %}
+              {% if journal.study_areas %}
+                {{ journal.study_areas|join(', ')|title }}
+              {% endif %}
+            </span>
             <span class="issn">
               ISSN
               {% if journal.eletronic_issn %}
