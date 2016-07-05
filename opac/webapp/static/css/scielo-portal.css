@@ -1923,9 +1923,6 @@ button.btn:active {
   margin-top: 15px;
   /*max-width: 80%;*/
 }
-.journal .brandLogo .theme {
-  color: #7b7469;
-}
 .journal .brandLogo h1 {
   color: #6789d3;
   font-size: 1.7em;
@@ -1937,6 +1934,7 @@ button.btn:active {
 .journal .brandLogo .publisher .scielo {
   color: #d92929;
 }
+.journal .brandLogo .theme ,
 .journal .brandLogo .issn {
   display: block;
   color: #7b7469;
