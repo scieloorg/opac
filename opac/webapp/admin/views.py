@@ -448,14 +448,6 @@ class CollectionAdminView(OpacBaseAdminView):
         'footer_resource', '_id', 'about',
         ]
 
-    form_overrides = dict(
-        license=Select2Field,
-    )
-
-    form_args = dict(
-        license=dict(choices=choices.LICENSE_CHOICES),
-    )
-
     form_ajax_refs = {
         'logo_resource': CustomQueryAjaxModelLoader(
             name='logo_resource',
@@ -485,7 +477,7 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'use_licenses', 'current_status', 'index_at', 'is_public',
+        'current_status', 'index_at', 'is_public',
         'unpublish_reason'
     ]
     column_searchable_list = [
@@ -493,7 +485,7 @@ class JournalAdminView(OpacBaseAdminView):
         'eletronic_issn', 'acronym',
     ]
     column_exclude_list = [
-        '_id', 'timeline', 'use_licenses', 'subject_categories',
+        '_id', 'timeline', 'subject_categories',
         'study_areas', 'social_networks', 'title_iso', 'short_title',
         'subject_descriptors', 'copyrighter', 'online_submission_url',
         'cover_url', 'logo_url', 'previous_journal_id',
@@ -586,7 +578,7 @@ class IssueAdminView(OpacBaseAdminView):
         'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
     ]
     column_exclude_list = [
-        '_id', 'use_licenses', 'sections', 'cover_url', 'suppl_text',
+        '_id', 'sections', 'cover_url', 'suppl_text',
         'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
         'bibliographic_legend', 'unpublish_reason'
     ]

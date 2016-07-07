@@ -560,3 +560,8 @@ def about_journal(journal_acron):
         context['content'] = page.content
 
     return render_template("journal/about.html", **context)
+
+
+@main.route("/open_access", methods=['GET'])
+def open_access():
+    return render_template("open_access.html")

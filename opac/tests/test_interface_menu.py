@@ -89,7 +89,7 @@ class MenuTestCase(BaseTestCase):
         no menú de hamurger, verificamos os links que apontam a views do opac
         """
         with current_app.app_context():
-            collection = utils.makeOneCollection({'license': 'BY/4.0', 'name': 'dummy collection'})
+            collection = utils.makeOneCollection({'name': 'dummy collection'})
 
             with self.client as c:
 

@@ -34,17 +34,9 @@
   {% endif %}
 
   <div class="container collectionLicense">
-      {% if g.collection.license != '' %}
-          <a href="https://creativecommons.org/licenses/{{ g.collection.license|lower }}/" target="_blank">
-              <img alt="Creative Commons License" style="border-width:0" class="image" src="https://i.creativecommons.org/l/{{ g.collection.license|lower }}/88x31.png" />
-              <span>
-                  {% trans host=request.headers['Host'] %}Todo o conteúdo de {{ host }}, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.{% endtrans %}<br/>
-                  <strong>{% trans %}saiba mais{% endtrans %} »</strong>
-              </span>
-          </a>
-      {% else %}
-        {% trans %}[Deve definir uma licencia para a coleção]{% endtrans %}
-      {% endif %}
+      <a href="{{ url_for('.open_access') }}">
+          <img alt="Open Access" style="border-width:0" class="image" src="{{ url_for('static', filename='img/oa_logo_32.png') }}" />
+      </a>
   </div>
 
 </footer>
