@@ -16,7 +16,6 @@ def makeOneCollection(attrib=None):
     config_acronym = current_app.config['OPAC_COLLECTION']
 
     name = attrib.get('name', 'collection of %s' % config_acronym)
-    license = attrib.get('license', 'BY/3.0')
     acronym = attrib.get('acronym', config_acronym)
 
     resource = makeOneResource({'type': 'img'})
@@ -25,7 +24,6 @@ def makeOneCollection(attrib=None):
         '_id': default_id,
         'name': name,
         'acronym': acronym,
-        'license': license,
         'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
         'header_logo_resource': attrib.get('header_logo_resource', resource)
@@ -103,12 +101,7 @@ def makeOneJournal(attrib=None):
                                 },
                                {'language': 'en',
                                'description': u'This journal is aiming xpto'
-                                }]),
-        'use_licenses': attrib.get('use_licenses',
-                                   {'license_code': u'BY/3.0',
-                                    'reference_url': u'http://creativecommons.org/licenses/by/3.0/deed.en',
-                                    'disclaimer': u'All the contents of www.scielo.br, except where otherwise noted, is licensed under a Creative Commons'
-                                    })
+                                }])
     }
     journal.update(attrib)
     return models.Journal(**journal).save()

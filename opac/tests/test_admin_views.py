@@ -34,7 +34,7 @@ class AdminViewsTestCase(BaseTestCase):
             que é feito um redirect para admin/login
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -56,7 +56,7 @@ class AdminViewsTestCase(BaseTestCase):
             que é feito um redirect para admin/login
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -80,7 +80,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a pagina visualizada contem uma mensagem indicando: usuário inválido.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -112,7 +112,7 @@ class AdminViewsTestCase(BaseTestCase):
                 email inválido e usuário inválido.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -145,7 +145,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a pagina visualizada contem uma mensagem indicando senha requerida.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -176,7 +176,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a página visualizada contem link para fazer logout.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -214,7 +214,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a página visualizada deve informar de senha inválida
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -255,7 +255,7 @@ class AdminViewsTestCase(BaseTestCase):
             na pagina aparece os link para: recuperar a senha
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -279,7 +279,7 @@ class AdminViewsTestCase(BaseTestCase):
             na pagina aparecem os links para trocar de idioma
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -317,7 +317,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a página visualizada deve informar do erro.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -362,7 +362,7 @@ class AdminViewsTestCase(BaseTestCase):
             a operação (logout) é realizada com sucesso
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -395,7 +395,7 @@ class AdminViewsTestCase(BaseTestCase):
             a pagina carregada é a esperad com o formulario esperado
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -423,7 +423,7 @@ class AdminViewsTestCase(BaseTestCase):
             de usuário não encontrado.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -451,7 +451,7 @@ class AdminViewsTestCase(BaseTestCase):
             as instruções para o email do novo usuário.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -485,7 +485,7 @@ class AdminViewsTestCase(BaseTestCase):
             link para continuar a operação.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -529,7 +529,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a pagina de recuparar senha com token seja a correta.
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -582,7 +582,7 @@ class AdminViewsTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -634,7 +634,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a senha do usuário não deve ser modificada
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -688,7 +688,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a pagina deve mostrar o template admin/auth/unconfirm_email.html
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -729,7 +729,7 @@ class AdminViewsTestCase(BaseTestCase):
             - a pagina deve mostrar o template admin/auth/unconfirm_email.html
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -782,7 +782,7 @@ class AdminViewsTestCase(BaseTestCase):
             mostra uma pagina de erro 404 com a mensagem de erro
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -808,7 +808,7 @@ class AdminViewsTestCase(BaseTestCase):
             mostra uma pagina de erro 404 com a mensagem de erro
         """
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -866,7 +866,7 @@ class AdminViewsTestCase(BaseTestCase):
         }
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -943,7 +943,7 @@ class AdminViewsTestCase(BaseTestCase):
         expected_msg = u'Email: %s confirmado com sucesso!' % normal_user['email']
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -995,7 +995,7 @@ class AdminViewsTestCase(BaseTestCase):
         """
         # with
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -1055,7 +1055,7 @@ class AdminViewsTestCase(BaseTestCase):
             u'Registro criado com sucesso.',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1131,7 +1131,7 @@ class AdminViewsTestCase(BaseTestCase):
         expected_form_error = {'email': [u'This field is required.']}
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
@@ -1191,7 +1191,7 @@ class AdminViewsTestCase(BaseTestCase):
         create_user(admin_user['email'], admin_user['password'], True)
         login_url = url_for('admin.login_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1258,7 +1258,7 @@ class JournalAdminViewTests(BaseTestCase):
         create_user(admin_user['email'], admin_user['password'], True)
         login_url = url_for('admin.login_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1307,7 +1307,7 @@ class JournalAdminViewTests(BaseTestCase):
         journal_detail_url = url_for('journal.details_view', id=journal.id)
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as client:
@@ -1352,7 +1352,7 @@ class JournalAdminViewTests(BaseTestCase):
         journal_index_url = url_for('journal.index_view')
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as client:
@@ -1395,14 +1395,13 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         expected_col_filters = [
-            'use_licenses',
             'current_status',
             'index_at',
             'is_public',
             'unpublish_reason'
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1446,7 +1445,7 @@ class JournalAdminViewTests(BaseTestCase):
             'print_issn', 'eletronic_issn', 'acronym',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1485,7 +1484,7 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         expected_column_exclude_list = [
-            '_id', 'timeline', 'use_licenses', 'subject_categories',
+            '_id', 'timeline', 'subject_categories',
             'study_areas', 'social_networks', 'title_iso', 'short_title',
             'subject_descriptors', 'copyrighter', 'online_submission_url',
             'cover_url', 'logo_url', 'previous_journal_id',
@@ -1495,7 +1494,7 @@ class JournalAdminViewTests(BaseTestCase):
             'print_issn', 'eletronic_issn', 'unpublish_reason',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1538,7 +1537,7 @@ class JournalAdminViewTests(BaseTestCase):
             'updated',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
 
@@ -1614,7 +1613,7 @@ class JournalAdminViewTests(BaseTestCase):
             'unpublish_reason',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1654,7 +1653,7 @@ class JournalAdminViewTests(BaseTestCase):
         journal_index_url = url_for('journal.index_view')
 
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1694,7 +1693,7 @@ class JournalAdminViewTests(BaseTestCase):
 
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as client:
@@ -1731,7 +1730,7 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1769,7 +1768,7 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1807,7 +1806,7 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1845,7 +1844,7 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1889,7 +1888,7 @@ class JournalAdminViewTests(BaseTestCase):
             'unpublish_plagiarism',
         ]
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -1942,7 +1941,7 @@ class JournalAdminViewTests(BaseTestCase):
         expected_msg = u'Periódico(s) publicado(s) com sucesso!!'
         # when
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as client:
@@ -1998,7 +1997,7 @@ class JournalAdminViewTests(BaseTestCase):
         action_url = '%saction/' % journal_index_url
         expected_msg = u'Periódico(s) publicado(s) com sucesso!!'
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2057,7 +2056,7 @@ class JournalAdminViewTests(BaseTestCase):
         expected_msg = u'Periódico(s) despublicado com sucesso!!'
         expected_reason = u'Plágio'
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2117,7 +2116,7 @@ class JournalAdminViewTests(BaseTestCase):
         expected_msg = u'Periódico(s) despublicado com sucesso!!'
         expected_reason = u'Problema de Direito Autoral'
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2177,7 +2176,7 @@ class JournalAdminViewTests(BaseTestCase):
         expected_msg = u'Periódico(s) despublicado com sucesso!!'
         expected_reason = u'Abuso ou Conteúdo Indevido'
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2235,7 +2234,7 @@ class JournalAdminViewTests(BaseTestCase):
         action_url = '%saction/' % journal_index_url
         expected_msg = u'Ocorreu um erro tentando publicar o(s) periódico(s)!!'
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2294,7 +2293,7 @@ class JournalAdminViewTests(BaseTestCase):
         expected_msg = u'Ocorreu um erro tentando despublicar o(s) periódico(s)!!'
 
         with current_app.app_context():
-            collection = makeOneCollection({'license': 'BY/4.0'})
+            collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
                 # when
@@ -2563,7 +2562,7 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         expected_column_exclude_list = [
-            '_id', 'use_licenses', 'sections', 'cover_url', 'suppl_text',
+            '_id', 'sections', 'cover_url', 'suppl_text',
             'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
             'bibliographic_legend', 'unpublish_reason'
         ]

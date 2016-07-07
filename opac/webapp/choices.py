@@ -23,20 +23,20 @@ RESOURCE_LANGUAGES_CHOICES = [
     ('es', _(u'Español')),
 ]
 
-LICENSE_CHOICES = [
-    ('BY/3.0', u'BY/3.0'),
-    ('BY/3.0/IGO', u'BY/3.0/IGO'),
-    ('BY/4.0', u'BY/4.0'),
-    ('BY-NC/3.0', u'BY-NC/3.0 '),
-    ('BY-NC/3.0/IGO', u'BY-NC/3.0/IGO '),
-    ('BY-NC/4.0', u'BY-NC/4.0 '),
-    ('BY-NC-ND/3.0 ', u'BY-NC-ND/3.0'),
-    ('BY-NC-ND/3.0/IGO ', u'BY-NC-ND/3.0/IGO'),
-    ('BY-NC-ND/4.0 ', u'BY-NC-ND/4.0'),
-    ('BY-NC-SA/4.0 ', u'BY-NC-SA/4.0'),
-    ('BY-ND/3.0', u'BY-ND/3.0 '),
-    ('BY-ND/4.0 ', u'BY-ND/4.0')
-]
+# LICENSE_CHOICES = [
+#     ('BY/3.0', u'BY/3.0'),
+#     ('BY/3.0/IGO', u'BY/3.0/IGO'),
+#     ('BY/4.0', u'BY/4.0'),
+#     ('BY-NC/3.0', u'BY-NC/3.0 '),
+#     ('BY-NC/3.0/IGO', u'BY-NC/3.0/IGO '),
+#     ('BY-NC/4.0', u'BY-NC/4.0 '),
+#     ('BY-NC-ND/3.0 ', u'BY-NC-ND/3.0'),
+#     ('BY-NC-ND/3.0/IGO ', u'BY-NC-ND/3.0/IGO'),
+#     ('BY-NC-ND/4.0 ', u'BY-NC-ND/4.0'),
+#     ('BY-NC-SA/4.0 ', u'BY-NC-SA/4.0'),
+#     ('BY-ND/3.0', u'BY-ND/3.0 '),
+#     ('BY-ND/4.0 ', u'BY-ND/4.0')
+# ]
 
 INDEX_NAME = {
     'SCIE':  u'Science Citation Index',

@@ -8,14 +8,14 @@ import utils
 
 class FooterTestCase(BaseTestCase):
 
-    def test_collection_license_home(self):
+    def test_collection_open_access_home(self):
         """
         Testa se os links e o conteúdo da licença esta de acordo com a licença
         cadastrada na coleção.
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection({'license': 'BY/4.0'})
+            collection = utils.makeOneCollection()
 
             with self.client as c:
 
@@ -25,17 +25,17 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('collection/index.html')
 
-                self.assertIn('https://creativecommons.org/licenses/by/4.0/', response.data)
-                self.assertIn('https://i.creativecommons.org/l/by/4.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo de localhost, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_collection_license_list_theme(self):
+    def test_collection_open_access_list_theme(self):
         """
         Testa se os links e o conteúdo da licença esta de acordo com a licença
         cadastrada na coleção.
         """
         with current_app.app_context():
-            collection = utils.makeOneCollection({'license': 'BY/4.0'})
+            collection = utils.makeOneCollection()
 
             with self.client as c:
 
@@ -45,18 +45,18 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('collection/list_theme.html')
 
-                self.assertIn('https://creativecommons.org/licenses/by/4.0/', response.data)
-                self.assertIn('https://i.creativecommons.org/l/by/4.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo de localhost, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_collection_license_journal_home(self):
+    def test_collection_open_access_journal_home(self):
         """
         Testa se os links e o conteúdo da licença esta de acordo com a licença
         cadastrada na coleção.
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection({'license': 'BY/4.0'})
+            collection = utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -69,11 +69,11 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('journal/detail.html')
 
-                self.assertIn('https://creativecommons.org/licenses/by/4.0/', response.data)
-                self.assertIn('https://i.creativecommons.org/l/by/4.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo de localhost, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_journal_license_journal_home(self):
+    def test_journal_open_access_journal_home(self):
         """
         Testa se os links e o conteúdo da licença este de acordo com a licença
         cadastrado no periódico.
@@ -93,10 +93,11 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('journal/detail.html')
 
-                self.assertIn('https://i.creativecommons.org/l/by/3.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo deste periódico, exceto onde está identificado, está licenciado sob uma Licença Creative Commons', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_journal_license_in_issue_grid(self):
+    def test_journal_open_access_in_issue_grid(self):
         """
         Testa se os links e o conteúdo da licença este de acordo com a licença
         cadastrado no periódico.
@@ -118,10 +119,11 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('issue/grid.html')
 
-                self.assertIn('https://i.creativecommons.org/l/by/3.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo deste periódico, exceto onde está identificado, está licenciado sob uma Licença Creative Commons', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_journal_license_in_issue_toc(self):
+    def test_journal_open_access_in_issue_toc(self):
         """
         Testa se os links e o conteúdo da licença este de acordo com a licença
         cadastrado no periódico.
@@ -141,17 +143,18 @@ class FooterTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('issue/toc.html')
 
-                self.assertIn('https://i.creativecommons.org/l/by/3.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo deste periódico, exceto onde está identificado, está licenciado sob uma Licença Creative Commons', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-    def test_journal_license_and_collection_license(self):
+    def test_journal_open_access(self):
         """
         Testa se os links e o conteúdo da licença este de acordo com a licença
         cadastrado no periódico.
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection({'license': 'BY/4.0'})
+            collection = utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -165,10 +168,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('journal/detail.html')
 
                 # Collection license
-                self.assertIn('https://creativecommons.org/licenses/by/4.0/', response.data)
-                self.assertIn('https://i.creativecommons.org/l/by/4.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo de localhost, exceto onde está identificado, está licenciado sob uma Licença Creative Commons.', response.data)
+                self.assertIn('/static/img/oa_logo_32.png', response.data)
+                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('Open Access', response.data)
 
-                # Journal license
-                self.assertIn('https://i.creativecommons.org/l/by/3.0/88x31.png', response.data)
-                self.assertIn('Todo o conteúdo deste periódico, exceto onde está identificado, está licenciado sob uma Licença Creative Commons', response.data)

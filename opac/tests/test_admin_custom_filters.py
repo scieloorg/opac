@@ -52,18 +52,6 @@ class CustomFiltersTestCase(BaseTestCase):
         self.assertIn('issue__in', result.query)
         self.assertItemsEqual(expected.query['issue__in'], result.query['issue__in'])
 
-    def test_flt_embedded_use_licenses(self):
-
-        op, term = parse_like_term('CC-%s' % str(uuid4().hex))
-        expected = Q(**{'use_licenses__license_code__%s' % op: term})
-        expected |= Q(**{'use_licenses__reference_url__%s' % op: term})
-        expected |= Q(**{'use_licenses__disclaimer__%s' % op: term})
-        expected_children = [i.query for i in expected.children]
-
-        result = get_flt(Journal.use_licenses, term, op)
-        self.assertEqual(expected.operation, result.operation)
-        self.assertEqual(expected_children, [i.query for i in result.children])
-
     def test_flt_list_field(self):
 
         op, term = parse_like_term('title-%s' % str(uuid4().hex))
@@ -90,19 +78,6 @@ class CustomFiltersTestCase(BaseTestCase):
 
         self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
 
-    def test_filters_embedded_field(self):
-
-        filter_converter = CustomFilterConverter()
-        filtes_embedded_field = (
-            CustomFilterLike, CustomFilterNotLike, CustomFilterEqual,
-            CustomFilterNotEqual, CustomFilterEmpty, CustomFilterInList,
-            CustomFilterNotInList)
-
-        result = filter_converter.convert('EmbeddedDocumentField', Journal.use_licenses, 'use_licenses')
-        expected = [f(Journal.use_licenses, 'use_licenses') for f in filtes_embedded_field]
-
-        self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
-
     def test_filters_list_field(self):
 
         filter_converter = CustomFilterConverter()
@@ -112,21 +87,6 @@ class CustomFiltersTestCase(BaseTestCase):
         expected = [f(Journal.index_at, 'index_at') for f in filtes_list_field]
 
         self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
-
-    def test_custom_filter_equal(self):
-
-        journal_fields = {'title': 'title-%s' % str(uuid4().hex)}
-        journal = makeOneJournal(journal_fields)
-        makeOneIssue({'journal': journal})
-        column = Issue.journal
-        custom_filter = CustomFilterEqual(column=column, name=__(u'Periódico'))
-
-        result = custom_filter.apply(Issue.objects, journal.title)
-
-        journals = Journal.objects.filter(Q(**{'title__': journal.title}))
-        expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
-
-        self.assertItemsEqual(expected, result)
 
     def test_custom_filter_not_equal(self):
 

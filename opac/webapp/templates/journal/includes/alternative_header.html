@@ -121,22 +121,22 @@
               {% trans %}Periódico{% endtrans %}
             </li>
             <li>
-              <a href="{{ journal.online_submission_url }}" class="icon">
+              <a href="{{ journal.online_submission_url|default('') }}" class="icon">
                 <span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}
               </a>
             </li>
             <li>
-              <a href="#" class="icon">
+              <a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}" class="icon">
                 <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
               </a>
             </li>
             <li>
-              <a href="#" class="icon">
+              <a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}" class="icon">
                 <span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}
               </a>
             </li>
             <li>
-              <a href="#" class="icon">
+              <a href="{{ url_for('.about_journal', journal_acron=journal.acronym) }}" class="icon">
                 <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
               </a>
             </li>
