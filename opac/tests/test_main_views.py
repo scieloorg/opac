@@ -2,7 +2,7 @@
 import unittest
 import flask
 import warnings
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 from flask import url_for, request, g, current_app
 from webapp import create_app, dbsql, dbmongo
 

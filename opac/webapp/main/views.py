@@ -28,7 +28,7 @@ def url_external(endpoint, **kwargs):
     return urljoin(request.url_root, url)
 
 
-@main.before_request
+@main.before_app_request
 def add_collection_to_g():
     if not hasattr(g, 'collection'):
         try:
@@ -515,7 +515,7 @@ def about_collection():
 
     context = {}
 
-    for page in g.collection.about:
+    for page in g.collection.get('about', []):
         if page.language == language:
             context = {'content': page.content}
 

@@ -2,7 +2,7 @@
 import os
 
 from flask import Flask
-from flask.ext.htmlmin import HTMLMIN
+from flask_htmlmin import HTMLMIN
 from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager

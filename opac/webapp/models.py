@@ -11,7 +11,7 @@ from sqlalchemy.event import listens_for
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_utils.types.choice import ChoiceType
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 from flask import current_app
 from webapp.utils import thumbgen_filename
 from . import dbsql as db

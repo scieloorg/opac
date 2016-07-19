@@ -14,7 +14,7 @@ import cStringIO
 from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pages
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
-from flask.ext.mongoengine import Pagination
+from flask_mongoengine import Pagination
 from webapp import dbsql
 from models import User
 from choices import INDEX_NAME

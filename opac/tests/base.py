@@ -10,7 +10,7 @@ import subprocess
 import pymongo
 from opac_schema.v1 import models as schema_models
 from flask import current_app
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 from webapp import dbsql
 
 

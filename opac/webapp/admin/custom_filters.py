@@ -1,11 +1,11 @@
 # coding: utf-8
 
-from flask.ext.admin.contrib.mongoengine.filters import (
+from flask_admin.contrib.mongoengine.filters import (
     FilterEqual, FilterNotEqual, FilterLike, FilterNotLike,
     FilterEmpty, FilterInList, FilterNotInList, FilterConverter)
-from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
-from flask.ext.admin.model import filters
-from flask.ext.admin.contrib import sqla
+from flask_admin.contrib.mongoengine.tools import parse_like_term
+from flask_admin.model import filters
+from flask_admin.contrib import sqla
 from mongoengine import ReferenceField, EmbeddedDocumentField, ListField, StringField
 from mongoengine.queryset import Q
 from opac_schema.v1.models import Journal, Issue
