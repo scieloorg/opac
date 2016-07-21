@@ -2,7 +2,7 @@
 import os
 
 from flask import Flask
-from flask.ext.htmlmin import HTMLMIN
+from flask_htmlmin import HTMLMIN
 from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
@@ -16,15 +16,13 @@ from werkzeug.contrib.fixers import ProxyFix
 import jinja_filters
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, Resource, News, Pages
 
+
+login_manager = LoginManager()
 assets = Environment()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
 mail = Mail()
 babel = Babel()
-
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'admin.login_view'
 
 
 def create_app():
@@ -36,6 +34,10 @@ def create_app():
     # Configurações
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+    # login
+    login_manager.session_protection = 'strong'
+    login_manager.login_view = 'admin.login_view'
+    login_manager.init_app(app)
 
     # Minificando o HTML
     if not app.config['DEBUG']:
@@ -62,9 +64,7 @@ def create_app():
     assets.init_app(app)
     # i18n
     babel.init_app(app)
-    # login
-    login_manager.init_app(app)
-
+    # Debug Toolbar
     if app.config['DEBUG']:
         # Toolbar
         from flask_debugtoolbar import DebugToolbarExtension

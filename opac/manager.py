@@ -29,8 +29,8 @@ from webapp import create_app, dbsql, dbmongo, mail
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
 from webapp import controllers
 from webapp.utils import reset_db, create_db_tables, create_user, create_image
-from flask.ext.script import Manager, Shell
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
 from webapp.admin.forms import EmailForm
 from flask import current_app
 

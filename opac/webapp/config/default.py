@@ -209,3 +209,21 @@ RSS_NEWS_FEEDS = {
     'url': 'http://blog.scielo.org/en/feed/',
   },
 }
+
+# paineis do flask-debug-toolbar somente ativos quando DEBUG = True
+
+DEBUG_TB_PANELS = [
+    # default:
+    'flask_debugtoolbar.panels.versions.VersionDebugPanel',
+    'flask_debugtoolbar.panels.timer.TimerDebugPanel',
+    'flask_debugtoolbar.panels.headers.HeaderDebugPanel',
+    'flask_debugtoolbar.panels.request_vars.RequestVarsDebugPanel',
+    'flask_debugtoolbar.panels.config_vars.ConfigVarsDebugPanel',
+    'flask_debugtoolbar.panels.template.TemplateDebugPanel',
+    'flask_debugtoolbar.panels.sqlalchemy.SQLAlchemyDebugPanel',
+    'flask_debugtoolbar.panels.logger.LoggingPanel',
+    'flask_debugtoolbar.panels.route_list.RouteListDebugPanel',
+    'flask_debugtoolbar.panels.profiler.ProfilerDebugPanel',
+    # Mongo:
+    'flask_mongoengine.panels.MongoDebugPanel'
+]

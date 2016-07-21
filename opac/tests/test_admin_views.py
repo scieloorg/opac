@@ -2,7 +2,7 @@
 
 import unittest
 import re
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 from flask import current_app, url_for, g
 from flask_admin.contrib.sqla import form as admin_form
 from flask_login import current_user, login_user

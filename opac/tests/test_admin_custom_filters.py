@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from base import BaseTestCase
-from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
+from flask_admin.contrib.mongoengine.tools import parse_like_term
 from flask_babelex import lazy_gettext as __
 from uuid import uuid4
 from webapp.admin.custom_filters import (

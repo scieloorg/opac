@@ -83,6 +83,15 @@ def makeOneJournal(attrib=None):
     default_id = attrib.get('_id', str(uuid4().hex))
     default_title = "journal-%s" % default_id
 
+    if 'social_networks' in attrib.keys():
+        social_networks = []
+        for sn in attrib['social_networks']:
+            social_account = models.SocialNetwork(
+                account=sn['account'],
+                network=sn['network'])
+            social_networks.append(social_account)
+        attrib['social_networks'] = social_networks
+
     journal = {
         '_id': default_id,
         'jid': attrib.get('jid', default_id),

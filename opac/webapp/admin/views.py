@@ -17,8 +17,8 @@ from wtforms import fields as wtforms_fields
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, request, flash, abort, current_app
-from flask.ext.admin.contrib import sqla, mongoengine
-from flask.ext.admin.contrib.mongoengine.tools import parse_like_term
+from flask_admin.contrib import sqla, mongoengine
+from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 from mongoengine.base.datastructures import BaseList
 
