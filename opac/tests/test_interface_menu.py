@@ -201,11 +201,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; número anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          número atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          número seguinte &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -230,11 +230,11 @@ class MenuTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; número anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="/issues/" class="btn group   disabled ">\n          atual\n        </a>'
+            expect_btn_atual = u'<a href="/issues/" class="btn group   disabled ">\n          número atual\n        </a>'
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          pr\xf3ximo &raquo;\n        </a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          número seguinte &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -243,7 +243,7 @@ class MenuTestCase(BaseTestCase):
             for btn in expected_btns:
                 self.assertIn(btn, response_data)
 
-    def test_journal_detail_menu_with_on_issue(self):
+    def test_journal_detail_menu_with_one_issue(self):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html`` quando o periódico
@@ -264,11 +264,11 @@ class MenuTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('journal/detail.html')
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; número anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          número atual\n        </a>' % url_for('.issue_toc', issue_id=issue.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          número seguinte &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -305,11 +305,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue1.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; número anterior\n        </a>' % url_for('.issue_toc', issue_id=issue1.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          número atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          pr\xf3ximo &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          número seguinte &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -346,11 +346,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n          &laquo; número anterior\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
-            expect_btn_atual = u'<a href="%s" class="btn group  selected  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  selected  ">\n          número atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          próximo &raquo;\n        </a>'
+            expect_btn_proximo = u'<a href="/issues/" class="btn group  disabled ">\n          número seguinte &raquo;\n        </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -386,11 +386,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; anterior\n        </a>'
+            expect_btn_anterior = u'<a href="/issues/" class="btn group  disabled ">\n          &laquo; número anterior\n        </a>'
 
-            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
+            expect_btn_atual = u'<a href="%s" class="btn group  ">\n          número atual\n        </a>' % url_for('.issue_toc', issue_id=issue3.iid)
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          próximo &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n          número seguinte &raquo;\n        </a>' % url_for('.issue_toc', issue_id=issue2.iid)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -431,11 +431,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; anterior\n                </a>' % url_for('.article_detail', article_id=article1.aid, lang_code='pt')
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; artigo anterior\n                </a>' % url_for('.article_detail', article_id=article1.aid, lang_code='pt')
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    próximo &raquo;\n                </a>' % url_for('.article_detail', article_id=article3.aid, lang_code='pt')
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for('.article_detail', article_id=article3.aid, lang_code='pt')
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -476,11 +476,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; anterior\n                </a>' % url_for('.article_detail', article_id=article2.aid, lang_code='pt')
+            expect_btn_anterior = u'<a href="%s" class="btn group ">\n                    &laquo; artigo anterior\n                </a>' % url_for('.article_detail', article_id=article2.aid, lang_code='pt')
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="/articles//pt" class="btn group  disabled ">\n                    próximo &raquo;\n                </a>'
+            expect_btn_proximo = u'<a href="/articles//pt" class="btn group  disabled ">\n                    artigo seguinte &raquo;\n                </a>'
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -521,11 +521,11 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = u'<a href="/articles//pt" class="btn group  disabled ">\n                    &laquo; anterior\n                </a>'
+            expect_btn_anterior = u'<a href="/articles//pt" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
 
-            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    atual\n                </a>'
+            expect_btn_atual = u'<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    pr\xf3ximo &raquo;\n                </a>' % url_for('.article_detail', article_id=article2.aid, lang_code='pt')
+            expect_btn_proximo = u'<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for('.article_detail', article_id=article2.aid, lang_code='pt')
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 

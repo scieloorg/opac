@@ -5,14 +5,11 @@
         <div class="col-md-2 col-sm-2">
             <h2>&#160;</h2>
             <a href="{{ url_for('.journal_detail', journal_id=article.journal.jid) }}" class="btn single">
-                <span class="glyphBtn home"></span> home
+                <span class="glyphBtn home"></span> {% trans %}home da revista{% endtrans %}
             </a>
         </div>
         <div class="col-md-5 col-sm-5">
-            <h2>
-                <span class="glyphBtn articles"></span>
-                {% trans year=issue.year, volume=issue.volume, number=issue.number %}Artigos do Ano {{ year }}, Volume {{ volume }} Número {{ number }}{% endtrans %}
-            </h2>
+            <h2>&#160;</h2>
             <div class="btn-group">
 
                 {# Sumário #}
@@ -22,17 +19,17 @@
 
                 {# Anterior #}
                 <a href="{{ url_for('.article_detail', article_id=previous_article.aid, lang_code=article_lang) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
-                    &laquo; {% trans %}anterior{% endtrans %}
+                    &laquo; {% trans %}artigo anterior{% endtrans %}
                 </a>
 
                 {# Atual #}
                 <a href="" class="btn group disabled">
-                    {% trans %}atual{% endtrans %}
+                    {% trans %}artigo atual{% endtrans %}
                 </a>
 
                 {# Próximo #}
                 <a href="{{ url_for('.article_detail', article_id=next_article.aid, lang_code=article_lang) }}" class="btn group {% if not next_article %} disabled {% endif %}">
-                    {% trans %}próximo{% endtrans %} &raquo;
+                    {% trans %}artigo seguinte{% endtrans %} &raquo;
                 </a>
 
             </div>
