@@ -32,10 +32,11 @@ def url_external(endpoint, **kwargs):
 def add_collection_to_g():
     if not hasattr(g, 'collection'):
         try:
-            g.collection = controllers.get_current_collection()
+            collection = controllers.get_current_collection()
+            setattr(g, 'collection', collection)
         except Exception, e:
             # discutir o que fazer aqui
-            g.collection = {}
+            setattr(g, 'collection', {})
 
 
 @babel.localeselector
@@ -515,7 +516,7 @@ def about_collection():
 
     context = {}
 
-    for page in g.collection.get('about', []):
+    for page in getattr(g.collection, 'about', []):
         if page.language == language:
             context = {'content': page.content}
 

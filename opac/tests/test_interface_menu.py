@@ -76,12 +76,14 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Sobre o Scielo" tem o css:
         "selected" quando acessamos a view "about"
         """
-        response = self.client.get(url_for('main.about_collection'))
+        with current_app.app_context():
+            collection = utils.makeOneCollection({'name': 'dummy collection'})
+            response = self.client.get(url_for('main.about_collection'))
 
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/about.html')
-        expected_anchor = u'<a href="/collection/about"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>\n        <span class="hidden-sm">Sobre o SciELO</span>'
-        self.assertIn(expected_anchor, response.data.decode('utf-8'))
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('collection/about.html')
+            expected_anchor = u'<a href="/collection/about"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>\n        <span class="hidden-sm">Sobre o SciELO</span>'
+            self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
     def test_links_in_hamburger_menu(self):
