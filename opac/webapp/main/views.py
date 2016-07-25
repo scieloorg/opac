@@ -328,6 +328,7 @@ def issue_grid(journal_id):
 @main.route('/issues/<string:issue_id>')
 def issue_toc(issue_id):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    section_filter = request.args.get('section', '', type=unicode)
 
     if not session.get('lang'):
         lang = default_lang
@@ -347,26 +348,28 @@ def issue_toc(issue_id):
 
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
-
+    if articles:
+        sections = sorted(articles.item_frequencies('section').keys())
+    else:
+        sections = []
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+
+    if section_filter != u'':
+        articles = articles.filter(section__iexact=section_filter)
 
     issue_list = [_issue for _issue in issues]
 
     previous_issue = utils.get_prev_issue(issue_list, issue)
     next_issue = utils.get_next_issue(issue_list, issue)
 
-    result_dict = OrderedDict()
-    for article in articles:
-        section = article.get_section_by_lang(lang)
-        result_dict.setdefault(section, [])
-        result_dict[section].append(article)
-
     context = {
                 'next_issue': next_issue,
                 'previous_issue': previous_issue,
                 'journal': journal,
                 'issue': issue,
-                'articles': result_dict,
+                'articles': articles,
+                'sections': sections,
+                'section_filter': section_filter,
                 # o primiero item da lista é o último fascículo.
                 'last_issue': issues[0] if issues else None
                }
