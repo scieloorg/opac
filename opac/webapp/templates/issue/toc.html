@@ -58,7 +58,8 @@
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
-                      <strong class="issueName">{{ journal.short_title }} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }}
+                    <strong class="issueName">
+                      {{ journal.short_title }} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }}
 
                       {% if issue.start_month and issue.end_month %}
                         {{ issue.start_month|abbrmonth }}./{{ issue.end_month|abbrmonth }}.
@@ -68,59 +69,77 @@
                         {{ issue.end_month|abbrmonth }}.
                       {% endif %}
 
-                      {{ issue.year }}</strong>
-                      <ul>
-                      {% for section in articles.iterkeys() %}
+                      {{ issue.year }}
+                    </strong>
+                    <ul>
+                      {% for section in sections %}
+                        {% if loop.first %}
+                          <li>
+                            <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}">
+                              {% if section_filter|length == 0 %}
+                                {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
+                              {% else %}
+                                {% trans %}Todas as seções{% endtrans %}
+                              {% endif %}
+                            </a>
+                          </li>
+                        {% endif %}
                         {% if section %}
-                        <li><a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                          <li>
+                            <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}?section={{ section|upper }}">
+                              {% if section_filter|upper == section|upper %}
+                                {{ section }} <span style="color: #6789d3;">&laquo;</span>
+                              {% else %}
+                                {{ section }}
+                              {% endif %}
+                            </a>
+                          </li>
                         {% endif %}
                       {% endfor %}
-                      </ul>
+                    </ul>
                   </div>
               </div>
 
-                {% for section, article_list in articles.iteritems() %}
+              {% for article in articles %}
 
-                  {% if section %}
-                    <a name="{{ section|upper }}"></a>
-                    <h1>{{ section }}</h1>
+                {% if article.section %}
+                  <a name="{{ article.section|upper }}"></a>
+                  <h1>
+                    <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}?section={{ article.section|upper }}">
+                      {{ article.section }}
+                    </a>
+                  </h1>
+                {% endif %}
+
+                <div>
+                  {% if session.lang %}
+                    <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags|title }}</h2>
                   {% endif %}
 
-                  <div class="issueIndent">
-                    <ul class="articles">
-                      {% for article in article_list %}
-                        <li>
-                            {% if session.lang %}
-                              <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags|title }}</h2>
-                            {% endif %}
+                  {% for author in article.authors %}
+                    {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
+                    <a href="/search?content_only=true&lang=en&q=au:{{ author }}">
+                      {{ author|striptags|title }}
+                    </a>{% if not loop.last %};{% endif %}
+                  {% endfor %}
 
-                            {% for author in article.authors %}
-                              {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
-                              <a href="/search?content_only=true&lang=en&q=au:{{ author }}">
-                                {{ author|striptags|title }}
-                              </a>{% if not loop.last %};{% endif %}
-                            {% endfor %}
-
-                            <ul class="links">
-                              {% for article_lang in article.languages %}
-                                <li>
-                                  {{ article_lang }}:
-                                  <a href="{{ url_for('.abstract_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Resumo{% endtrans %}</a>
-                                  | <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Texto{% endtrans %}</a>
-                                  {% with pdf_url = marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) %}
-                                    {% if pdf_url %}
-                                      | <a href="{{ pdf_url }}" target="_blank">PDF</a>
-                                    {% endif %}
-                                  {% endwith %}
-                                  {# | <a href="#">Press-release</a> #}
-                                </li>
-                              {% endfor %}
-                            </ul>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                  </div>
-                {% endfor %}
+                  <ul class="links">
+                    {% for article_lang in article.languages %}
+                      <li>
+                        {{ article_lang }}:
+                        <a href="{{ url_for('.abstract_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Resumo{% endtrans %}</a>
+                        | <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Texto{% endtrans %}</a>
+                        {% with pdf_url = marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) %}
+                          {% if pdf_url %}
+                            | <a href="{{ pdf_url }}" target="_blank">PDF</a>
+                          {% endif %}
+                        {% endwith %}
+                        {# | <a href="#">Press-release</a> #}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endfor %}
           </div>
           <div class="clearfix"></div>
       </div>
