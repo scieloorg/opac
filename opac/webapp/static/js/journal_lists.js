@@ -6,6 +6,7 @@ var JournalListAlpha = {
   template_row_selector: null,
   template_result_body_selector: null,
   query_input_selector: null,
+  query_filter_name: null,
   loading_selector: null,
   has_next: false,
   next_num: 0,
@@ -32,11 +33,17 @@ var JournalListAlpha = {
 
     var self = this;
     var page = this.page;
-    var query = $.trim($(this.query_input_selector).val());
+    var query = $.trim(
+      $(this.query_input_selector).val()
+    );
+    var query_filter = $.trim(
+      $('input[name="' + this.query_filter_name +'"]').filter(":checked").val()
+    );
     $(this.loading_selector).show();
     $.getJSON(self.url, {
       page: page,
       query: query,
+      query_filter: query_filter
     }).done(function(data){
       self.render_results(data, clear);
     }).fail(function(){
@@ -100,12 +107,13 @@ var JournalListAlpha = {
   },
 
   initialize: function(url, template_row_selector, template_result_body_selector,
-                       query_input_selector, loading_selector,
+                       query_input_selector, query_filter_name, loading_selector,
                        error_msg_selector, empty_msg_selector){
     this.url = url;
     this.template_row_selector = template_row_selector;
     this.template_result_body_selector = template_result_body_selector;
     this.query_input_selector = query_input_selector;
+    this.query_filter_name = query_filter_name;
     this.loading_selector = loading_selector;
 
     this.error_msg_selector = error_msg_selector;
@@ -119,6 +127,9 @@ var JournalListAlpha = {
       if (this.value.length >= 3 || $.trim(this.value).length === 0) {
         self.search(true);
       }
+    });
+    $('input[name="' + this.query_filter_name + '"]').change(function(){
+      self.search(true);
     });
 
     $(window).on("scroll",function() {
@@ -137,7 +148,8 @@ var JournalCategorizedList = {
 
   url: '/',
   template_results_selector: '#template_collection_list_table',
-  query_filter: 'areas',
+  filter: 'areas',
+  query_filter_name: null,
   results_container_selector: null,
   query_input_selector:  null,
   loading_selector: null,
@@ -157,14 +169,19 @@ var JournalCategorizedList = {
 
   search: function(){
     var self = this;
-    var query = $.trim($(this.query_input_selector).val());
-
+    var query = $.trim(
+      $(this.query_input_selector).val()
+    );
+    var query_filter = $.trim(
+      $('input[name="' + this.query_filter_name +'"]').filter(":checked").val()
+    );
     this.clear_list();
     $(this.loading_selector).show();
 
     $.getJSON(self.url, {
-      query: query,
-      filter: this.query_filter,
+      query: query,   /* the text from input */
+      query_filter: query_filter, /* the radio button selected */
+      filter: this.filter, /* arear or WoS listing */
     }).done(function(data){
       self.render_results(data);
       $(self.loading_selector).hide();
@@ -240,14 +257,15 @@ var JournalCategorizedList = {
 
   },
 
-  initialize: function(results_container_selector, query_input_selector, loading_selector,
-                       query_filter, url, error_msg_selector, empty_msg_selector,
+  initialize: function(results_container_selector, query_input_selector, query_filter_name,
+                       loading_selector, filter, url, error_msg_selector, empty_msg_selector,
                        main_label, grouper_name_plural){
 
     this.results_container_selector = results_container_selector;
     this.query_input_selector = query_input_selector;
+    this.query_filter_name = query_filter_name;
     this.loading_selector = loading_selector;
-    this.query_filter = query_filter;
+    this.filter = filter;
 
     this.url = url;
     this.error_msg_selector = error_msg_selector;
@@ -264,6 +282,9 @@ var JournalCategorizedList = {
       if (this.value.length >= 3 || $.trim(this.value).length === 0) {
         self.search();
       }
+    });
+    $('input[name="' + this.query_filter_name + '"]').change(function(){
+      self.search();
     });
     return this;
 

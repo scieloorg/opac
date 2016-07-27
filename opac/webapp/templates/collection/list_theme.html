@@ -32,7 +32,7 @@
 
         <!-- first tab -->
         <div class="tab-pane active collectionListStart" id="areasConhecimento">
-          {% with input_id='query_areas' %}
+          {% with input_id='query_areas', filter_id='query_filter_areas' %}
             {% include "collection/includes/list_journals_search_input.html" %}
           {% endwith %}
 
@@ -44,7 +44,7 @@
 
         <!-- second tab -->
         <div class="tab-pane collectionListStart" id="temasWoS">
-          {% with input_id='query_wos' %}
+          {% with input_id='query_wos', filter_id='query_filter_wos' %}
             {% include "collection/includes/list_journals_search_input.html" %}
           {% endwith %}
 
@@ -99,6 +99,7 @@
         areas_list.initialize(
           '#areas_list_table_container',
           '#query_areas',
+          "query_filter_areas",
           '.collectionListLoadingAreas',
           'areas',
           "{{ url_for('main.journals_search_by_theme_ajax') }}",
@@ -113,6 +114,7 @@
         wos_list.initialize(
           '#wos_list_table_container',
           '#query_wos',
+          "query_filter_wos",
           '.collectionListLoadingWos',
           'wos',
           "{{ url_for('main.journals_search_by_theme_ajax') }}",

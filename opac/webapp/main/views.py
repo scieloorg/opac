@@ -86,8 +86,10 @@ def journals_search_alpha_ajax():
         abort(400, _(u'Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=unicode)
+    query_filter = request.args.get('query_filter', '', type=unicode)
     page = request.args.get('page', 1, type=int)
-    response_data = controllers.get_alpha_list_from_paginated_journals(title_query=query, page=page)
+    response_data = controllers.get_alpha_list_from_paginated_journals(
+        title_query=query, query_filter=query_filter, page=page)
 
     return jsonify(response_data)
 
@@ -99,14 +101,15 @@ def journals_search_by_theme_ajax():
         abort(400, _(u'Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=unicode)
+    query_filter = request.args.get('query_filter', '', type=unicode)
     filter = request.args.get('filter', 'areas', type=unicode)
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('study_areas', query)
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query)
+        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter)
     elif filter == 'publisher':
-        objects = controllers.get_journals_grouped_by('publisher_name', query)
+        objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter)
     else:
         return jsonify({
             'error': 401,
