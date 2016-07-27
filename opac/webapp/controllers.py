@@ -34,27 +34,44 @@ def get_current_collection():
 
 # -------- JOURNAL --------
 
-def get_journals(title_query='', is_public=True, order_by="title"):
+def get_journals(title_query='', is_public=True, query_filter="", order_by="title"):
     """
     Retorna uma lista de periódicos considerando os parâmetros:
     - ``title_query`` texto para filtrar (usando i_contains) pelo titulo do periódicos;
     - ``is_public``: filtra por público e não público de cada periódico;
+    - ``query_filter``: string com possíveis valores:
+        - "" (vazio == sem filtro)
+        - "current" (somente periódicos ativos)
+        - "no-current" (somente periódicos não ativos)
     - ``order_by``: que corresponde ao nome de um atributo pelo qual
                     deve estar ordenada a lista resultante.
     """
+    filters = {}
+
+    if query_filter not in ["", "current", "no-current"]:
+        raise ValueError(u"Parámetro: 'query_filter' é inválido!")
+    elif query_filter == "current":
+        filters = {
+            "current_status": "current",
+        }
+    elif query_filter == "no-current":
+        filters = {
+            "current_status__ne": "current",
+        }
 
     if not title_query or title_query.strip() == "":
         journals = Journal.objects(
-            is_public=is_public).order_by(order_by)
+            is_public=is_public, **filters).order_by(order_by)
     else:
         journals = Journal.objects(
             is_public=is_public,
-            title__icontains=title_query).order_by(order_by)
+            title__icontains=title_query,
+            **filters).order_by(order_by)
 
     return journals
 
 
-def get_journals_paginated(title_query, is_public=True, order_by="title", page=1, per_page=20):
+def get_journals_paginated(title_query, is_public=True, query_filter="", order_by="title", page=1, per_page=20):
     """
     Retorna um objeto Pagination (flask-mongoengine) com a lista de periódicos filtrados
     pelo titulo (title_query) e pelo parametro ``is_public``, ordenado pelo campo indicado
@@ -64,7 +81,7 @@ def get_journals_paginated(title_query, is_public=True, order_by="title", page=1
     - ``per_page`` indica o tamanho da pagina.
     """
 
-    journals = get_journals(title_query, is_public, order_by)
+    journals = get_journals(title_query, is_public, query_filter, order_by)
     return Pagination(journals, page, per_page)
 
 
@@ -116,12 +133,14 @@ def get_journal_json_data(journal):
     return j_data
 
 
-def get_alpha_list_from_paginated_journals(title_query, is_public=True, order_by="title", page=1, per_page=20):
+def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title", page=1, per_page=20):
     """
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """
 
-    journals = get_journals_paginated(title_query=title_query, order_by=order_by, page=page, per_page=per_page)
+    journals = get_journals_paginated(
+        title_query=title_query, query_filter=query_filter,
+        order_by=order_by, page=page, per_page=per_page)
     journal_list = []
 
     for journal in journals.items:
@@ -141,7 +160,7 @@ def get_alpha_list_from_paginated_journals(title_query, is_public=True, order_by
     return response_data
 
 
-def get_journals_grouped_by(grouper_field, title_query='', is_public=True, order_by='title'):
+def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_public=True, order_by='title'):
     """
     Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
 
@@ -154,7 +173,7 @@ def get_journals_grouped_by(grouper_field, title_query='', is_public=True, order
         - para cada chave, se listam os periódicos nessa categoria, com a estrutura de dados
         retornada pela função: ``get_journal_json_data``
     """
-    journals = get_journals(title_query, is_public, order_by)
+    journals = get_journals(title_query, is_public, query_filter, order_by)
 
     groups_dict = {}
 
