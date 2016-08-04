@@ -465,44 +465,6 @@ def article_detail(article_id, lang_code):
     return render_template("article/detail.html", **context)
 
 
-@main.route('/abstract/<string:article_id>/<string:lang_code>')
-def abstract_detail(article_id, lang_code):
-    # TODO: a view do abstract pode mudar ou incluso ser eliminada. Ver issue #234 do OPAC
-    article = controllers.get_article_by_aid(article_id)
-
-    if not article:
-        abort(404, _(u'Resumo não encontrado'))
-
-    if lang_code not in article.languages:
-        abort(404, _(u'O Artigo não se encontra no idioma solicitado: %s' % lang_code))
-
-    if not article.is_public:
-        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-    if not article.htmls:
-        abort(404, _(u'Resumo do artigo não encontrado'))
-
-    journal = article.journal
-    issue = article.issue
-
-    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
-
-    article_list = [_article for _article in articles]
-
-    previous_article = utils.get_prev_article(article_list, article)
-    next_article = utils.get_next_article(article_list, article)
-
-    context = {
-        'next_article': next_article,
-        'previous_article': previous_article,
-        'article': article,
-        'journal': journal,
-        'issue': issue,
-        'article_lang': lang_code
-    }
-    return render_template("article/abstract.html", **context)
-
-
 @main.route("/media/<path:filename>", methods=['GET'])
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
