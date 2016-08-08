@@ -20,10 +20,12 @@
     <a class="collectionLink <% if (!journal.is_active) { %> disabled <% } %>" href="<%- journal.links.detail %>">
       <strong class="journalTitle"><%- journal.title %></strong>,
       <strong class="journalIssues"><%- journal.issues_count %> {% trans %}números{% endtrans %}</strong>,
-      {% trans %}Último{% endtrans %}:
-      <span class="journalLastVolume"><em>{% trans %}Volume{% endtrans %}</em> <%- journal.last_issue.volume %></span>
-      <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> -
-      <span class="journalLastPubDate"><%- journal.last_issue.year %></span>
+      <% if (journal.last_issue) { %>
+        {% trans %}Último{% endtrans %}:
+        <span class="journalLastVolume"><em>{% trans %}Volume{% endtrans %}</em> <%- journal.last_issue.volume %></span>
+        <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> -
+        <span class="journalLastPubDate"><%- journal.last_issue.year %></span>
+      <% } %>
       <% if (!journal.is_active) { %>(inativo)<% } %>
       <% if (journal.previous_journal_ref) { %>
         <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>
