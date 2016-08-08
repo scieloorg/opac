@@ -57,6 +57,7 @@ def create_app():
 
     css = Bundle('css/bootstrap.min.css',
                  'css/scielo-portal.css',
+                 'css/style.css',
                  filters='cssmin', output='css/bundle.css')
 
     assets.register('js_all', js)

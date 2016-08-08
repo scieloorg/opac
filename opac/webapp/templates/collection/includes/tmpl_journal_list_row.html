@@ -25,6 +25,9 @@
       <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> -
       <span class="journalLastPubDate"><%- journal.last_issue.year %></span>
       <% if (!journal.is_active) { %>(inativo)<% } %>
+      <% if (journal.previous_journal_ref) { %>
+        <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>
+      <% } %>
     </a>
   </td>
 </tr>
