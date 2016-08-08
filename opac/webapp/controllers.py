@@ -124,6 +124,7 @@ def get_journal_json_data(journal):
         },
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,
+        'previous_journal_ref': journal.previous_journal_ref,
         'last_issue': {
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
