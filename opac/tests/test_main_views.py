@@ -747,61 +747,6 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 404)
         self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
 
-    # ABSTRACT
-
-    def test_abstract_detail_without_html(self):
-        """
-        Teste da ``view function`` ``abstract_detail``, deve retornar uma
-        página 404 com a msg ``Resumo do artigo não encontrado``.
-        """
-
-        article = utils.makeOneArticle({'title': 'Article Y'})
-
-        response = self.client.get(url_for('main.abstract_detail',
-                                           article_id=article.id,
-                                           lang_code='pt'))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'Resumo do artigo não encontrado',
-                      response.data.decode('utf-8'))
-
-    def test_abstract_detail_without_articles(self):
-        """
-        Teste da ``view function`` ``abstract_detail`` sem artigos
-        cadastrados, deve retornar página 404 com a msg ``Artigo não encontrado``
-        """
-
-        response = self.client.get(url_for('main.abstract_detail',
-                                           article_id='9ajsd9shwqjks9syd',
-                                           lang_code='pt'))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'Resumo não encontrado', response.data.decode('utf-8'))
-
-    def test_abstract_detail_with_article_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``abstract_detail`` acessando o resumo do
-        artigo com atributo is_public=False, deve retorna uma página com
-         ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
-        """
-
-        journal = utils.makeOneJournal()
-
-        issue = utils.makeOneIssue({'journal': journal.id})
-
-        article = utils.makeOneArticle({
-            'is_public': False,
-            'unpublish_reason': 'Resumo incorreto',
-            'issue': issue.id,
-            'journal': journal.id})
-
-        response = self.client.get(url_for('main.abstract_detail',
-                                           article_id=article.id,
-                                           lang_code='pt'))
-
-        self.assertStatus(response, 404)
-        self.assertIn(u'Resumo incorreto', response.data.decode('utf-8'))
-
     # HOMEPAGE
 
     def test_collection_sponsors_at_homepage(self):

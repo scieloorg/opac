@@ -127,8 +127,7 @@
                     {% for article_lang in article.languages %}
                       <li>
                         {{ article_lang }}:
-                        <a href="{{ url_for('.abstract_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Resumo{% endtrans %}</a>
-                        | <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Texto{% endtrans %}</a>
+                        <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article_lang) }}">{% trans %}Texto{% endtrans %}</a>
                         {% with pdf_url = marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) %}
                           {% if pdf_url %}
                             | <a href="{{ pdf_url }}" target="_blank">PDF</a>
