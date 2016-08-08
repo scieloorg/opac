@@ -19,11 +19,9 @@ install_requirements = [
     'Flask-Login>=0.3.2',
     'Flask-Script>=2.0.5',
     'Flask-Mail>=0.9.1',
-    'lxml>=3.5.0',
     'Flask-BabelEx>=0.9.2',
     'Flask-Testing>=0.4.2',
     'Flask-Migrate>=1.7.0',
-    'packtools>=1.0.1',
     'unicodecsv>=0.14.1',
     'opac_schema',
     # for production production
@@ -32,12 +30,12 @@ install_requirements = [
 ]
 
 dependency_links = [
-    'http://github.com/scieloorg/opac_schema/tarball/v2.10#egg=opac_schema-v2.10'
+    'http://github.com/scieloorg/opac_schema/tarball/v2.11#egg=opac_schema-v2.11'
 ]
 
 setup(
     name='opac',
-    version='0.10-dev',
+    version='0.11-dev',
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,

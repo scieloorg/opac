@@ -10,6 +10,7 @@
 import datetime
 import unicodecsv
 import cStringIO
+from slugify import slugify
 
 from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pages
 from flask import current_app, url_for
@@ -34,7 +35,7 @@ def get_current_collection():
 
 # -------- JOURNAL --------
 
-def get_journals(title_query='', is_public=True, query_filter="", order_by="title"):
+def get_journals(title_query='', is_public=True, query_filter="", order_by="title_slug"):
     """
     Retorna uma lista de periódicos considerando os parâmetros:
     - ``title_query`` texto para filtrar (usando i_contains) pelo titulo do periódicos;
@@ -63,15 +64,16 @@ def get_journals(title_query='', is_public=True, query_filter="", order_by="titl
         journals = Journal.objects(
             is_public=is_public, **filters).order_by(order_by)
     else:
+        title_query_slug = slugify(title_query)
         journals = Journal.objects(
             is_public=is_public,
-            title__icontains=title_query,
+            title_slug__icontains=title_query_slug,
             **filters).order_by(order_by)
 
     return journals
 
 
-def get_journals_paginated(title_query, is_public=True, query_filter="", order_by="title", page=1, per_page=20):
+def get_journals_paginated(title_query, is_public=True, query_filter="", order_by="title_slug", page=1, per_page=20):
     """
     Retorna um objeto Pagination (flask-mongoengine) com a lista de periódicos filtrados
     pelo titulo (title_query) e pelo parametro ``is_public``, ordenado pelo campo indicado
@@ -124,16 +126,19 @@ def get_journal_json_data(journal):
         },
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,
-        'last_issue': {
+    }
+
+    if journal.last_issue:
+        j_data['last_issue'] = {
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
             'year': journal.last_issue.year,
         }
-    }
+
     return j_data
 
 
-def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title", page=1, per_page=20):
+def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title_slug", page=1, per_page=20):
     """
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """
@@ -160,7 +165,7 @@ def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_fi
     return response_data
 
 
-def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_public=True, order_by='title'):
+def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_public=True, order_by="title_slug"):
     """
     Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
 
@@ -203,7 +208,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
     return {'meta': meta, 'objects': groups_dict}
 
 
-def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title'):
+def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug'):
 
     def format_csv_row(list_type, journal):
         common_fields = [
