@@ -17,6 +17,6 @@ Flask-BabelEx==0.9.3
 Flask-Migrate==1.8.1
 unicodecsv==0.14.1
 feedparser==5.2.1
--e git+https://git@github.com/scieloorg/opac_schema@v2.12.1#egg=opac_schema
+-e git+https://git@github.com/scieloorg/opac_schema@v2.12#egg=opac_schema
 Flask-HTMLmin==1.2
 python-slugify==1.2.0
