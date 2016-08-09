@@ -4,6 +4,7 @@
     Macro para retorna a url de um PDF, filtrado pelo idioma e pelo tipo.
     o atributo lang não seria o da session['lang'], mas de algum dos idiomas em que esta disponíveis o artigo.
 #}
+
 {% macro get_pdf_url_by_lang(article, lang) -%}
   {% if article.pdfs  -%}
       {{ mresources.get_resources_url(article.pdfs, 'pdf', lang) }}
