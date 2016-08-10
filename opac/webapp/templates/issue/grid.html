@@ -35,7 +35,16 @@
               <tr>
                 <td class="col-xs-1">{% trans %}Ano{% endtrans %}</td>
                 <th class="col-xs-1">{% trans %}Volume{% endtrans %}</th>
-                <td class="col-xs-10 left">{% trans %}Número{% endtrans %}</td>
+                <td class="col-xs-10 left">
+                  {% trans %}Número{% endtrans %}
+                  {% if issues_ahead %}
+                    <span class="pull-right">
+                      {% for issue in issues_ahead %}
+                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn ahead">ahead of print</a>
+                      {% endfor %}
+                    </span>
+                  {% endif %}
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -46,14 +55,19 @@
                     <th>{{volume}}</th>
                     <td class="left">
                       {% for issue in issue_list|sort(attribute='order') %}
-                        {% if issue.type == 'ahead' %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn ahead">ahead of print</a>
-                        {% elif issue.type == 'special' %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">spe.{{issue.suppl_text}}</a>
+                        {% if issue.type == 'special' %}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                            spe.{% if issue.spe_text -%}{{issue.spe_text}}{%- endif %}
+                          </a>
                         {% elif issue.type == 'supplement' %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">suppl.{{issue.suppl_text}}</a>
-                        {% else %} {# issue.type == 'regular' #}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">{{issue.number}}</a>
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                            suppl.{% if issue.suppl_text -%}{{issue.suppl_text}}{%- endif %}
+                          </a>
+                        {# {% elif issue.type == 'regular' %} #}
+                        {% else %}
+                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                            {{issue.number}}
+                          </a>
                         {% endif %}
                       {% endfor %}
                     </td>

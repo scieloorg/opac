@@ -1,5 +1,5 @@
 Flask==0.11.1
-mongoengine==0.10.0
+mongoengine==0.10.6
 flask-mongoengine==0.7.5
 Flask-Assets==0.11
 jsmin==2.2.1
@@ -14,7 +14,7 @@ Flask-Script==2.0.5
 Flask-Mail==0.9.1
 Pillow==3.3.0
 Flask-BabelEx==0.9.3
-Flask-Migrate==1.8.1
+Flask-Migrate==2.0.0
 unicodecsv==0.14.1
 feedparser==5.2.1
 -e git+https://git@github.com/scieloorg/opac_schema@v2.12#egg=opac_schema
