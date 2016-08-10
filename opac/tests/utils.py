@@ -144,6 +144,7 @@ def makeOneIssue(attrib=None):
     default_id = attrib.get('_id', str(uuid4().hex))
     default_volume = attrib.get('volume', '1')  # improve para evitar dups
     default_number = attrib.get('number', '1')  # improve para evitar dups
+    default_type = attrib.get('type', 'regular')
     default_order = attrib.get('order', attrib.get('order', '1'))
     default_year = attrib.get('year', datetime.datetime.now().year)
     default_label = attrib.get('label', '%s (%s)' % (default_volume, default_number))
@@ -167,6 +168,7 @@ def makeOneIssue(attrib=None):
         'iid': default_id,
         'volume': default_volume,
         'number': default_number,
+        'type': default_type,
         'order': default_order,
         'year': default_year,
         'label': default_label,

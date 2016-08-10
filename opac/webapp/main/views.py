@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import unicode_literals
 
 import logging
 from datetime import datetime
@@ -300,30 +301,15 @@ def issue_grid(journal_id):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
-    issues = controllers.get_issues_by_jid(journal_id, is_public=True)
-
-    result_dict = OrderedDict()
-    for issue in issues:
-        key_year = str(issue.year)
-        key_volume = str(issue.volume)
-        result_dict.setdefault(key_year, OrderedDict())
-        result_dict[key_year].setdefault(key_volume, []).append(issue)
-
-    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
+    issues_data = controllers.get_issues_for_grid_by_jid(journal_id, is_public=True)
 
     context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
         'journal': journal,
-        'result_dict': result_dict,
-        # o primiero item da lista é o último fascículo.
-        # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None
+        'next_issue': None,
+        'previous_issue': issues_data['previous_issue'],
+        'last_issue': issues_data['last_issue'],
+        'issues_ahead': issues_data['only_ahead'],
+        'result_dict': issues_data['ordered_for_grid'],
     }
     return render_template("issue/grid.html", **context)
 

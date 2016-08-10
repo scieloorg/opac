@@ -10,6 +10,8 @@
 import datetime
 import unicodecsv
 import cStringIO
+from collections import OrderedDict
+
 from slugify import slugify
 
 from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pages
@@ -348,6 +350,61 @@ def get_issues_by_jid(jid, **kwargs):
 
     if get_journal_by_jid(jid):
         return Issue.objects(journal=jid, **kwargs).order_by(*order_by)
+
+
+def get_issues_for_grid_by_jid(jid, **kwargs):
+    """
+    Retorna uma lista de fascículos considerando os parâmetros ``jid`` e ``kwargs``,
+    e ordenado por parâmetro ``order_by``.
+
+    - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
+    - ``kwargs``: parâmetros de filtragem, utilize a chave ``order_by` para indicar
+    uma lista de ordenação.
+    """
+
+    order_by = kwargs.get('order_by', None)
+
+    if order_by:
+        del kwargs['order_by']
+    else:
+        order_by = ["-year", "-volume", "-order"]
+
+    issues = []
+    issues_ahead = []
+    issues_without_ahead = []
+
+    if get_journal_by_jid(jid):
+        issues = Issue.objects(
+            journal=jid,
+            type__in=['ahead', 'regular', 'special', 'supplement'],
+            **kwargs).order_by(*order_by)
+        issues_ahead = issues.filter(type='ahead')
+        issues_without_ahead = issues.filter(type__ne='ahead')
+
+    result_dict = OrderedDict()
+    for issue in issues_without_ahead:
+        key_year = str(issue.year)
+        key_volume = str(issue.volume)
+        result_dict.setdefault(key_year, OrderedDict())
+        result_dict[key_year].setdefault(key_volume, []).append(issue)
+
+    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # anterior e próximo
+    if len(issues) >= 2:
+        previous_issue = issues[1]
+    else:
+        previous_issue = None
+
+    # o primiero item da lista é o último fascículo.
+    # condicional para verificar se issues contém itens
+    last_issue = issues[0] if issues else None
+
+    return {
+        'only_ahead': issues_ahead,         # lista de fascículos ahead of print
+        'ordered_for_grid': result_dict,    # lista de fascículos odenadas para a grade
+        'previous_issue': previous_issue,
+        'last_issue': last_issue
+    }
 
 
 def get_issue_by_iid(iid, **kwargs):
