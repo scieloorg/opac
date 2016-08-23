@@ -1,0 +1,96 @@
+<section class="levelMenu">
+  <div class="container">
+    <a href="{{ url_for('.about_collection') }}" class="onlineSubmission"><span class="glyphBtn infoMenu"></span>{% trans %}Sobre o{% endtrans %} SciELO {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</a>
+    <form method="get" action="http://search.scielo.org/" id="searchForm" name="searchForm">
+      <input type="hidden" name="q" id="q" value="">
+      <input type="hidden" name="lang" id="lang" value="{% if session.lang %}{{ session.lang[:2] }}{% endif %}">
+      <input type="hidden" name="filter[in][]" value="{{ config.OPAC_COLLECTION }}">
+    </form>
+    <form name="searchFormBuilder" action="//search.scielo.org/" method="get" class="searchForm searchFormBuilder">
+      <div class="col-md-10 col-sm-10">
+
+        <div class="input-group col-md-12 col-sm-12">
+          <div class="form-textarea">
+            <textarea name="q[]" placeholder="Entre uma ou mais palavras" rows="1" class="form-control"></textarea>
+            <a href="javascript:;" class="clearIptText showTooltip" title="Limpar expressão" style="display: none;"></a>
+          </div>
+          <div class="selectBox index">
+            <select name="index[]">
+              <option value="">{% trans %}Todos os índices{% endtrans %}</option>
+              <option value="year_cluster">{% trans %}Ano{% endtrans %}</option>
+              <option value="au">{% trans %}Autor{% endtrans %}</option>
+              <option value="sponsor">{% trans %}Financiador{% endtrans %}</option>
+              <option value="ta">{% trans %}Periódico{% endtrans %}</option>
+              <option value="ab">{% trans %}Resumo{% endtrans %}</option>
+              <option value="ti">{% trans %}Títutlo{% endtrans %}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="searchRow-container"></div>
+      </div>
+      <div class="col-md-2 col-sm-2">
+        <input type="submit" value="{% trans %}Buscar{% endtrans %}" class="btn btn-primary glyph glyph-search">
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="col-md-10 col-sm-10 right">
+        <a href="" class="newSearchField" data-count="2">{% trans %}Adicionar outro campo{% endtrans %} +</a>
+      </div>
+      <div id="searchRow-matriz">
+        <div class="searchRow" id="searchRow-@" style="display: none;">
+          <div class="col-md-1 col-sm-1 center">
+            <a href="" class="eraseSearchField" data-rel="" title="Apagar campo"></a>
+          </div>
+          <div class="col-md-11 col-sm-11">
+            <div class="row pdRight">
+              <div class="input-group col-md-12 col-sm-12">
+                <div class="selectBox connector">
+                  <select name="bool[]">
+                    <option>AND</option>
+                    <option>OR</option>
+                    <option>AND NOT</option>
+                  </select>
+                </div>
+                <div class="form-textarea no-divisor">
+                  <textarea name="q[]" placeholder="{% trans %}Entre uma ou mais palavras{% endtrans %}" rows="1" class="form-control"></textarea>
+                  <a href="javascript:;" class="clearIptText showTooltip" title="{% trans %}Limpar expressão{% endtrans %}" style="display: none;"></a>
+                </div>
+                <div class="selectBox index">
+                  <select name="index[]">
+                    <option value="">{% trans %}Todos os índices{% endtrans %}</option>
+                    <option value="year_cluster">{% trans %}Ano{% endtrans %}</option>
+                    <option value="au">{% trans %}Autor{% endtrans %}</option>
+                    <option value="sponsor">{% trans %}Financiador{% endtrans %}</option>
+                    <option value="ta">{% trans %}Periódico{% endtrans %}</option>
+                    <option value="ab">{% trans %}Resumo{% endtrans %}</option>
+                    <option value="ti">{% trans %}Títutlo{% endtrans %}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </form>
+  </div>
+</section>
+<div class="modal fade" id="NotFound" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">{% trans %}Sem resultados{% endtrans %}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="midGlyph alert">
+          {% trans %}Não foram encontrados documentos para sua pesquisa{% endtrans %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

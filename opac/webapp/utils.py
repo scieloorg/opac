@@ -12,6 +12,7 @@ import controllers
 import models
 import webapp
 import re
+import requests
 
 try:
     from PIL import Image, ImageOps
@@ -310,3 +311,23 @@ def import_feed(feed_url, language):
             controllers.create_news_record(news_data)
             entries_count += 1
         return (True, entries_count)
+
+
+def do_request(url, params):
+    try:
+        response = requests.get(url, params=params)
+    except:
+        return None
+    if response.status_code == 200:
+        return response.content
+    return None
+
+
+def do_request_json(url, params):
+    try:
+        response = requests.get(url, params=params)
+    except:
+        return {}
+    if response.status_code == 200:
+        return response.json()
+    return {}

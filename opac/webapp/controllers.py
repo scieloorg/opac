@@ -18,10 +18,14 @@ from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pag
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
+from flask_oauthlib.client import OAuth
 from webapp import dbsql
 from models import User
 from choices import INDEX_NAME
+import utils
 
+
+ANALYTICS = 'http://analytics.scielo.org'
 
 # -------- COLLECTION --------
 
@@ -33,6 +37,76 @@ def get_current_collection():
     current_collection_acronym = current_app.config['OPAC_COLLECTION']
     collection = Collection.objects.get(acronym=current_collection_acronym)
     return collection
+
+
+def get_collection_analytics():
+    """
+    Regresa una colección con las metricas y urls de SciELO Analytics
+    """
+    current_collection_acronym = current_app.config['OPAC_COLLECTION']
+    endpoint = 'ajx/publication/size'
+    params = {
+        'code': current_collection_acronym,
+        'collection': current_collection_acronym,
+        'field': 'citations'
+    }
+    references = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
+
+    params['field'] = 'documents'
+    articles = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
+
+    params['field'] = 'issue'
+    issues = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
+
+    params['field'] = 'issn'
+    journals = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
+
+    analytics = {}
+    analytics['metrics'] = {
+        'references': int(references.get('total', 0)),
+        'articles': int(articles.get('total', 0)),
+        'issues': int(issues.get('total', 0)),
+        'journals': int(journals.get('total', 0)),
+    }
+    analytics['urls'] = {
+        'downloads': '{0}/w/accesses?collection={1}'.format(ANALYTICS, current_collection_acronym),
+        'references': '{0}/w/publication/size?collection={1}'.format(ANALYTICS, current_collection_acronym),
+        'other': '{0}/?collection={1}'.format(ANALYTICS, current_collection_acronym),
+    }
+
+    return analytics
+
+
+def get_collection_tweets():
+
+    tweets = []
+    oauth = OAuth(current_app)
+    twitter = oauth.remote_app(
+        'twitter',
+        base_url='https://api.twitter.com/1.1/',
+        request_token_url='https://api.twitter.com/oauth/request_token',
+        access_token_url='https://api.twitter.com/oauth/access_token',
+        authorize_url='https://api.twitter.com/oauth/authenticate',
+        consumer_key=current_app.config['TWITTER_CONSUMER_KEY'],
+        consumer_secret=current_app.config['TWITTER_CONSUMER_SECRET']
+    )
+
+    @twitter.tokengetter
+    def get_twitter_token():
+        return (
+            current_app.config['TWITTER_ACCESS_TOKEN'],
+            current_app.config['TWITTER_ACCESS_TOKEN_SECRET']
+        )
+
+    response = twitter.request('statuses/user_timeline.json', data={
+        'screen_name': current_app.config['TWITTER_SCREEN_NAME'],
+        'count': current_app.config['TWITTER_LIMIT'],
+    })
+
+    if response.status == 200:
+        tweets = response.data
+
+    return tweets
 
 
 # -------- JOURNAL --------

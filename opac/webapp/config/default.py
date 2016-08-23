@@ -194,7 +194,7 @@ THUMBNAIL_WIDTH = 100
 # search scielo
 URL_SEARCH = 'http://search.scielo.org/'
 
-NEWS_LIST_LIMIT = 4
+NEWS_LIST_LIMIT = 10
 RSS_NEWS_FEEDS = {
   'pt_BR': {
     'display_name': u'SciELO em Perspectiva',
@@ -227,3 +227,12 @@ DEBUG_TB_PANELS = [
     # Mongo:
     'flask_mongoengine.panels.MongoDebugPanel'
 ]
+
+
+# Configurações do API Twitter
+TWITTER_CONSUMER_KEY = 'consum3r-k3y'
+TWITTER_CONSUMER_SECRET = 'consum3r-secr3t'
+TWITTER_ACCESS_TOKEN = 'acc3ss-tok3n-secr3t'
+TWITTER_ACCESS_TOKEN_SECRET = 'acc3ss-tok3n-secr3t'
+TWITTER_SCREEN_NAME = 'RedeSciELO'
+TWITTER_LIMIT = '10'
