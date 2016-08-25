@@ -65,6 +65,13 @@ import os
         - THUMBNAIL_HEIGHT:     altura do thumbnail
         - THUMBNAIL_HEIGHT:     largura do thumbnail
 
+      - Twitter:
+        - OPAC_TWITTER_CONSUMER_KEY:    Twitter comuser key (default: 'consum3r-k3y')
+        - OPAC_TWITTER_CONSUMER_SECRET: Twitter comuser secret (default: 'consum3r-secr3t')
+        - OPAC_TWITTER_ACCESS_TOKEN:    Twitter access token (default: 'acc3ss-tok3n-secr3t')
+        - OPAC_TWITTER_ACCESS_TOKEN_SECRET: Twitter access token (default: 'acc3ss-tok3n-secr3t')
+        - OPAC_TWITTER_SCREEN_NAME: Twitter screen name (default: 'RedeSciELO')
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -230,9 +237,10 @@ DEBUG_TB_PANELS = [
 
 
 # Configurações do API Twitter
-TWITTER_CONSUMER_KEY = 'consum3r-k3y'
-TWITTER_CONSUMER_SECRET = 'consum3r-secr3t'
-TWITTER_ACCESS_TOKEN = 'acc3ss-tok3n-secr3t'
-TWITTER_ACCESS_TOKEN_SECRET = 'acc3ss-tok3n-secr3t'
-TWITTER_SCREEN_NAME = 'RedeSciELO'
+TWITTER_CONSUMER_KEY = os.environ.get('OPAC_TWITTER_CONSUMER_KEY', 'consum3r-k3y')
+TWITTER_CONSUMER_SECRET = os.environ.get('OPAC_TWITTER_CONSUMER_SECRET', 'consum3r-secr3t')
+TWITTER_ACCESS_TOKEN = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN', 'acc3ss-tok3n-secr3t')
+TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN_SECRET', 'acc3ss-tok3n-secr3t')
+TWITTER_SCREEN_NAME = os.environ.get('OPAC_TWITTER_SCREEN_NAME', 'RedeSciELO')
 TWITTER_LIMIT = '10'
+
