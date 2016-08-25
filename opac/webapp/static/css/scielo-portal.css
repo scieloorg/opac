@@ -117,11 +117,14 @@ a:hover {
 .right {
   text-align: right;
 }
+.center {
+  text-align: center;
+}
 .selectBox {
   overflow: hidden;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background: #ffffff url(../img/input.glyphs.png) 95% 0 no-repeat;
+  background: #fff url(../img/input.glyphs.png) 95% 0 no-repeat;
   vertical-align: top;
   border: 1px solid #ccc;
   line-height: 1.42857143;
@@ -587,6 +590,11 @@ button.btn:active {
   height: 32px;
   background-position: center -2886px;
 }
+.lattesLogo {
+  width: 32px;
+  height: 32px;
+  background-position: center -4577px;
+}
 .figureIcon {
   background-position: center -3340px;
 }
@@ -622,6 +630,68 @@ button.btn:active {
 }
 .gotoTopoIcon {
   background-position: center -3610px;
+}
+.bigPdfDownload {
+  height: 30px;
+  background-position: center -4304px;
+}
+.glyphFlags {
+  width: 40px;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
+  background: url(../img/flags.glyphs.png) center -350px no-repeat;
+}
+.ZA {
+  background-position: center 0;
+}
+.AR {
+  background-position: center -30px;
+}
+.BR {
+  background-position: center -58px;
+}
+.CL {
+  background-position: center -86px;
+}
+.CO {
+  background-position: center -115px;
+}
+.CR {
+  background-position: center -142px;
+}
+.CU {
+  background-position: center -171px;
+}
+.ES {
+  background-position: center -200px;
+}
+.MX {
+  background-position: center -228px;
+}
+.PE {
+  background-position: center -258px;
+}
+.PT {
+  background-position: center -287px;
+}
+.VE {
+  background-position: center -317px;
+}
+.PY {
+  background-position: center -377px;
+}
+.fPublic {
+  background-position: center -350px;
+}
+.tShare {
+  background-position: center -4410px;
+}
+.tReload {
+  background-position: center -4440px;
+}
+.tFavorite {
+  background-position: center -4471px;
 }
 .filterHead {
   font-size: .8em;
@@ -695,16 +765,16 @@ button.btn:active {
 .levelMenu .col-md-4 a.group {
   width: 33.33%;
 }
-.portal .levelMenu h2 {
-    font-size: 1.3em;
-    margin-bottom: 12px;
+.portal .levelMenu h2{
+  font-size: 1.3em;
+  margin-bottom: 12px;
 }
 .levelMenu h2 {
   margin: 0 0 5px;
   font-weight: normal;
+  font-size: .9em;
   color: #7b7469;
   line-height: 22px;
-  font-size: 0.9em;
   margin-bottom: 12px;
 }
 .levelMenu a.selected,
@@ -947,6 +1017,98 @@ button.btn:active {
 .collapseContent a.collapse-title.closed {
   background-position: -15px -191px;
 }
+.metrics .levelMenu {
+  background: #fafaf8;
+}
+.metrics .levelMenu .numbers {
+  font-size: 1.8em;
+  font-weight: bold;
+  text-align: center;
+}
+.metrics .levelMenu .numbers span {
+  display: block;
+  font-weight: normal;
+  font-size: .5em;
+}
+.metrics li:before {
+  content: '\00bb';
+  display: inline-block;
+  color: #403d39;
+  width: 13px;
+  margin-left: -13px;
+}
+.metrics li a {
+  font-weight: bold;
+  font-size: .9em;
+}
+.periodicals .levelMenu {
+  background: #fafaf8;
+  padding: 10px 15px;
+}
+.periodicals li {
+  display: inline-block;
+  height: 58px;
+  text-align: center;
+  background: url(../img/dashline.v.png) top right repeat-y;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.periodicals li:last-child {
+  background: none;
+}
+.periodicals li a {
+  padding: 0 12px;
+  font-size: 1.1em;
+  font-weight: bold;
+  line-height: 58px;
+}
+.periodicals .search {
+  float: right;
+}
+.slide-item.release {
+  display: inline-block;
+  vertical-align: top;
+  width: 160px;
+  padding: 0 10px 0 0;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #7b7469;
+  font-size: .8em;
+}
+.slide-item.release .col-md-12 {
+  background: #f6f6f4;
+  border-radius: 4px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.slide-item.release h3 {
+  /*color: @DarkBlue;
+      font-size: 1.3em;
+      margin: 0;
+      height: 110px;*/
+  color: #6789d3;
+  margin: 0;
+  font-size: 1em;
+}
+.slide-item.release a {
+  color: #6789d3;
+  font-weight: bold;
+}
+.slide-item.release span {
+  display: block;
+  text-transform: uppercase;
+  color: #7b7469;
+  font-size: .7em;
+  font-weight: normal;
+}
+.slide-item.release strong {
+  color: #6789d3;
+}
+.slide-item.release .info {
+  font-size: .9em;
+  color: #7b7469;
+  font-weight: normal;
+}
 .searchForm .container {
   position: relative;
 }
@@ -971,7 +1133,7 @@ button.btn:active {
   line-height: 26px;
 }
 .searchForm .selectBox {
-  background: #ffffff url(../img/searchForm.selectBox.png) right 4px no-repeat;
+  background: #fff url(../img/searchForm.selectBox.png) right 4px no-repeat;
   padding-top: 5px;
 }
 .searchForm .selectBox.index {
@@ -1246,6 +1408,16 @@ button.btn:active {
   text-indent: -5000px;
   background: url(../img/button.glyphs.png) -10px -280px no-repeat;
 }
+.searchForm .resultBlock .collapseBlock a.configsText {
+  /*display: inline-block;*/
+  position: absolute;
+  top: 7px;
+  right: 0;
+  width: auto;
+  height: 25px;
+  /*text-indent: -5000px;
+        background: url(../img/button.glyphs.png) -10px -280px no-repeat;*/
+}
 .searchForm .resultBlock .collapseBlock .showAll {
   position: absolute;
   bottom: 0;
@@ -1341,7 +1513,7 @@ button.btn:active {
   display: block;
   padding: 7px 25px 7px 12px;
   margin-bottom: 5px;
-  background: #ffffff url(../img/button.glyphs.png) 104% -322px no-repeat;
+  background: #fff url(../img/button.glyphs.png) 104% -322px no-repeat;
   border-radius: 4px;
   color: #7f7a71;
 }
@@ -1877,6 +2049,9 @@ button.btn:active {
 #CitationModal .download:hover {
   color: #6789d3;
 }
+.DOIResults {
+  font-weight: bolder!important;
+}
 .journal .mainNav {
   margin-top: 15px;
   padding: 0;
@@ -1934,7 +2109,7 @@ button.btn:active {
 .journal .brandLogo .publisher .scielo {
   color: #d92929;
 }
-.journal .brandLogo .theme ,
+.journal .brandLogo .theme,
 .journal .brandLogo .issn {
   display: block;
   color: #7b7469;
@@ -3057,6 +3232,22 @@ button.btn:active {
   text-align: center;
   margin-left: -15px;
 }
+.articleCtt .collapseContent .logos:before {
+  width: 22px;
+  height: 12px;
+  display: inline-block;
+  content: '';
+  background: url(../img/button.glyphs.png) no-repeat;
+}
+.articleCtt .collapseContent .logos.scielo:before {
+  background-position: center -4556px;
+}
+.articleCtt .collapseContent .logos.fapesp:before {
+  background-position: center -4506px;
+}
+.articleCtt .collapseContent .logos.google:before {
+  background-position: center -4531px;
+}
 .articleCtt .collapseContent a {
   color: #00e;
 }
@@ -3064,6 +3255,46 @@ button.btn:active {
   position: absolute;
   right: 0;
   z-index: 99;
+}
+#translateArticleModal .modal-body {
+  background: #f7f6f4;
+  font-size: .9em;
+}
+#translateArticleModal .modal-footer {
+  margin-top: 0;
+}
+#translateArticleModal .dashline {
+  padding-bottom: 5px;
+  background: url(../img/dashline.png) bottom left repeat-x;
+}
+#translateArticleModal th {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fdfcf9;
+}
+#translateArticleModal table {
+  width: 100%;
+}
+#translateArticleModal td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #dee5f5;
+  text-align: center;
+}
+#translateArticleModal th {
+  vertical-align: top;
+}
+.collection ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.collection h2 {
+  font-size: 1.3em;
+  margin-bottom: 12px;
+}
+.collection h2 span {
+  font-weight: normal;
 }
 .collection .sectionTitle {
   padding: 10px 15px 10px;
@@ -3086,6 +3317,32 @@ button.btn:active {
   position: absolute;
   right: 20px;
   top: -45px;
+}
+.collection .periodicals li {
+  width: 16.3%;
+}
+.collection .slide-item.release,
+.collection .slide-item.perspective,
+.collection .slide-item.twitter {
+  width: 250px;
+  font-size: 1em;
+}
+.collection .slide-item.release .col-md-12,
+.collection .slide-item.perspective .col-md-12,
+.collection .slide-item.twitter .col-md-12 {
+  min-height: 120px;
+}
+.collection .slide-item.release a,
+.collection .slide-item.perspective a,
+.collection .slide-item.twitter a {
+  color: #6789d3;
+  font-weight: bold;
+}
+.collection .perspective .slide-item .col-md-12{
+  min-height: 220px;
+}
+.collection .twitter .slide-item .col-md-12 {
+  min-height: 160px;
 }
 .collectionNews {
   font-size: .9em;
@@ -3184,13 +3441,18 @@ button.btn:active {
 .collectionList .collectionListTable a:hover .glyphBtn {
   opacity: 1;
 }
-.collectionList .collectionListTable td.actions {
+.collectionList .collectionListTable td.actions,
+.collectionList .collectionListTable td.flags {
   width: 160px;
   text-align: center;
   white-space: nowrap;
 }
-.collectionList .collectionListTable td.actions a {
+.collectionList .collectionListTable td.actions a,
+.collectionList .collectionListTable td.flags a {
   padding: 1px;
+}
+.collectionList .collectionListTable td.flags {
+  text-align: left;
 }
 .collectionList .collectionListTable tr:hover > td {
   background-color: #f7f9fd;
@@ -3229,6 +3491,13 @@ button.btn:active {
 .collectionList .collectionListTable td.collapseContainer .collapseTitle:visited,
 .collectionList .collectionListTable td.collapseContainer .collapseTitleBlock:visited {
   text-decoration: none;
+}
+.collectionList .collectionListTable td.collapseContainer .collectionBold .collapseTitle {
+  border: none;
+}
+.collectionList .collectionListTable td.collapseContainer .collectionBold .collapseTitle strong {
+  font-weight: bold;
+  color: #00314c;
 }
 .collectionList .collectionListTable td.collapseContainer .collapseContent {
   position: relative;
@@ -3333,6 +3602,184 @@ button.btn:active {
 .collectionAbout .listMenu ul li a {
   color: #6789d3;
 }
+.collectionAbout .about {
+  margin-bottom: 40px;
+}
+.portal ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.portal h2 {
+  font-size: 1.3em;
+  margin-bottom: 12px;
+}
+.portal h2 span {
+  font-weight: normal;
+}
+.portal .pdRight {
+  margin-right: -6px;
+}
+.portal .collapseBlock {
+  font-size: .9em;
+}
+.portal .collapseBlock .collapse-title {
+  position: relative;
+  display: block;
+  color: #00314c;
+  font-weight: bold;
+  font-size: 1em;
+  padding: 7px 2px;
+}
+.portal .collapseBlock .collapse-title .glyphBtn {
+  background-position: center -4393px;
+}
+.portal .collapseBlock .collapse-title:active,
+.portal .collapseBlock .collapse-title:visited,
+.portal .collapseBlock .collapse-title:focus {
+  text-decoration: none;
+}
+.portal .collapseBlock .collapse-title.closed .glyphBtn {
+  background-position: center -4370px;
+}
+.portal .collapseBlock .collapse-content {
+  padding: 10px 6px;
+  background: #fafaf8;
+  font-size: .9em;
+}
+.portal .collectionList .collectionListTable th.flags {
+  width: 190px;
+}
+.portal .collectionList .collectionListTable th.download {
+  width: 200px;
+}
+.portal .themesTab {
+  margin-top: 20px;
+}
+.portal .portalMenu h2 {
+  padding-bottom: 12px;
+  background: url(../img/dashline.png) bottom left repeat-x;
+}
+.portal .portalMenu li {
+  padding: 6px 0;
+}
+.portal .portalMenu li:after {
+  content: '\00bb';
+  display: inline-block;
+  color: #6789d3;
+  width: 13px;
+  margin-left: 5px;
+}
+.portal .portalMenu li a {
+  font-weight: bold;
+}
+.portal .portalMenu .collapseBlock li {
+  font-size: 1.1em;
+}
+.portal .portalMenu .collapseBlock li:after {
+  content: "";
+}
+.portal .periodicals li {
+  display: inline;
+  padding: 15px 4px;
+}
+.portal .release {
+  padding: 0 10px 0 0;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #7b7469;
+  font-size: 1em;
+}
+.portal .release .col-md-12 {
+  background: #fafaf8;
+  border-radius: 4px;
+  padding: 0;
+  min-height: 500px;
+}
+.portal .release .col-md-12.twitter-timeline-container {
+  padding: 10px;
+}
+.portal .release a {
+  color: #6789d3;
+  font-weight: bold;
+}
+.portal .release h3 {
+  color: #6789d3;
+  margin: 0;
+  font-size: 1em;
+}
+.portal .release span {
+  display: block;
+  text-transform: uppercase;
+  color: #7b7469;
+  font-size: .7em;
+  font-weight: normal;
+}
+.portal .release strong {
+  color: #6789d3;
+}
+.portal .release .info {
+  font-size: .9em;
+  color: #7b7469;
+  font-weight: normal;
+}
+.portal .release .block {
+  background: url(../img/dashline.png) bottom left repeat-x;
+  padding: 20px 15px;
+}
+.portal .release .block:last-child {
+  background: none;
+}
+.portal .release .twitter a {
+  font-weight: normal;
+}
+.portal .release .twitter .tSahre {
+  position: relative;
+}
+.portal .release .twitter span {
+  display: inline-block;
+}
+.portal .bread {
+  padding: 10px 0 15px;
+  margin: 10px 0;
+  background: #f7f6f4;
+}
+.portal .bread .breadTitle {
+  padding: 0;
+  margin: 0;
+  font-size: 2.4em;
+  color: #6789d3;
+}
+.portal .bread .breadcrumb {
+  padding: 0;
+  margin: 0;
+}
+.portal .bread .breadcrumb li a {
+  color: #403d39;
+  font-size: .8em;
+}
+.portal .bread .breadcrumb li:before {
+  content: '\00bb';
+  display: inline-block;
+  width: 13px;
+  color: #403d39;
+  margin-left: 0px;
+  margin-right: 7px;
+}
+.portal .bread .breadcrumb li:first-child:before {
+  display: none;
+}
+.portal .bread .share {
+  top: 25px;
+}
+.portal .articleCtt .ref-list .refList a {
+  display: inline-block;
+  margin-right: 0;
+}
+.portal .articleCtt .ref-list .col-md-1.col-sm-1 {
+  margin: 0;
+  width: auto;
+}
 .alternativeHeader {
   position: fixed;
   top: -60px;
@@ -3434,6 +3881,63 @@ button.btn:active {
   display: block;
   background: url(../img/dropdown-arrow.png) top center no-repeat;
 }
+.portal .nav-tabs.themesSubTab,
+.collection .nav-tabs.themesSubTab {
+  border: none;
+}
+.portal .nav-tabs.themesSubTab li,
+.collection .nav-tabs.themesSubTab li {
+  margin: 20px 10px 10px 0;
+  border: none;
+}
+.portal .nav-tabs.themesSubTab li a,
+.collection .nav-tabs.themesSubTab li a {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #403d39;
+}
+.portal .nav-tabs.themesSubTab li:hover,
+.collection .nav-tabs.themesSubTab li:hover {
+  color: #6789d3;
+}
+.portal .nav-tabs.themesSubTab li.active a,
+.collection .nav-tabs.themesSubTab li.active a {
+  color: #6789d3;
+  background: #f7f6f4;
+}
+.portal .about .sectionTitle,
+.collection .about .sectionTitle {
+  padding-bottom: 12px;
+  background: url(../img/dashline.png) bottom left repeat-x;
+}
+.portal .about .networkList a,
+.collection .about .networkList a {
+  color: #00314c;
+}
+.portal .about .networkList li,
+.collection .about .networkList li {
+  padding: 8px 10px 20px 10px;
+  background: url(../img/dashline.png) bottom left repeat-x;
+}
+.portal .about .networkList li:hover,
+.collection .about .networkList li:hover {
+  color: #fff;
+  background: #6789d3;
+  border-radius: 4px;
+}
+.portal .about .networkList li:hover:before,
+.collection .about .networkList li:hover:before {
+  background-position: center -4331px;
+}
+.portal .about .networkList li:before,
+.collection .about .networkList li:before {
+  display: inline-block;
+  content: "";
+  width: 32px;
+  height: 32px;
+  background: url(../img/button.glyphs.png) no-repeat;
+  background-position: center -4355px;
+}
 @media all and (max-width: 991px) {
   .notTablet {
     display: none !important;
@@ -3496,10 +4000,10 @@ button.btn:active {
   border-bottom: 1px solid #eae9e5;
 }
 .lt-ie9 .articleTxt .fig .thumb {
-  background: #ffffff url(../img/fig-thumb.png) center center no-repeat !important;
+  background: #fff url(../img/fig-thumb.png) center center no-repeat !important;
 }
 .lt-ie9 .articleTxt .table .thumb {
-  background: #ffffff url(../img/table-thumb.png) center center no-repeat !important;
+  background: #fff url(../img/table-thumb.png) center center no-repeat !important;
 }
 .lt-ie9 .articleTxt .refList.outer {
   border-bottom: 5px solid #f7f6f4;
@@ -3509,4 +4013,13 @@ button.btn:active {
 }
 .menuLevelJournal{
   margin-top: 12px;
+}
+.articleShare {
+  left: -38px;
+}
+.articleShare:before {
+  left: 74%!important;
+}
+.socialLinks.articleShareLink {
+  position: absolute;
 }

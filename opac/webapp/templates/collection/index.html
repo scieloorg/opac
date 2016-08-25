@@ -1,37 +1,178 @@
 {% extends "collection/base.html" %}
-{% block body_class %}portal collection{% endblock %}
+{% block body_class %}collection{% endblock %}
+{% block level_menu %}
+    {% include "collection/includes/levelMenu_search.html" %}
+{% endblock %}
 {% block main_content %}
-
-  <section class="collection collectionNews">
+  <section class="collection">
     <div class="container">
-      <div class="row sectionTitle">
-        <h1 class="col-md-8 col-sm-7">{% trans %}Notícias{% endtrans %}</h1>
-        <div class="col-md-4 col-sm-5 share">
-          <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
-          <a href="#" class="showTooltip" data-placement="top" title="Atom" target="blank"><span class="glyphBtn rssMini"></span></a>
-          <span class="divisor"></span>
-          {% trans %}Compartilhe{% endtrans %}
-          <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
-          <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
-          <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
-          <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
-          <ul class="dropdown-menu">
-              <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
-              <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
-              <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
-              <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
-              <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
-              <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
-              <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
-          </ul>
+      <div class="row">
+        <div class="col-md-12 col-sm-12 metrics">
+          <h2>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }} <span>{% trans %}em números | Métricas{% endtrans %}</span></h2>
+          <div class="levelMenu">
+            <div class="col-md-10 col-sm-10 numbers">
+              <div class="col-md-3 col-sm-3">
+                {{ analytics.metrics.references }}
+                <span>{% trans %}citações{% endtrans %}</span>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                {{ analytics.metrics.articles }}
+                <span>{% trans %}artigos{% endtrans %}</span>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                {{ analytics.metrics.issues }}
+                <span>{% trans %}números{% endtrans %}</span>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                {{ analytics.metrics.journals }}
+                <span>{% trans %}períodicos{% endtrans %}</span>
+              </div>
+            </div>
+            <div class="col-md-2 col-sm-2">
+              <ul>
+                <li>
+                  <a href="{{ analytics.urls.downloads }}">{% trans %}Downloads{% endtrans %}</a>
+                </li>
+                <li>
+                  <a href="{{ analytics.urls.references }}">{% trans %}Citações{% endtrans %}</a>
+                </li>
+                <li>
+                  <a href="{{ analytics.urls.other }}">{% trans %}Outros indicadores{% endtrans %}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="clearfix"></div>
+          </div>
         </div>
       </div>
-      <div class="newsContainer">
-        {% for item in news %}
-          {% with is_highlight = loop.index == 1 %}
-            {% include "news/includes/collection_news_row.html" %}
-          {% endwith %}
-        {% endfor %}
+      <div class="row">
+        <div class="col-md-12 col-sm-12 periodicals">
+          <h2>{% trans %}Lista de periódicos{% endtrans %}</h2>  
+          <div class="levelMenu">
+            <ul>
+              <li>
+                <a href="{{ url_for('.collection_list_alpha') }}">{% trans %}Alfabética{% endtrans %}</a>
+              </li>
+              <li>
+                <a href="{{ url_for('.collection_list_theme') }}">{% trans %}Temática{% endtrans %}</a>
+              </li>
+              <li>
+                <a href="{{ url_for('.collection_list_institution') }}">{% trans %}Por instituição{% endtrans %}</a>
+              </li>
+              <li>
+                <a href="#">{% trans %}Novos números{% endtrans %}</a>
+              </li>
+              <li>
+                <a href="#">{% trans %}Novos períodicos{% endtrans %}</a>
+              </li>
+              <li>
+                <a href="{{ analytics.urls.other }}">{% trans %}Métricas{% endtrans %}</a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="block releases">
+          <div class="col-md-12">
+            <h2>Press-releases</h2>
+            <div class="slider" id="pressrelases">
+              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+              <div class="slide-container">
+                <div class="slide-wrapper">
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Pode o ambiente mudar o comportamento diuturno exibido pela população do camarão vermelho?</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Cuidados frente à revolução da longevidade</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Pode o ambiente mudar o comportamento diuturno exibido pela população do camarão vermelho?</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="#">Estudo evidencia projeto de vida e trabalho como questão de inclusão da pessoa idosa</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="#">Estudo evidencia projeto de vida e trabalho como questão de inclusão da pessoa idosa</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Pode o ambiente mudar o comportamento diuturno exibido pela população do camarão vermelho?</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Cuidados frente à revolução da longevidade</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="#">Estudo evidencia projeto de vida e trabalho como questão de inclusão da pessoa idosa</a>
+                    </div>
+                  </div>
+                  <div class="slide-item release">
+                    <div class="col-md-12">
+                      <a href="javascript:;">Pode o ambiente mudar o comportamento diuturno exibido pela população do camarão vermelho?</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="block perspective">
+          <div class="col-md-12">
+            <h2>SciELO <span>{% trans %}em perspectiva{% endtrans %}</span></h2>
+            <div class="slider" id="perspective">
+              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+              <div class="slide-container">
+                <div class="slide-wrapper">
+                  {% for item in news %}
+                    {% with is_highlight = loop.index == 1 %}
+                      {% include "news/includes/collection_news_row.html" %}
+                    {% endwith %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="block twitter">
+          <div class="col-md-12">
+            <h2><span>Twitter</span> <a href="https://twitter.com/{{ config.TWITTER_SCREEN_NAME }}" target="_blank">@{{ config.TWITTER_SCREEN_NAME }}</a></h2>
+            <div class="slider" id="twitter">
+              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+              <div class="slide-container">
+                <div class="slide-wrapper twitter-timeline-container">
+                  {% for tweet in tweets %}
+                    {% with is_highlight = loop.index == 1 %}
+                      {% include "collection/includes/tweet_row.html" %}
+                    {% endwith %}
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
       </div>
     </div>
   </section>

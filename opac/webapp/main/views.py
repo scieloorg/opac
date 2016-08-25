@@ -74,8 +74,12 @@ def index():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang)
     news = controllers.get_latest_news_by_lang(language)
+    analytics = controllers.get_collection_analytics()
+    tweets = controllers.get_collection_tweets()
     context = {
-        'news': news
+        'news': news,
+        'analytics': analytics,
+        'tweets': tweets
     }
     return render_template("collection/index.html", **context)
 
@@ -159,8 +163,9 @@ def collection_list_feed():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
 
-    title = 'SciELO - %s - %s' % (g.collection.name, _(u'Últimos periódicos inseridos na coleção'))
-    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % g.collection.name)
+
+    title = 'SciELO - %s - %s' % (g.collection.name or _('NOME DA COLEÇÃO!!'), _(u'Últimos periódicos inseridos na coleção'))
+    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % g.collection.name or _('NOME DA COLEÇÃO!!'))
 
     feed = AtomFeed(title,
                     subtitle=subtitle,
@@ -461,6 +466,17 @@ def download_file_by_filename(filename):
 def search():
     context = {}
     return render_template("collection/search.html", **context)
+
+
+@main.route("/metasearch", methods=['GET'])
+def metasearch():
+    url = request.args.get('url', 'http://search.scielo.org', type=unicode)
+    params = {}
+    for k, v in request.args.items():
+        if k != 'url':
+            params[k] = v
+    xml = utils.do_request(url, request.args)
+    return Response(xml, mimetype='text/xml')
 
 
 @main.route("/collection/about", methods=['GET'])
