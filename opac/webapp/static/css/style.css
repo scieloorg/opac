@@ -3,3 +3,7 @@
 .journalPreviousTitle{
     font-weight: bold;
 }
+
+.journal .mainMenu .logo img {
+  margin-bottom: 10px;
+}
