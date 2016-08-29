@@ -575,12 +575,12 @@ class IssueAdminView(OpacBaseAdminView):
         'end_month', 'year', 'is_public', 'unpublish_reason'
     ]
     column_searchable_list = [
-        'iid', 'journal', 'volume', 'number', 'label', 'bibliographic_legend'
+        'iid', 'journal', 'volume', 'number', 'label'
     ]
     column_exclude_list = [
         '_id', 'sections', 'cover_url', 'suppl_text',
         'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
-        'bibliographic_legend', 'unpublish_reason'
+        'unpublish_reason'
     ]
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
@@ -603,7 +603,6 @@ class IssueAdminView(OpacBaseAdminView):
         year=__(u'Ano'),
         label=__(u'Etiqueta'),
         order=__(u'Ordem'),
-        bibliographic_legend=__(u'Legenda bibliográfica'),
         is_public=__(u'Publicado?'),
         unpublish_reason=__(u'Motivo de despublicação'),
     )

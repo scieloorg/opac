@@ -58,19 +58,7 @@
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
-                    <strong class="issueName">
-                      {{ journal.short_title }} {% trans %}vol.{% endtrans %}{{ issue.volume }} {% trans %}no.{% endtrans %}{{ issue.number }} {{ journal.publisher_city }}
-
-                      {% if issue.start_month and issue.end_month %}
-                        {{ issue.start_month|abbrmonth }}./{{ issue.end_month|abbrmonth }}.
-                      {% elif issue.start_month %}
-                        {{ issue.start_month|abbrmonth }}.
-                      {% elif issue.end_month %}
-                        {{ issue.end_month|abbrmonth }}.
-                      {% endif %}
-
-                      {{ issue.year }}
-                    </strong>
+                    <strong>{{ journal.legend_last_issue }}</strong>
                     <ul>
                       {% for section in sections %}
                         {% if loop.first %}

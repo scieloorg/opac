@@ -2524,7 +2524,7 @@ class IssueAdminViewTests(BaseTestCase):
         issue_index_url = url_for('issue.index_view')
         expected_column_searchable_list = [
             'iid', 'journal', 'volume', 'number',
-            'label', 'bibliographic_legend'
+            'label'
         ]
         # when
         with self.client as client:
@@ -2564,7 +2564,7 @@ class IssueAdminViewTests(BaseTestCase):
         expected_column_exclude_list = [
             '_id', 'sections', 'cover_url', 'suppl_text',
             'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
-            'bibliographic_legend', 'unpublish_reason'
+            'unpublish_reason'
         ]
         # when
         with self.client as client:
@@ -2657,7 +2657,6 @@ class IssueAdminViewTests(BaseTestCase):
             'year',
             'label',
             'order',
-            'bibliographic_legend',
             'is_public',
             'unpublish_reason',
         ]
