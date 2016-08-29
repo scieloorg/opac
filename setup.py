@@ -30,7 +30,7 @@ install_requirements = [
 ]
 
 dependency_links = [
-    'http://github.com/scieloorg/opac_schema/tarball/v2.11#egg=opac_schema-v2.11'
+    'http://github.com/scieloorg/opac_schema/tarball/v2.13#egg=opac_schema-v2.13'
 ]
 
 setup(
