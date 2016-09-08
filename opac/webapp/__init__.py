@@ -12,6 +12,7 @@ from flask_mail import Mail
 from flask_babelex import Babel
 from flask_babelex import lazy_gettext
 from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.routing import BaseConverter
 
 import jinja_filters
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, Resource, News, Pages
@@ -25,11 +26,19 @@ mail = Mail()
 babel = Babel()
 
 
+class RegexConverter(BaseConverter):
+    def __init__(self, url_map, *items):
+        super(RegexConverter, self).__init__(url_map)
+        self.regex = items[0]
+
+
 def create_app():
     app = Flask(__name__,
                 static_url_path='/static',
                 static_folder='static',
                 instance_relative_config=False)
+
+    app.url_map.converters['regex'] = RegexConverter
 
     # Configurações
     app.config.from_object('webapp.config.default')  # Configuração basica

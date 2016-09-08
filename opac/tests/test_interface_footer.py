@@ -63,7 +63,7 @@ class FooterTestCase(BaseTestCase):
             with self.client as c:
 
                 response = c.get(url_for('main.journal_detail',
-                                         journal_id=journal.id))
+                                         url_seg=journal.url_segment))
 
                 self.assertStatus(response, 200)
 
@@ -87,7 +87,7 @@ class FooterTestCase(BaseTestCase):
             with self.client as c:
 
                 response = c.get(url_for('main.journal_detail',
-                                         journal_id=journal.id))
+                                         url_seg=journal.url_segment))
 
                 self.assertStatus(response, 200)
 
@@ -113,7 +113,7 @@ class FooterTestCase(BaseTestCase):
             with self.client as c:
 
                 response = c.get(url_for('main.issue_grid',
-                                         journal_id=journal.id))
+                                         url_seg=journal.url_segment))
 
                 self.assertStatus(response, 200)
 
@@ -132,12 +132,15 @@ class FooterTestCase(BaseTestCase):
         with current_app.app_context():
             collection = utils.makeOneCollection()
 
-            issue = utils.makeOneIssue()
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
 
             with self.client as c:
 
                 response = c.get(url_for('main.issue_toc',
-                                         issue_id=issue.id))
+                                         url_seg=issue.journal.url_segment,
+                                         url_seg_issue=issue.url_segment))
 
                 self.assertStatus(response, 200)
 
@@ -161,7 +164,7 @@ class FooterTestCase(BaseTestCase):
             with self.client as c:
 
                 response = c.get(url_for('main.journal_detail',
-                                         journal_id=journal.id))
+                                         url_seg=journal.url_segment))
 
                 self.assertStatus(response, 200)
 

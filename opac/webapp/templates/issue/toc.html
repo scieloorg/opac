@@ -7,7 +7,7 @@
       <div class="container">
           <div class="col-md-4 col-md-offset-8 share">
               <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
-              <a href="{{ url_for('main.issue_feed', issue_id=issue.iid)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
+              <a href="{{ url_for('main.issue_feed', url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
               <span class="divisor"></span>
               {% trans %}Compartilhe{% endtrans %}
               <a href="" class="sendViaMail showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
@@ -58,12 +58,12 @@
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
-                    <strong>{{ journal.legend_last_issue }}</strong>
+                    <strong>{{ issue.legend }}</strong>
                     <ul>
                       {% for section in sections %}
                         {% if loop.first %}
                           <li>
-                            <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}">
+                            <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}">
                               {% if section_filter|length == 0 %}
                                 {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
                               {% else %}
@@ -74,7 +74,7 @@
                         {% endif %}
                         {% if section %}
                           <li>
-                            <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}?section={{ section|upper }}">
+                            <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ section|upper }}">
                               {% if section_filter|upper == section|upper %}
                                 {{ section }} <span style="color: #6789d3;">&laquo;</span>
                               {% else %}
@@ -93,7 +93,7 @@
                 {% if article.section %}
                   <a name="{{ article.section|upper }}"></a>
                   <h1>
-                    <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}?section={{ article.section|upper }}">
+                    <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ article.section|upper }}">
                       {{ article.section }}
                     </a>
                   </h1>
@@ -119,10 +119,10 @@
                         {{ lang }}:
 
                         {% if lang in article.abstract_languages %}
-                          <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |
+                          <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |
                         {% endif %}
 
-                        <a href="{{ url_for('.article_detail', article_id=article.aid, lang_code=lang) }}">{% trans %}Texto{% endtrans %}</a>
+                        <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}">{% trans %}Texto{% endtrans %}</a>
 
                         {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %}
                           {% if pdf_url %}

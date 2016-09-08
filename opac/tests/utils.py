@@ -82,6 +82,7 @@ def makeOneJournal(attrib=None):
     attrib = attrib or {}
     default_id = attrib.get('_id', str(uuid4().hex))
     default_title = "journal-%s" % default_id
+    default_title_iso = default_title[:6]
 
     if 'social_networks' in attrib.keys():
         social_networks = []
@@ -97,10 +98,11 @@ def makeOneJournal(attrib=None):
         'jid': attrib.get('jid', default_id),
         'is_public': attrib.get('is_public', True),
         'title': attrib.get('title', default_title),
+        'title_iso': attrib.get('title_iso', default_title_iso),
         'short_title': attrib.get('short_title', 'Jounal Ex.'),
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
-        'acronym': attrib.get('acronym', "journal-%s" % default_id),
+        'acronym': attrib.get('acronym', "journal_acron"),
         'mission': attrib.get('mission',
                               [{'language': 'pt',
                                'description': u'Esse periódico tem com objetivo xpto'
@@ -257,6 +259,10 @@ def makeOneArticle(attrib=None):
         'updated': attrib.get('updated', datetime.datetime.now()),
         'issue': issue.id,
         'journal': journal.id,
+        'original_language': attrib.get('original_language', 'pt'),
+        'fpage': attrib.get('fpage', '15'),
+        'lpage': attrib.get('lpage', '16'),
+        'elocation': attrib.get('elocation', 'e08y2y8393'),
         'translated_titles': attrib.get('translated_titles', []),
         'languages': attrib.get('languages', ['pt', ]),
     }

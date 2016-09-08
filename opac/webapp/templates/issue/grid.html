@@ -40,7 +40,8 @@
                   {% if issues_ahead %}
                     <span class="pull-right">
                       {% for issue in issues_ahead %}
-                        <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn ahead">ahead of print</a>
+                        <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                          url_seg_issue=issue.url_segment) }}" class="btn ahead">ahead of print</a>
                       {% endfor %}
                     </span>
                   {% endif %}
@@ -56,16 +57,19 @@
                     <td class="left">
                       {% for issue in issue_list|sort(attribute='order') %}
                         {% if issue.type == 'special' %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                          url_seg_issue=issue.url_segment) }}" class="btn">
                             spe.{% if issue.spe_text -%}{{issue.spe_text}}{%- endif %}
                           </a>
                         {% elif issue.type == 'supplement' %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                          url_seg_issue=issue.url_segment) }}" class="btn">
                             suppl.{% if issue.suppl_text -%}{{issue.suppl_text}}{%- endif %}
                           </a>
                         {# {% elif issue.type == 'regular' %} #}
                         {% else %}
-                          <a href="{{ url_for('.issue_toc', issue_id=issue.iid) }}" class="btn">
+                          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                          url_seg_issue=issue.url_segment) }}" class="btn">
                             {{issue.number}}
                           </a>
                         {% endif %}

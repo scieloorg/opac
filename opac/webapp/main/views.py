@@ -84,64 +84,7 @@ def index():
     return render_template("collection/index.html", **context)
 
 
-@main.route("/journals/search/alpha/ajax/", methods=['GET', ])
-def journals_search_alpha_ajax():
-
-    if not request.is_xhr:
-        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
-
-    query = request.args.get('query', '', type=unicode)
-    query_filter = request.args.get('query_filter', '', type=unicode)
-    page = request.args.get('page', 1, type=int)
-    response_data = controllers.get_alpha_list_from_paginated_journals(
-        title_query=query, query_filter=query_filter, page=page)
-
-    return jsonify(response_data)
-
-
-@main.route("/journals/search/group/by/filter/ajax/", methods=['GET'])
-def journals_search_by_theme_ajax():
-
-    if not request.is_xhr:
-        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
-
-    query = request.args.get('query', '', type=unicode)
-    query_filter = request.args.get('query_filter', '', type=unicode)
-    filter = request.args.get('filter', 'areas', type=unicode)
-
-    if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter)
-    elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter)
-    elif filter == 'publisher':
-        objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter)
-    else:
-        return jsonify({
-            'error': 401,
-            'message': _(u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".')
-        })
-    return jsonify(objects)
-
-
-@main.route("/journals/download/<string:list_type>/<string:extension>", methods=['GET', ])
-def download_journal_list(list_type, extension):
-    if extension.lower() not in ['csv', 'xls']:
-        abort(401, _(u'Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
-    elif list_type.lower() not in ['alpha', 'areas', 'wos', 'publisher']:
-        abort(401, _(u'Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
-    else:
-        if extension.lower() == 'xls':
-            mimetype = 'application/vnd.ms-excel'
-        else:
-            mimetype = 'text/csv'
-        query = request.args.get('query', '', type=unicode)
-        data = controllers.get_journal_generator_for_csv(list_type=list_type, title_query=query)
-        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        filename = 'journals_%s_%s.%s' % (list_type, timestamp, extension)
-        response = Response(data, mimetype=mimetype)
-        response.headers['Content-Disposition'] = u'attachment; filename=%s' % filename
-        return response
-
+###################################Collection###################################
 
 @main.route('/journals')
 def collection_list_alpha():
@@ -207,16 +150,31 @@ def collection_list_feed():
                  render_template("collection/list_feed_content.html", **context),
                  content_type='html',
                  author=journal.publisher_name,
-                 url=url_external('main.journal_detail', journal_id=journal.jid),
+                 url=url_external('main.journal_detail', url_seg=journal.url_segment),
                  updated=journal.updated,
                  published=journal.created)
 
     return feed.get_response()
 
 
-@main.route('/journals/<string:journal_id>')
-def journal_detail(journal_id):
-    journal = controllers.get_journal_by_jid(journal_id)
+@main.route("/collection/about", methods=['GET'])
+def about_collection():
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+
+    context = {}
+
+    for page in getattr(g.collection, 'about', []):
+        if page.language == language:
+            context = {'content': page.content}
+
+    return render_template("collection/about.html", **context)
+
+####################################Journal#####################################
+
+@main.route('/<string:url_seg>/')
+def journal_detail(url_seg):
+    journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
@@ -230,7 +188,7 @@ def journal_detail(journal_id):
     news = controllers.get_latest_news_by_lang(language)
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal_id, is_public=True)
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
     # A lista de fascículos deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
@@ -252,9 +210,9 @@ def journal_detail(journal_id):
     return render_template("journal/detail.html", **context)
 
 
-@main.route('/journals/<string:journal_id>/feed')
-def journal_feed(journal_id):
-    journal = controllers.get_journal_by_jid(journal_id)
+@main.route('/<string:url_seg>/feed')
+def journal_feed(url_seg):
+    journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
@@ -288,16 +246,120 @@ def journal_feed(journal_id):
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
-                 url=url_external('main.article_detail', article_id=article.aid, lang_code=article_lang),
+                 url=url_external('main.article_detail',
+                                  url_seg=journal.url_segment,
+                                  url_seg_issue=last_issue.url_segment,
+                                  url_seg_article=article.url_segment,
+                                  lang_code=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
     return feed.get_response()
 
 
-@main.route('/journals/<string:journal_id>/issues')
-def issue_grid(journal_id):
-    journal = controllers.get_journal_by_jid(journal_id)
+@main.route("/<string:url_seg>/about", methods=['GET'])
+def about_journal(url_seg):
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+
+    journal = controllers.get_journal_by_url_seg(url_seg)
+
+    if not journal:
+        abort(404, _(u'Periódico não encontrado'))
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+
+    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # anterior e próximo
+    if len(issues) >= 2:
+        previous_issue = issues[1]
+    else:
+        previous_issue = None
+
+    page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
+
+    context = {
+        'next_issue': None,
+        'previous_issue': previous_issue,
+        'journal': journal,
+        # o primiero item da lista é o último fascículo.
+        # condicional para verificar se issues contém itens
+        'last_issue': issues[0] if issues else None,
+    }
+
+    if page:
+        context['content'] = page.content
+
+    return render_template("journal/about.html", **context)
+
+
+@main.route("/journals/search/alpha/ajax/", methods=['GET', ])
+def journals_search_alpha_ajax():
+
+    # if not request.is_xhr:
+    #     abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+
+    query = request.args.get('query', '', type=unicode)
+    query_filter = request.args.get('query_filter', '', type=unicode)
+    page = request.args.get('page', 1, type=int)
+    response_data = controllers.get_alpha_list_from_paginated_journals(
+        title_query=query, query_filter=query_filter, page=page)
+
+    return jsonify(response_data)
+
+
+@main.route("/journals/search/group/by/filter/ajax/", methods=['GET'])
+def journals_search_by_theme_ajax():
+
+    if not request.is_xhr:
+        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+
+    query = request.args.get('query', '', type=unicode)
+    query_filter = request.args.get('query_filter', '', type=unicode)
+    filter = request.args.get('filter', 'areas', type=unicode)
+
+    if filter == 'areas':
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter)
+    elif filter == 'wos':
+        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter)
+    elif filter == 'publisher':
+        objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter)
+    else:
+        return jsonify({
+            'error': 401,
+            'message': _(u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".')
+        })
+    return jsonify(objects)
+
+
+@main.route("/journals/download/<string:list_type>/<string:extension>", methods=['GET', ])
+def download_journal_list(list_type, extension):
+    if extension.lower() not in ['csv', 'xls']:
+        abort(401, _(u'Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
+    elif list_type.lower() not in ['alpha', 'areas', 'wos', 'publisher']:
+        abort(401, _(u'Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
+    else:
+        if extension.lower() == 'xls':
+            mimetype = 'application/vnd.ms-excel'
+        else:
+            mimetype = 'text/csv'
+        query = request.args.get('query', '', type=unicode)
+        data = controllers.get_journal_generator_for_csv(list_type=list_type, title_query=query)
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        filename = 'journals_%s_%s.%s' % (list_type, timestamp, extension)
+        response = Response(data, mimetype=mimetype)
+        response.headers['Content-Disposition'] = u'attachment; filename=%s' % filename
+        return response
+
+####################################Issue#######################################
+
+@main.route('/<string:url_seg>/issues/')
+def issue_grid(url_seg):
+    journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
@@ -306,7 +368,7 @@ def issue_grid(journal_id):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
-    issues_data = controllers.get_issues_for_grid_by_jid(journal_id, is_public=True)
+    issues_data = controllers.get_issues_for_grid_by_jid(journal.id, is_public=True)
 
     context = {
         'journal': journal,
@@ -319,8 +381,8 @@ def issue_grid(journal_id):
     return render_template("issue/grid.html", **context)
 
 
-@main.route('/issues/<string:issue_id>')
-def issue_toc(issue_id):
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/')
+def issue_toc(url_seg, url_seg_issue):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     section_filter = request.args.get('section', '', type=unicode)
 
@@ -329,7 +391,7 @@ def issue_toc(issue_id):
     else:
         lang = session.get('lang')[:2]
 
-    issue = controllers.get_issue_by_iid(issue_id)
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
         abort(404, _(u'Fascículo não encontrado'))
@@ -342,10 +404,12 @@ def issue_toc(issue_id):
 
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
     if articles:
         sections = sorted(articles.item_frequencies('section').keys())
     else:
         sections = []
+
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
     if section_filter != u'':
@@ -371,9 +435,9 @@ def issue_toc(issue_id):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/issues/<string:issue_id>/feed')
-def issue_feed(issue_id):
-    issue = controllers.get_issue_by_iid(issue_id)
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/feed')
+def issue_feed(url_seg, url_seg_issue):
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
         abort(404, _(u'Fascículo não encontrado'))
@@ -408,22 +472,35 @@ def issue_feed(issue_id):
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
-                 url=url_external('main.article_detail', article_id=article.aid, lang_code=article_lang),
+                 url=url_external('main.article_detail',
+                                  url_seg=journal.url_segment,
+                                  url_seg_issue=issue.url_segment,
+                                  url_seg_article=article.url_segment,
+                                  lang_code=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
     return feed.get_response()
 
+###################################Article######################################
 
-@main.route('/articles/<string:article_id>/<string:lang_code>')
-def article_detail(article_id, lang_code):
-    article = controllers.get_article_by_aid(article_id)
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
+
+    if not issue:
+        abort(404, _(u'Issue não encontrado'))
+
+    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
         abort(404, _(u'Artigo não encontrado'))
 
     if lang_code not in article.languages:
-        abort(404, _(u'O Artigo não se encontra no idioma solicitado: %s' % lang_code))
+        # Se não tem idioma na URL mostra o artigo no idioma original.
+        lang_code = article.original_language
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -456,11 +533,7 @@ def article_detail(article_id, lang_code):
     return render_template("article/detail.html", **context)
 
 
-@main.route("/media/<path:filename>", methods=['GET'])
-def download_file_by_filename(filename):
-    media_root = current_app.config['MEDIA_ROOT']
-    return send_from_directory(media_root, filename)
-
+###################################Search#######################################
 
 @main.route("/search", methods=['GET'])
 def search():
@@ -478,59 +551,12 @@ def metasearch():
     xml = utils.do_request(url, request.args)
     return Response(xml, mimetype='text/xml')
 
+###################################Others#######################################
 
-@main.route("/collection/about", methods=['GET'])
-def about_collection():
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
-
-    context = {}
-
-    for page in getattr(g.collection, 'about', []):
-        if page.language == language:
-            context = {'content': page.content}
-
-    return render_template("collection/about.html", **context)
-
-
-@main.route("/<string:journal_acron>/about", methods=['GET'])
-def about_journal(journal_acron):
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
-
-    journal = controllers.get_journal_by_acron(journal_acron)
-
-    if not journal:
-        abort(404, _(u'Periódico não encontrado'))
-
-    if not journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
-
-    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
-    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
-
-    page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
-
-    context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
-        'journal': journal,
-        # o primiero item da lista é o último fascículo.
-        # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None,
-    }
-
-    if page:
-        context['content'] = page.content
-
-    return render_template("journal/about.html", **context)
+@main.route("/media/<path:filename>", methods=['GET'])
+def download_file_by_filename(filename):
+    media_root = current_app.config['MEDIA_ROOT']
+    return send_from_directory(media_root, filename)
 
 
 @main.route("/open_access", methods=['GET'])

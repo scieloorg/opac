@@ -49,7 +49,7 @@
       <div class="col-md-6 col-md-5 menuItens">
           <ul>
               <li>
-                <a href="{{ url_for('.journal_detail', journal_id=journal.jid) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
+                <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
                   <span class="glyphBtn home"></span>
                 </a>
               </li>
@@ -64,14 +64,14 @@
 
                   {# Sumário #}
                   <li>
-                    <a href="{{ url_for('.issue_toc', issue_id=issue.id) }}">
+                    <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}">
                       &bull; {% trans %}sumário{% endtrans %}
                     </a>
                   </li>
 
                   {# Anterior #}
                   <li class="{% if not previous_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', article_id=previous_article.aid, lang_code=article_lang) }}">
+                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment, lang_code=article.original_language) }}">
                       &laquo; {% trans %}anterior{% endtrans %}
                     </a>
                   </li>
@@ -85,7 +85,7 @@
 
                   {# Próximo #}
                   <li class="{% if not next_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', article_id=next_article.aid, lang_code=article_lang) }}">
+                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment, lang_code=article.original_language) }}">
                       &raquo; {% trans %}próximo{% endtrans %}
                     </a>
                   </li>
