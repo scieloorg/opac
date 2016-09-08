@@ -6,7 +6,7 @@
     <div class="container">
       <div class="col-md-4 col-md-offset-8 share">
         <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
-        <a href="{{ url_for('main.journal_feed', journal_id=journal.jid)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
+        <a href="{{ url_for('main.journal_feed', url_seg=journal.url_segment)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
         <span class="divisor"></span>
         {% trans %}Compartilhe{% endtrans %}
         <a href="" class="sendViaMail showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
@@ -52,7 +52,7 @@
         {% if journal.last_issue %}
           <div class="block lastIssue">
             <div class="col-md-6 col-sm-6">
-              <a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}">
+              <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
                 {% if journal.last_issue.cover_url %}
                   <img src="{{ latest_issue.cover_url }}" class="image" alt="{% trans %}Capa do número mais recente{% endtrans %}" /> <!-- a imagem é opcional -->
                 {% endif %}
@@ -66,7 +66,7 @@
               <h3>{% trans %}Sumário{% endtrans %}</h3>
               <ul>
                 {% for section in journal.last_issue.sections|sort(attribute='name') %}
-                  <li><a href="{{ url_for('.issue_toc', issue_id=journal.last_issue.iid) }}#{{ section|upper }}">{{ section }}</a></li>
+                  <li><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}#{{ section|upper }}">{{ section }}</a></li>
                 {% endfor %}
               </ul>
             </div>

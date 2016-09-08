@@ -33,7 +33,7 @@ class TOCTestCase(BaseTestCase):
                                             'translated_titles': translated_titles})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='pt_BR'),
@@ -69,12 +69,12 @@ class TOCTestCase(BaseTestCase):
                                             'translated_titles': translated_titles})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='es'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                     follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
@@ -105,12 +105,12 @@ class TOCTestCase(BaseTestCase):
                                             'translated_titles': translated_titles})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='en'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                     follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
@@ -139,12 +139,12 @@ class TOCTestCase(BaseTestCase):
                                             'translated_titles': translated_titles})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='en'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                     follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
@@ -173,12 +173,12 @@ class TOCTestCase(BaseTestCase):
                                             'translated_titles': translated_titles})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='es_MX'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                    follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
@@ -214,12 +214,12 @@ class TOCTestCase(BaseTestCase):
                                              'translated_titles': []})
 
             header = {'Referer': url_for('main.issue_toc',
-                                         issue_id=issue.iid)}
+                                         url_seg=journal.url_segment, url_seg_issue=issue.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='es'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                     follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 

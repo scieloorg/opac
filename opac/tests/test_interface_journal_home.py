@@ -23,7 +23,7 @@ class JournalHomeTestCase(BaseTestCase):
             collection = utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
-                                         journal_id=journal.jid)}
+                                         url_seg=journal.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='pt_BR'),
@@ -49,7 +49,7 @@ class JournalHomeTestCase(BaseTestCase):
             collection = utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
-                                         journal_id=journal.jid)}
+                                         url_seg=journal.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='es'),
@@ -75,12 +75,12 @@ class JournalHomeTestCase(BaseTestCase):
             collection = utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
-                                         journal_id=journal.jid)}
+                                         url_seg=journal.url_segment)}
 
             response = c.get(url_for('main.set_locale',
                                      lang_code='en'),
-                             headers=header,
-                             follow_redirects=True)
+                                     headers=header,
+                                     follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
@@ -106,7 +106,7 @@ class JournalHomeTestCase(BaseTestCase):
             journal = utils.makeOneJournal({'collection': collection})
             with self.client as c:
                 # when
-                response = c.get(url_for('main.journal_detail', journal_id=journal.jid))
+                response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertEqual(journal.social_networks, [])
                 self.assertStatus(response, 200)
@@ -145,7 +145,7 @@ class JournalHomeTestCase(BaseTestCase):
             journal = utils.makeOneJournal(journal_data)
             with self.client as c:
                 # when
-                response = c.get(url_for('main.journal_detail', journal_id=journal.jid))
+                response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
                 social_networks_class = u"journalLinks"
@@ -189,7 +189,7 @@ class JournalHomeTestCase(BaseTestCase):
             journal = utils.makeOneJournal(journal_data)
             with self.client as c:
                 # when
-                response = c.get(url_for('main.journal_detail', journal_id=journal.jid))
+                response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
                 social_networks_class = u"journalLinks"
@@ -233,7 +233,7 @@ class JournalHomeTestCase(BaseTestCase):
             journal = utils.makeOneJournal(journal_data)
             with self.client as c:
                 # when
-                response = c.get(url_for('main.journal_detail', journal_id=journal.jid))
+                response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
                 social_networks_class = u"journalLinks"

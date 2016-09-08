@@ -194,7 +194,7 @@ def get_journal_json_data(journal):
         'id': journal.id,
         'title': journal.title,
         'links': {
-            'detail': url_for('main.journal_detail', journal_id=journal.jid),
+            'detail': url_for('main.journal_detail', url_seg=journal.url_segment),
             'submission': '#',
             'instructions': '#',
             'about': '#',
@@ -361,6 +361,20 @@ def get_journal_by_acron(acron, **kwargs):
 
     return Journal.objects(acronym=acron, **kwargs).first()
 
+def get_journal_by_url_seg(url_seg, **kwargs):
+    """
+    Retorna um periódico considerando os parâmetros ``url_seg`` e ``kwargs``
+
+    - ``url_seg``: string, acrônimo do periódico
+    - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
+    """
+
+    if not url_seg:
+        raise ValueError(__(u'Obrigatório um url_seg.'))
+
+    return Journal.objects(url_segment=url_seg, **kwargs).first()
 
 def get_journals_by_jid(jids):
     """
@@ -536,6 +550,38 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
         issue.save()
 
 
+def get_issue_by_acron_issue(jacron, year, issue_label):
+    """
+    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
+
+    - ``jacron``: string, contendo o acrônimo do periódico;
+    - ``issue``: string, label do issue.
+    """
+
+    jiid = get_journal_by_acron(jacron)
+
+    if not jacron and year and issue_label:
+        raise ValueError(__(u'Obrigatório um jacron e issue_label.'))
+
+    return Issue.objects.filter(journal=jiid, year=int(year), label=issue_label).first()
+
+
+def get_issue_by_url_seg(url_seg, url_seg_issue):
+    """
+    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
+
+    - ``url_seg``: string, contém o seguimento da URL do Journal;
+    - ``url_seg_issue``: string, contém o seguimento da URL do Issue,.
+    """
+
+    jiid = get_journal_by_url_seg(url_seg)
+
+    if not url_seg and url_seg_issue:
+        raise ValueError(__(u'Obrigatório um url_seg e url_seg_issue.'))
+
+    return Issue.objects.filter(journal=jiid, url_segment=url_seg_issue).first()
+
+
 # -------- ARTICLE --------
 
 def get_article_by_aid(aid, **kwargs):
@@ -550,6 +596,20 @@ def get_article_by_aid(aid, **kwargs):
         raise ValueError(__(u'Obrigatório um aid.'))
 
     return Article.objects(aid=aid, **kwargs).first()
+
+
+def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``iid`` e ``kwargs``.
+
+    - ``iid``: string, chave primaria do fascículo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
+    - ``kwargs``: parâmetros de filtragem.
+    """
+
+    if not iid and url_seg_article:
+        raise ValueError(__(u'Obrigatório um iid and url_seg_article.'))
+
+    return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
 
 
 def get_articles_by_aid(aids):

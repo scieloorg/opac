@@ -4,7 +4,7 @@
     <div class="container">
         <div class="col-md-2 col-sm-2">
             <h2>&#160;</h2>
-            <a href="{{ url_for('.journal_detail', journal_id=article.journal.jid) }}" class="btn single">
+            <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
                 <span class="glyphBtn home"></span> {% trans %}home da revista{% endtrans %}
             </a>
         </div>
@@ -13,12 +13,12 @@
             <div class="btn-group">
 
                 {# Sumário #}
-                <a href="{{ url_for('.issue_toc', issue_id=issue.id) }}" class="btn group">
+                <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group">
                     {% trans %}sumário{% endtrans %}
                 </a>
 
                 {# Anterior #}
-                <a href="{{ url_for('.article_detail', article_id=previous_article.aid, lang_code=article_lang) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
+                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment, lang_code=article.original_language) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
                     &laquo; {% trans %}artigo anterior{% endtrans %}
                 </a>
 
@@ -28,7 +28,7 @@
                 </a>
 
                 {# Próximo #}
-                <a href="{{ url_for('.article_detail', article_id=next_article.aid, lang_code=article_lang) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment, lang_code=article.original_language) }}" class="btn group {% if not next_article %} disabled {% endif %}">
                     {% trans %}artigo seguinte{% endtrans %} &raquo;
                 </a>
 

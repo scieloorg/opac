@@ -233,11 +233,11 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('collection/list_feed_content.html')
 
             for journal in journals:
-                self.assertIn('journals/%s' % journal.id,
+                self.assertIn('%s' % journal.url_segment,
                               response.data.decode('utf-8'))
 
             for issue in issues:
-                self.assertIn('issues/%s' % issue.id,
+                self.assertIn('%s' % issue.url_segment,
                               response.data.decode('utf-8'))
 
     def test_collection_list_feed_without_journals(self):
@@ -274,7 +274,7 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('collection/list_feed_content.html')
 
             for journal in journals:
-                self.assertIn('journals/%s' % journal.id,
+                self.assertIn('%s' % journal.url_segment,
                               response.data.decode('utf-8'))
 
     # JOURNAL
@@ -293,7 +293,7 @@ class MainTestCase(BaseTestCase):
             journal = utils.makeOneJournal({'title': 'Revista X'})
 
             response = self.client.get(url_for('main.journal_detail',
-                                               journal_id=journal.id))
+                                               url_seg=journal.url_segment))
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('journal/detail.html')
@@ -310,10 +310,10 @@ class MainTestCase(BaseTestCase):
 
         journals = utils.makeAnyJournal(items=6)
 
-        unknow_id = '0k2qhs8slwnui8'
+        unknow_url_seg = '0k2qhs8slwnui8'
 
         response = self.client.get(url_for('main.journal_detail',
-                                   journal_id=unknow_id))
+                                   url_seg=unknow_url_seg))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Periódico não encontrado',
@@ -331,7 +331,7 @@ class MainTestCase(BaseTestCase):
             'unpublish_reason': 'plágio'})
 
         response = self.client.get(url_for('main.journal_detail',
-                                           journal_id=journal.id))
+                                           url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'plágio', response.data.decode('utf-8'))
@@ -353,7 +353,7 @@ class MainTestCase(BaseTestCase):
             )
 
             response = self.client.get(url_for('main.journal_feed',
-                                               journal_id=journal.id))
+                                               url_seg=journal.url_segment))
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('issue/feed_content.html')
@@ -370,7 +370,7 @@ class MainTestCase(BaseTestCase):
         unknow_id = '0k2qhs8slwnui8'
 
         response = self.client.get(url_for('main.journal_feed',
-                                   journal_id=unknow_id))
+                                   url_seg=unknow_id))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Periódico não encontrado',
@@ -388,7 +388,7 @@ class MainTestCase(BaseTestCase):
             'unpublish_reason': 'plágio'})
 
         response = self.client.get(url_for('main.journal_feed',
-                                           journal_id=journal.id))
+                                           url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'plágio', response.data.decode('utf-8'))
@@ -411,13 +411,13 @@ class MainTestCase(BaseTestCase):
             issues = utils.makeAnyIssue(attrib={'journal': journal.id})
 
             response = self.client.get(url_for('main.issue_grid',
-                                       journal_id=journal.id))
+                                       url_seg=journal.url_segment))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
 
             for issue in issues:
-                self.assertIn('/issues/%s' % issue.id, response.data.decode('utf-8'))
+                self.assertIn('/journal_acron', response.data.decode('utf-8'))
 
     def test_issue_grid_without_issues(self):
         """
@@ -433,7 +433,7 @@ class MainTestCase(BaseTestCase):
             journal = utils.makeOneJournal()
 
             response = self.client.get(url_for('main.issue_grid',
-                                       journal_id=journal.id))
+                                                url_seg=journal.url_segment))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
@@ -452,10 +452,10 @@ class MainTestCase(BaseTestCase):
 
         issues = utils.makeAnyIssue(attrib={'journal': journal.id})
 
-        unknow_id = '9km2g78o2mnu7'
+        unknow_url_seg = '9km2g78o2mnu7'
 
         response = self.client.get(url_for('main.issue_grid',
-                                   journal_id=unknow_id))
+                                            url_seg=unknow_url_seg))
 
         self.assertStatus(response, 404)
 
@@ -473,7 +473,7 @@ class MainTestCase(BaseTestCase):
                                        'unpublish_reason': 'Problema de Direito Autoral'})
 
         response = self.client.get(url_for('main.issue_grid',
-                                           journal_id=journal.id))
+                                           url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Problema de Direito Autoral',
@@ -486,13 +486,18 @@ class MainTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
+
             collection = utils.makeOneCollection()
 
+            journal = utils.makeOneJournal()
+
             issue = utils.makeOneIssue({'number': '31',
-                                        'volume': '10'})
+                                        'volume': '10',
+                                        'journal': journal})
 
             response = self.client.get(url_for('main.issue_toc',
-                                       issue_id=issue.id))
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
@@ -505,12 +510,15 @@ class MainTestCase(BaseTestCase):
         quando é acessado utilizando um identificador do issue desconhecido,
         deve retorna status_code 404 com a msg ``Fascículo não encontrado``.
         """
+        journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue()
-        unknow_id = '9wks9sjdu9j'
+        issue = utils.makeOneIssue({'journal': journal})
+
+        unknow_url_seg = '2014.v3n2'
 
         response = self.client.get(url_for('main.issue_toc',
-                                   issue_id=unknow_id))
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=unknow_url_seg))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
@@ -521,13 +529,16 @@ class MainTestCase(BaseTestCase):
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
+        journal = utils.makeOneJournal()
 
         issue = utils.makeOneIssue({
             'is_public': False,
-            'unpublish_reason': 'Fascículo incorreto'})
+            'unpublish_reason': 'Fascículo incorreto',
+            'journal': journal})
 
         response = self.client.get(url_for('main.issue_toc',
-                                           issue_id=issue.id))
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
@@ -548,7 +559,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.issue_toc',
-                                           issue_id=issue.id))
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
@@ -563,15 +575,19 @@ class MainTestCase(BaseTestCase):
         with current_app.app_context():
             collection = utils.makeOneCollection()
 
+            journal = utils.makeOneJournal()
+
             issue = utils.makeOneIssue({'number': '31',
-                                        'volume': '10'})
+                                        'volume': '10',
+                                        'journal': journal})
             articles = utils.makeAnyArticle(
                 issue=issue,
                 attrib={'journal': issue.journal.id, 'issue': issue.id}
             )
 
             response = self.client.get(url_for('main.issue_feed',
-                                       issue_id=issue.id))
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/feed_content.html')
@@ -583,12 +599,15 @@ class MainTestCase(BaseTestCase):
         quando é acessado utilizando um identificador do issue desconhecido,
         deve retorna status_code 404 com a msg ``Fascículo não encontrado``.
         """
+        journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue()
-        unknow_id = '9wks9sjdu9j'
+        issue = utils.makeOneIssue({'journal': journal})
+
+        unknow_url_seg= '2015.v6n3'
 
         response = self.client.get(url_for('main.issue_feed',
-                                   issue_id=unknow_id))
+                                   url_seg=journal.url_segment,
+                                   url_seg_issue=unknow_url_seg))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
@@ -600,12 +619,16 @@ class MainTestCase(BaseTestCase):
         404 e msg cadastrada no atributo ``reason``.
         """
 
+        journal = utils.makeOneJournal()
+
         issue = utils.makeOneIssue({
             'is_public': False,
-            'unpublish_reason': 'Fascículo incorreto'})
+            'unpublish_reason': 'Fascículo incorreto',
+            'journal': journal})
 
         response = self.client.get(url_for('main.issue_feed',
-                                           issue_id=issue.id))
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
@@ -626,7 +649,8 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.issue_feed',
-                                           issue_id=issue.id))
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
         self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
@@ -644,12 +668,22 @@ class MainTestCase(BaseTestCase):
 
             resource = utils.makeOneResource()
 
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
             article = utils.makeOneArticle({'title': 'Article Y',
-                                            'htmls': [resource]})
+                                            'htmls': [resource],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
 
             response = self.client.get(url_for('main.article_detail',
-                                               article_id=article.id,
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
                                                lang_code='pt'))
+
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
@@ -663,8 +697,14 @@ class MainTestCase(BaseTestCase):
         e a msg ``Artigo não encontrado``
         """
 
+        journal = utils.makeOneJournal()
+
+        issue = utils.makeOneIssue({'journal': journal})
+
         response = self.client.get(url_for('main.article_detail',
-                                           article_id='02ksn892hwytd8jh2',
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment,
+                                           url_seg_article='9827-817',
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
@@ -684,14 +724,16 @@ class MainTestCase(BaseTestCase):
 
         issue = utils.makeOneIssue({
             'is_public': True,
-            'journal': journal.id})
+            'journal': journal})
 
         article = utils.makeOneArticle({
-            'issue': issue.id,
-            'journal': journal.id})
+            'issue': issue,
+            'journal': journal})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id,
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment,
+                                           url_seg_article=article.url_segment,
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
@@ -717,7 +759,9 @@ class MainTestCase(BaseTestCase):
             'journal': journal.id})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id,
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment,
+                                           url_seg_article=article.url_segment,
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
@@ -737,11 +781,13 @@ class MainTestCase(BaseTestCase):
         article = utils.makeOneArticle({
             'is_public': False,
             'unpublish_reason': 'Artigo com problemas de licença',
-            'issue': issue.id,
-            'journal': journal.id})
+            'issue': issue,
+            'journal': journal})
 
         response = self.client.get(url_for('main.article_detail',
-                                           article_id=article.id,
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment,
+                                           url_seg_article=article.url_segment,
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
