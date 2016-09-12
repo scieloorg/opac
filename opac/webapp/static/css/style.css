@@ -7,3 +7,18 @@
 .journal .mainMenu .logo img {
   margin-bottom: 10px;
 }
+
+.pressRelease .smallText-right{
+    color: #7f7a71;
+    text-align: right;
+}
+
+.pressRelease h1{
+    margin-bottom: 0px;
+}
+
+.pressReleaseText{
+    padding: 10px;
+    text-align: justify;
+    background: #fafaf8;
+}

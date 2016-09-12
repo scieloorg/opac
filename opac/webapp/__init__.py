@@ -15,8 +15,16 @@ from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.routing import BaseConverter
 
 import jinja_filters
-from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, Resource, News, Pages
-
+from opac_schema.v1.models import (
+    Collection,
+    Sponsor,
+    Journal,
+    Issue,
+    Article,
+    Resource,
+    News,
+    Pages,
+    PressRelease)
 
 login_manager = LoginManager()
 assets = Environment()
@@ -103,6 +111,7 @@ def create_app():
     admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Periódico')))
     admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Fascículo')))
     admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Artigo')))
+    admin.add_view(views.PressReleaseAdminView(PressRelease, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Press Release')))
     admin.add_view(views.ResourceAdminView(Resource, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Recursos')))
     admin.add_view(views.NewsAdminView(News, category=lazy_gettext(u'Notícias'), name=lazy_gettext(u'Notícias')))
     admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext(u'Ativos')))

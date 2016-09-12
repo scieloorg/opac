@@ -14,7 +14,14 @@ from collections import OrderedDict
 
 from slugify import slugify
 
-from opac_schema.v1.models import Journal, Issue, Article, Collection, News, Pages
+from opac_schema.v1.models import(
+    Journal,
+    Issue,
+    Article,
+    Collection,
+    News,
+    Pages,
+    PressRelease)
 from flask import current_app, url_for
 from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
@@ -107,6 +114,35 @@ def get_collection_tweets():
         tweets = response.data
 
     return tweets
+
+
+# -------- PRESSRELEASES --------
+
+def get_press_release(journal, issue, article, lang_code):
+
+    filters = {}
+
+    if  journal:
+        filters['journal'] = journal.id
+
+    if issue:
+        filters['issue'] = issue.id
+
+    if article:
+        filters['article'] = article.id
+
+    if lang_code:
+        filters['language'] = lang_code
+
+    return PressRelease.objects(**filters).first()
+
+
+def get_press_releases(query_filter=None, order_by="publication_date"):
+
+    if not query_filter:
+        query_filter = {}
+
+    return PressRelease.objects(**query_filter).order_by(order_by)
 
 
 # -------- JOURNAL --------
@@ -596,6 +632,19 @@ def get_article_by_aid(aid, **kwargs):
         raise ValueError(__(u'Obrigatório um aid.'))
 
     return Article.objects(aid=aid, **kwargs).first()
+
+def get_article_by_url_seg(url_seg_article, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.
+
+    - ``url_seg_article``: string, chave primaria do artigo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
+    - ``kwargs``: parâmetros de filtragem.
+    """
+
+    if not url_seg_article:
+        raise ValueError(__(u'Obrigatório um url_seg_article.'))
+
+    return Article.objects(url_segment=url_seg_article, **kwargs).first()
 
 
 def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
