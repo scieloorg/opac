@@ -118,21 +118,16 @@ def get_collection_tweets():
 
 # -------- PRESSRELEASES --------
 
-def get_press_release(journal, issue, article, lang_code):
+def get_press_release(journal, issue, article=None, lang_code):
 
     filters = {}
-
-    if  journal:
-        filters['journal'] = journal.id
-
-    if issue:
-        filters['issue'] = issue.id
 
     if article:
         filters['article'] = article.id
 
-    if lang_code:
-        filters['language'] = lang_code
+    filters['journal'] = journal.id
+    filters['issue'] = issue.id
+    filters['language'] = lang_code
 
     return PressRelease.objects(**filters).first()
 
@@ -637,7 +632,7 @@ def get_article_by_url_seg(url_seg_article, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.
 
-    - ``url_seg_article``: string, chave primaria do artigo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
+    - ``url_seg_article``: string, segmento do url do artigo;
     - ``kwargs``: parâmetros de filtragem.
     """
 
@@ -649,9 +644,11 @@ def get_article_by_url_seg(url_seg_article, **kwargs):
 
 def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     """
-    Retorna um artigo considerando os parâmetros ``iid`` e ``kwargs``.
+    Retorna um artigo considerando os parâmetros ``iid``, ``url_seg_article`` e
+    ``kwargs``.
 
-    - ``iid``: string, chave primaria do fascículo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
+    - ``iid``: string, id do fascículo;
+    - ``url_seg_article``: string, segmento do url do artigo;
     - ``kwargs``: parâmetros de filtragem.
     """
 
