@@ -118,7 +118,7 @@ def get_collection_tweets():
 
 # -------- PRESSRELEASES --------
 
-def get_press_release(journal, issue, article=None, lang_code):
+def get_press_release(journal, issue, lang_code, article=None):
 
     filters = {}
 

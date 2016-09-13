@@ -106,7 +106,7 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
     if not issue:
         abort(404, _(u'Fascículo não encontrado'))
 
-    press_release = controllers.get_press_release(journal, issue, article, lang_code)
+    press_release = controllers.get_press_release(journal, issue, lang_code, article)
 
     if not press_release:
         abort(404, _(u'Press Release não encontrado'))
