@@ -99,6 +99,8 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
 
     if url_seg_article:
         article = controllers.get_article_by_url_seg(url_seg_article)
+    else:
+        article = None
 
     if not journal:
         abort(404, _(u'Periódico não encontrado'))
