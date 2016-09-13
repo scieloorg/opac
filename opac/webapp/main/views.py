@@ -56,7 +56,7 @@ def get_locale():
     return session['lang']
 
 
-@main.route('/set_locale/<string:lang_code>')
+@main.route('/set_locale/<string:lang_code>/')
 def set_locale(lang_code):
     langs = current_app.config.get('LANGUAGES')
 
@@ -73,42 +73,76 @@ def set_locale(lang_code):
 def index():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang)
+
     news = controllers.get_latest_news_by_lang(language)
     analytics = controllers.get_collection_analytics()
     tweets = controllers.get_collection_tweets()
+    press_releases = controllers.get_press_releases({'language': language})
+
     context = {
         'news': news,
         'analytics': analytics,
-        'tweets': tweets
+        'tweets': tweets,
+        'press_releases': press_releases
     }
+
     return render_template("collection/index.html", **context)
+
+###################################PressRelease#################################
+
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/pressrelease/<string:lang_code>/', defaults={'url_seg_article': None})
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/pressrelease/<string:lang_code>/')
+def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
+    journal = controllers.get_journal_by_url_seg(url_seg)
+
+    issue = controllers.get_issue_by_url_seg(journal.url_segment, url_seg_issue)
+
+    if url_seg_article:
+        article = controllers.get_article_by_url_seg(url_seg_article)
+
+    if not journal:
+        abort(404, _(u'Periódico não encontrado'))
+
+    if not issue:
+        abort(404, _(u'Fascículo não encontrado'))
+
+    press_release = controllers.get_press_release(journal, issue, lang_code, article)
+
+    if not press_release:
+        abort(404, _(u'Press Release não encontrado'))
+
+    context = {
+        'press_release': press_release
+    }
+
+    return render_template("collection/includes/press_release.html", **context)
 
 
 ###################################Collection###################################
 
-@main.route('/journals')
+@main.route('/journals/')
 def collection_list_alpha():
     return render_template("collection/list_alpha.html")
 
 
-@main.route('/journals/theme')
+@main.route('/journals/theme/')
 def collection_list_theme():
     return render_template("collection/list_theme.html")
 
 
-@main.route('/journals/institution')
+@main.route('/journals/institution/')
 def collection_list_institution():
     return render_template("collection/list_institution.html")
 
 
-@main.route('/journals/feed')
+@main.route('/journals/feed/')
 def collection_list_feed():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
+    collection = controllers.get_current_collection()
 
-
-    title = 'SciELO - %s - %s' % (g.collection.name or _('NOME DA COLEÇÃO!!'), _(u'Últimos periódicos inseridos na coleção'))
-    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % g.collection.name or _('NOME DA COLEÇÃO!!'))
+    title = 'SciELO - %s - %s' % (collection.name, _(u'Últimos periódicos inseridos na coleção'))
+    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % collection.name)
 
     feed = AtomFeed(title,
                     subtitle=subtitle,
@@ -157,7 +191,7 @@ def collection_list_feed():
     return feed.get_response()
 
 
-@main.route("/collection/about", methods=['GET'])
+@main.route("/collection/about/", methods=['GET'])
 def about_collection():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -210,7 +244,7 @@ def journal_detail(url_seg):
     return render_template("journal/detail.html", **context)
 
 
-@main.route('/<string:url_seg>/feed')
+@main.route('/<string:url_seg>/feed/')
 def journal_feed(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -257,7 +291,7 @@ def journal_feed(url_seg):
     return feed.get_response()
 
 
-@main.route("/<string:url_seg>/about", methods=['GET'])
+@main.route("/<string:url_seg>/about/", methods=['GET'])
 def about_journal(url_seg):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -336,7 +370,7 @@ def journals_search_by_theme_ajax():
     return jsonify(objects)
 
 
-@main.route("/journals/download/<string:list_type>/<string:extension>", methods=['GET', ])
+@main.route("/journals/download/<string:list_type>/<string:extension>/", methods=['GET', ])
 def download_journal_list(list_type, extension):
     if extension.lower() not in ['csv', 'xls']:
         abort(401, _(u'Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
@@ -435,7 +469,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/feed')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/feed/')
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -535,13 +569,13 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 ###################################Search#######################################
 
-@main.route("/search", methods=['GET'])
+@main.route("/search/", methods=['GET'])
 def search():
     context = {}
     return render_template("collection/search.html", **context)
 
 
-@main.route("/metasearch", methods=['GET'])
+@main.route("/metasearch/", methods=['GET'])
 def metasearch():
     url = request.args.get('url', 'http://search.scielo.org', type=unicode)
     params = {}
@@ -553,12 +587,12 @@ def metasearch():
 
 ###################################Others#######################################
 
-@main.route("/media/<path:filename>", methods=['GET'])
+@main.route("/media/<path:filename>/", methods=['GET'])
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
 
 
-@main.route("/open_access", methods=['GET'])
+@main.route("/open_access/", methods=['GET'])
 def open_access():
     return render_template("open_access.html")

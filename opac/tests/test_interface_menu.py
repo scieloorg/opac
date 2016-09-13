@@ -20,7 +20,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/search.html')
-        expected_anchor = u'<a href="/search"\n         class="btn single selected">\n        <span class="glyphBtn search"></span>\n        <span class="hidden-sm">Buscar artigos</span>\n        <span class="hidden-md hidden-lg">Buscar</span>\n      </a>'
+        expected_anchor = u'<a href="/search/"\n         class="btn single selected">\n        <span class="glyphBtn search"></span>\n        <span class="hidden-sm">Buscar artigos</span>\n        <span class="hidden-md hidden-lg">Buscar</span>\n      </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_alpha_link_is_selected_for_list_alpha(self):
@@ -32,7 +32,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_alpha.html')
-        expected_anchor = u'<a href="/journals"\n             class="btn group selected">\n            Alfabética\n          </a>'
+        expected_anchor = u'<a href="/journals/"\n             class="btn group selected">\n            Alfabética\n          </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_theme_link_is_selected_for_list_theme(self):
@@ -44,7 +44,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_theme.html')
-        expected_anchor = u'<a href="/journals/theme"\n             class="btn group selected">\n            Temática\n          </a>'
+        expected_anchor = u'<a href="/journals/theme/"\n             class="btn group selected">\n            Temática\n          </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_institution_link_is_selected_for_list_institution(self):
@@ -56,7 +56,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_institution.html')
-        expected_anchor = u'<a href="/journals/institution"\n             class="btn group selected">\n            Por instituição\n          </a>'
+        expected_anchor = u'<a href="/journals/institution/"\n             class="btn group selected">\n            Por instituição\n          </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_about_link_is_selected_for_about_view(self):
@@ -70,7 +70,7 @@ class MenuTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('collection/about.html')
-            expected_anchor = u'<a href="/collection/about"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>\n        <span class="hidden-sm">Sobre o SciELO</span>'
+            expected_anchor = u'<a href="/collection/about/"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>'
             self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu

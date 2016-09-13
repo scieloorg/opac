@@ -2,6 +2,7 @@
 import os
 import logging
 import socket
+from datetime import datetime
 from functools import partial
 from uuid import uuid4
 from werkzeug import secure_filename
@@ -27,7 +28,7 @@ from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer, import_feed
-from opac_schema.v1.models import Sponsor, Resource
+from opac_schema.v1.models import Sponsor, Resource, Journal, Issue, Article
 from webapp.admin.custom_widget import CKEditorField
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -730,14 +731,12 @@ class PagesAdminView(OpacBaseAdminView):
     edit_template = 'admin/pages/edit.html'
 
     form_overrides = dict(
-        type=Select2Field,
         language=Select2Field,
         journal=SelectField,
         content=CKEditorField
     )
 
     form_args = dict(
-        type=dict(choices=['html', 'htm']),
         language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
         journal=dict(choices=[('', '------')] +
                      [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
@@ -747,3 +746,59 @@ class PagesAdminView(OpacBaseAdminView):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
             model._id = str(uuid4().hex)
+
+
+class PressReleaseAdminView(OpacBaseAdminView):
+    can_create = True
+    can_edit = True
+    edit_modal = False
+    can_delete = True
+    create_modal = False
+    edit_modal = False
+    can_view_details = True
+    form_excluded_columns = ('created', 'updated')
+    column_searchable_list = ('title', 'content', 'doi', )
+
+    column_exclude_list = [
+        '_id', 'content', 'created', 'updated',
+    ]
+
+    create_template = 'admin/pressrelease/edit.html'
+    edit_template = 'admin/pressrelease/edit.html'
+
+    form_overrides = dict(
+        language=Select2Field,
+        content=CKEditorField
+    )
+
+    form_ajax_refs = {
+        'journal': CustomQueryAjaxModelLoader(
+            name='journal',
+            model=Journal,
+            fields=['title', 'acronym', 'scielo_issn', 'print_issn',
+                    'eletronic_issn']
+        ),
+        'issue': CustomQueryAjaxModelLoader(
+            name='issue',
+            model=Issue,
+            fields=['label', 'pid', 'journal']
+        ),
+        'article': CustomQueryAjaxModelLoader(
+            name='article',
+            model=Article,
+            fields=['title', 'doi', 'pid',]
+        ),
+    }
+
+    form_args = dict(
+        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+    )
+
+    def on_model_change(self, form, model, is_created):
+
+        # é necessario definir um valor para o campo ``_id`` na criação.
+        if is_created:
+            model.created = datetime.now()
+            model._id = str(uuid4().hex)
+
+        model.updated = datetime.now()
