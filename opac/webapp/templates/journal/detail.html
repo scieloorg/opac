@@ -75,31 +75,33 @@
         {% endif %}
 
         {# press_releases #}
-        <div class="block releases">
-          <div class="col-md-12">
-            <h2>Press-releases</h2>
-            <div class="slider" id="pressrelases">
-              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-              <div class="slide-container">
-                <div class="slide-wrapper">
-                  {% for press_release in press_releases %}
-                    <div class="slide-item release">
-                      <div class="col-md-12">
-                        {% if press_release.article %}
-                          <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
-                        {% else %}
-                          <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
-                        {% endif %}
+        {% if press_releases %}
+          <div class="block releases">
+            <div class="col-md-12">
+              <h2>Press-releases</h2>
+              <div class="slider" id="pressrelases">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for press_release in press_releases %}
+                      <div class="slide-item release">
+                        <div class="col-md-12">
+                          {% if press_release.article %}
+                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {% else %}
+                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {% endif %}
+                        </div>
                       </div>
-                    </div>
-                  {% endfor %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="clearfix"></div>
-        </div>
+        {% endif %}
         {# press_release #}
 
         {# news #}
