@@ -117,7 +117,7 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
         'press_release': press_release
     }
 
-    return render_template("collection/includes/press_release.html", **context)
+    return render_template("includes/press_release.html", **context)
 
 
 ###################################Collection###################################
@@ -233,10 +233,15 @@ def journal_detail(url_seg):
     else:
         previous_issue = None
 
+    # Get press releases
+    press_releases = controllers.get_press_releases({'journal': journal,
+                                                     'language': language})
+
     context = {
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
+        'press_releases': press_releases,
         # o primiero item da lista é o último fascículo.
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,

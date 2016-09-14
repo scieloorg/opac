@@ -74,85 +74,35 @@
           </div>
         {% endif %}
 
-        {# press releases #}
-        <div class="block releases">
-          <div class="col-md-12">
-            <h2>Press-releases</h2>
-            <div class="slider">
-              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-              <div class="slide-container">
-                <div class="slide-wrapper">
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2013/12 - v8 n.3</span>
-                      <h3>Dossiê Metodologia da pesquisa arqueológica</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
+        {# press_releases #}
+        {% if press_releases %}
+          <div class="block releases">
+            <div class="col-md-12">
+              <h2>Press-releases</h2>
+              <div class="slider" id="pressrelases">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for press_release in press_releases %}
+                      <div class="slide-item release">
+                        <div class="col-md-12">
+                          {% if press_release.article %}
+                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {% else %}
+                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {% endif %}
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2012/12 - v7 n.3</span>
-                      <h3>Dossiês sobre antropologia física e sobre hidrelétricas</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2012/08 - v7 n.2</span>
-                      <h3>Agriculturas Amazônicas</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2013/12 - v8 n.3</span>
-                      <h3>Dossiê Metodologia da pesquisa arqueológica</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2012/04 - v7 n.1</span>
-                      <h3>Museologia e Patrimônio</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2011/08 - v6 n.2</span>
-                      <h3>Número especial destaca obra de Benedito Nunes</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="slide-item release">
-                    <div class="col-md-12">
-                      <span>2011/08 - v6 n.2</span>
-                      <h3>Número especial destaca obra de Benedito Nunes</h3>
-                      <div>
-                        {% trans %}Press-release em{% endtrans %} <a href="">{% trans %}português{% endtrans %}</a>, <a href="">{% trans %}inglês{% endtrans %}</a>
-                      </div>
-                    </div>
+                    {% endfor %}
                   </div>
                 </div>
               </div>
             </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="clearfix"></div>
-        </div>
-        {# /press releases #}
+        {% endif %}
+        {# press_release #}
 
         {# news #}
         <div class="block news">
@@ -172,5 +122,7 @@
   </section>
 
   {% include "journal/includes/contact_footer.html" %}
+
+  {% include "includes/press_release_modal.html" %}
 
 {% endblock %}

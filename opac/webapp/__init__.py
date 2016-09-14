@@ -68,6 +68,7 @@ def create_app():
                 'js/vendor/underscore-min.js',
                 'js/vendor/bootstrap.min.js',
                 'js/vendor/iframeResizer.min.js',
+                'js/vendor/clipboard.js',
                 'js/common.js',
                 'js/main.js',
                 filters='jsmin', output='js/bundle.js')
