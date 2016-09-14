@@ -1,0 +1,77 @@
+{% import 'macros/resources.html' as mresources %}
+
+<div class="modal-header">
+
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+    <center>
+    <img src="{% if g.collection.header_logo_resource %}{{ mresources.get_resource_url(g.collection.header_logo_resource, 'img', session.lang) }}{% endif %}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
+    </center>
+
+</div>
+
+<div class="clearfix"></div>
+
+<div class="modal-body">
+
+    <div class="pressRelease">
+
+        <p class="smallText-right">
+          <small>{% trans %}Press Release{% endtrans %}</small>
+        </p>
+
+        <h1>{{ press_release.title }}</h1>
+
+
+        {% if press_release.article %}
+            <div class="row pressRelease">
+
+                {% if press_release.article.doi %}
+                    <div class="col-md-6 col-sm-12">
+                        <span>DOI: {{ press_release.article.doi}}</span>
+                    </div>
+                {% endif %}
+
+                {% if press_release.doi %}
+                    <div class="col-md-6 col-sm-12 right">
+
+                        <a href="#" class="copy_clipboard" data-toggle="tooltip" data-placement="left" data-clipboard-target="#copy_input" title="Clique para copiar a URL">
+                            <i class="glyphicon glyphicon-link"></i>
+                        </a>
+
+                        <input id="copy_input" value="{{ press_release.doi }}">
+
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if press_release.article %}
+            <p class="smallText">{% trans %} Press release relacionado ao artigo: {% endtrans %}
+            <a href="{{ press_release.article.url }}">{{ press_release.article.legend }}</a></p>
+        {% elif press_release.issue %}
+            <p class="smallText">{% trans %} Press release relacionado ao fascículo: {% endtrans %}
+            <a href="{{ press_release.issue.url }}">{{ press_release.issue.legend }}</a></p>
+        {% elif press_release.journal %}
+            <p class="smallText">{% trans %} Press release relacionado ao periódico: {% endtrans %}
+            <a href="{{ press_release.journal.url }}">{{ press_release.journal.legend }}</a></p>
+        {% endif %}
+
+        <div class="pressReleaseText">
+            {{ press_release.content|safe }}
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-success" data-dismiss="modal">{% trans %} Fechar {% endtrans %}</button>
+</div>
+
+<script type="text/javascript">
+    new Clipboard('.copy_clipboard');
+    $(function() {
+        $('.copy_clipboard').tooltip()
+    });
+</script>

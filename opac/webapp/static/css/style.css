@@ -22,3 +22,11 @@
     text-align: justify;
     background: #fafaf8;
 }
+
+.pressRelease input{
+    border: 0px;
+    width: 80%;
+    outline: none;
+    color: #a7a49e;
+}
+
