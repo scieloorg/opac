@@ -76,14 +76,14 @@ def index():
 
     news = controllers.get_latest_news_by_lang(language)
     analytics = controllers.get_collection_analytics()
-    tweets = controllers.get_collection_tweets()
-    press_releases = controllers.get_press_releases({'language': language})
+    # tweets = controllers.get_collection_tweets()
+    # press_releases = controllers.get_press_releases({'language': language})
 
     context = {
         'news': news,
         'analytics': analytics,
-        'tweets': tweets,
-        'press_releases': press_releases
+        # 'tweets': tweets,
+        # 'press_releases': press_releases
     }
 
     return render_template("collection/index.html", **context)
@@ -123,18 +123,18 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
 ###################################Collection###################################
 
 @main.route('/journals/')
-def collection_list_alpha():
-    return render_template("collection/list_alpha.html")
+def collection_list():
+    return render_template("collection/list_journal.html")
 
 
-@main.route('/journals/theme/')
-def collection_list_theme():
-    return render_template("collection/list_theme.html")
+# @main.route('/journals/theme/')
+# def collection_list_theme():
+#     return render_template("collection/list_theme.html")
 
 
-@main.route('/journals/institution/')
-def collection_list_institution():
-    return render_template("collection/list_institution.html")
+# @main.route('/journals/institution/')
+# def collection_list_institution():
+#     return render_template("collection/list_institution.html")
 
 
 @main.route('/journals/feed/')

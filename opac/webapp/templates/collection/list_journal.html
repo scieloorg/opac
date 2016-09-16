@@ -1,0 +1,363 @@
+{% extends "collection/base.html" %}
+
+{% block level_menu %}
+  {% include "collection/includes/levelMenu.html" %}
+{% endblock %}
+
+{% block main_content %}
+
+  <section class="collection collectionList">
+    <div class="container">
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#alpha" data-toggle="tab">Alfabética</a></li>
+        <li role="presentation"><a href="#theme" data-toggle="tab">Temática</a></li>
+        <li role="presentation"><a href="#publisher" data-toggle="tab">Por instituição</a></li>
+        <li role="presentation"><a href="#newIssue" data-toggle="tab">Novos números</a></li>
+        <li role="presentation"><a href="#newJournals" data-toggle="tab">Novos periódicos</a></li>
+        <li role="presentation"><a href="#metricas" data-toggle="tab">Métricas</a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- Alpha -->
+        <div class="tab-pane active collectionListStart" id="alpha">
+
+          <div class="row collectionListSearch">
+            <div class="col-md-5 col-sm-6">
+            <input type="text" name="{{ input_id|default('query') }}"
+                   id="{{ input_id|default('query') }}"
+                   value=""
+                   class="form-control collectionSearch"
+                   placeholder="Digite uma ou mais palavras para filtrar a lista" />
+            </div>
+          </div>
+
+            <!-- Alpha content -->
+              <div class="container">
+
+                <div class="row collectionListTable">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th class="actions"></th>
+                        <th>
+                          <div class="col-xs-6">
+                            {% trans %}Título{% endtrans %} <small class="collectionListTotalInfo"></small>
+                          </div>
+                          <div class="col-xs-6 right download">
+                            {% trans %}download da lista{% endtrans %}
+                            <a data-toggle="tooltip" href="#" class="collectionListDownloadXLS" title="{% trans %}Lista em arquivo para Excel{% endtrans %}">
+                              <span class="glyphBtn downloadXLS"></span>
+                            </a>
+                            <a data-toggle="tooltip" href="#" class="collectionListDownloadCSV" title="{% trans %}Lista em arquivo CSV{% endtrans %}">
+                              <span class="glyphBtn downloadCSV"></span>
+                            </a>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody id="journals_table_body">
+                      {# preenchido com a lista de periódicos com js #}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <!-- Alpha content -->
+        </div>
+        <!-- Alfa -->
+
+        <!-- Theme -->
+        <div class="tab-pane collectionListStart" id="theme">
+          <ul class="nav nav-tabs themesSubTab">
+            <li role="presentation" class="active"><a href="#areasConhecimento" data-toggle="tab">Grandes áreas do conhecimento</a></li>
+            <li role="presentation"><a href="#temasWoS" data-toggle="tab">Áreas temáticas do Web of Science</a></li>
+          </ul>
+
+            <div class="row collectionListSearch">
+              <div class="col-md-5 col-sm-6">
+                <input type="text" name="query_areas"
+                       id="query_areas"
+                       value=""
+                       class="form-control collectionSearch"
+                       placeholder="Digite uma ou mais palavras para filtrar a lista" />
+              </div>
+            </div>
+
+            <!-- Theme content -->
+              <div class="container">
+
+                <div class="tab-content">
+
+                  <!-- first tab -->
+                  <div class="tab-pane active collectionListStart" id="areasConhecimento">
+
+                    <div id="areas_list_table_container"></div>
+
+                  </div>
+                  <!-- /first tab -->
+
+                  <!-- second tab -->
+                  <div class="tab-pane collectionListStart" id="temasWoS">
+
+                    <div id="wos_list_table_container"></div>
+
+                  </div>
+                  <!-- /second tab -->
+
+                </div>
+              </div>
+            <!-- Theme content -->
+
+            <script id="template_collection_list_table" type="text/template">
+              {% with template_collection_list_table_body_id='template_collection_list_table_body' %}
+              {% include "collection/includes/tmpl_journal_list_grouper_table_container.html" %}
+              {% endwith %}
+            </script>
+
+            <script id="template_collection_list_table_body" type="text/template">
+              {% with template_journal_row_id='template_journal_row' %}
+              {% include "collection/includes/tmpl_journal_list_grouper_table_row.html" %}
+              {% endwith %}
+            </script>
+        </div>
+        <!-- Theme -->
+
+        <!-- Publisher -->
+        <div class="tab-pane collectionListStart" id="publisher">
+
+          <div class="row collectionListSearch">
+            <div class="col-md-5 col-sm-6">
+                <input type="text" name="query_publisher"
+                       id="query_publisher"
+                       value=""
+                       class="form-control collectionSearch"
+                       placeholder="Digite uma ou mais palavras para filtrar a lista" />
+            </div>
+          </div>
+
+            <div class="container">
+
+              <div id="list_table_container" class="collectionListTable">
+              </div>
+
+            </div>
+
+          <script id="template_collection_list_table" type="text/template">
+            {% with template_collection_list_table_body_id='template_collection_list_table_body' %}
+              {% include "collection/includes/tmpl_journal_list_grouper_table_container.html" %}
+            {% endwith %}
+          </script>
+
+          <script id="template_collection_list_table_body" type="text/template">
+            {% with template_journal_row_id='template_journal_row' %}
+              {% include "collection/includes/tmpl_journal_list_grouper_table_row.html" %}
+            {% endwith %}
+          </script>
+
+        </div>
+        <!-- Publisher -->
+
+        <!-- new_issue -->
+        <div class="tab-pane collectionListStart" id="newIssue">
+
+          [newIssue]
+
+        </div>
+        <!-- newIssue -->
+
+        <!-- new_issue -->
+        <div class="tab-pane collectionListStart" id="newJournals">
+
+          [newJournals]
+
+        </div>
+        <!-- newIssue -->
+
+      </div>
+
+      <div style="display: none;" class="collectionListLoadingAreas collectionListLoading"></div>
+
+    </div>
+  </section>
+
+  <script id="template_journal_row" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_row.html" %}
+  </script>
+
+  <script id="template_empty_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_empty.html" %}
+  </script>
+
+  <script id="template_error_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_error.html" %}
+  </script>
+
+{% endblock %}
+
+{% block extra_js %}
+
+  <script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
+
+  <script>
+
+    function listAlpha(){
+
+      var list = JournalListAlpha.initialize(
+          "{{ url_for('main.journals_search_alpha_ajax') }}",
+          "#template_journal_row",
+          "#journals_table_body",
+          "#query",
+          "query_filter",
+          ".collectionListLoading",
+          "#template_error_msg",
+          "#template_empty_msg"
+        ).search(true);
+
+        /* download links */
+        $('.collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
+          open_download_url(target_url, '#query');
+        });
+        $('.collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
+          open_download_url(target_url, '#query');
+        });
+
+    }
+
+    function listTheme(){
+      /* Grandes áreas do conhecimento */
+      var areas_list = Object.create(JournalCategorizedList);
+      areas_list.initialize(
+        '#areas_list_table_container',
+        '#query_areas',
+        "query_filter_areas",
+        '.collectionListLoadingAreas',
+        'areas',
+        "{{ url_for('main.journals_search_by_theme_ajax') }}",
+        "#template_error_msg",
+        "#template_empty_msg",
+        "{% trans %}Título{% endtrans %}",
+        "{% trans %}temas{% endtrans %}"
+      ).search();
+
+      /* Áreas temáticas do Web of Science */
+      var wos_list = Object.create(JournalCategorizedList);
+      wos_list.initialize(
+        '#wos_list_table_container',
+        '#query_wos',
+        "query_filter_wos",
+        '.collectionListLoadingWos',
+        'wos',
+        "{{ url_for('main.journals_search_by_theme_ajax') }}",
+        "#template_error_msg",
+        "#template_empty_msg",
+        "{% trans %}Título{% endtrans %}",
+        "{% trans %}temas{% endtrans %}"
+      ).search();
+
+      /* download links */
+      $('#areas_list_table_container').on('results_loaded', function(event) {
+        $('#areasConhecimento .collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='xls') }}";
+          open_download_url(target_url, '#query_areas');
+        });
+        $('#areasConhecimento .collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='csv') }}";
+          open_download_url(target_url, '#query_areas');
+        });
+      });
+
+      $('#temasWoS').on('results_loaded', function(event) {
+        $('#temasWoS .collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='xls') }}";
+          open_download_url(target_url, '#query_wos');
+        });
+        $('#temasWoS .collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='csv') }}";
+          open_download_url(target_url, '#query_wos');
+        });
+      });
+
+    }
+
+    function listPublisher(){
+
+      var list = Object.create(JournalCategorizedList);
+      list.initialize(
+        '#list_table_container',
+        '#query_publisher',
+        "query_filter",
+        '.collectionListLoading',
+        'publisher',
+        "{{ url_for('main.journals_search_by_theme_ajax') }}",
+        "#template_error_msg",
+        "#template_empty_msg",
+        "{% trans %}Editoras{% endtrans %}",
+        "{% trans %}editoras{% endtrans %}"
+      ).search();
+
+      /* download links */
+      $('#list_table_container').on('results_loaded', function(event) {
+        $('.collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='xls') }}";
+          open_download_url(target_url, '#query_publisher');
+        });
+        $('.collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='csv') }}";
+          open_download_url(target_url, '#query_publisher');
+        });
+      });
+
+    }
+
+    // inicio
+    $(function() {
+
+        // hash switch
+        switch(window.location.hash) {
+          case '#alpha':
+              listAlpha()
+              break;
+          case '#theme':
+              listTheme()
+              break;
+          case '#publisher':
+              listPublisher()
+              break;
+          default:
+              listAlpha()
+        }
+
+      // tab ativa
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href")
+
+        switch(target) {
+            case '#alpha':
+                listAlpha()
+                break;
+            case '#theme':
+                listTheme()
+                break;
+            case '#publisher':
+                listPublisher()
+                break;
+            default:
+                listAlpha()
+        }
+
+      });
+
+    });
+  </script>
+
+{% endblock %}

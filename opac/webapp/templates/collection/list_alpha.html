@@ -2,52 +2,14 @@
 {% block level_menu %}
   {% include "collection/includes/levelMenu.html" %}
 {% endblock %}
+
 {% block main_content %}
 
   <style>
     .collectionList { min-height: 400px; }
   </style>
 
-  <section class="collection collectionList collectionListStart">
-
-    <div class="container">
-      {% with section_title=_('Lista alfabética de periódicos') %}
-        {% include "collection/includes/list_journals_section_title.html" %}
-      {% endwith %}
-      {% with input_id='query' %}
-        {% include "collection/includes/list_journals_search_input.html" %}
-      {% endwith %}
-
-      <div class="row collectionListTable">
-        <table>
-          <thead>
-            <tr>
-              <th class="actions"></th>
-              <th>
-                <div class="col-xs-6">
-                  {% trans %}Título{% endtrans %} <small class="collectionListTotalInfo"></small>
-                </div>
-                <div class="col-xs-6 right download">
-                  {% trans %}download da lista{% endtrans %}
-                  <a data-toggle="tooltip" href="#" class="collectionListDownloadXLS" title="{% trans %}Lista em arquivo para Excel{% endtrans %}">
-                    <span class="glyphBtn downloadXLS"></span>
-                  </a>
-                  <a data-toggle="tooltip" href="#" class="collectionListDownloadCSV" title="{% trans %}Lista em arquivo CSV{% endtrans %}">
-                    <span class="glyphBtn downloadCSV"></span>
-                  </a>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody id="journals_table_body">
-            {# preenchido com a lista de periódicos com js #}
-          </tbody>
-        </table>
-        <div class="collectionListLoading" style="display: none;"></div>
-      </div>
-      <div class="clearfix"></div>
-    </div>
-  </section>
+  {% include "collection/includes/levelMenuTab.html" %}
 
   <script id="template_journal_row" type="text/template">
     {% include "collection/includes/tmpl_journal_list_row.html" %}
@@ -62,35 +24,135 @@
   </script>
 
 {% endblock %}
+
 {% block extra_js %}
 
   <script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
   <script>
-    $(function() {
-      var list = JournalListAlpha.initialize(
-        "{{ url_for('main.journals_search_alpha_ajax') }}",
-        "#template_journal_row",
-        "#journals_table_body",
-        "#query",
-        "query_filter",
-        ".collectionListLoading",
-        "#template_error_msg",
-        "#template_empty_msg"
-      ).search(true);
 
-      /* download links */
-      $('.collectionListDownloadXLS').click(function(event) {
-        event.preventDefault();
-        var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
-        open_download_url(target_url, '#query');
-      });
-      $('.collectionListDownloadCSV').click(function(event) {
-        event.preventDefault();
-        var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
-        open_download_url(target_url, '#query');
-      });
+    // $(function() {
+    //   var list = JournalListAlpha.initialize(
+    //     "{{ url_for('main.journals_search_alpha_ajax') }}",
+    //     "#template_journal_row",
+    //     "#journals_table_body",
+    //     "#query",
+    //     "query_filter",
+    //     ".collectionListLoading",
+    //     "#template_error_msg",
+    //     "#template_empty_msg"
+    //   ).search(true);
+
+    //   /* download links */
+    //   $('.collectionListDownloadXLS').click(function(event) {
+    //     event.preventDefault();
+    //     var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
+    //     open_download_url(target_url, '#query');
+    //   });
+    //   $('.collectionListDownloadCSV').click(function(event) {
+    //     event.preventDefault();
+    //     var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
+    //     open_download_url(target_url, '#query');
+    //   });
+
+    // });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).attr("href") // activated tab
+
+      // Lista alfabética
+      if(target=='#alfa'){
+        alert("alfa");
+
+        var list = JournalListAlpha.initialize(
+          "{{ url_for('main.journals_search_alpha_ajax') }}",
+          "#template_journal_row",
+          "#journals_table_body",
+          "#query",
+          "query_filter",
+          ".collectionListLoading",
+          "#template_error_msg",
+          "#template_empty_msg"
+        ).search(true);
+
+        /* download links */
+        $('.collectionListDownloadXLS').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
+          open_download_url(target_url, '#query');
+        });
+        $('.collectionListDownloadCSV').click(function(event) {
+          event.preventDefault();
+          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
+          open_download_url(target_url, '#query');
+        });
+
+      }
+
+      // Lista temática
+      if (target=='#theme'){
+        alert("theme");
+        /* Grandes áreas do conhecimento */
+        var areas_list = Object.create(JournalCategorizedList);
+        areas_list.initialize(
+          '#areas_list_table_container',
+          '#query_areas',
+          "query_filter_areas",
+          '.collectionListLoadingAreas',
+          'areas',
+          "{{ url_for('main.journals_search_by_theme_ajax') }}",
+          "#template_error_msg",
+          "#template_empty_msg",
+          "{% trans %}Título{% endtrans %}",
+          "{% trans %}temas{% endtrans %}"
+        ).search();
+
+        /* Áreas temáticas do Web of Science */
+        var wos_list = Object.create(JournalCategorizedList);
+        wos_list.initialize(
+          '#wos_list_table_container',
+          '#query_wos',
+          "query_filter_wos",
+          '.collectionListLoadingWos',
+          'wos',
+          "{{ url_for('main.journals_search_by_theme_ajax') }}",
+          "#template_error_msg",
+          "#template_empty_msg",
+          "{% trans %}Título{% endtrans %}",
+          "{% trans %}temas{% endtrans %}"
+        ).search();
+
+
+        /* download links */
+        // $('#areas_list_table_container').on('results_loaded', function(event) {
+        //   $('#areasConhecimento .collectionListDownloadXLS').click(function(event) {
+        //     event.preventDefault();
+        //     var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='xls') }}";
+        //     open_download_url(target_url, '#query_areas');
+        //   });
+        //   $('#areasConhecimento .collectionListDownloadCSV').click(function(event) {
+        //     event.preventDefault();
+        //     var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='csv') }}";
+        //     open_download_url(target_url, '#query_areas');
+        //   });
+        // });
+
+        // $('#temasWoS').on('results_loaded', function(event) {
+        //   $('#temasWoS .collectionListDownloadXLS').click(function(event) {
+        //     event.preventDefault();
+        //     var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='xls') }}";
+        //     open_download_url(target_url, '#query_wos');
+        //   });
+        //   $('#temasWoS .collectionListDownloadCSV').click(function(event) {
+        //     event.preventDefault();
+        //     var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='csv') }}";
+        //     open_download_url(target_url, '#query_wos');
+        //   });
+        // });
+
+      }
 
     });
+
   </script>
 
 {% endblock %}

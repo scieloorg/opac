@@ -1,64 +1,29 @@
 {% import 'macros/menu.html' as mmenu %}
 
-<section class="levelMenu">
+<section class="bread">
   <div class="container">
-    <a href="#" class="onlineSubmission">
-      <span class="glyphBtn authorInfo"></span> {% trans %}Portal do Autor{% endtrans %}
-    </a>
-    <div class="col-md-2 col-sm-2">
-      <h2>&#160;</h2>
-      <a href="{{ url_for('.index') }}"
-         class="btn single {{ mmenu.endpoint_selected(view_name='main.index') }}">
-        <span class="glyphBtn home"></span> {% trans %}Home{% endtrans %}
-      </a>
+    <div class="col-md-9 col-sm-9">
+      <ol class="breadcrumb">
+        <li><a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a></li>
+      </ol>
+      <h1 class="breadTitle">{% trans %}Periódicos{% endtrans %}</h1>
     </div>
-    <div class="col-md-2 col-sm-2">
-      <h2>&#160;</h2>
-      <a href="{{ url_for('.search') }}"
-         class="btn single {{ mmenu.endpoint_selected(view_name='main.search') }}">
-        <span class="glyphBtn search"></span>
-        <span class="hidden-sm">{% trans %}Buscar artigos{% endtrans %}</span>
-        <span class="hidden-md hidden-lg">{% trans %}Buscar{% endtrans %}</span>
-      </a>
-    </div>
-    <div class="col-md-4 col-sm-4">
-      <h2>
-        <span class="glyphBtn numbers"></span> {% trans %}Lista de Periódicos{% endtrans %}:
-      </h2>
-      <div class="btn-group">
-          <a href="{{ url_for('.collection_list_alpha') }}"
-             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_alpha') }}">
-            {% trans %}Alfabética{% endtrans %}
-          </a>
-          <a href="{{ url_for('.collection_list_theme') }}"
-             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_theme') }}">
-            {% trans %}Temática{% endtrans %}
-          </a>
-          <a href="{{ url_for('.collection_list_institution') }}"
-             class="btn group {{ mmenu.endpoint_selected(view_name='main.collection_list_institution') }}">
-            {% trans %}Por instituição{% endtrans %}
-          </a>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-2">
-      <h2>&#160;</h2>
-      <a target="_blank" href="//analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="btn single">
-        <span class="glyphBtn metrics"></span> {% trans %}Métricas{% endtrans %}
-      </a>
-    </div>
-    <div class="col-md-2 col-sm-2 dropdown-container">
-      <h2>&#160;</h2>
-      <a href="{{ url_for('.about_collection') }}"
-         class="btn single dropdown-toggle {{ mmenu.endpoint_selected(view_name='main.about_collection') }}">
-        <span class="glyphBtn infoMenu"></span>
-        <span class="hidden-sm">{% trans %}Sobre o SciELO{% endtrans %}</span>
-        <span class="hidden-md hidden-lg">{% trans %}Sobre{% endtrans %}</span>
-      </a>
+    <div class="col-md-3 col-sm-3 share">
+      {% trans %}Compartilhe{% endtrans %}
+      <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
+      <a data-toggle="tooltip" href="{{ url_for('main.collection_list_feed')}}" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
+      <a href="" class="sendViaMail showTooltip" data-placement="top" title="Enviar link por e-mail"><span class="glyphBtn sendMail"></span></a>
+      <a href="" class="shareFacebook showTooltip" data-placement="top" title="Compartilhar no Facebook"><span class="glyphBtn facebook"></span></a>
+      <a href="" class="shareTwitter showTooltip" data-placement="top" title="Compartilhar no Twitter"><span class="glyphBtn twitter"></span></a>
+      <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="Outras redes sociais"><span class="glyphBtn otherNetworks"></span></a>
       <ul class="dropdown-menu">
-          <li><a href="{{ url_for('.about_collection') }}#about-collection">{% trans %}Sobre o{% endtrans %} SciELO Brasil</a></li>
-          <li><a href="{{ url_for('.about_collection') }}#about-network">{% trans %}Sobre a Rede SciELO{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about_collection') }}#evaluation">{% trans %}Avaliação de periódicos{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about_collection') }}#team">{% trans %}Equipe{% endtrans %} SciELO Brasil</a></li>
+        <li class="dropdown-header"> {% trans %}Outras redes sociais{% endtrans %}</li>
+        <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
+        <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
+        <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
+        <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
+        <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
+        <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
       </ul>
     </div>
   </div>
