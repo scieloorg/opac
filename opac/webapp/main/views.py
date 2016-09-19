@@ -76,14 +76,14 @@ def index():
 
     news = controllers.get_latest_news_by_lang(language)
     analytics = controllers.get_collection_analytics()
-    # tweets = controllers.get_collection_tweets()
-    # press_releases = controllers.get_press_releases({'language': language})
+    tweets = controllers.get_collection_tweets()
+    press_releases = controllers.get_press_releases({'language': language})
 
     context = {
         'news': news,
         'analytics': analytics,
-        # 'tweets': tweets,
-        # 'press_releases': press_releases
+        'tweets': tweets,
+        'press_releases': press_releases
     }
 
     return render_template("collection/index.html", **context)
