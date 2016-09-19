@@ -51,19 +51,19 @@
           <div class="levelMenu">
             <ul>
               <li>
-                <a href="{{ url_for('.collection_list_alpha') }}">{% trans %}Alfabética{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}">{% trans %}Alfabética{% endtrans %}</a>
               </li>
               <li>
-                <a href="{{ url_for('.collection_list_theme') }}">{% trans %}Temática{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}#theme">{% trans %}Temática{% endtrans %}</a>
               </li>
               <li>
-                <a href="{{ url_for('.collection_list_institution') }}">{% trans %}Por instituição{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}#publisher">{% trans %}Por instituição{% endtrans %}</a>
               </li>
               <li>
-                <a href="#">{% trans %}Novos números{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}#newIssue">{% trans %}Novos números{% endtrans %}</a>
               </li>
               <li>
-                <a href="#">{% trans %}Novos períodicos{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}#newJournals">{% trans %}Novos períodicos{% endtrans %}</a>
               </li>
               <li>
                 <a href="{{ analytics.urls.other }}">{% trans %}Métricas{% endtrans %}</a>

@@ -74,7 +74,7 @@ class MainTestCase(BaseTestCase):
                              follow_redirects=True)
             self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/list_alpha.html')
+            self.assertTemplateUsed('collection/list_journal.html')
 
     def test_change_set_locale_with_unknow_lang(self):
         """
@@ -105,10 +105,10 @@ class MainTestCase(BaseTestCase):
         collecton = utils.makeOneCollection()
         journals = utils.makeAnyJournal(items=10)
 
-        response = self.client.get(url_for('main.collection_list_alpha'))
+        response = self.client.get(url_for('main.collection_list') + '#alpha')
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_alpha.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
         for journal in journals:
             self.assertIn('journals/%s' % journal.id,
@@ -125,10 +125,10 @@ class MainTestCase(BaseTestCase):
         """
 
         collecton = utils.makeOneCollection()
-        response = self.client.get(url_for('main.collection_list_alpha'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_alpha.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
         self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
@@ -149,10 +149,10 @@ class MainTestCase(BaseTestCase):
                                         attrib={"study_areas": ["Human Sciences",
                                                 "Biological Sciences", "Engineering"]})
 
-        response = self.client.get(url_for('main.collection_list_theme'))
+        response = self.client.get(url_for('main.collection_list') + '#theme')
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_theme.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
         for journal in journals:
             self.assertIn('journals/%s' % journal.id,
@@ -166,10 +166,10 @@ class MainTestCase(BaseTestCase):
         """
 
         collecton = utils.makeOneCollection()
-        response = self.client.get(url_for('main.collection_list_theme'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_theme.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
         self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
@@ -185,10 +185,10 @@ class MainTestCase(BaseTestCase):
         collecton = utils.makeOneCollection()
         warnings.warn("Necessário definir o atributo instituição no modelo do Manager")
 
-        response = self.client.get(url_for('main.collection_list_institution'))
+        response = self.client.get(url_for('main.collection_list') + '#publisher')
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_institution.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
     def test_collection_list_institution_without_journals(self):
         """
@@ -198,10 +198,10 @@ class MainTestCase(BaseTestCase):
         """
 
         collecton = utils.makeOneCollection()
-        response = self.client.get(url_for('main.collection_list_institution'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_institution.html')
+        self.assertTemplateUsed('collection/list_journal.html')
 
         self.assertIn(u'Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
@@ -870,7 +870,7 @@ class MainTestCase(BaseTestCase):
             }
             collection = utils.makeOneCollection(attrib=collection_data)
             # when
-            response = self.client.get(url_for('main.collection_list_alpha'))
+            response = self.client.get(url_for('main.collection_list'))
             # then
             self.assertStatus(response, 200)
             self.assertIn(collection['address1'], response.data.decode('utf-8'))

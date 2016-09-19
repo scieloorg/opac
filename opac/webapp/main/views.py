@@ -123,18 +123,8 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
 ###################################Collection###################################
 
 @main.route('/journals/')
-def collection_list_alpha():
-    return render_template("collection/list_alpha.html")
-
-
-@main.route('/journals/theme/')
-def collection_list_theme():
-    return render_template("collection/list_theme.html")
-
-
-@main.route('/journals/institution/')
-def collection_list_institution():
-    return render_template("collection/list_institution.html")
+def collection_list():
+    return render_template("collection/list_journal.html")
 
 
 @main.route('/journals/feed/')
@@ -341,8 +331,8 @@ def about_journal(url_seg):
 @main.route("/journals/search/alpha/ajax/", methods=['GET', ])
 def journals_search_alpha_ajax():
 
-    # if not request.is_xhr:
-    #     abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+    if not request.is_xhr:
+        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=unicode)
     query_filter = request.args.get('query_filter', '', type=unicode)
