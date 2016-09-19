@@ -22,18 +22,12 @@
         <!-- Alpha -->
         <div class="tab-pane active collectionListStart" id="alpha">
 
-          <div class="row collectionListSearch">
-            <div class="col-md-5 col-sm-6">
-            <input type="text" name="query"
-                   id="query"
-                   value=""
-                   class="form-control collectionSearch"
-                   placeholder="Digite uma ou mais palavras para filtrar a lista" />
-            </div>
-          </div>
-
             <!-- Alpha content -->
               <div class="container">
+
+                {% with input_id='query' %}
+                  {% include "collection/includes/list_journals_search_input.html" %}
+                {% endwith %}
 
                 <div class="row collectionListTable">
                   <table>
@@ -81,15 +75,9 @@
                   <!-- first tab -->
                   <div class="tab-pane active collectionListStart" id="areasConhecimento">
 
-                    <div class="row collectionListSearch">
-                      <div class="col-md-5 col-sm-6">
-                        <input type="text" name="query_areas"
-                               id="query_areas"
-                               value=""
-                               class="form-control collectionSearch"
-                               placeholder="Digite uma ou mais palavras para filtrar a lista" />
-                      </div>
-                    </div>
+                    {% with input_id='query_areas', filter_id='query_filter_areas' %}
+                      {% include "collection/includes/list_journals_search_input.html" %}
+                    {% endwith %}
 
                     <div id="areas_list_table_container"></div>
 
@@ -99,15 +87,9 @@
                   <!-- second tab -->
                   <div class="tab-pane collectionListStart" id="temasWoS">
 
-                    <div class="row collectionListSearch">
-                      <div class="col-md-5 col-sm-6">
-                        <input type="text" name="query_wos"
-                               id="query_wos"
-                               value=""
-                               class="form-control collectionSearch"
-                               placeholder="Digite uma ou mais palavras para filtrar a lista" />
-                      </div>
-                    </div>
+                    {% with input_id='query_wos', filter_id='query_filter_wos' %}
+                      {% include "collection/includes/list_journals_search_input.html" %}
+                    {% endwith %}
 
                     <div id="wos_list_table_container"></div>
 
@@ -135,15 +117,9 @@
         <!-- Publisher -->
         <div class="tab-pane collectionListStart" id="publisher">
 
-          <div class="row collectionListSearch">
-            <div class="col-md-5 col-sm-6">
-                <input type="text" name="query_publisher"
-                       id="query_publisher"
-                       value=""
-                       class="form-control collectionSearch"
-                       placeholder="Digite uma ou mais palavras para filtrar a lista" />
-            </div>
-          </div>
+          {% with input_id='query_publisher', filter_id='query_filter_publisher'  %}
+            {% include "collection/includes/list_journals_search_input.html" %}
+          {% endwith %}
 
             <div class="container">
 
@@ -303,7 +279,7 @@
       list.initialize(
         '#list_table_container',
         '#query_publisher',
-        "query_filter",
+        "query_filter_publisher",
         '.collectionListLoading',
         'publisher',
         "{{ url_for('main.journals_search_by_theme_ajax') }}",
