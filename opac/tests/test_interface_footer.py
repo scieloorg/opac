@@ -39,11 +39,10 @@ class FooterTestCase(BaseTestCase):
 
             with self.client as c:
 
-                response = c.get(url_for('main.collection_list_theme'))
-
+                response = c.get(url_for('main.collection_list'))
                 self.assertStatus(response, 200)
 
-                self.assertTemplateUsed('collection/list_theme.html')
+                self.assertTemplateUsed('collection/list_journal.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
                 self.assertIn('href="%s"' % url_for('main.open_access'), response.data)

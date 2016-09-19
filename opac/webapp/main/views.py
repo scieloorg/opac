@@ -127,16 +127,6 @@ def collection_list():
     return render_template("collection/list_journal.html")
 
 
-# @main.route('/journals/theme/')
-# def collection_list_theme():
-#     return render_template("collection/list_theme.html")
-
-
-# @main.route('/journals/institution/')
-# def collection_list_institution():
-#     return render_template("collection/list_institution.html")
-
-
 @main.route('/journals/feed/')
 def collection_list_feed():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
@@ -341,8 +331,8 @@ def about_journal(url_seg):
 @main.route("/journals/search/alpha/ajax/", methods=['GET', ])
 def journals_search_alpha_ajax():
 
-    # if not request.is_xhr:
-    #     abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+    if not request.is_xhr:
+        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=unicode)
     query_filter = request.args.get('query_filter', '', type=unicode)

@@ -12,9 +12,9 @@
         <li role="presentation" class="active"><a href="#alpha" data-toggle="tab">Alfabética</a></li>
         <li role="presentation"><a href="#theme" data-toggle="tab">Temática</a></li>
         <li role="presentation"><a href="#publisher" data-toggle="tab">Por instituição</a></li>
-        <li role="presentation"><a href="#newIssue" data-toggle="tab">Novos números</a></li>
+        {# <li role="presentation"><a href="#newIssue" data-toggle="tab">Novos números</a></li>
         <li role="presentation"><a href="#newJournals" data-toggle="tab">Novos periódicos</a></li>
-        <li role="presentation"><a href="#metricas" data-toggle="tab">Métricas</a></li>
+        <li role="presentation"><a href="#metricas" data-toggle="tab">Métricas</a></li> #}
       </ul>
 
       <div class="tab-content">
@@ -24,8 +24,8 @@
 
           <div class="row collectionListSearch">
             <div class="col-md-5 col-sm-6">
-            <input type="text" name="{{ input_id|default('query') }}"
-                   id="{{ input_id|default('query') }}"
+            <input type="text" name="query"
+                   id="query"
                    value=""
                    class="form-control collectionSearch"
                    placeholder="Digite uma ou mais palavras para filtrar a lista" />
@@ -73,16 +73,6 @@
             <li role="presentation"><a href="#temasWoS" data-toggle="tab">Áreas temáticas do Web of Science</a></li>
           </ul>
 
-            <div class="row collectionListSearch">
-              <div class="col-md-5 col-sm-6">
-                <input type="text" name="query_areas"
-                       id="query_areas"
-                       value=""
-                       class="form-control collectionSearch"
-                       placeholder="Digite uma ou mais palavras para filtrar a lista" />
-              </div>
-            </div>
-
             <!-- Theme content -->
               <div class="container">
 
@@ -91,6 +81,16 @@
                   <!-- first tab -->
                   <div class="tab-pane active collectionListStart" id="areasConhecimento">
 
+                    <div class="row collectionListSearch">
+                      <div class="col-md-5 col-sm-6">
+                        <input type="text" name="query_areas"
+                               id="query_areas"
+                               value=""
+                               class="form-control collectionSearch"
+                               placeholder="Digite uma ou mais palavras para filtrar a lista" />
+                      </div>
+                    </div>
+
                     <div id="areas_list_table_container"></div>
 
                   </div>
@@ -98,6 +98,16 @@
 
                   <!-- second tab -->
                   <div class="tab-pane collectionListStart" id="temasWoS">
+
+                    <div class="row collectionListSearch">
+                      <div class="col-md-5 col-sm-6">
+                        <input type="text" name="query_wos"
+                               id="query_wos"
+                               value=""
+                               class="form-control collectionSearch"
+                               placeholder="Digite uma ou mais palavras para filtrar a lista" />
+                      </div>
+                    </div>
 
                     <div id="wos_list_table_container"></div>
 
@@ -157,7 +167,7 @@
         </div>
         <!-- Publisher -->
 
-        <!-- new_issue -->
+        {# <!-- new_issue -->
         <div class="tab-pane collectionListStart" id="newIssue">
 
           [newIssue]
@@ -171,7 +181,7 @@
           [newJournals]
 
         </div>
-        <!-- newIssue -->
+        <!-- newIssue --> #}
 
       </div>
 
@@ -319,7 +329,6 @@
 
     }
 
-    // inicio
     $(function() {
 
         // hash switch

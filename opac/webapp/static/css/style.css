@@ -39,9 +39,9 @@
 }
 
 .collection .collectionList{
-    min-height: 600px;
+    min-height: 500px;
 }
 
-.collectionListTable{
-    min-height: 300px;
+.collectionList .collectionListLoading{
+    margin-top: 50px;
 }

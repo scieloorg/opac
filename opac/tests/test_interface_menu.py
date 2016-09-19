@@ -20,7 +20,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/search.html')
-        expected_anchor = u'<a href="/search/"\n         class="btn single selected">\n        <span class="glyphBtn search"></span>\n        <span class="hidden-sm">Buscar artigos</span>\n        <span class="hidden-md hidden-lg">Buscar</span>\n      </a>'
+        expected_anchor = u'<a href="/search/">\n              Busca\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_alpha_link_is_selected_for_list_alpha(self):
@@ -28,11 +28,11 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Alfabética" tem o css:
         "selected" quando acessamos a view "collection_list_alpha"
         """
-        response = self.client.get(url_for('main.collection_list_alpha'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_alpha.html')
-        expected_anchor = u'<a href="/journals/"\n             class="btn group selected">\n            Alfabética\n          </a>'
+        self.assertTemplateUsed('collection/list_journal.html')
+        expected_anchor = u'<a href="/journals/#alpha">\n              Lista alfabética de periódicos\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_theme_link_is_selected_for_list_theme(self):
@@ -40,11 +40,11 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Temática" tem o css:
         "selected" quando acessamos a view "collection_list_theme"
         """
-        response = self.client.get(url_for('main.collection_list_theme'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_theme.html')
-        expected_anchor = u'<a href="/journals/theme/"\n             class="btn group selected">\n            Temática\n          </a>'
+        self.assertTemplateUsed('collection/list_journal.html')
+        expected_anchor = u'<a href="/journals/#theme">\n              Lista temática de periódicos\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_institution_link_is_selected_for_list_institution(self):
@@ -52,26 +52,12 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Por instituição" tem o css:
         "selected" quando acessamos a view "collection_list_institution"
         """
-        response = self.client.get(url_for('main.collection_list_institution'))
+        response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_institution.html')
-        expected_anchor = u'<a href="/journals/institution/"\n             class="btn group selected">\n            Por instituição\n          </a>'
+        self.assertTemplateUsed('collection/list_journal.html')
+        expected_anchor = u'<a href="/journals/#publisher">\n              Lista de periódicos por editoras\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
-
-    def test_about_link_is_selected_for_about_view(self):
-        """
-        Verficamos que o link do menú "Sobre o Scielo" tem o css:
-        "selected" quando acessamos a view "about"
-        """
-        with current_app.app_context():
-            collection = utils.makeOneCollection({'name': 'dummy collection'})
-            response = self.client.get(url_for('main.about_collection'))
-
-            self.assertStatus(response, 200)
-            self.assertTemplateUsed('collection/about.html')
-            expected_anchor = u'<a href="/collection/about/"\n         class="btn single dropdown-toggle selected">\n        <span class="glyphBtn infoMenu"></span>'
-            self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
     def test_links_in_hamburger_menu(self):
@@ -88,11 +74,11 @@ class MenuTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
                 expected_anchor1 = u"""<a href="%s">\n        <strong>%s</strong>""" % (url_for('.index'), collection.name or __('NOME DA COLEÇÃO!!'))
                 self.assertIn(expected_anchor1, response_data)
-                expected_anchor2 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list_alpha'), __(u'Lista alfabética de periódicos'))
+                expected_anchor2 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#alpha', __(u'Lista alfabética de periódicos'))
                 self.assertIn(expected_anchor2, response_data)
-                expected_anchor3 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list_theme'), __(u'Lista temática de periódicos'))
+                expected_anchor3 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#theme', __(u'Lista temática de periódicos'))
                 self.assertIn(expected_anchor3, response_data)
-                expected_anchor4 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list_institution'), __(u'Lista de periódicos por editoras'))
+                expected_anchor4 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#publisher', __(u'Lista de periódicos por editoras'))
                 self.assertIn(expected_anchor4, response_data)
                 expected_anchor5 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.search'), __(u'Busca'))
                 self.assertIn(expected_anchor5, response_data)
