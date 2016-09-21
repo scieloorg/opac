@@ -32,7 +32,7 @@
                   </a>
                   <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-header">
-                      {{journal.short_title}} {% trans %}vol.{% endtrans %}{{ journal.last_issue.volume }} {% trans %}no.{% endtrans %}{{ journal.last_issue.number }} {{ journal.last_issue.publisher_city }} {{ journal.last_issue.start_month }}/{{ journal.last_issue.end_month }} {{ journal.last_issue.year }}
+                      {{ article.legend }}
                     </li>
                     <li><strong>{{ article.get_title_by_lang(session.lang) }}</strong></li>
                     <li class="author">H. Rodríguez-Angulo; J. Toro-Mendoza; J. Marques; R. Bonfante-Cabarcas; A. Mijares;</li>

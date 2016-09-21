@@ -273,7 +273,7 @@ def journal_feed(url_seg):
         if feed_language not in article.languages:
             article_lang = article.original_language
 
-        feed.add(article.title,
+        feed.add(article.title or 'NO TITLE',
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
