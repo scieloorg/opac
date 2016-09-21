@@ -25,14 +25,16 @@
       </div>
       <div class="col-md-12 content journalHome">
         <div class="block mission">
-          <div class="col-md-6 col-sm-6">
-            {% if journal.mission %}
-              <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
-              {% if session.lang %}
-                <p>{{ journal.get_mission_by_lang(session.lang[:2]) }}</p>
-              {% endif %}
-            {% endif %}
-          </div>
+          {% if journal.mission %}
+            <div class="col-md-6 col-sm-6">
+                <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
+                {% if session.lang %}
+                  {% if journal.get_mission_by_lang(session.lang[:2]) %}
+                    <p>{{ journal.get_mission_by_lang(session.lang[:2]) }}</p>
+                  {% endif %}
+                {% endif %}
+            </div>
+          {% endif %}
           <div class="col-md-6 col-sm-6">
             <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
             <ul>
