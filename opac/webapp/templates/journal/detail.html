@@ -29,9 +29,7 @@
             <div class="col-md-6 col-sm-6">
                 <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
                 {% if session.lang %}
-                  {% if journal.get_mission_by_lang(session.lang[:2]) %}
-                    <p>{{ journal.get_mission_by_lang(session.lang[:2]) }}</p>
-                  {% endif %}
+                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|default("", true) }}</p>
                 {% endif %}
             </div>
           {% endif %}
