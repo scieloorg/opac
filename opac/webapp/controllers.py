@@ -318,14 +318,20 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
 def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug'):
 
     def format_csv_row(list_type, journal):
+
+        last_issue_volume = journal.last_issue.volume or ''
+        last_issue_number = journal.last_issue.number or ''
+        last_issue_year = journal.last_issue.year or ''
+
         common_fields = [
             unicode(journal.title),
             unicode(journal.issue_count),
-            unicode(journal.last_issue.volume) or u'',
-            unicode(journal.last_issue.number) or u'',
-            unicode(journal.last_issue.year) or u'',
+            unicode(last_issue_volume) or u'',
+            unicode(last_issue_number) or u'',
+            unicode(last_issue_year) or u'',
             unicode(journal.current_status == 'current'),
         ]
+
         if list_type == 'alpha':
             return common_fields
         elif list_type == 'areas':
@@ -335,7 +341,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         else:  # publisher_name
             return [journal.publisher_name] + common_fields
 
-    common_headers = ['Title', '# issues', 'Last volume', 'Last number', 'Last year', 'Is active?']
+    common_headers = ['Title', 'issues', 'Last volume', 'Last number', 'Last year', 'Is active?']
     if list_type == 'alpha':
         CSV_HEADERS = common_headers
         order_by = 'title'
