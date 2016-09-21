@@ -307,6 +307,13 @@
 
     $(function() {
 
+        $('.tab_link').each(function(){
+            $(this).click(function(){
+                hash = $(this).attr('href').replace(/^.*?#/,'');
+                $('[href=#' + hash + ']').tab('show');
+            });
+        });
+
         // hash switch
         switch(window.location.hash) {
           case '#alpha':
