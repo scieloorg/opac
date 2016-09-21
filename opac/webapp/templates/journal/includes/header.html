@@ -21,9 +21,14 @@
       </div>
       <div class="col-md-8 col-sm-6 brandLogo">
         <div class="row">
-          <div class="col-md-3 hidden-sm">
-            <img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
-          </div>
+          {% if journal.logo_url %}
+            <div class="col-md-3 hidden-sm">
+              <img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
+            </div>
+          {% else %}
+            <div class="col-md-1 hidden-sm">
+            </div>
+          {% endif %}
           <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
             <h1>{{ journal.title }}</h1>
             <span class="publisher">{% trans %}Publicação de: {% endtrans %} <strong>{{ journal.publisher_name}}</strong></span>
