@@ -94,7 +94,7 @@
           </ul>
         </li>
         <li>
-          <a href="{{ url_for('.search') }}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
+          <a href="{{ config.URL_SEARCH }}?q=*&lang={% if session.lang %}{{ session.lang[:2] }}{% endif %}&filter[ta_cluster][]={% if journal.short_title %}{{ journal.short_title }}{% endif %}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
             <span class="glyphBtn search"></span>
           </a>
         </li>

@@ -86,7 +86,7 @@
           </ul>
         </li>
         <li>
-          <a href="{{ url_for('.search') }}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
+          <a href="{{ config.URL_SEARCH }}?q=*&lang={% if session.lang %}{{ session.lang[:2] }}{% endif %}&filter[in][]={{config.OPAC_COLLECTION}}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
             <span class="glyphBtn search"></span>
           </a>
         </li>

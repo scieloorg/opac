@@ -566,15 +566,9 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 ###################################Search#######################################
 
-@main.route("/search/", methods=['GET'])
-def search():
-    context = {}
-    return render_template("collection/search.html", **context)
-
-
 @main.route("/metasearch/", methods=['GET'])
 def metasearch():
-    url = request.args.get('url', 'http://search.scielo.org', type=unicode)
+    url = request.args.get('url', current_app.config['URL_SEARCH'], type=unicode)
     params = {}
     for k, v in request.args.items():
         if k != 'url':

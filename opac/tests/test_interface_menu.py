@@ -11,17 +11,6 @@ import utils
 class MenuTestCase(BaseTestCase):
 
     # Collection Menu
-    def test_search_link_is_selected_for_search_view(self):
-        """
-        Verficamos que o link do menú "Buscar artigos" tem o css:
-        "selected" quando acessamos a view "search"
-        """
-        response = self.client.get(url_for('main.search'))
-
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/search.html')
-        expected_anchor = u'<a href="/search/">\n              Busca\n            </a>'
-        self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_alpha_link_is_selected_for_list_alpha(self):
         """
@@ -80,7 +69,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor3, response_data)
                 expected_anchor4 = u"""<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#publisher', __(u'Lista de periódicos por editoras'))
                 self.assertIn(expected_anchor4, response_data)
-                expected_anchor5 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (url_for('.search'), __(u'Busca'))
+                expected_anchor5 = u"""<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (current_app.config['URL_SEARCH'] + "?q=*&lang=&filter[in][]=" + current_app.config['OPAC_COLLECTION'], u'Busca')
                 self.assertIn(expected_anchor5, response_data)
                 expected_anchor6 = u"""<li>\n            <a target="_blank" href="//analytics.scielo.org/?collection=%s">\n              %s\n            </a>\n          </li>\n          <li>""" % (current_app.config['OPAC_COLLECTION'], __(u'M\xe9tricas'))
                 self.assertIn(expected_anchor6, response_data)
