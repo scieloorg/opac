@@ -3,10 +3,7 @@
 <div class="modal-header">
 
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-
-    <center>
-    <img src="{% if g.collection.header_logo_resource %}{{ mresources.get_resource_url(g.collection.header_logo_resource, 'img', session.lang) }}{% endif %}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
-    </center>
+    <h4 class="modal-title">&nbsp;</h4>
 
 </div>
 
@@ -16,9 +13,7 @@
 
     <div class="pressRelease">
 
-        <p class="smallText-right">
-          <small>{% trans %}Press Release{% endtrans %}</small>
-        </p>
+        <small>{% trans %}Press Release{% endtrans %}</small>
 
         <h1>{{ press_release.title }}</h1>
 

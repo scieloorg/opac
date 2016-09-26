@@ -86,9 +86,13 @@
                     <div class="slide-item release">
                       <div class="col-md-12">
                         {% if press_release.article %}
-                          <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
+                            {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+                            <a data-toggle="modal" href="#">{{ press_release.title }}</a>
                         {% else %}
-                          <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
+                          {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
+                            {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+                            <a data-toggle="modal" href="#">{{ press_release.title }}</a>
                         {% endif %}
                       </div>
                     </div>
