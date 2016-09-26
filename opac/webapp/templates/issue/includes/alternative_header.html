@@ -33,7 +33,15 @@
               {% trans %}Número atual{% endtrans %}:
             </li>
             <li>
-              <strong>{{ journal.legend }}</strong>
+
+              {% if page=='toc' %}
+                <strong>{{ issue.legend }}</strong>
+              {% endif %}
+
+              {% if page=='grid' %}
+                <strong>{{ last_issue.legend }}</strong>
+              {% endif %}
+
             </li>
           </ul>
         </li>
@@ -86,7 +94,7 @@
           </ul>
         </li>
         <li>
-          <a href="{{ config.URL_SEARCH }}?q=*&lang={% if session.lang %}{{ session.lang[:2] }}{% endif %}&filter[in][]={{config.OPAC_COLLECTION}}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
+          <a href="{{ config.URL_SEARCH }}?q=*&lang={% if session.lang %}{{ session.lang[:2] }}{% endif %}&filter[ta_cluster][]={% if journal.short_title %}{{ journal.short_title }}{% endif %}" class="showTooltip" data-placement="bottom" title="{% trans %}Buscar{% endtrans %}">
             <span class="glyphBtn search"></span>
           </a>
         </li>

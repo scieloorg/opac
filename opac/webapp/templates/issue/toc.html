@@ -25,36 +25,42 @@
               </ul>
           </div>
 
-          <div class="col-md-3 col-sm-4 issueData" id="issueData">
-            <div class="issueInfo">
-              {% if issue.cover_url %}
-                <div class="cover">
-                    <img src="{{ issue.cover_url }}" class="image" alt="Capa: Vol. {{ issue.volume }} No. {{ issue.number }}" />
+          {# Por hora iremos garantir que a interface não fique com conteúdo fixo #}
+          {% if issue.editorial_board %}
+            <div class="col-md-3 col-sm-4 issueData" id="issueData">
+              <div class="issueInfo">
+                {% if issue.cover_url %}
+                  <div class="cover">
+                      <img src="{{ issue.cover_url }}" class="image" alt="Capa: Vol. {{ issue.volume }} No. {{ issue.number }}" />
+                  </div>
+                {% endif %}
+                <div class="editor">
+                  <ul>
+                    <li>
+                      <label>{% trans %}Editor científico{% endtrans %}</label>
+                      <strong>Hein van der Voort</strong>
+                    </li>
+                    <li>
+                      <label>{% trans %}Editores associados{% endtrans %}</label>
+                      <strong>Ana Vilacy Galúcio</strong>
+                      <strong>Claudia Leonor López Garcés</strong>
+                      <strong>Glenn Shepard Junior</strong>
+                      <strong>Priscila Faulhaber Barbosa</strong>
+                    </li>
+                    <li>
+                      <a href="secundaria.html"><span class="glyphBtn editorInfo"></span> {% trans %}Veja toda a equipe editorial{% endtrans %}</a>
+                    </li>
+                  </ul>
                 </div>
-              {% endif %}
-              <div class="editor">
-                <ul>
-                  <li>
-                    <label>{% trans %}Editor científico{% endtrans %}</label>
-                    <strong>Hein van der Voort</strong>
-                  </li>
-                  <li>
-                    <label>{% trans %}Editores associados{% endtrans %}</label>
-                    <strong>Ana Vilacy Galúcio</strong>
-                    <strong>Claudia Leonor López Garcés</strong>
-                    <strong>Glenn Shepard Junior</strong>
-                    <strong>Priscila Faulhaber Barbosa</strong>
-                  </li>
-                  <li>
-                    <a href="secundaria.html"><span class="glyphBtn editorInfo"></span> {% trans %}Veja toda a equipe editorial{% endtrans %}</a>
-                  </li>
-                </ul>
               </div>
             </div>
-          </div>
+          {% endif %}
 
-          <div class="col-md-9 col-sm-8 content issueIndex" id="issueIndex">
-              <a href="" class="expandCollapseContent showTooltip" title="{% trans %}Expandir/recolher conteúdo{% endtrans %}"><span class="glyphBtn opened"></span></a>
+          {# Por hora iremos garantir que a interface não fique com conteúdo fixo #}
+          <div class="{% if issue.editorial_board %}col-md-8 col-sm-8{% else %}col-md-12 col-sm-12{% endif %} content issueIndex" id="issueIndex">
+              {% if issue.editorial_board %}
+                <a href="" class="expandCollapseContent showTooltip" title="{% trans %}Expandir/recolher conteúdo{% endtrans %}"><span class="glyphBtn opened"></span></a>
+              {% endif %}
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
@@ -90,7 +96,8 @@
 
               {% for article in articles %}
 
-                {% if article.section %}
+                {# Item comentado se caso precisarmos reverter
+                 {% if article.section %}
                   <a name="{{ article.section|upper }}"></a>
                   <h1>
                     <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ article.section|upper }}">
@@ -98,18 +105,19 @@
                     </a>
                   </h1>
                 {% endif %}
+                #}
 
-                <div>
+                <div style="margin-bottom:30px;margin-top:20px;">
                   {% if session.lang %}
-                    <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags|title }}</h2>
+                    <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
                   {% endif %}
 
-                  {% for author in article.authors %}
+                  {%- for author in article.authors %}
                     {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
-                    <a href="/search?content_only=true&lang=en&q=au:{{ author }}">
-                      {{ author|striptags|title }}
+                    <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
+                      {{- author|striptags -}}
                     </a>{% if not loop.last %};{% endif %}
-                  {% endfor %}
+                  {% endfor -%}
 
                   <ul class="links">
 
@@ -145,5 +153,9 @@
   </section>
 
   {% include "journal/includes/contact_footer.html" %}
+
+  {% with page='toc' %}
+    {% include "issue/includes/alternative_header.html" %}
+  {% endwith %}
 
 {% endblock %}

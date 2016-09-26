@@ -34,31 +34,38 @@
                 <div class="row">
                     <div class="col-md-8 col-sm-8">
                         {% if content %}
-                            {{ content|safe }}
+                          {{ content|safe }}
                         {% else %}
-                            {% trans %} Conteúdo não cadastrado {% endtrans %}
+                          {% trans %} Conteúdo não cadastrado {% endtrans %}
                         {% endif %}
                     </div>
+                    {% if journal.social_networks or journal.logo_url %}
                     <div class="col-md-4 col-sm-4">
-                        <a href="#" class="linkLogo">
-                            <img src="{{ journal.logo_url }}" alt="{% trans %}Logo {% endtrans %} {{ journal.title }}">
-                            {% trans %}Clique para ver a logo deste periódico {% endtrans %}
-                        </a>
-                        <div class="linkSocial">
-                            <small>{% trans %}Siga este periódico nas redes sociais{% endtrans %}</small>
-                            <ul>
-                                <li>
-                                    <a href=""><span class="glyphBtn bigFacebook"></span> FACEBOOK</a>
-                                </li>
-                                <li>
-                                    <a href=""><span class="glyphBtn bigTwitter"></span> TWITTER</a>
-                                </li>
-                                <li>
-                                    <a href=""><span class="glyphBtn bigGooglePlus"></span> GOOGLE+</a>
-                                </li>
-                            </ul>
-                        </div>
+                        {% if journal.logo_url %}
+                          <a href="#" class="linkLogo">
+                              <img src="{{ journal.logo_url }}" alt="{% trans %}Logo {% endtrans %} {{ journal.title }}">
+                              {% trans %}Clique para ver a logo deste periódico {% endtrans %}
+                          </a>
+                        {% endif %}
+
+                        {% if journal.social_networks %}
+                          <div class="linkSocial">
+                              <small>{% trans %}Siga este periódico nas redes sociais{% endtrans %}</small>
+                              <ul>
+                                  <li>
+                                      <a href=""><span class="glyphBtn bigFacebook"></span> FACEBOOK</a>
+                                  </li>
+                                  <li>
+                                      <a href=""><span class="glyphBtn bigTwitter"></span> TWITTER</a>
+                                  </li>
+                                  <li>
+                                      <a href=""><span class="glyphBtn bigGooglePlus"></span> GOOGLE+</a>
+                                  </li>
+                              </ul>
+                          </div>
+                        {% endif %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
 

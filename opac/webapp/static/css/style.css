@@ -45,3 +45,11 @@
 .collectionList .collectionListLoading{
     margin-top: 50px;
 }
+
+.journal .journalContent .content h2{
+    margin: 0px;
+}
+
+.journal .issueList .btn.ahead{
+    margin-left: 23px
+}
