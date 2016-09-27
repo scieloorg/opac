@@ -29,11 +29,11 @@
             <div class="col-md-9 col-sm-9">
               <h1>{% trans %}Todos os números{% endtrans %}</h1>
             </div>
-            {% if issues_ahead %}
-            <span class="rigth">
-              {# Sempre existe aapenas um fascículo em ahead, por hora irei deixa pegando o indice 0 #}
-              <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
-              url_seg_issue=issues_ahead.0.url_segment) }}" class="btn ahead">ahead of print</a>
+            {% if ahead %}
+              <span class="rigth">
+                <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                url_seg_issue=ahead.url_segment) }}" class="btn ahead">ahead of print</a>
+              </span>
             {% endif %}
           </div>
           <table>

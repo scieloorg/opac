@@ -495,7 +495,6 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
         order_by = ["-year", "-volume", "-order"]
 
     issues = []
-    issues_ahead = []
     issues_without_ahead = []
 
     if get_journal_by_jid(jid):
@@ -503,7 +502,7 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
             journal=jid,
             type__in=['ahead', 'regular', 'special', 'supplement', 'volume_issue'],
             **kwargs).order_by(*order_by)
-        issues_ahead = issues.filter(type='ahead')
+        issue_ahead = issues.filter(type='ahead')
         issues_without_ahead = issues.filter(type__ne='ahead')
 
     volume_issue = {}
@@ -534,7 +533,7 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
     last_issue = issues[0] if issues else None
 
     return {
-        'only_ahead': issues_ahead,         # lista de fascículos ahead of print
+        'ahead': issue_ahead,         # lista de fascículos ahead of print
         'ordered_for_grid': result_dict,    # lista de fascículos odenadas para a grade
         'volume_issue': volume_issue,       # lista de volumes que são fascículos
         'previous_issue': previous_issue,
