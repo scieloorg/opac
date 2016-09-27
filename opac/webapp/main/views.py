@@ -406,6 +406,7 @@ def issue_grid(url_seg):
         'next_issue': None,
         'previous_issue': issues_data['previous_issue'],
         'last_issue': issues_data['last_issue'],
+        'volume_issue': issues_data['volume_issue'],
         'issues_ahead': issues_data['only_ahead'],
         'result_dict': issues_data['ordered_for_grid'],
     }
