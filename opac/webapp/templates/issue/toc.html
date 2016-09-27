@@ -124,7 +124,7 @@
                     {% for lang in article.languages %}
                       <li>
 
-                        {{ lang }}:
+                        {{ lang|trans_alpha2 }}:
 
                         {% if lang in article.abstract_languages %}
                           <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |

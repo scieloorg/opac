@@ -33,6 +33,7 @@ dbsql = SQLAlchemy()
 mail = Mail()
 babel = Babel()
 
+from .main import custom_filters
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -62,6 +63,7 @@ def create_app():
 
     # Registrando os filtros
     app.jinja_env.filters['abbrmonth'] = jinja_filters.abbrmonth
+    app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',

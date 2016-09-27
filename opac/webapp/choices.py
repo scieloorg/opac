@@ -20,7 +20,7 @@ RESOURCE_TYPE_CHOICES = [
 RESOURCE_LANGUAGES_CHOICES = [
     ('pt_BR', _(u'Português')),
     ('en', _(u'Inglês')),
-    ('es', _(u'Español')),
+    ('es', _(u'Espanhol')),
 ]
 
 # LICENSE_CHOICES = [
@@ -57,4 +57,19 @@ MONTHS = {
           10: _('out'),
           11: _('nov'),
           12: _('dez')
+}
+
+
+ISO3166_ALPHA2 = {
+    'pt': _(u'Português'),
+    'en': _(u'Inglês'),
+    'es': _(u'Espanhol'),
+    'al': _(u'Albânia'),
+    'cn': _(u'Chinês'),
+    'ro': _(u'Romeno'),
+    'fr': _(u'Francês'),
+    'it': _(u'Italiano'),
+    'ru': _(u'Russo'),
+    'ar': _(u'Árabe'),
+    'zh': _(u'Chinês'),
 }
