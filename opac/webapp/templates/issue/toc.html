@@ -94,59 +94,61 @@
                   </div>
               </div>
 
-              {% for article in articles %}
+              <div class="issueIndent">
+                <ul class="articles">
+                  {% for article in articles %}
 
-                {# Item comentado se caso precisarmos reverter
-                 {% if article.section %}
-                  <a name="{{ article.section|upper }}"></a>
-                  <h1>
-                    <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ article.section|upper }}">
-                      {{ article.section }}
-                    </a>
-                  </h1>
-                {% endif %}
-                #}
-
-                <div style="margin-bottom:30px;margin-top:20px;">
-                  {% if session.lang %}
-                    <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
-                  {% endif %}
-
-                  {%- for author in article.authors %}
-                    {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
-                    <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
-                      {{- author|striptags -}}
-                    </a>{% if not loop.last %};{% endif %}
-                  {% endfor -%}
-
-                  <ul class="links">
-
-                    {% for lang in article.languages %}
+                    {# Item comentado se caso precisarmos reverter
+                     {% if article.section %}
+                      <a name="{{ article.section|upper }}"></a>
+                      <h1>
+                        <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ article.section|upper }}">
+                          {{ article.section }}
+                        </a>
+                      </h1>
+                    {% endif %}
+                    #}
                       <li>
 
-                        {{ lang|trans_alpha2 }}:
-
-                        {% if lang in article.abstract_languages %}
-                          <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |
+                        {% if session.lang %}
+                          <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
                         {% endif %}
 
-                        <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}">{% trans %}Texto{% endtrans %}</a>
+                        {%- for author in article.authors %}
+                          {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
+                          <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
+                            {{- author|striptags -}}
+                          </a>{% if not loop.last %};{% endif %}
+                        {% endfor -%}
 
-                        {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %}
-                          {% if pdf_url %}
-                            | <a href="{{ pdf_url }}" target="_blank">PDF</a>
-                          {% endif %}
-                        {% endwith %}
+                        <ul class="links">
 
-                        {# | <a href="#">Press-release</a> #}
+                          {% for lang in article.languages %}
+                            <li>
+
+                              {{ lang|trans_alpha2 }}:
+
+                              {% if lang in article.abstract_languages %}
+                                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |
+                              {% endif %}
+
+                              <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}">{% trans %}Texto{% endtrans %}</a>
+
+                              {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %}
+                                {% if pdf_url %}
+                                  | <a href="{{ pdf_url }}" target="_blank">PDF</a>
+                                {% endif %}
+                              {% endwith %}
+
+                              {# | <a href="#">Press-release</a> #}
+                            </li>
+
+                          {% endfor %}
+                        </ul>
                       </li>
-
-                    {% endfor %}
-
-                  </ul>
-
-                </div>
-              {% endfor %}
+                  {% endfor %}
+                </ul>
+              </div>
           </div>
           <div class="clearfix"></div>
       </div>

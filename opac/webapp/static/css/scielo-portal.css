@@ -1,3 +1,4 @@
+/* Breakspoints */
 ::selection {
   background: #6789d3;
   color: #fff;
@@ -85,6 +86,180 @@
     transform: translateY(15px);
   }
 }
+.scielo {
+  display: inline-block;
+  vertical-align: middle;
+  background-image: url(../img/logos/logo-scielo-org.svg);
+  background-position: center 25px;
+  background-repeat: no-repeat;
+  width: 165px;
+  height: 110px;
+  text-indent: -5000px;
+}
+.scielo[class*="scielo-"] {
+  background-position: bottom center;
+}
+.scielo.scielo-arg-pt {
+  background-image: url(../img/logos/pt-logo-scielo-arg.svg);
+}
+.scielo.scielo-bol-pt {
+  background-image: url(../img/logos/pt-logo-scielo-bol.svg);
+}
+.scielo.scielo-bra-pt {
+  background-image: url(../img/logos/pt-logo-scielo-bra.svg);
+}
+.scielo.scielo-bol-pt {
+  background-image: url(../img/logos/pt-logo-scielo-bol.svg);
+}
+.scielo.scielo-chi-pt {
+  background-image: url(../img/logos/pt-logo-scielo-chi.svg);
+}
+.scielo.scielo-col-pt {
+  background-image: url(../img/logos/pt-logo-scielo-col.svg);
+}
+.scielo.scielo-crc-pt {
+  background-image: url(../img/logos/pt-logo-scielo-crc.svg);
+}
+.scielo.scielo-cub-pt {
+  background-image: url(../img/logos/pt-logo-scielo-cub.svg);
+}
+.scielo.scielo-esp-pt {
+  background-image: url(../img/logos/pt-logo-scielo-esp.svg);
+}
+.scielo.scielo-mex-pt {
+  background-image: url(../img/logos/pt-logo-scielo-mex.svg);
+}
+.scielo.scielo-par-pt {
+  background-image: url(../img/logos/pt-logo-scielo-par.svg);
+}
+.scielo.scielo-per-pt {
+  background-image: url(../img/logos/pt-logo-scielo-per.svg);
+}
+.scielo.scielo-por-pt {
+  background-image: url(../img/logos/pt-logo-scielo-por.svg);
+}
+.scielo.scielo-rsa-pt {
+  background-image: url(../img/logos/pt-logo-scielo-rsa.svg);
+}
+.scielo.scielo-sp-pt {
+  background-image: url(../img/logos/pt-logo-scielo-sp.svg);
+}
+.scielo.scielo-uru-pt {
+  background-image: url(../img/logos/pt-logo-scielo-uru.svg);
+}
+.scielo.scielo-ven-pt {
+  background-image: url(../img/logos/pt-logo-scielo-ven.svg);
+}
+.scielo.scielo-arg-es {
+  background-image: url(../img/logos/es-logo-scielo-arg.svg);
+}
+.scielo.scielo-bol-es {
+  background-image: url(../img/logos/es-logo-scielo-bol.svg);
+}
+.scielo.scielo-bra-es {
+  background-image: url(../img/logos/es-logo-scielo-bra.svg);
+}
+.scielo.scielo-bol-es {
+  background-image: url(../img/logos/es-logo-scielo-bol.svg);
+}
+.scielo.scielo-chi-es {
+  background-image: url(../img/logos/es-logo-scielo-chi.svg);
+}
+.scielo.scielo-col-es {
+  background-image: url(../img/logos/es-logo-scielo-col.svg);
+}
+.scielo.scielo-crc-es {
+  background-image: url(../img/logos/es-logo-scielo-crc.svg);
+}
+.scielo.scielo-cub-es {
+  background-image: url(../img/logos/es-logo-scielo-cub.svg);
+}
+.scielo.scielo-esp-es {
+  background-image: url(../img/logos/es-logo-scielo-esp.svg);
+}
+.scielo.scielo-mex-es {
+  background-image: url(../img/logos/es-logo-scielo-mex.svg);
+}
+.scielo.scielo-par-es {
+  background-image: url(../img/logos/es-logo-scielo-par.svg);
+}
+.scielo.scielo-per-es {
+  background-image: url(../img/logos/es-logo-scielo-per.svg);
+}
+.scielo.scielo-por-es {
+  background-image: url(../img/logos/es-logo-scielo-por.svg);
+}
+.scielo.scielo-rsa-es {
+  background-image: url(../img/logos/es-logo-scielo-rsa.svg);
+}
+.scielo.scielo-sp-es {
+  background-image: url(../img/logos/es-logo-scielo-sp.svg);
+}
+.scielo.scielo-uru-es {
+  background-image: url(../img/logos/es-logo-scielo-uru.svg);
+}
+.scielo.scielo-ven-es {
+  background-image: url(../img/logos/es-logo-scielo-ven.svg);
+}
+.scielo.scielo-arg-en {
+  background-image: url(../img/logos/en-logo-scielo-arg.svg);
+}
+.scielo.scielo-bol-en {
+  background-image: url(../img/logos/en-logo-scielo-bol.svg);
+}
+.scielo.scielo-bra-en {
+  background-image: url(../img/logos/en-logo-scielo-bra.svg);
+}
+.scielo.scielo-bol-en {
+  background-image: url(../img/logos/en-logo-scielo-bol.svg);
+}
+.scielo.scielo-chi-en {
+  background-image: url(../img/logos/en-logo-scielo-chi.svg);
+}
+.scielo.scielo-col-en {
+  background-image: url(../img/logos/en-logo-scielo-col.svg);
+}
+.scielo.scielo-crc-en {
+  background-image: url(../img/logos/en-logo-scielo-crc.svg);
+}
+.scielo.scielo-cub-en {
+  background-image: url(../img/logos/en-logo-scielo-cub.svg);
+}
+.scielo.scielo-enp-en {
+  background-image: url(../img/logos/en-logo-scielo-enp.svg);
+}
+.scielo.scielo-mex-en {
+  background-image: url(../img/logos/en-logo-scielo-mex.svg);
+}
+.scielo.scielo-par-en {
+  background-image: url(../img/logos/en-logo-scielo-par.svg);
+}
+.scielo.scielo-per-en {
+  background-image: url(../img/logos/en-logo-scielo-per.svg);
+}
+.scielo.scielo-por-en {
+  background-image: url(../img/logos/en-logo-scielo-por.svg);
+}
+.scielo.scielo-rsa-en {
+  background-image: url(../img/logos/en-logo-scielo-rsa.svg);
+}
+.scielo.scielo-sp-en {
+  background-image: url(../img/logos/en-logo-scielo-sp.svg);
+}
+.scielo.scielo-uru-en {
+  background-image: url(../img/logos/en-logo-scielo-uru.svg);
+}
+.scielo.scielo-ven-en {
+  background-image: url(../img/logos/en-logo-scielo-ven.svg);
+}
+.scielo-letter {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  background-image: url(../img/logos/logo-scielo-letter.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
 body {
   font-family: Arial, Sans-serif;
   color: #403d39;
@@ -119,6 +294,9 @@ a:hover {
 }
 .center {
   text-align: center;
+}
+.left {
+  text-align: left;
 }
 .selectBox {
   overflow: hidden;
@@ -381,6 +559,16 @@ input[type=radio].radio:checked + label.radio {
 .brandLogo h1 {
   margin: 0 auto;
   text-align: center;
+}
+.brandLogo .scielo {
+  width: 212px;
+  height: 124px;
+  margin-left: 103px;
+}
+@media all and (min-width: 768px) and (max-width: 989px) {
+  .brandLogo .scielo {
+    margin-left: 54px;
+  }
 }
 .highlight {
   background: #f7f6f4;
@@ -765,17 +953,12 @@ button.btn:active {
 .levelMenu .col-md-4 a.group {
   width: 33.33%;
 }
-.portal .levelMenu h2{
-  font-size: 1.3em;
-  margin-bottom: 12px;
-}
 .levelMenu h2 {
   margin: 0 0 5px;
   font-weight: normal;
   font-size: .9em;
   color: #7b7469;
   line-height: 22px;
-  margin-bottom: 12px;
 }
 .levelMenu a.selected,
 .levelMenu a.btn:hover,
@@ -1043,24 +1226,24 @@ button.btn:active {
 }
 .periodicals .levelMenu {
   background: #fafaf8;
-  padding: 10px 15px;
 }
-.periodicals li {
-  display: inline-block;
+.periodicals ul {
+  display: table;
+  width: 100%;
+}
+.periodicals ul li {
+  display: table-cell;
   height: 58px;
   text-align: center;
+  vertical-align: middle;
   background: url(../img/dashline.v.png) top right repeat-y;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
-.periodicals li:last-child {
+.periodicals ul li:last-child {
   background: none;
 }
-.periodicals li a {
-  padding: 0 12px;
+.periodicals ul li a {
   font-size: 1.1em;
   font-weight: bold;
-  line-height: 58px;
 }
 .periodicals .search {
   float: right;
@@ -1108,6 +1291,20 @@ button.btn:active {
   font-size: .9em;
   color: #7b7469;
   font-weight: normal;
+}
+.modal .showTooltip {
+  width: 100%;
+}
+.modal .fakeLink {
+  color: #0000ee;
+  width: 90%;
+  font-weight: normal;
+}
+.modal .pressRelease * {
+  font-family: Arial, Sans-serif !important;
+}
+.modal .pressRelease h1 {
+  margin-top: 10px;
 }
 .searchForm .container {
   position: relative;
@@ -2074,7 +2271,7 @@ button.btn:active {
   padding-top: 25px;
 }
 .journal .mainMenu .logo img {
-  /*width: 100%;*/
+  width: 100%;
 }
 .journal .levelMenu {
   padding-bottom: 30px;
@@ -2096,7 +2293,10 @@ button.btn:active {
 }
 .journal .brandLogo img {
   margin-top: 15px;
-  /*max-width: 80%;*/
+  width: 100%;
+}
+.journal .brandLogo .theme {
+  color: #7b7469;
 }
 .journal .brandLogo h1 {
   color: #6789d3;
@@ -2109,7 +2309,6 @@ button.btn:active {
 .journal .brandLogo .publisher .scielo {
   color: #d92929;
 }
-.journal .brandLogo .theme,
 .journal .brandLogo .issn {
   display: block;
   color: #7b7469;
@@ -2289,6 +2488,18 @@ button.btn:active {
 .journal .release a {
   color: #0000ee;
 }
+.journal .news .release {
+  width: 360px;
+}
+.journal .news .release .ellipsis {
+  max-width: 340px;
+  height: 60px;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+}
 .journal .news .col-md-2 {
   padding-left: 0;
 }
@@ -2296,19 +2507,11 @@ button.btn:active {
   width: 100%;
   border-radius: 4px;
 }
-.journal .news a {
-  display: block;
-  margin-bottom: 30px;
-  color: #7f7a71;
-  font-size: .9em;
-}
-.journal .news a:hover h3 {
-  color: #6789d3;
-}
 .journal .news h3 {
   color: #00314c;
   margin: 0 0 5px;
   font-size: 1.5em;
+  height: 70px;
 }
 .journal .news strong {
   white-space: nowrap;
@@ -2420,8 +2623,9 @@ button.btn:active {
 }
 .journal .issueIndex h1 {
   color: #a29d96;
-  font-size: 1.3em;
-  margin: 30px 0 15px 0;
+  font-size: 1em;
+  margin: 30px 0 10px 0;
+  text-transform: uppercase;
 }
 .journal .issueIndex .collapse-title h1 {
   margin-top: 10px;
@@ -2443,11 +2647,11 @@ button.btn:active {
 .journal .issueIndex .collapse-content a:hover {
   color: #8a847b;
 }
-.journal .issueIndex .issueIndent {
-  padding-left: 30px;
-}
 .journal .issueIndex .issueName {
   color: #00314c;
+}
+.journal .issueIndex .articles {
+  margin: 0 !important;
 }
 .journal .issueIndex .articles li {
   margin-bottom: 20px;
@@ -2467,6 +2671,7 @@ button.btn:active {
 }
 .journal .issueIndex .articles ul.links {
   margin-top: 15px !important;
+  margin-left: 15px !important;
 }
 .journal .issueIndex .links {
   font-size: .85em;
@@ -2713,7 +2918,6 @@ button.btn:active {
 }
 .articleCtt {
   margin-top: 20px;
-  min-height: 500px
 }
 .articleCtt .container {
   position: relative;
@@ -3318,9 +3522,6 @@ button.btn:active {
   right: 20px;
   top: -45px;
 }
-.collection .periodicals li {
-  width: 16.3%;
-}
 .collection .slide-item.release,
 .collection .slide-item.perspective,
 .collection .slide-item.twitter {
@@ -3338,11 +3539,57 @@ button.btn:active {
   color: #6789d3;
   font-weight: bold;
 }
-.collection .perspective .slide-item .col-md-12{
-  min-height: 220px;
-}
+.collection .perspective .slide-item .col-md-12,
 .collection .twitter .slide-item .col-md-12 {
   min-height: 160px;
+}
+.collection .btn-group {
+  width: 100%;
+}
+@media all and (min-width: 768px) and (max-width: 989px) {
+  .collection .btn-group {
+    margin-bottom: 20px;
+  }
+  .collection .btn-group.dropdown {
+    margin-bottom: 0;
+  }
+}
+.collection .btn-group input.btn-radio-group {
+  visibility: hidden;
+  position: absolute;
+  margin: -30px 0;
+}
+.collection .btn-group .btn-radio-group,
+.collection .btn-group .btn-dropdown-group {
+  width: 33.3%;
+  text-align: center;
+  line-height: 22px;
+  border: 1px solid #dedddb;
+  background: #fff !important;
+  color: #00314c;
+  font-size: .9em;
+  margin-left: -1px;
+}
+.collection .btn-group .btn-radio-group:active,
+.collection .btn-group .btn-dropdown-group:active {
+  box-shadow: none;
+}
+.collection .btn-group .btn-dropdown-group {
+  width: 100%;
+  text-align: left;
+}
+.collection .btn-group .btn-dropdown-group .caret {
+  position: relative;
+  float: right;
+  top: 8px;
+}
+.collection .btn-group input.btn-radio-group:checked + .btn-radio-group {
+  background: #6789d3 !important;
+  color: #fff;
+  box-shadow: none;
+}
+.collection #tema .col-md-6.noPaddingLeft {
+  margin-left: -1px;
 }
 .collectionNews {
   font-size: .9em;
@@ -3679,10 +3926,6 @@ button.btn:active {
 .portal .portalMenu .collapseBlock li:after {
   content: "";
 }
-.portal .periodicals li {
-  display: inline;
-  padding: 15px 4px;
-}
 .portal .release {
   padding: 0 10px 0 0;
   -moz-box-sizing: border-box;
@@ -3812,6 +4055,14 @@ button.btn:active {
 .alternativeHeader .menuItens li:hover .dropdown-menu {
   display: block;
 }
+@media all and (min-width: 768px) and (max-width: 989px) {
+  .alternativeHeader .menuItens {
+    padding-right: 0;
+  }
+  .alternativeHeader .menuItens ul {
+    padding: 0;
+  }
+}
 .alternativeHeader .journalInfo {
   padding-top: 20px;
   font-size: .9em;
@@ -3880,6 +4131,10 @@ button.btn:active {
   height: 8px;
   display: block;
   background: url(../img/dropdown-arrow.png) top center no-repeat;
+}
+.alternativeHeader h2 .scielo {
+  height: 45px;
+  background-position: top left;
 }
 .portal .nav-tabs.themesSubTab,
 .collection .nav-tabs.themesSubTab {
@@ -4010,9 +4265,6 @@ button.btn:active {
 }
 .lt-ie9 .articleTxt .refList.full {
   border-bottom: 0;
-}
-.menuLevelJournal{
-  margin-top: 12px;
 }
 .articleShare {
   left: -38px;
