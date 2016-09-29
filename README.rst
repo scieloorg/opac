@@ -32,17 +32,18 @@ Como executar os tests
 - Para ter o relatório de coverage deve executar: ``make test_coverage``
 
 
-============================
-Instalação utilizando Docker
-============================
+=================================================
+Instalação utilizando Docker para desenvolvimento
+=================================================
 
 Para executar o ambiente (de desenvolvimento) com Docker, utilizando as definições do arquivo **Dockerfile** e **docker-compose.yml** na raiz do projeto.
 Simplesmente executar:
 
-1. executar: ``docker-compose build`` para construir as imagens.
-2. executar: ``docker-compose up``  para rodar os containers.
+1. executar: ``docker-compose -f docker-compose-dev.yml build`` para construir as imagens.
+2. executar: ``docker-compose -f docker-compose-dev.yml up``  para rodar os containers.
 3. acessar pelo browser: http://localhost ou no caso de utilizar OSx trocar localhost pela IP da maquina default (ver na saída do comando: ``docker-machine ip``)
-
+4. para parar os containers, executar: ``docker-compose -f docker-compose-dev.yml stop``
+5. para remover os containers, executar: ``docker-compose -f docker-compose-dev.yml rm`` e confirmar com ``y``
 
 =========================================
 Reportar problemas, ou solicitar mudanças

@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+
+    mailhog:
+        image: mailhog/mailhog:latest
+        hostname: mailhog
+        ports:
+            - "8025:8025"
+
+    opac_mongo:
+        image: mongo:latest
+        restart: always
+        hostname: opac_mongo
+        ports:
+          - "27017:27017"
+
+    opac_webapp:
+        build:
+            context: .
+            dockerfile: ./Dockerfile-dev
+        command: gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --reload --log-level DEBUG
+        restart: always
+        hostname: opac_webapp
+        depends_on:
+            - opac_mongo
+            - mailhog
+        volumes:
+            - .:/app
+        links:
+            - opac_mongo:opac_mongo
+            - mailhog:mailhog
+        ports:
+            - "8000:8000"
+        environment:
+            - OPAC_DEBUG_MODE=True
+            - OPAC_MONGODB_NAME=opac
+            - OPAC_MONGODB_HOST=opac_mongo
+            - OPAC_DATABASE_DIR=/app/data
+            - OPAC_MAIL_SERVER=mailhog
+            - OPAC_MAIL_PORT=1025
+            - OPAC_SECRET_KEY=s3kr3tk3y
+
+    opac_nginx:
+        image: scieloorg/opac_nginx:latest
+        restart: always
+        depends_on:
+            - opac_webapp
+        links:
+            - opac_webapp:opac-webapp
+        ports:
+            - "9000:9000"
+        hostname: opac_nginx
