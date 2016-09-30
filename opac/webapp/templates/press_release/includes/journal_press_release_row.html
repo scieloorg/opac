@@ -1,0 +1,14 @@
+<div class="slide-item release">
+  <div class="col-md-12">
+    <span>{{ press_release.publication_date }} - {{ press_release.issue.url_segment }}</span>
+    <h3>{{ press_release.title|truncate(70) }}</h3>
+    <div>
+      {% trans %}Press-release em {% endtrans %}<a href="">português</a> {% trans %}e{% endtrans %} <a href="">inglês</a>
+      {# Link comentado até que se tenha uma decisão - Press Release para artigo #}
+      {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+
+      {# Link comentado até que se tenha uma decisão - Press Release para fascículo #}
+      {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+    </div>
+  </div>
+</div>

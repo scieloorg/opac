@@ -24,6 +24,8 @@
         </ul>
       </div>
       <div class="col-md-12 content journalHome">
+
+        {# mission #}
         <div class="block mission">
           {% if journal.mission %}
             <div class="col-md-6 col-sm-6">
@@ -33,6 +35,9 @@
                 {% endif %}
             </div>
           {% endif %}
+        {# mission #}
+
+          {# analytics #}
           <div class="col-md-6 col-sm-6">
             <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
             <ul>
@@ -49,6 +54,9 @@
           </div>
           <div class="clearfix"></div>
         </div>
+        {# analytics #}
+
+        {# last issue #}
         {% if journal.last_issue %}
           <div class="block lastIssue">
             <div class="col-md-6 col-sm-6">
@@ -73,28 +81,23 @@
             <div class="clearfix"></div>
           </div>
         {% endif %}
+        {# last issue #}
 
         {# press_releases #}
         {% if press_releases %}
           <div class="block releases">
             <div class="col-md-12">
               <h2>Press-releases</h2>
-              <div class="slider" id="pressrelases">
-                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-                <div class="slide-container">
-                  <div class="slide-wrapper">
-                    {% for press_release in press_releases %}
-                      <div class="slide-item release">
-                        <div class="col-md-12">
-                          {% if press_release.article %}
-                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
-                          {% else %}
-                            <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a>
-                          {% endif %}
-                        </div>
-                      </div>
+              <div class="slider" id="pressrelease">
+                <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container" style="height: 171px;">
+                  <div class="slide-wrapper" style="width: 1220px;">
+
+                    {% for press_release in press_releases  %}
+                      {% include "press_release/includes/journal_press_release_row.html" %}
                     {% endfor %}
+
                   </div>
                 </div>
               </div>
@@ -105,18 +108,31 @@
         {# press_release #}
 
         {# news #}
-        <div class="block news">
-          <div class="col-md-12">
-            <h2>{% trans %}Notícias{% endtrans %}</h2>
+        {% if news %}
+          <div class="block news">
+            <div class="col-md-12">
+              <h2>{% trans %}Notícias{% endtrans %}</h2>
+              <div class="slider" id="noticias">
+                <a href="javascript:;" class="slide-back" style="top: 90.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next" style="top: 90.5px;"><span class="glyphBtn arrowRight"></span></a>
 
-            {% for item in news  %}
-              {% include "news/includes/journal_news_row.html" %}
-            {% endfor %}
+                <div class="slide-container" style="height: 181px;">
+                  <div class="slide-wrapper" style="width: 2260px;">
 
+                  {% for item in news  %}
+                    {% include "news/includes/journal_news_row.html" %}
+                  {% endfor %}
+
+                  </div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="clearfix"></div>
-        </div>
-        {# /news #}
+        {% endif %}
+        {# news #}
+
       </div>
     </div>
   </section>

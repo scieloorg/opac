@@ -1,16 +1,10 @@
-<a href="{{ item.url }}" target="_blank">
-  <div class="col-md-2 col-sm-3">
-    {% if item.image_url %}
-      <img src="{{ item.image_url }}" alt="" class="news_image" />
-    {% endif %}
-  </div>
-  <div class="col-md-8 col-sm-8">
-    {{ item.publication_date }}
+<div class="slide-item release">
+  <div class="col-md-12">
+    <span>{{ item.publication_date }}</span>
     <h3>{{ item.title }}</h3>
-    {% autoescape false %}
+    <div class="ellipsis">
       {{ item.description|striptags|title|replace('Read More →', '') }}
-    {% endautoescape %}
-    <strong>{% trans%}Continue lendo{% endtrans %} &raquo;</strong>
+    </div>
+    <a href="{{ item.url }}" target="_blank"><strong>{% trans%}Continue lendo{% endtrans %} &raquo;</strong></a>
   </div>
-  <div class="clearfix"></div>
-</a>
+</div>
