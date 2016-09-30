@@ -74,75 +74,83 @@
         </div>
       </div>
       <div class="row">
-        <div class="block releases">
-          <div class="col-md-12">
-            <h2>Press-releases</h2>
-            <div class="slider" id="pressrelases">
-              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-              <div class="slide-container">
-                <div class="slide-wrapper">
-                  {% for press_release in press_releases %}
-                    <div class="slide-item release">
-                      <div class="col-md-12">
-                        {% if press_release.article %}
-                          {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
-                            {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
-                            <a data-toggle="modal" href="#">{{ press_release.title }}</a>
-                        {% else %}
-                          {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
-                            {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
-                            <a data-toggle="modal" href="#">{{ press_release.title }}</a>
-                        {% endif %}
+        {% if press_releases %}
+          <div class="block releases">
+            <div class="col-md-12">
+              <h2>Press-releases</h2>
+              <div class="slider" id="pressrelases">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for press_release in press_releases %}
+                      <div class="slide-item release">
+                        <div class="col-md-12">
+                          {% if press_release.article %}
+                            {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
+                              {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+                              <a data-toggle="modal" href="#">{{ press_release.title }}</a>
+                          {% else %}
+                            {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
+                              {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
+                              <a data-toggle="modal" href="#">{{ press_release.title }}</a>
+                          {% endif %}
+                        </div>
                       </div>
-                    </div>
-                  {% endfor %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="clearfix"></div>
-        </div>
+        {% endif %}
 
-        <div class="block perspective">
-          <div class="col-md-12">
-            <h2>SciELO <span>{% trans %}em perspectiva{% endtrans %}</span></h2>
-            <div class="slider" id="perspective">
-              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-              <div class="slide-container">
-                <div class="slide-wrapper">
-                  {% for item in news %}
-                    {% with is_highlight = loop.index == 1 %}
-                      {% include "news/includes/collection_news_row.html" %}
-                    {% endwith %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix"></div>
-        </div>
 
-        <div class="block twitter">
-          <div class="col-md-12">
-            <h2><span>Twitter</span> <a href="https://twitter.com/{{ config.TWITTER_SCREEN_NAME }}" target="_blank">@{{ config.TWITTER_SCREEN_NAME }}</a></h2>
-            <div class="slider" id="twitter">
-              <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-              <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-              <div class="slide-container">
-                <div class="slide-wrapper twitter-timeline-container">
-                  {% for tweet in tweets %}
-                    {% with is_highlight = loop.index == 1 %}
-                      {% include "collection/includes/tweet_row.html" %}
-                    {% endwith %}
-                  {% endfor %}
+        {% if news %}
+          <div class="block perspective">
+            <div class="col-md-12">
+              <h2>SciELO <span>{% trans %}em perspectiva{% endtrans %}</span></h2>
+              <div class="slider" id="perspective">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for item in news %}
+                      {% with is_highlight = loop.index == 1 %}
+                        {% include "news/includes/collection_news_row.html" %}
+                      {% endwith %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="clearfix"></div>
-        </div>
+        {% endif %}
+
+        {% if tweets %}
+          <div class="block twitter">
+            <div class="col-md-12">
+              <h2><span>Twitter</span> <a href="https://twitter.com/{{ config.TWITTER_SCREEN_NAME }}" target="_blank">@{{ config.TWITTER_SCREEN_NAME }}</a></h2>
+              <div class="slider" id="twitter">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper twitter-timeline-container">
+                    {% for tweet in tweets %}
+                      {% with is_highlight = loop.index == 1 %}
+                        {% include "collection/includes/tweet_row.html" %}
+                      {% endwith %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        {% endif %}
+
       </div>
     </div>
   </section>
