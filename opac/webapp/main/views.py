@@ -500,7 +500,7 @@ def issue_feed(url_seg, url_seg_issue):
         if feed_language not in article.languages:
             article_lang = article.original_language
 
-        feed.add(article.title or 'Sem título',
+        feed.add(article.title or 'Unknow title',
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
