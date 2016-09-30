@@ -483,7 +483,7 @@ def issue_feed(url_seg, url_seg_issue):
     journal = issue.journal
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
-    feed = AtomFeed(journal.title,
+    feed = AtomFeed(journal.title or "",
                     feed_url=request.url,
                     url=request.url_root,
                     subtitle=utils.get_label_issue(issue))
@@ -500,7 +500,7 @@ def issue_feed(url_seg, url_seg_issue):
         if feed_language not in article.languages:
             article_lang = article.original_language
 
-        feed.add(article.title,
+        feed.add(article.title or 'Sem título',
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
