@@ -53,3 +53,13 @@
 .journal .issueList .btn.ahead{
     margin-left: 23px
 }
+
+#SendViaEmailConfirm .message{
+  padding: 15px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#SendViaEmailConfirm .email_error{
+  color: red;
+}

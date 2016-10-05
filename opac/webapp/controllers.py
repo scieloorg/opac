@@ -834,3 +834,28 @@ def count_elements_by_type_and_visibility(type, public_only=False):
             return Article.objects.count()
     else:
         raise ValueError(u"Parâmetro 'type' errado, tente: 'journal' ou 'issue' ou 'article'.")
+
+
+def send_email_share(from_email, recipents, share_url, subject, comment):
+    """
+    Envia un correo para compartir una página,
+    regresa un mensaje de confirmación
+    @params:
+    - ``from_email``: Email del usario que comparte la página
+    - ``recipents`` : Lista de correos para compartir la pagina
+    - ``share_url`` : Url de la página que se comparte
+    - ``subject``   : Asunto personalizado por el usaurio
+    - ``comment``   : Cuerto adicional del correo
+    """
+    subject = subject or __(u'SciELO - Enace compartido')
+    share = __(u'O usuário %s compartilha este link: %s, da SciELO' % (from_email, share_url))
+    comment = u'%s<br/><br/>%s' % (share, comment)
+
+    sent, message = utils.send_email(recipents, subject, comment)
+
+    if not sent:
+        return (sent, message)
+
+    return (True, __(u'Página compartida'))
+
+
