@@ -847,16 +847,16 @@ def count_elements_by_type_and_visibility(type, public_only=False):
 
 def send_email_share(from_email, recipents, share_url, subject, comment):
     """
-    Envia un correo para compartir una página,
-    regresa un mensaje de confirmación
+    Envia uma mensagem de compartilhamento de página e retorna uma mensagem de
+    confirmação
     @params:
-    - ``from_email``: Email del usario que comparte la página
-    - ``recipents`` : Lista de correos para compartir la pagina
-    - ``share_url`` : Url de la página que se comparte
-    - ``subject``   : Asunto personalizado por el usaurio
-    - ``comment``   : Cuerto adicional del correo
+    - ``from_email``: Email do usuário que compartilha a página
+    - ``recipents`` : Liste de emials que compartilha a página
+    - ``share_url`` : URL da página que compartilha
+    - ``subject``   : Assunto
+    - ``comment``   : Comentário adicional
     """
-    subject = subject or __(u'SciELO - Enace compartido')
+    subject = subject or __(u'Compartilhamento de link SciELO')
     share = __(u'O usuário %s compartilha este link: %s, da SciELO' % (from_email, share_url))
     comment = u'%s<br/><br/>%s' % (share, comment)
 
@@ -865,6 +865,6 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
     if not sent:
         return (sent, message)
 
-    return (True, __(u'Página compartida'))
+    return (True, __(u'Mensagem enviada!'))
 
 
