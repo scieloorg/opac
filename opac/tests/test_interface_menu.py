@@ -96,8 +96,8 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor16, response_data)
                 expected_anchor17 = u"""<li>\n          <a href="#">\n            %s\n          </a>\n        </li>""" % __(u'Contatos')
                 self.assertIn(expected_anchor17, response_data)
-                expected_anchor18 = u"""<li>\n      <a href="#"><strong>%s</strong></a>\n    </li>""" % __(u'Portal do Autor')
-                self.assertIn(expected_anchor18, response_data)
+                # expected_anchor18 = u"""<li>\n      <a href="#"><strong>%s</strong></a>\n    </li>""" % __(u'Portal do Autor')
+                # self.assertIn(expected_anchor18, response_data)
 
     def test_blog_link_in_hamburger_menu(self):
         """
