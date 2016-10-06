@@ -167,10 +167,13 @@ def send_email(recipient, subject, html):
      - (True, '') em caso de sucesso.
      - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
+    recipients = [recipient, ]
+    if isinstance(recipient, list):
+        recipients = recipient
     try:
         msg = Message(subject=subject,
                       sender=current_app.config['MAIL_DEFAULT_SENDER'],
-                      recipients=[recipient, ],
+                      recipients=recipients,
                       html=html)
         webapp.mail.send(msg)
         return (True, '')

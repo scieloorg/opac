@@ -577,6 +577,26 @@ def metasearch():
     xml = utils.do_request(url, request.args)
     return Response(xml, mimetype='text/xml')
 
+################################E-mail share####################################
+
+@main.route("/email_share/", methods=['GET'])
+def email_share():
+    print vars(request)
+    from_email = request.args.get('yourEmail', type=unicode)
+    recipents = request.args.get('email', type=unicode)
+    share_url = request.args.get('share_url', type=unicode)
+    subject = request.args.get('subject', type=unicode)
+    comment = request.args.get('comment', type=unicode)
+
+    sent, message = controllers.send_email_share(
+            from_email,
+            recipents.split(";"),
+            share_url,
+            subject,
+            comment
+        )
+    return jsonify({'sent': sent, 'message': message.encode('utf-8')})
+
 ###################################Others#######################################
 
 @main.route("/media/<path:filename>/", methods=['GET'])

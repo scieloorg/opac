@@ -73,6 +73,25 @@ var Portal = {
 				$("#SendViaEmail").modal("show");
 			});
 
+      $("#sendViaEmail").on("submit", function(e) {
+        e.preventDefault();
+        $("#share_url").val($(location).attr('href'));
+        $("#SendViaEmailConfirm .message").removeClass("email_error");
+        $.ajax({
+            url: $(this).attr("action"),
+            method: $(this).attr("method"),
+            data: $(this).serialize(),
+            success: function(data) {
+              if(!data.sent)
+                $("#SendViaEmailConfirm .message").addClass("email_error");
+              $("#SendViaEmail").modal("hide");
+              $("#SendViaEmailConfirm .message").text(data.message)
+              $("#SendViaEmailConfirm").modal("show");
+            }
+        });
+        return false;
+      });
+
 			$(".showBlock").on("click",function() {
 				var t = $(this),
 					rel = t.data("rel"),
