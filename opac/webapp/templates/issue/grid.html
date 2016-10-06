@@ -26,15 +26,9 @@
       <div class="col-md-12 content issueList" id="issueList">
         {% if result_dict %}
           <div class="row">
-            <div class="col-md-9 col-sm-9">
+            <div class="col-md-12 col-sm-12">
               <h1>{% trans %}Todos os números{% endtrans %}</h1>
             </div>
-            {% if ahead %}
-              <span class="rigth">
-                <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
-                url_seg_issue=ahead.url_segment) }}" class="btn ahead">ahead of print</a>
-              </span>
-            {% endif %}
           </div>
           <table>
             <thead>
@@ -46,20 +40,30 @@
               </tr>
             </thead>
             <tbody>
+              {% if ahead %}
+                <tr>
+                  <td> - </td>
+                <th> - </th>
+                <td class="left">
+                  <span class="rigth">
+                    <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                  url_seg_issue=ahead.url_segment) }}" class="btn ahead">ahead of print</a>
+                  </span>
+                </td>
+              {% endif %}
               {% for year,v in result_dict.iteritems() %}
                 {% for volume, issue_list in v.iteritems() %}
                   <tr>
-                    <td>{{year}}</td>
-                    {# Verificando se é um fascículo de volume #}
+                    <td>{{ year }}</td>
                     <th>
-                      {% if volume in volume_issue %}
-                        <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
-                                  url_seg_issue=volume_issue[volume].url_segment) }}">{{volume}}</a>
-                      {% else %}
-                        {{volume}}
-                      {% endif %}
+                      {{ volume }}
                     </th>
                     <td class="left">
+                      {# Verificando se é um fascículo de volume #}
+                      {% if volume in volume_issue %}
+                        <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
+                                  url_seg_issue=volume_issue[volume].issue.url_segment) }}" class="btn ahead">{{ volume_issue[volume].art_count }}{% trans %} artigos{% endtrans %}</a>
+                      {% endif %}
                       {% for issue in issue_list|sort(attribute='order') %}
                         {% if issue.type == 'special' %}
                           <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,

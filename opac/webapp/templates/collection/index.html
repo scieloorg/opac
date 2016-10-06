@@ -12,20 +12,20 @@
           <div class="levelMenu">
             <div class="col-md-10 col-sm-10 numbers">
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.references }}
-                <span>{% trans %}citações{% endtrans %}</span>
-              </div>
-              <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.articles }}
-                <span>{% trans %}artigos{% endtrans %}</span>
+                {{ analytics.metrics.journals }}
+                <span>{% trans %}períodicos{% endtrans %}</span>
               </div>
               <div class="col-md-3 col-sm-3">
                 {{ analytics.metrics.issues }}
                 <span>{% trans %}números{% endtrans %}</span>
               </div>
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.journals }}
-                <span>{% trans %}períodicos{% endtrans %}</span>
+                {{ analytics.metrics.articles }}
+                <span>{% trans %}artigos{% endtrans %}</span>
+              </div>
+              <div class="col-md-3 col-sm-3">
+                {{ analytics.metrics.references }}
+                <span>{% trans %}citações{% endtrans %}</span>
               </div>
             </div>
             <div class="col-md-2 col-sm-2">
@@ -56,7 +56,7 @@
               <li>
                 <a href="{{ url_for('.collection_list') }}#theme">{% trans %}Temática{% endtrans %}</a>
               </li>
-              <li>
+{#               <li>
                 <a href="{{ url_for('.collection_list') }}#publisher">{% trans %}Por instituição{% endtrans %}</a>
               </li>
               <li>
@@ -67,7 +67,7 @@
               </li>
               <li>
                 <a href="{{ analytics.urls.other }}">{% trans %}Métricas{% endtrans %}</a>
-              </li>
+              </li> #}
             </ul>
             <div class="clearfix"></div>
           </div>

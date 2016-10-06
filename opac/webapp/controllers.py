@@ -514,7 +514,9 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
 
         # Verificando se é um volume de fascículo e criando um dicionário auxiliar
         if issue.type == 'volume_issue':
-            volume_issue[issue.volume] = issue
+            volume_issue.setdefault(issue.volume, {})
+            volume_issue[issue.volume]['issue'] = issue
+            volume_issue[issue.volume]['art_count'] = len(get_articles_by_iid(issue.iid))
 
         key_volume = issue.volume
 
