@@ -111,11 +111,10 @@
                       <li>
 
                         {% if session.lang %}
-                          <h2>{{ article.get_title_by_lang(session.lang[:2])|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
+                          <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true)|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
                         {% endif %}
 
                         {%- for author in article.authors %}
-                          {# TODO: revisar o parametro: lang=en na querystring, deveria ser o lang da session. #}
                           <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
                             {{- author|striptags -}}
                           </a>{% if not loop.last %};{% endif %}
@@ -132,7 +131,7 @@
                                 <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">{% trans %}Resumo{% endtrans %} |
                               {% endif %}
 
-                              <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}">{% trans %}Texto{% endtrans %}</a>
+                              <a href="{{ url_for('.article_detail', url_seg=journal. url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">{% trans %}Texto{% endtrans %}</a>
 
                               {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %}
                                 {% if pdf_url %}

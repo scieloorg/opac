@@ -239,7 +239,8 @@ def get_journal_json_data(journal):
         j_data['last_issue'] = {
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
-            'year': journal.last_issue.year
+            'year': journal.last_issue.year,
+            'url_segment': journal.url_last_issue
         }
 
     return j_data
