@@ -198,6 +198,77 @@ def about_collection():
 
 ####################################Journal#####################################
 
+
+@main.route('/scielo.php/')
+def router_legacy():
+
+    script_php = request.args.get('script')
+    pid = request.args.get('pid')
+
+    if not script_php or not pid:
+        abort(404, _(u'Página não encontrado'))
+
+    if script_php == 'sci_serial':
+
+        # pid = issn
+        journal = controllers.get_journal_by_issn(pid)
+
+        if not journal:
+            abort(404, _(u'Periódico não encontrada'))
+
+        if not journal.is_public:
+            abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+        return journal_detail(journal.url_segment)
+
+    elif script_php == 'sci_issuetoc':
+
+        issue = controllers.get_issue_by_pid(pid)
+
+        if not issue:
+            abort(404, _(u'Fascículo não encontrado'))
+
+        if not issue.is_public:
+            abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
+
+        if not issue.journal.is_public:
+            abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
+
+        return issue_toc(issue.journal.url_segment, issue.url_segment)
+
+    elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
+
+        article = controllers.get_article_by_pid(pid)
+
+        if not article:
+            abort(404, _(u'Artigo não encontrado'))
+
+        if not article.is_public:
+            abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+
+        if not article.issue.is_public:
+            abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+        if not article.journal.is_public:
+            abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+        return article_detail(article.journal.url_segment,
+                              article.issue.url_segment,
+                              article.url_segment)
+
+    elif script_php == 'sci_issues':
+
+        journal = controllers.get_journal_by_issn(pid)
+
+        if not journal:
+            abort(404, _(u'Periódico não encontrado'))
+
+        if not journal.is_public:
+            abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+        return issue_grid(journal.url_segment)
+
+
 @main.route('/<string:url_seg>/')
 def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)

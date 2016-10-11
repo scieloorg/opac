@@ -115,9 +115,15 @@
                         {% endif %}
 
                         {%- for author in article.authors %}
-                          <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
-                            {{- author|striptags -}}
-                          </a>{% if not loop.last %};{% endif %}
+                          {% if session.lang %}
+                            <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
+                              {{- author|striptags -}}
+                            </a>{% if not loop.last %};{% endif %}
+                          {% else %}
+                            <a href="{{config['URL_SEARCH']}}?q=au:{{ author }}">
+                              {{- author|striptags -}}
+                            </a>{% if not loop.last %};{% endif %}
+                          {% endif %}
                         {% endfor -%}
 
                         <ul class="links">

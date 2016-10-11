@@ -31,6 +31,8 @@ from models import User
 from choices import INDEX_NAME
 import utils
 
+from mongoengine import Q
+
 
 ANALYTICS = 'http://analytics.scielo.org'
 
@@ -414,6 +416,23 @@ def get_journal_by_url_seg(url_seg, **kwargs):
 
     return Journal.objects(url_segment=url_seg, **kwargs).first()
 
+
+def get_journal_by_issn(issn, **kwargs):
+    """
+    Retorna um periódico considerando os parâmetros ``issn`` e ``kwargs``
+
+    - ``issn``: string, issn do periódico
+    - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
+    """
+
+    if not issn:
+        raise ValueError(__(u'Obrigatório um issn.'))
+
+    return Journal.objects(Q(print_issn=issn) | Q(eletronic_issn=issn), **kwargs).first()
+
+
 def get_journals_by_jid(jids):
     """
     Retorna um dicionário de periódicos aonde o atributo ``jid`` de cada um deles
@@ -615,6 +634,19 @@ def get_issue_by_acron_issue(jacron, year, issue_label):
     return Issue.objects.filter(journal=jiid, year=int(year), label=issue_label).first()
 
 
+def get_issue_by_pid(pid):
+    """
+    Retorna um fascículo considerando o parâmetro ``pid``.
+
+    - ``pid``: string, contendo o PID do fascículo.
+    """
+
+    if not pid:
+        raise ValueError(__(u'Obrigatório um PID.'))
+
+    return Issue.objects.filter(pid=pid).first()
+
+
 def get_issue_by_url_seg(url_seg, url_seg_issue):
     """
     Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
@@ -645,6 +677,7 @@ def get_article_by_aid(aid, **kwargs):
         raise ValueError(__(u'Obrigatório um aid.'))
 
     return Article.objects(aid=aid, **kwargs).first()
+
 
 def get_article_by_url_seg(url_seg_article, **kwargs):
     """
@@ -732,6 +765,20 @@ def get_articles_by_iid(iid, **kwargs):
         raise ValueError(__(u'Obrigatório um iid.'))
 
     return Article.objects(issue=iid, **kwargs).order_by('order')
+
+
+def get_article_by_pid(pid, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``pid``.
+
+    - ``pid``: string, contendo o PID do artigo.
+    """
+
+    if not pid:
+        raise ValueError(__(u'Obrigatório um pid.'))
+
+    return Article.objects(pid=pid, **kwargs).first()
+
 
 # -------- NEWS --------
 
