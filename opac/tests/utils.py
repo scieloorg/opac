@@ -147,6 +147,7 @@ def makeOneIssue(attrib=None):
     default_volume = attrib.get('volume', '1')  # improve para evitar dups
     default_number = attrib.get('number', '1')  # improve para evitar dups
     default_type = attrib.get('type', 'regular')
+    default_pid = attrib.get('pid', '0000-000000000000')
     default_order = attrib.get('order', attrib.get('order', '1'))
     default_year = attrib.get('year', datetime.datetime.now().year)
     default_label = attrib.get('label', '%s (%s)' % (default_volume, default_number))
@@ -174,6 +175,7 @@ def makeOneIssue(attrib=None):
         'order': default_order,
         'year': default_year,
         'label': default_label,
+        'pid': default_pid,
         'is_public': attrib.get('is_public', True),
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
@@ -217,6 +219,7 @@ def makeOneArticle(attrib=None):
 
     attrib = attrib or {}
     default_id = attrib.get('_id', str(uuid4().hex))
+    default_pid = attrib.get('pid','0000-00000000000000000')
     default_title = "article-%s" % default_id
     default_domain_key = "article-domain_key-%s" % default_id
     issue = attrib.get('issue', None)
@@ -259,6 +262,7 @@ def makeOneArticle(attrib=None):
         'updated': attrib.get('updated', datetime.datetime.now()),
         'issue': issue.id,
         'journal': journal.id,
+        'pid': default_pid,
         'original_language': attrib.get('original_language', 'pt'),
         'fpage': attrib.get('fpage', '15'),
         'lpage': attrib.get('lpage', '16'),
