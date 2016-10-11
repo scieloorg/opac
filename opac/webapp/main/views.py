@@ -214,7 +214,7 @@ def router_legacy():
         journal = controllers.get_journal_by_issn(pid)
 
         if not journal:
-            abort(404, _(u'Periódico não encontrado'))
+            abort(404, _(u'Periódico não encontrada'))
 
         if not journal.is_public:
             abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
