@@ -30,6 +30,7 @@
 {% endblock %}
 
 {% block tail %}
+  <div class="text-center"><a href="{{ url_for('main.index') }}" class="bigpopup">Visualizar Site</center>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -52,4 +53,8 @@
       </div>
     </div>
   </div>
+
+  <script src="{{ url_for('static', filename='js/vendor/jquery.popupwindows.js') }}"> </script>
+  <script src="{{ url_for('static', filename='js/admin/common.js') }}"> </script>
+
 {% endblock %}

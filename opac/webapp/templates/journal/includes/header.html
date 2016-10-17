@@ -58,9 +58,9 @@
         </div>
         <ul>
           <li><a href="{{ journal.online_submission_url|default('', true) }}"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
-          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
+          <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
         </ul>
       </div>
       <div class="clearfix"></div>

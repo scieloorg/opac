@@ -3,10 +3,31 @@
 <section class="bread">
   <div class="container">
     <div class="col-md-9 col-sm-9">
-      <ol class="breadcrumb">
-        <li><a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a></li>
-      </ol>
-      <h1 class="breadTitle">{% trans %}Periódicos{% endtrans %}</h1>
+
+      {% if page %}
+
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('.index') }}">Home</a></li>
+            <li><a href="{{ url_for('.about_collection') }}">{{ page }}</a></li>
+            <li>{{ page }}</li>
+        </ol>
+
+        <h1 class="breadTitle">{{ page }}</h1>
+
+      {% else %}
+
+        <ol class="breadcrumb">
+          <li><a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a></li>
+        </ol>
+
+        {% if pages %}
+          <h1 class="breadTitle"> {% trans %} Sobre o SciELO {% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</h1>
+        {% else %}
+          <h1 class="breadTitle"> {% trans %} Periódicos {% endtrans %}</h1>
+        {% endif %}
+
+      {% endif %}
+
     </div>
     <div class="col-md-3 col-sm-3 share">
       {% trans %}Compartilhe{% endtrans %}

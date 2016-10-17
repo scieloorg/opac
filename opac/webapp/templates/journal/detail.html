@@ -41,7 +41,7 @@
           <div class="col-md-6 col-sm-6">
             <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
             <ul>
-              <li><a href="">SciELO</a>
+              <li><a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
               <li><a href="">Google Scholar</a>
                 <div>
                   <small>{% trans %}Índice h5{% endtrans %}:</small> <strong>6</strong>

@@ -190,9 +190,16 @@ def about_collection():
 
     context = {}
 
-    for page in getattr(g.collection, 'about', []):
-        if page.language == language:
-            context = {'content': page.content}
+    page_id = request.args.get('page_id')
+
+    if page_id:
+        # caso seja uma página
+        page = controllers.get_page_by_id(page_id)
+        context['page'] = page
+    else:
+        # caso não seja uma página é uma lista
+        pages = controllers.get_pages_by_lang(language)
+        context['pages'] = pages
 
     return render_template("collection/about.html", **context)
 
