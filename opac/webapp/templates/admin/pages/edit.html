@@ -1,5 +1,12 @@
 {% extends 'admin/model/edit.html' %}
 
+{% block messages %}
+    <div class="alert alert-info alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        {% trans %}<strong>Atenção:</strong> ao selecionar um <strong>periódico</strong> esta págna será a página "secundária" do periódico selecionado, caso contrário será uma página da coleção, verificar páginas da coleção em <em>Sobre o SciELO</em>. {% endtrans %}
+    </div>
+{% endblock %}
+
 {% block tail %}
     {{ super() }}
     <script src="/static/js/ckeditor/ckeditor.js"></script>

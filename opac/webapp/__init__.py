@@ -119,7 +119,7 @@ def create_app():
     admin.add_view(views.NewsAdminView(News, category=lazy_gettext(u'Notícias'), name=lazy_gettext(u'Notícias')))
     admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext(u'Ativos')))
     admin.add_view(views.ImageAdminView(Image, dbsql.session, category=lazy_gettext(u'Ativos')))
-    admin.add_view(views.PagesAdminView(Pages, category=lazy_gettext(u'Ativos'), name=lazy_gettext(u'Páginas')))
+    admin.add_view(views.PagesAdminView(Pages, category=lazy_gettext(u'Páginas'), name=lazy_gettext(u'Lista de Páginas')))
     admin.add_view(views.UserAdminView(User, dbsql.session, category=lazy_gettext(u'Gestão'), name=lazy_gettext(u'Usuário')))
 
     from .main import main as main_bp

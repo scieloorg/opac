@@ -800,15 +800,6 @@ def get_latest_news_by_lang(language):
         is_public=True).order_by('-publication_date')[:limit]
 
 
-def get_page_by_journal_acron_lang(acron, language):
-
-    page = Pages.objects(language=language, journal=acron).first()
-
-    return page
-
-# -------- SLQALCHEMY --------
-
-
 # -------- USER --------
 
 
@@ -918,3 +909,19 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
     return (True, __(u'Mensagem enviada!'))
 
 
+# -------- PAGES --------
+
+
+def get_page_by_journal_acron_lang(acron, language):
+
+    return Pages.objects(language=language, journal=acron).first()
+
+
+def get_page_by_id(id):
+
+    return Pages.objects.get(_id=id)
+
+
+def get_pages_by_lang(lang, journal=''):
+
+    return Pages.objects(language=lang, journal=journal)
