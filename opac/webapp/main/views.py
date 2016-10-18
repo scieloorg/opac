@@ -681,8 +681,3 @@ def email_share():
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
-
-
-@main.route("/open_access/", methods=['GET'])
-def open_access():
-    return render_template("open_access.html")

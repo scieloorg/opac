@@ -26,7 +26,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('collection/index.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_collection_open_access_list_theme(self):
@@ -45,7 +45,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('collection/list_journal.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_collection_open_access_journal_home(self):
@@ -69,7 +69,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('journal/detail.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_journal_open_access_journal_home(self):
@@ -93,7 +93,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('journal/detail.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_journal_open_access_in_issue_grid(self):
@@ -119,7 +119,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('issue/grid.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_journal_open_access_in_issue_toc(self):
@@ -146,7 +146,7 @@ class FooterTestCase(BaseTestCase):
                 self.assertTemplateUsed('issue/toc.html')
 
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
     def test_journal_open_access(self):
@@ -171,6 +171,6 @@ class FooterTestCase(BaseTestCase):
 
                 # Collection license
                 self.assertIn('/static/img/oa_logo_32.png', response.data)
-                self.assertIn('href="%s"' % url_for('main.open_access'), response.data)
+                self.assertIn('href="%s"' % url_for('main.about_collection'), response.data)
                 self.assertIn('Open Access', response.data)
 
