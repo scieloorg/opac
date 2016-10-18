@@ -8,7 +8,7 @@
 
         <ol class="breadcrumb">
             <li><a href="{{ url_for('.index') }}">Home</a></li>
-            <li><a href="{{ url_for('.about_collection') }}">{{ page }}</a></li>
+            <li><a href="{{ url_for('.about_collection') }}">{% trans %} Sobre o SciELO {% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</a></li>
             <li>{{ page }}</li>
         </ol>
 
