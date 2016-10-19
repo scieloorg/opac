@@ -11,6 +11,7 @@ services:
     opac_mongo:
         image: mongo:latest
         restart: always
+        user: nobody
         hostname: opac_mongo
         ports:
           - "27017:27017"
@@ -20,6 +21,7 @@ services:
             context: .
             dockerfile: ./Dockerfile-dev
         command: gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --reload --log-level DEBUG
+        user: nobody
         restart: always
         hostname: opac_webapp
         depends_on:
@@ -43,6 +45,7 @@ services:
 
     opac_nginx:
         image: scieloorg/opac_nginx:latest
+        user: nobody
         restart: always
         depends_on:
             - opac_webapp
