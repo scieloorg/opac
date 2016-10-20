@@ -1,42 +1,31 @@
 version: '2'
 
-networks:
-   opac-network:
-    external: true
-
 services:
 
     opac_mongo:
-        image: mongo
+        image: mongo:latest
         restart: always
+        user: mongodb
+        hostname: opac_mongo
         ports:
           - "27017:27017"
-        hostname: opac_mongo
-        networks:
-            - opac-network
 
-    opac_nginx:
-        image: scieloorg/opac_nginx:stable
-        restart: always
-        ports:
-            - "80:9000"
-        networks:
-            - opac-network
-        hostname: opac_nginx
-
-    opac_webapp_1:
+    opac_webapp:
         build: .
+        user: nobody
         restart: always
-        working_dir: /app
+        hostname: opac_webapp
+        depends_on:
+            - opac_mongo
         volumes:
             - ./data:/app/data
         links:
-            - opac_nginx:opac_nginx
             - opac_mongo:opac_mongo
         ports:
-            - "8000"
-        networks:
-            - opac-network
+            - "8000:8000"
         environment:
+            - OPAC_DEBUG_MODE=True
             - OPAC_MONGODB_NAME=opac_mongo
             - OPAC_DATABASE_DIR=/app/data
+            - OPAC_SECRET_KEY=s3kr3tk3y
+            - OPAC_MONGODB_HOST=opac_mongo
