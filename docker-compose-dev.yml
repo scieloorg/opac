@@ -11,7 +11,7 @@ services:
     opac_mongo:
         image: mongo:latest
         restart: always
-        user: nobody
+        user: mongodb
         hostname: opac_mongo
         ports:
           - "27017:27017"
@@ -42,15 +42,3 @@ services:
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
             - OPAC_SECRET_KEY=s3kr3tk3y
-
-    opac_nginx:
-        image: scieloorg/opac_nginx:latest
-        user: nobody
-        restart: always
-        depends_on:
-            - opac_webapp
-        links:
-            - opac_webapp:opac-webapp
-        ports:
-            - "9000:9000"
-        hostname: opac_nginx
