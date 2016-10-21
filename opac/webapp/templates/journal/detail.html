@@ -31,7 +31,7 @@
             <div class="col-md-6 col-sm-6">
                 <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
                 {% if session.lang %}
-                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|default("", true) }}</p>
+                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|default(_("Periódico sem missão cadastrada"), true) }}</p>
                 {% endif %}
             </div>
           {% endif %}
@@ -70,16 +70,19 @@
                 </span>
               </a>
             </div>
-            <div class="col-md-6 col-sm-6">
-              <h3>{% trans %}Sumário{% endtrans %}</h3>
-              <ul>
-                {% for section in journal.last_issue.sections|sort(attribute='name') %}
-                  <li><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}#{{ section|upper }}">{{ section }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
+            {% if sections %}
+              <div class="col-md-6 col-sm-6">
+                <h3>{% trans %}Sumário{% endtrans %}</h3>
+                <ul>
+                  {% for section in sections|sort() %}
+                    <li><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}#{{ section|upper }}">{{ section }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
             <div class="clearfix"></div>
           </div>
+
         {% endif %}
         {# last issue #}
 
