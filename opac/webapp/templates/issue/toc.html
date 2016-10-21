@@ -66,18 +66,20 @@
                   <div class="collapse-content issueIndent">
                     <strong>{{ issue.legend }}</strong>
                     <ul>
+
+                      {% if sections %}
+                        <li>
+                          <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}">
+                            {% if section_filter|length == 0 %}
+                              {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
+                            {% else %}
+                              {% trans %}Todas as seções{% endtrans %}
+                            {% endif %}
+                          </a>
+                        </li>
+                      {% endif %}
+
                       {% for section in sections %}
-                        {% if loop.first %}
-                          <li>
-                            <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}">
-                              {% if section_filter|length == 0 %}
-                                {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
-                              {% else %}
-                                {% trans %}Todas as seções{% endtrans %}
-                              {% endif %}
-                            </a>
-                          </li>
-                        {% endif %}
                         {% if section %}
                           <li>
                             <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ section|upper }}">
@@ -90,6 +92,7 @@
                           </li>
                         {% endif %}
                       {% endfor %}
+
                     </ul>
                   </div>
               </div>

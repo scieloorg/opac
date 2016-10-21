@@ -59,3 +59,14 @@
 #SendViaEmailConfirm .email_error{
   color: red;
 }
+
+.journal .issueIndex .collapse-content {
+    padding-bottom: 20px;
+    margin-left: 19px;
+}
+
+.journal .journalContent .content ul {
+    margin: 0 0 0 25px;
+    padding: 0;
+}
+

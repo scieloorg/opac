@@ -90,8 +90,8 @@ def index():
 
 ###################################PressRelease#################################
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/pressrelease/<string:lang_code>/', defaults={'url_seg_article': None})
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/pressrelease/<string:lang_code>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/pressrelease/<string:lang_code>/', defaults={'url_seg_article': None})
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/pressrelease/<string:lang_code>/')
 def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -301,9 +301,16 @@ def journal_detail(url_seg):
     else:
         previous_issue = None
 
-    # Get press releases
+    # Press releases
     press_releases = controllers.get_press_releases({'journal': journal,
                                                      'language': language})
+
+    # Lista de seções
+    # Mantendo sempre o idioma inglês para as seções na página incial do periódico
+    if journal.last_issue:
+        sections = [section for section in journal.last_issue.sections if section.language == 'en']
+    else:
+        sections = []
 
     context = {
         'next_issue': None,
@@ -313,6 +320,7 @@ def journal_detail(url_seg):
         # o primiero item da lista é o último fascículo.
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,
+        'sections': sections if sections else None,
         'news': news
     }
 
@@ -491,7 +499,7 @@ def issue_grid(url_seg):
     return render_template("issue/grid.html", **context)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/')
 def issue_toc(url_seg, url_seg_issue):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     section_filter = request.args.get('section', '', type=unicode)
@@ -516,7 +524,8 @@ def issue_toc(url_seg, url_seg_issue):
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
     if articles:
-        sections = sorted(articles.item_frequencies('section').keys())
+        sections = articles.item_frequencies('section').keys()
+        sections = sorted([k for k in sections if k is not None])
     else:
         sections = []
 
@@ -545,7 +554,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/feed/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/feed/')
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -594,8 +603,8 @@ def issue_feed(url_seg, url_seg_issue):
 
 ###################################Article######################################
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(?:\w+)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
