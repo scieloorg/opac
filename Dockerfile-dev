@@ -6,6 +6,8 @@ COPY ./requirements.dev.txt /app/requirements.dev.txt
 
 RUN pip install -r /app/requirements.txt && \
     pip install -r /app/requirements.dev.txt
+    
+CMD make compile_messages
 
 USER nobody
 
