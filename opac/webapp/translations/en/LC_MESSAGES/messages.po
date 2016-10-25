@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2016-10-03 14:35-0300\n"
-"PO-Revision-Date: 2016-10-25 10:27+0000\n"
+"PO-Revision-Date: 2016-10-25 19:14+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language-Team: English (http://www.transifex.com/scielo/opac/language/en/)\n"
 "MIME-Version: 1.0\n"
@@ -613,7 +613,7 @@ msgstr ""
 #: opac/webapp/admin/views.py:536 opac/webapp/admin/views.py:607
 #: opac/webapp/admin/views.py:676
 msgid "Publicado?"
-msgstr ""
+msgstr "Published?"
 
 #: opac/webapp/admin/views.py:537 opac/webapp/admin/views.py:608
 #: opac/webapp/admin/views.py:677
@@ -653,11 +653,11 @@ msgstr ""
 
 #: opac/webapp/admin/views.py:591
 msgid "Id Número"
-msgstr ""
+msgstr "ID number"
 
 #: opac/webapp/admin/views.py:593
 msgid "Seções"
-msgstr ""
+msgstr "Sections"
 
 #: opac/webapp/admin/views.py:595
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:25
@@ -665,47 +665,47 @@ msgstr ""
 #: opac/webapp/templates/includes/format_journal_row.html:14
 #: opac/webapp/templates/issue/grid.html:43
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #: opac/webapp/admin/views.py:596 opac/webapp/admin/views.py:667
 #: opac/webapp/templates/issue/grid.html:44
 msgid "Número"
-msgstr ""
+msgstr "Number"
 
 #: opac/webapp/admin/views.py:599
 msgid "Tipo"
-msgstr ""
+msgstr "Type"
 
 #: opac/webapp/admin/views.py:600
 msgid "Texto do suplemento"
-msgstr ""
+msgstr "Text for supplement"
 
 #: opac/webapp/admin/views.py:601
 msgid "Texto do especial"
-msgstr ""
+msgstr "Text for special"
 
 #: opac/webapp/admin/views.py:602
 msgid "Mês inicial"
-msgstr ""
+msgstr "Beginning month"
 
 #: opac/webapp/admin/views.py:603
 msgid "Mês final"
-msgstr ""
+msgstr "End month"
 
 #: opac/webapp/admin/views.py:604
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:20
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:63
 #: opac/webapp/templates/issue/grid.html:42
 msgid "Ano"
-msgstr ""
+msgstr "Year"
 
 #: opac/webapp/admin/views.py:605
 msgid "Etiqueta"
-msgstr ""
+msgstr "Tag"
 
 #: opac/webapp/admin/views.py:606
 msgid "Ordem"
-msgstr ""
+msgstr "Order"
 
 #: opac/webapp/admin/views.py:616
 msgid "Fascículo(s) publicado(s) com sucesso!!"
@@ -727,23 +727,23 @@ msgstr "An error occurred trying to unpublish the issue(s)!! Error %(ex)s"
 
 #: opac/webapp/admin/views.py:666
 msgid "Id Artigo"
-msgstr ""
+msgstr "Article ID"
 
 #: opac/webapp/admin/views.py:670
 msgid "Seção"
-msgstr ""
+msgstr "Section"
 
 #: opac/webapp/admin/views.py:671
 msgid "É Ahead of Print?"
-msgstr ""
+msgstr "E-version ahead of Print?"
 
 #: opac/webapp/admin/views.py:674
 msgid "HTML's"
-msgstr ""
+msgstr "HTML's"
 
 #: opac/webapp/admin/views.py:675
 msgid "Chave de domínio"
-msgstr ""
+msgstr "Domain key"
 
 #: opac/webapp/admin/views.py:685
 msgid "Artigo(s) publicado com sucesso!!"
@@ -755,15 +755,15 @@ msgstr "Article(s) successfully unpublished!!"
 
 #: opac/webapp/main/views.py:22
 msgid "O periódico está indisponível por motivo de: "
-msgstr ""
+msgstr "The journal is unavailable because:"
 
 #: opac/webapp/main/views.py:23
 msgid "O fascículo está indisponível por motivo de: "
-msgstr ""
+msgstr "The issue is unavailable because:"
 
 #: opac/webapp/main/views.py:24
 msgid "O artigo está indisponível por motivo de: "
-msgstr ""
+msgstr "The article is unavailable because:"
 
 #: opac/webapp/main/views.py:64
 msgid "Código de idioma inválido"
@@ -782,38 +782,38 @@ msgstr "Issue not found"
 
 #: opac/webapp/main/views.py:114
 msgid "Press Release não encontrado"
-msgstr ""
+msgstr "Press Release not found"
 
 #: opac/webapp/main/views.py:136
 msgid "Últimos periódicos inseridos na coleção"
-msgstr ""
+msgstr "Latest journals added to the collection"
 
 #: opac/webapp/main/views.py:137
 #, python-format
 msgid "10 últimos periódicos inseridos na coleção %s"
-msgstr ""
+msgstr "10 latest journals added to the collection %s"
 
 #: opac/webapp/main/views.py:335 opac/webapp/main/views.py:350
 msgid "Requisição inválida. Deve ser por ajax"
-msgstr ""
+msgstr "Invalid request. Must be made via ajax"
 
 #: opac/webapp/main/views.py:365
 msgid "Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou \"publisher\"."
-msgstr ""
+msgstr "Invalid parameter \"filter\". Should be \"areas\", \"wos\" or \"publisher\"."
 
 #: opac/webapp/main/views.py:373
 msgid "Parámetro \"extension\" é inválido, deve ser \"csv\" ou \"xls\"."
-msgstr ""
+msgstr "Invalid parameter \"extension\". Should be \"csv\" or \"xls\"."
 
 #: opac/webapp/main/views.py:375
 msgid ""
 "Parámetro \"list_type\" é inválido, deve ser: \"alpha\", \"areas\", \"wos\" "
 "ou \"publisher\"."
-msgstr ""
+msgstr "Invalid parameter \"list_type\". Should be: \"alpha\", \"areas\", \"wos\" or \"publisher\"."
 
 #: opac/webapp/main/views.py:526
 msgid "Issue não encontrado"
-msgstr ""
+msgstr "Issue not found"
 
 #: opac/webapp/main/views.py:531
 msgid "Artigo não encontrado"
@@ -821,7 +821,7 @@ msgstr "Article not found"
 
 #: opac/webapp/templates/open_access.html:9
 msgid "Declaração sobre acesso aberto"
-msgstr ""
+msgstr "Declaration on Open Access"
 
 #: opac/webapp/templates/admin/index.html:7
 msgid "da coleção"
@@ -887,38 +887,38 @@ msgstr "Forgot the password?"
 
 #: opac/webapp/templates/admin/auth/unconfirm_email.html:7
 msgid "Email não confirmado!"
-msgstr ""
+msgstr "Email not confirmed!"
 
 #: opac/webapp/templates/admin/auth/unconfirm_email.html:9
 msgid ""
 "Você <strong>deve</strong> confirmar seu email.<br>\n"
 "            <strong>Por favor entre em contato com o administrador.</strong>"
-msgstr ""
+msgstr "You <strong>should</strong> confirm your email.<br>\n<strong>Please contact your administrator.</strong>"
 
 #: opac/webapp/templates/admin/news/list.html:9
 msgid "Feeds"
-msgstr ""
+msgstr "Feeds"
 
 #: opac/webapp/templates/admin/news/list.html:19
 msgid "Importar desde:"
-msgstr ""
+msgstr "Import from:"
 
 #: opac/webapp/templates/admin/news/list.html:20
 #: opac/webapp/templates/admin/news/list.html:46
 msgid "idioma:"
-msgstr ""
+msgstr "Language:"
 
 #: opac/webapp/templates/admin/news/list.html:27
 msgid "Importar todo "
-msgstr ""
+msgstr "Import all"
 
 #: opac/webapp/templates/admin/news/list.html:46
 msgid "Tem certeza que deseja importar o feed: "
-msgstr ""
+msgstr "Are you sure you want to import feed:?"
 
 #: opac/webapp/templates/admin/news/list.html:57
 msgid "Tem certeza que deseja importar todos os feeds de todas as fontes?"
-msgstr ""
+msgstr "Are you should you want to import all the feeds from all sources?"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:6
 #: opac/webapp/templates/collection/includes/header.html:7
@@ -926,23 +926,23 @@ msgstr ""
 #: opac/webapp/templates/journal/includes/alternative_header.html:6
 #: opac/webapp/templates/journal/includes/header.html:7
 msgid "Abrir menu"
-msgstr ""
+msgstr "Open menu"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:8
 msgid "Ir para a homepage da coleção:"
-msgstr ""
+msgstr "Go to the Home Page of Collection:"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:40
 msgid "Sobre os autores"
-msgstr ""
+msgstr "About the authors"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:43
 msgid "Permissões"
-msgstr ""
+msgstr "Permissions"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:52
 msgid "Homepage do periódico"
-msgstr ""
+msgstr "Journal Home page"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:62
 msgid "Artigos de"
@@ -951,38 +951,38 @@ msgstr ""
 #: opac/webapp/templates/article/includes/alternative_header.html:68
 #: opac/webapp/templates/article/includes/levelMenu.html:17
 msgid "sumário"
-msgstr ""
+msgstr "summary"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:75
 #: opac/webapp/templates/issue/includes/alternative_header.html:77
 #: opac/webapp/templates/journal/includes/alternative_header.html:69
 msgid "anterior"
-msgstr ""
+msgstr "previous"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:82
 #: opac/webapp/templates/issue/includes/alternative_header.html:84
 #: opac/webapp/templates/journal/includes/alternative_header.html:76
 msgid "atual"
-msgstr ""
+msgstr "current"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:89
 #: opac/webapp/templates/issue/includes/alternative_header.html:91
 #: opac/webapp/templates/journal/includes/alternative_header.html:83
 msgid "próximo"
-msgstr ""
+msgstr "next"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:97
 #: opac/webapp/templates/article/includes/alternative_header.html:113
 msgid "Baixar"
-msgstr ""
+msgstr "Download"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:104
 msgid "Visualizar no Readcube"
-msgstr ""
+msgstr "Display in Readcube"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:120
 msgid "Expandir/Reduzir texto"
-msgstr ""
+msgstr "Enlarge/reduce text"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:125
 msgid "Topo"
@@ -991,105 +991,105 @@ msgstr ""
 #: opac/webapp/templates/article/includes/levelMenu.html:8
 #: opac/webapp/templates/journal/includes/levelMenu.html:7
 msgid "home da revista"
-msgstr ""
+msgstr "journal home"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:22
 msgid "artigo anterior"
-msgstr ""
+msgstr "previous article"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:27
 msgid "artigo atual"
-msgstr ""
+msgstr "current article"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:32
 msgid "artigo seguinte"
-msgstr ""
+msgstr "next article"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:38
 msgid "Outras versões deste artigo"
-msgstr ""
+msgstr "Other versions of this article"
 
 #: opac/webapp/templates/collection/about.html:36
 #: opac/webapp/templates/journal/about.html:39
 msgid " Conteúdo não cadastrado "
-msgstr ""
+msgstr "Content not registered"
 
 #: opac/webapp/templates/collection/index.html:11
 msgid "em números | Métricas"
-msgstr ""
+msgstr "in numbers | Metrics"
 
 #: opac/webapp/templates/collection/index.html:16
 msgid "citações"
-msgstr ""
+msgstr "citations"
 
 #: opac/webapp/templates/collection/index.html:20
 msgid "artigos"
-msgstr ""
+msgstr "articles"
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:22
 #: opac/webapp/templates/collection/index.html:24
 #: opac/webapp/templates/collection/list_feed_content.html:7
 #: opac/webapp/templates/includes/format_journal_row.html:12
 msgid "números"
-msgstr ""
+msgstr "numbers"
 
 #: opac/webapp/templates/collection/index.html:28
 msgid "períodicos"
-msgstr ""
+msgstr "journals"
 
 #: opac/webapp/templates/collection/index.html:34
 msgid "Downloads"
-msgstr ""
+msgstr "Downloads"
 
 #: opac/webapp/templates/collection/index.html:37
 msgid "Citações"
-msgstr ""
+msgstr "Citations"
 
 #: opac/webapp/templates/collection/index.html:40
 msgid "Outros indicadores"
-msgstr ""
+msgstr "Other indicators"
 
 #: opac/webapp/templates/collection/index.html:50
 msgid "Lista de periódicos"
-msgstr ""
+msgstr "Journal list"
 
 #: opac/webapp/templates/collection/index.html:54
 msgid "Alfabética"
-msgstr ""
+msgstr "Alphabetic"
 
 #: opac/webapp/templates/collection/index.html:57
 msgid "Temática"
-msgstr ""
+msgstr "Thematic"
 
 #: opac/webapp/templates/collection/index.html:60
 msgid "Por instituição"
-msgstr ""
+msgstr "By institution"
 
 #: opac/webapp/templates/collection/index.html:63
 msgid "Novos números"
-msgstr ""
+msgstr "New issues"
 
 #: opac/webapp/templates/collection/index.html:66
 msgid "Novos períodicos"
-msgstr ""
+msgstr "New journals"
 
 #: opac/webapp/templates/collection/index.html:113
 msgid "em perspectiva"
-msgstr ""
+msgstr "in perspective"
 
 #: opac/webapp/templates/collection/list_feed_content.html:1
 msgid "Último número"
-msgstr ""
+msgstr "Last issue"
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:26
 #: opac/webapp/templates/collection/list_feed_content.html:4
 #: opac/webapp/templates/includes/format_journal_row.html:15
 msgid "Nº"
-msgstr ""
+msgstr "Nº"
 
 #: opac/webapp/templates/collection/list_feed_content.html:6
 msgid "(inativo)"
-msgstr ""
+msgstr "(inactive)"
 
 #: opac/webapp/templates/collection/list_feed_content.html:7
 msgid "de"
