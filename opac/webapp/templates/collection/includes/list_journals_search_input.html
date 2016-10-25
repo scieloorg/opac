@@ -1,26 +1,22 @@
 <div class="row collectionListSearch">
-  <div class="col-md-12 col-sm-12">
+  <div class="col-md-6">
+    <div class="btn-group">
+      <input id="all_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="" checked="checked">
+      <label for="all_{{filter_id}}" class="btn btn-radio-group">{% trans %}Todos{% endtrans %}</label>
 
-    <div class="input-group">
+      <input id="current_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="current">
+      <label for="current_{{filter_id}}" class="btn btn-radio-group">{% trans %}Títulos correntes{% endtrans %}</label>
+
+      <input id="no_current_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="no-current">
+      <label for="no_current_{{filter_id}}" class="btn btn-radio-group">{% trans %}Títulos não-correntes{% endtrans %}</label>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-12">
 
       <input type="text" name="{{ input_id|default('query') }}"
              id="{{ input_id|default('query') }}"
              value=""
              class="form-control collectionSearch"
-             placeholder="Digite uma ou mais palavras para filtrar a lista"/>
-
-      <span class="input-group-addon">
-        <input type="radio" name="{{ filter_id|default('query_filter') }}" value="" checked="checked">
-        {% trans %}Todos{% endtrans %}
-      </span>
-      <span class="input-group-addon">
-        <input type="radio" name="{{ filter_id|default('query_filter') }}" value="current">
-        {% trans %}Títulos correntes{% endtrans %}
-      </span>
-      <span class="input-group-addon">
-        <input type="radio" name="{{ filter_id|default('query_filter') }}" value="no-current">
-        {% trans %}Títulos não-correntes{% endtrans %}
-      </span>
-    </div>
+             placeholder="{% trans %}Digite uma ou mais palavras para filtrar a lista{% endtrans %}"/>
   </div>
 </div>

@@ -30,10 +30,6 @@
     color: #a7a49e;
 }
 
-.collectionList .collectionListTable table{
-    width: 98%;
-}
-
 .collectionList .collectionListTable td.collapseContainer{
     padding: 0px 0;
 }
