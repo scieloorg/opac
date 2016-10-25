@@ -339,7 +339,7 @@ msgstr "Ocurrió un error intentando publicar el/los periódico(s)!! Erro: %(ex)
 #: app/admin/views.py:513 app/admin/views.py:517 app/admin/views.py:521
 #, fuzzy, python-format
 msgid "Despublicar por %s"
-msgstr "Despublicar"
+msgstr "Despublicar por %s"
 
 #: app/admin/views.py:378
 msgid "Id Número"
