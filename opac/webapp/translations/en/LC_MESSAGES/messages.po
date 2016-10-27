@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2016-10-03 14:35-0300\n"
-"PO-Revision-Date: 2016-10-26 12:25+0000\n"
-"Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
+"PO-Revision-Date: 2016-10-27 12:11+0000\n"
+"Last-Translator: Juan Funez <juan.funez@gmail.com>\n"
 "Language-Team: English (http://www.transifex.com/scielo/opac/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -305,44 +305,44 @@ msgstr "Arabic"
 
 #: opac/webapp/controllers.py:381
 msgid "Obrigatório um jid."
-msgstr ""
+msgstr "A jid is required."
 
 #: opac/webapp/controllers.py:397
 msgid "Obrigatório um acronym."
-msgstr ""
+msgstr "An acronym is required."
 
 #: opac/webapp/controllers.py:412
 msgid "Obrigatório um url_seg."
-msgstr ""
+msgstr "A url_seg is required."
 
 #: opac/webapp/controllers.py:449 opac/webapp/controllers.py:591
 #: opac/webapp/controllers.py:708
 msgid "Obrigatório uma lista de ids."
-msgstr ""
+msgstr "A list of id's is required."
 
 #: opac/webapp/controllers.py:553 opac/webapp/controllers.py:729
 msgid "Obrigatório um iid."
-msgstr ""
+msgstr "A iid is required."
 
 #: opac/webapp/controllers.py:610
 msgid "Obrigatório um jacron e issue_label."
-msgstr ""
+msgstr "A jarcon and issue_label are required."
 
 #: opac/webapp/controllers.py:626
 msgid "Obrigatório um url_seg e url_seg_issue."
-msgstr ""
+msgstr "A url_seg and url_seg_issue are required."
 
 #: opac/webapp/controllers.py:642
 msgid "Obrigatório um aid."
-msgstr ""
+msgstr "A aid is required."
 
 #: opac/webapp/controllers.py:655
 msgid "Obrigatório um url_seg_article."
-msgstr ""
+msgstr "A url_seg_article is required."
 
 #: opac/webapp/controllers.py:671
 msgid "Obrigatório um iid and url_seg_article."
-msgstr ""
+msgstr "A iid and url_seg_article are required."
 
 #: opac/webapp/controllers.py:772
 msgid "Parâmetro email deve ser uma string"
@@ -355,7 +355,7 @@ msgstr "The parameter \"email\" must be an integer."
 #: opac/webapp/controllers.py:795 opac/webapp/controllers.py:809
 #, python-format
 msgid "Usuário deve ser do tipo %s"
-msgstr ""
+msgstr "User must be of type %s"
 
 #: opac/webapp/admin/forms.py:9 opac/webapp/admin/forms.py:21
 msgid "Email"
@@ -402,7 +402,7 @@ msgstr "Email: %(email)s successfully confirmed!"
 #: opac/webapp/admin/views.py:113
 #, python-format
 msgid "Enviamos as instruções para recuperar a senha para: %(email)s"
-msgstr "The instructions to recover the password have been sent to: %(email)s"
+msgstr "The instructions to reset the password have been sent to: %(email)s "
 
 #: opac/webapp/admin/views.py:116
 #, python-format
@@ -459,12 +459,12 @@ msgstr "The language: %s is not included in our database of feeds."
 #: opac/webapp/admin/views.py:389
 #, python-format
 msgid "O feed: \"%s\", no idioma: \"%s\", não consta no nosso cadastro de feeds."
-msgstr "The feed: \"%s\", language: \"%s\", is not included in our database of feeds."
+msgstr "The feed: \"%s\", in language: \"%s\", is not included in our database of feeds."
 
 #: opac/webapp/admin/views.py:396 opac/webapp/admin/views.py:416
 #, python-format
 msgid "O feed: %s [%s], foi importado com sucesso !!"
-msgstr "The feed: %s [%s], was imported successfully."
+msgstr "The feed: %s [%s] was successfully imported."
 
 #: opac/webapp/admin/views.py:401 opac/webapp/admin/views.py:420
 #, python-format
@@ -592,7 +592,7 @@ msgstr "Mission"
 
 #: opac/webapp/admin/views.py:531
 msgid "No índice"
-msgstr ""
+msgstr "In index"
 
 #: opac/webapp/admin/views.py:532
 msgid "Patrocinadores"
@@ -600,11 +600,11 @@ msgstr "Sponsors"
 
 #: opac/webapp/admin/views.py:533
 msgid "Ref periódico anterior"
-msgstr ""
+msgstr "Previous journal reference"
 
 #: opac/webapp/admin/views.py:534
 msgid "Situação atual"
-msgstr ""
+msgstr "Journal status"
 
 #: opac/webapp/admin/views.py:535
 msgid "Total de números"
@@ -618,7 +618,7 @@ msgstr "Published?"
 #: opac/webapp/admin/views.py:537 opac/webapp/admin/views.py:608
 #: opac/webapp/admin/views.py:677
 msgid "Motivo de despublicação"
-msgstr ""
+msgstr "Reason for unpublishing"
 
 #: opac/webapp/admin/views.py:540 opac/webapp/admin/views.py:611
 #: opac/webapp/admin/views.py:680
@@ -640,7 +640,7 @@ msgstr "Journal(s) successfully unpublished!!"
 #: opac/webapp/admin/views.py:556
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) periódico(s)!!. Erro: %(ex)s"
-msgstr ""
+msgstr "An error occurred while attempting to unpublish the journal(s)!!. Error: %(ex)s"
 
 #: opac/webapp/admin/views.py:559 opac/webapp/admin/views.py:563
 #: opac/webapp/admin/views.py:567 opac/webapp/admin/views.py:632
@@ -649,7 +649,7 @@ msgstr ""
 #: opac/webapp/admin/views.py:710
 #, python-format
 msgid "Despublicar por %s"
-msgstr ""
+msgstr "Unpublished because of %s"
 
 #: opac/webapp/admin/views.py:591
 msgid "Id Número"
@@ -946,7 +946,7 @@ msgstr "Journal Home page"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:62
 msgid "Artigos de"
-msgstr ""
+msgstr "Articles from"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:68
 #: opac/webapp/templates/article/includes/levelMenu.html:17
@@ -986,7 +986,7 @@ msgstr "Enlarge/reduce text"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:125
 msgid "Topo"
-msgstr ""
+msgstr "Top"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:8
 #: opac/webapp/templates/journal/includes/levelMenu.html:7
@@ -1116,7 +1116,7 @@ msgstr "broad areas"
 
 #: opac/webapp/templates/collection/list_journal.html:214
 msgid "áreas WOS"
-msgstr ""
+msgstr "WOS subject areas"
 
 #: opac/webapp/templates/collection/list_journal.html:226
 msgid "Editoras"
@@ -1229,7 +1229,7 @@ msgstr "Enter one or more words"
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:58
 msgid "Limpar expressão"
-msgstr ""
+msgstr "Reset"
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:87
 msgid "Sem resultados"
@@ -1249,7 +1249,7 @@ msgstr "Current titles"
 
 #: opac/webapp/templates/collection/includes/list_journals_search_input.html:22
 msgid "Títulos não-correntes"
-msgstr ""
+msgstr "Non-current titles"
 
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:16
 #: opac/webapp/templates/issue/toc.html:13
