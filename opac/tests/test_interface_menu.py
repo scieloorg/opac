@@ -104,37 +104,39 @@ class MenuTestCase(BaseTestCase):
         Verificamos que o link para o blog em perspectiva fique
         apontando ao link certo considerando o idioma da sessão
         """
-        with self.client as c:
-            collection = utils.makeOneCollection()
-            # idioma em 'pt_br'
-            response = c.get(
-                url_for('main.set_locale', lang_code='pt_BR'),
-                headers={'Referer': '/'},
-                follow_redirects=True)
 
-            self.assertStatus(response, 200)
-            expected_anchor = '<a href="http://blog.scielo.org/">'
-            self.assertIn(expected_anchor, response.data.decode('utf-8'))
+        with current_app.app_context():
+            collection = utils.makeOneCollection({'name': 'dummy collection'})
+            with self.client as c:
+                # idioma em 'pt_br'
+                response = c.get(
+                    url_for('main.set_locale', lang_code='pt_BR'),
+                    headers={'Referer': '/'},
+                    follow_redirects=True)
 
-            # idioma em 'en'
-            response = c.get(
-                url_for('main.set_locale', lang_code='en'),
-                headers={'Referer': '/'},
-                follow_redirects=True)
+                self.assertStatus(response, 200)
+                expected_anchor = '<a href="http://blog.scielo.org/">'
+                self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
-            self.assertStatus(response, 200)
-            expected_anchor = '<a href="http://blog.scielo.org/en/">'
-            self.assertIn(expected_anchor, response.data.decode('utf-8'))
+                # idioma em 'en'
+                response = c.get(
+                    url_for('main.set_locale', lang_code='en'),
+                    headers={'Referer': '/'},
+                    follow_redirects=True)
 
-            # idioma em 'es'
-            response = c.get(
-                url_for('main.set_locale', lang_code='es'),
-                headers={'Referer': '/'},
-                follow_redirects=True)
+                self.assertStatus(response, 200)
+                expected_anchor = '<a href="http://blog.scielo.org/en/">'
+                self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
-            self.assertStatus(response, 200)
-            expected_anchor = '<a href="http://blog.scielo.org/es/">'
-            self.assertIn(expected_anchor, response.data.decode('utf-8'))
+                # idioma em 'es'
+                response = c.get(
+                    url_for('main.set_locale', lang_code='es'),
+                    headers={'Referer': '/'},
+                    follow_redirects=True)
+
+                self.assertStatus(response, 200)
+                expected_anchor = '<a href="http://blog.scielo.org/es/">'
+                self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Journal Menu
     def test_journal_detail_menu(self):

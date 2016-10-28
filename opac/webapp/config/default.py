@@ -72,6 +72,9 @@ import os
         - OPAC_TWITTER_ACCESS_TOKEN_SECRET: Twitter access token (default: 'acc3ss-tok3n-secr3t')
         - OPAC_TWITTER_SCREEN_NAME: Twitter screen name (default: 'RedeSciELO')
 
+      - Metrics:
+        - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -199,7 +202,10 @@ THUMBNAIL_HEIGHT = 100
 THUMBNAIL_WIDTH = 100
 
 # search scielo
-URL_SEARCH = 'http://search.scielo.org/'
+URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', 'http://search.scielo.org/')
+
+# analytics scielo
+OPAC_METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
 
 NEWS_LIST_LIMIT = 10
 RSS_NEWS_FEEDS = {
@@ -243,4 +249,6 @@ TWITTER_ACCESS_TOKEN = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN', 'acc3ss-tok3n
 TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN_SECRET', 'acc3ss-tok3n-secr3t')
 TWITTER_SCREEN_NAME = os.environ.get('OPAC_TWITTER_SCREEN_NAME', 'RedeSciELO')
 TWITTER_LIMIT = '10'
+
+
 

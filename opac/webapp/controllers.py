@@ -34,8 +34,6 @@ import utils
 from mongoengine import Q
 
 
-ANALYTICS = 'http://analytics.scielo.org'
-
 # -------- COLLECTION --------
 
 def get_current_collection():
@@ -46,44 +44,6 @@ def get_current_collection():
     current_collection_acronym = current_app.config['OPAC_COLLECTION']
     collection = Collection.objects.get(acronym=current_collection_acronym)
     return collection
-
-
-def get_collection_analytics():
-    """
-    Regresa una colección con las metricas y urls de SciELO Analytics
-    """
-    current_collection_acronym = current_app.config['OPAC_COLLECTION']
-    endpoint = 'ajx/publication/size'
-    params = {
-        'code': current_collection_acronym,
-        'collection': current_collection_acronym,
-        'field': 'citations'
-    }
-    references = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
-
-    params['field'] = 'documents'
-    articles = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
-
-    params['field'] = 'issue'
-    issues = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
-
-    params['field'] = 'issn'
-    journals = utils.do_request_json('{0}/{1}'.format(ANALYTICS, endpoint), params)
-
-    analytics = {}
-    analytics['metrics'] = {
-        'references': int(references.get('total', 0)),
-        'articles': int(articles.get('total', 0)),
-        'issues': int(issues.get('total', 0)),
-        'journals': int(journals.get('total', 0)),
-    }
-    analytics['urls'] = {
-        'downloads': '{0}/w/accesses?collection={1}'.format(ANALYTICS, current_collection_acronym),
-        'references': '{0}/w/publication/size?collection={1}'.format(ANALYTICS, current_collection_acronym),
-        'other': '{0}/?collection={1}'.format(ANALYTICS, current_collection_acronym),
-    }
-
-    return analytics
 
 
 def get_collection_tweets():

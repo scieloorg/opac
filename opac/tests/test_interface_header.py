@@ -2,6 +2,7 @@
 
 from flask import url_for
 from base import BaseTestCase
+from flask import current_app
 
 import utils
 
@@ -15,17 +16,18 @@ class HeaderTestCase(BaseTestCase):
         idioma Espanhol e Inglês.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
-            response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+            with self.client as c:
+                response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('lang-en', response.data)
-            self.assertIn('lang-es', response.data)
-            self.assertNotIn('lang-pt', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('lang-en', response.data)
+                self.assertIn('lang-es', response.data)
+                self.assertNotIn('lang-pt', response.data)
 
     def test_current_language_when_set_en(self):
         """
@@ -34,17 +36,18 @@ class HeaderTestCase(BaseTestCase):
         idioma Espanhol e Português.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
-            response = c.get(url_for('main.set_locale', lang_code='en'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+            with self.client as c:
+                response = c.get(url_for('main.set_locale', lang_code='en'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('lang-pt', response.data)
-            self.assertIn('lang-es', response.data)
-            self.assertNotIn('lang-en', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('lang-pt', response.data)
+                self.assertIn('lang-es', response.data)
+                self.assertNotIn('lang-en', response.data)
 
     def test_current_language_when_set_es(self):
         """
@@ -53,17 +56,18 @@ class HeaderTestCase(BaseTestCase):
         idioma Inglês e Português.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
-            response = c.get(url_for('main.set_locale', lang_code='es'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+            with self.client as c:
+                response = c.get(url_for('main.set_locale', lang_code='es'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('lang-pt', response.data)
-            self.assertIn('lang-en', response.data)
-            self.assertNotIn('lang-es', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('lang-pt', response.data)
+                self.assertIn('lang-en', response.data)
+                self.assertNotIn('lang-es', response.data)
 
     def test_current_header_logo_when_set_pt_BR(self):
         """
@@ -71,16 +75,17 @@ class HeaderTestCase(BaseTestCase):
         nesse teste o logo deve retorna no contexto do idioma Português.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
+            with self.client as c:
 
-            response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+                response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('data-lang="pt_BR"', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('data-lang="pt_BR"', response.data)
 
     def test_current_header_logo_when_set_en(self):
         """
@@ -88,15 +93,16 @@ class HeaderTestCase(BaseTestCase):
         nesse teste o logo deve retorna no contexto do idioma Inglês.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
-            response = c.get(url_for('main.set_locale', lang_code='en'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+            with self.client as c:
+                response = c.get(url_for('main.set_locale', lang_code='en'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('data-lang="en"', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('data-lang="en"', response.data)
 
     def test_current_header_logo_when_set_es(self):
         """
@@ -104,12 +110,13 @@ class HeaderTestCase(BaseTestCase):
         nesse teste o logo deve retorna no contexto do idioma Espanhol.
         """
 
-        with self.client as c:
+        with current_app.app_context():
             collection = utils.makeOneCollection()
-            response = c.get(url_for('main.set_locale', lang_code='es'),
-                             headers={'Referer': '/'},
-                             follow_redirects=True)
-            self.assertStatus(response, 200)
+            with self.client as c:
+                response = c.get(url_for('main.set_locale', lang_code='es'),
+                                 headers={'Referer': '/'},
+                                 follow_redirects=True)
+                self.assertStatus(response, 200)
 
-            self.assertTemplateUsed('collection/index.html')
-            self.assertIn('data-lang="es"', response.data)
+                self.assertTemplateUsed('collection/index.html')
+                self.assertIn('data-lang="es"', response.data)
