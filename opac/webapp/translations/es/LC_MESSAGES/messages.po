@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2016-10-03 14:35-0300\n"
-"PO-Revision-Date: 2016-10-27 15:28+0000\n"
+"PO-Revision-Date: 2016-10-28 11:41+0000\n"
 "Last-Translator: Juan Funez <juan.funez@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/scielo/opac/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -455,7 +455,7 @@ msgstr ""
 #: opac/webapp/admin/views.py:385
 #, python-format
 msgid "O idioma: %s, não consta no nosso cadastro de feeds."
-msgstr ""
+msgstr "El idioma: %s no es parte de nuestro registro de feeds."
 
 #: opac/webapp/admin/views.py:389
 #, python-format
@@ -796,7 +796,7 @@ msgstr ""
 
 #: opac/webapp/main/views.py:335 opac/webapp/main/views.py:350
 msgid "Requisição inválida. Deve ser por ajax"
-msgstr ""
+msgstr "Solicitud no válida. Debe ser por ajax"
 
 #: opac/webapp/main/views.py:365
 msgid "Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou \"publisher\"."
@@ -884,7 +884,7 @@ msgstr "Enviar"
 
 #: opac/webapp/templates/admin/auth/login.html:28
 msgid "Esqueci a senha?"
-msgstr "Olvidé mi contraseña"
+msgstr "Olvidé mi contraseña?"
 
 #: opac/webapp/templates/admin/auth/unconfirm_email.html:7
 msgid "Email não confirmado!"
@@ -979,11 +979,11 @@ msgstr "Descargar"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:104
 msgid "Visualizar no Readcube"
-msgstr ""
+msgstr "Visualizar en el Readcube"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:120
 msgid "Expandir/Reduzir texto"
-msgstr ""
+msgstr "Ampliar/Reducir texto"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:125
 msgid "Topo"
@@ -1104,12 +1104,12 @@ msgstr "descarga de la lista"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_grouper_table_container.html:15
 #: opac/webapp/templates/collection/list_journal.html:43
 msgid "Lista em arquivo para Excel"
-msgstr ""
+msgstr "Lista en archivo para Excel"
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_grouper_table_container.html:18
 #: opac/webapp/templates/collection/list_journal.html:46
 msgid "Lista em arquivo CSV"
-msgstr ""
+msgstr "Lista en archivo CSV"
 
 #: opac/webapp/templates/collection/list_journal.html:200
 msgid "grandes áreas"
@@ -1280,7 +1280,7 @@ msgstr "Buscar"
 
 #: opac/webapp/templates/collection/includes/nav.html:35
 msgid "Sobre:"
-msgstr ""
+msgstr "Acerca de:"
 
 #: opac/webapp/templates/collection/includes/nav.html:47
 msgid "SciELO.org - Rede SciELO"
@@ -1346,7 +1346,7 @@ msgstr ""
 
 #: opac/webapp/templates/errors/400.html:7
 msgid "Ação inválida"
-msgstr ""
+msgstr "Acción no válida"
 
 #: opac/webapp/templates/errors/403.html:7
 msgid "Acesso não autorizado!"
@@ -1386,7 +1386,7 @@ msgstr ""
 
 #: opac/webapp/templates/includes/press_release.html:64
 msgid " Fechar "
-msgstr ""
+msgstr "Cerrar"
 
 #: opac/webapp/templates/issue/grid.html:30
 msgid "Todos os números"
@@ -1433,7 +1433,7 @@ msgstr "Sumario"
 #: opac/webapp/templates/issue/toc.html:74
 #: opac/webapp/templates/issue/toc.html:76
 msgid "Todas as seções"
-msgstr ""
+msgstr "Todas las secciones"
 
 #: opac/webapp/templates/issue/toc.html:135
 msgid "Texto"
@@ -1442,12 +1442,12 @@ msgstr "Texto"
 #: opac/webapp/templates/issue/includes/alternative_header.html:8
 #: opac/webapp/templates/journal/includes/alternative_header.html:8
 msgid "Ir para a homepage da coleção: "
-msgstr ""
+msgstr "Ir a la página de inicio de la colección:"
 
 #: opac/webapp/templates/issue/includes/alternative_header.html:16
 #: opac/webapp/templates/journal/includes/alternative_header.html:16
 msgid "logomarca da colleção:"
-msgstr ""
+msgstr "logotipo de la colección:"
 
 #: opac/webapp/templates/issue/includes/alternative_header.html:33
 #: opac/webapp/templates/journal/includes/alternative_header.html:33
@@ -1466,7 +1466,7 @@ msgstr "todos"
 
 #: opac/webapp/templates/journal/about.html:46
 msgid "Logo "
-msgstr ""
+msgstr "Logotipo"
 
 #: opac/webapp/templates/journal/about.html:47
 msgid "Clique para ver a logo deste periódico "
@@ -1495,7 +1495,7 @@ msgstr "Mediana h5"
 
 #: opac/webapp/templates/journal/detail.html:65
 msgid "Capa do número mais recente"
-msgstr ""
+msgstr "Tapa del número más reciente"
 
 #: opac/webapp/templates/journal/detail.html:68
 msgid "Número mais recente"
@@ -1511,11 +1511,11 @@ msgstr "Ir a la página de inicio de la colección"
 
 #: opac/webapp/templates/journal/includes/header.html:34
 msgid "Publicação de: "
-msgstr ""
+msgstr "Publicado por:"
 
 #: opac/webapp/templates/journal/includes/header.html:45
 msgid "versão impressa ISSN"
-msgstr ""
+msgstr "versión impresa ISSN"
 
 #: opac/webapp/templates/journal/includes/header.html:49
 msgid "versão on-line ISSN"
