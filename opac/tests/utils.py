@@ -19,11 +19,18 @@ def makeOneCollection(attrib=None):
     acronym = attrib.get('acronym', config_acronym)
 
     resource = makeOneResource({'type': 'img'})
+    metrics = {
+            'total_journal': attrib.get('total_journal', 0),
+            'total_issue': attrib.get('total_issue', 0),
+            'total_article': attrib.get('total_article', 0),
+            'total_citation': attrib.get('total_citation', 0)
+        }
 
     collection = {
         '_id': default_id,
         'name': name,
         'acronym': acronym,
+        'metrics': metrics,
         'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
         'header_logo_resource': attrib.get('header_logo_resource', resource)

@@ -21,11 +21,13 @@ class MainTestCase(BaseTestCase):
         Teste da página inicial, deve retorna utf-8 como conjunto de caracter e
         o template ``collection/index.html``.
         """
-        with self.client as c:
-            response = c.get(url_for('main.index'))
-            self.assertStatus(response, 200)
-            self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+        with current_app.app_context():
+            utils.makeOneCollection()
+            with self.client as c:
+                response = c.get(url_for('main.index'))
+                self.assertStatus(response, 200)
+                self.assertEqual('text/html; charset=utf-8', response.content_type)
+                self.assert_template_used("collection/index.html")
 
     def test_g_object_has_collection_object(self):
         """

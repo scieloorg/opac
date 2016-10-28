@@ -12,32 +12,32 @@
           <div class="levelMenu">
             <div class="col-md-10 col-sm-10 numbers">
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.journals }}
+                {{ g.collection.metrics.total_journal }}
                 <span>{% trans %}períodicos{% endtrans %}</span>
               </div>
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.issues }}
+                {{ g.collection.metrics.total_issue }}
                 <span>{% trans %}números{% endtrans %}</span>
               </div>
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.articles }}
+                {{ g.collection.metrics.total_article }}
                 <span>{% trans %}artigos{% endtrans %}</span>
               </div>
               <div class="col-md-3 col-sm-3">
-                {{ analytics.metrics.references }}
+                {{ g.collection.metrics.total_citation }}
                 <span>{% trans %}citações{% endtrans %}</span>
               </div>
             </div>
             <div class="col-md-2 col-sm-2">
               <ul>
                 <li>
-                  <a href="{{ analytics.urls.downloads }}" target="_blank">{% trans %}Downloads{% endtrans %}</a>
+                  <a href="{{ urls.downloads }}" target="_blank">{% trans %}Downloads{% endtrans %}</a>
                 </li>
                 <li>
-                  <a href="{{ analytics.urls.references }}" target="_blank">{% trans %}Citações{% endtrans %}</a>
+                  <a href="{{ urls.references }}" target="_blank">{% trans %}Citações{% endtrans %}</a>
                 </li>
                 <li>
-                  <a href="{{ analytics.urls.other }}" target="_blank">{% trans %}Outros indicadores{% endtrans %}</a>
+                  <a href="{{ urls.other }}" target="_blank">{% trans %}Outros indicadores{% endtrans %}</a>
                 </li>
               </ul>
             </div>

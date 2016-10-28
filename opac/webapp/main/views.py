@@ -75,13 +75,25 @@ def index():
     language = session.get('lang', default_lang)
 
     news = controllers.get_latest_news_by_lang(language)
-    analytics = controllers.get_collection_analytics()
+
     tweets = controllers.get_collection_tweets()
     press_releases = controllers.get_press_releases({'language': language})
 
+    urls = {
+        'downloads': '{0}/w/accesses?collection={1}'.format(
+                                current_app.config['OPAC_METRICS_URL'],
+                                current_app.config['OPAC_COLLECTION']),
+        'references': '{0}/w/publication/size?collection={1}'.format(
+                                current_app.config['OPAC_METRICS_URL'],
+                                current_app.config['OPAC_COLLECTION']),
+        'other': '{0}/?collection={1}'.format(
+                                current_app.config['OPAC_METRICS_URL'],
+                                current_app.config['OPAC_COLLECTION'])
+    }
+
     context = {
         'news': news,
-        'analytics': analytics,
+        'urls': urls,
         'tweets': tweets,
         'press_releases': press_releases
     }
