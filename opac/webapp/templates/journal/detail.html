@@ -44,10 +44,10 @@
               <li><a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
               <li><a href="">Google Scholar</a>
                 <div>
-                  <small>{% trans %}Índice h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_index }}</strong>
+                  <small>{% trans %}Índice h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}</strong>
                 </div>
                 <div>
-                  <small>{% trans %}Mediana h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_median }}</strong>
+                  <small>{% trans %}Mediana h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}</strong>
                 </div>
               </li>
             </ul>

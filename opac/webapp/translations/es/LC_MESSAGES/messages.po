@@ -5,6 +5,7 @@
 # Translators:
 # ernesto spinak <spinaker@montevideo.com.uy>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016
+# jamil Atta <atta.jamil@gmail.com>, 2016
 # Juan Funez <juan.funez@gmail.com>, 2016
 # Thais Forster <verfor@gmail.com>, 2016
 msgid ""
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2016-10-03 14:35-0300\n"
-"PO-Revision-Date: 2016-10-28 11:41+0000\n"
-"Last-Translator: Juan Funez <juan.funez@gmail.com>\n"
+"PO-Revision-Date: 2016-10-31 12:39+0000\n"
+"Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/scielo/opac/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,44 +307,44 @@ msgstr "Árabe"
 
 #: opac/webapp/controllers.py:381
 msgid "Obrigatório um jid."
-msgstr ""
+msgstr "Obligatorio un jid."
 
 #: opac/webapp/controllers.py:397
 msgid "Obrigatório um acronym."
-msgstr ""
+msgstr "Obligatorio un acronimo."
 
 #: opac/webapp/controllers.py:412
 msgid "Obrigatório um url_seg."
-msgstr ""
+msgstr "Obligatorio un url_seg."
 
 #: opac/webapp/controllers.py:449 opac/webapp/controllers.py:591
 #: opac/webapp/controllers.py:708
 msgid "Obrigatório uma lista de ids."
-msgstr ""
+msgstr "Obligatorio un listado de ids."
 
 #: opac/webapp/controllers.py:553 opac/webapp/controllers.py:729
 msgid "Obrigatório um iid."
-msgstr ""
+msgstr "Obligatorio un iid."
 
 #: opac/webapp/controllers.py:610
 msgid "Obrigatório um jacron e issue_label."
-msgstr ""
+msgstr "Obligatorio un jacron e issue_label."
 
 #: opac/webapp/controllers.py:626
 msgid "Obrigatório um url_seg e url_seg_issue."
-msgstr ""
+msgstr "Obligatorio un url_seg y url_seg_issue."
 
 #: opac/webapp/controllers.py:642
 msgid "Obrigatório um aid."
-msgstr ""
+msgstr "Obligatorio un aid."
 
 #: opac/webapp/controllers.py:655
 msgid "Obrigatório um url_seg_article."
-msgstr ""
+msgstr "Obligatorio un url_seg_article."
 
 #: opac/webapp/controllers.py:671
 msgid "Obrigatório um iid and url_seg_article."
-msgstr ""
+msgstr "Obligatorio un iid and url_seg_article."
 
 #: opac/webapp/controllers.py:772
 msgid "Parâmetro email deve ser uma string"
@@ -450,7 +451,7 @@ msgstr "idioma"
 
 #: opac/webapp/admin/views.py:269
 msgid "Previsualização"
-msgstr ""
+msgstr "Previsualización"
 
 #: opac/webapp/admin/views.py:385
 #, python-format
@@ -719,12 +720,12 @@ msgstr "Ocurrió un error intentando publicar el/los fascículo(s)!! Error: %(ex
 
 #: opac/webapp/admin/views.py:626
 msgid "Fascículo(s) despublicado(s) com sucesso!!"
-msgstr "Fascículo(s) despublicado(s) com éxito!!"
+msgstr "Fascículo(s) despublicado(s) con éxito!!"
 
 #: opac/webapp/admin/views.py:629 opac/webapp/admin/views.py:699
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s"
-msgstr "Ocurrió un error intentando despublicar el/los fascículo(s)!! Error: %(ex)s"
+msgstr "Ha ocurrido un error intentando despublicar el/los fascículo(s)!! Error: %(ex)s"
 
 #: opac/webapp/admin/views.py:666
 msgid "Id Artigo"
@@ -987,7 +988,7 @@ msgstr "Ampliar/Reducir texto"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:125
 msgid "Topo"
-msgstr ""
+msgstr "Inicio"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:8
 #: opac/webapp/templates/journal/includes/levelMenu.html:7
@@ -1196,7 +1197,7 @@ msgstr "Sobre el"
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:19
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:62
 msgid "Todos os índices"
-msgstr ""
+msgstr "Todos los índices"
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:21
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:64
@@ -1230,7 +1231,7 @@ msgstr "Ingrese una o más palabras"
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:58
 msgid "Limpar expressão"
-msgstr ""
+msgstr "Borrar expresión"
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:87
 msgid "Sem resultados"
