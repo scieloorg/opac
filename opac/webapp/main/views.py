@@ -150,8 +150,6 @@ def collection_list_feed():
 
     feed = AtomFeed(title,
                     subtitle=subtitle,
-                    logo=utils.get_resources_url(g.collection.logo_resource,
-                                                 'img', language),
                     feed_url=request.url, url=request.url_root)
 
     journals = controllers.get_journals_paginated(

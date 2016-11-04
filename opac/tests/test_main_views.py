@@ -668,14 +668,11 @@ class MainTestCase(BaseTestCase):
 
             collection = utils.makeOneCollection()
 
-            resource = utils.makeOneResource()
-
             journal = utils.makeOneJournal()
 
             issue = utils.makeOneIssue({'journal': journal})
 
             article = utils.makeOneArticle({'title': 'Article Y',
-                                            'htmls': [resource],
                                             'issue': issue,
                                             'journal': journal,
                                             'url_segment': '10-11'})
