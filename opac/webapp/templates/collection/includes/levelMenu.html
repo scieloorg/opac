@@ -7,8 +7,8 @@
       {% if page %}
 
         <ol class="breadcrumb">
-            <li><a href="{{ url_for('.index') }}">Home</a></li>
-            <li><a href="{{ url_for('.about_collection') }}">{% trans %} Sobre o SciELO {% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</a></li>
+            <li><a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a></li>
+            <li><a href="{{ url_for('.about_collection') }}">{% trans %}Sobre o SciELO{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</a></li>
             <li>{{ page }}</li>
         </ol>
 
@@ -21,9 +21,9 @@
         </ol>
 
         {% if pages %}
-          <h1 class="breadTitle"> {% trans %} Sobre o SciELO {% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</h1>
+          <h1 class="breadTitle"> {% trans %}Sobre o SciELO{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</h1>
         {% else %}
-          <h1 class="breadTitle"> {% trans %} Periódicos {% endtrans %}</h1>
+          <h1 class="breadTitle"> {% trans %}Periódicos{% endtrans %}</h1>
         {% endif %}
 
       {% endif %}

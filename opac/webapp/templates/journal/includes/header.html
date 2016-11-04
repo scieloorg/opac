@@ -1,4 +1,4 @@
-{% import 'macros/resources.html' as mresources %}
+{% import 'macros/images.html' as cimages %}
 
 <header>
   <div class="container">
@@ -7,13 +7,13 @@
         <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
         <h2>
           <a href="{{ url_for('.index') }}" title="{% trans %} Ir para a homepage da coleção {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-            <img src="{% if g.collection.header_logo_resource %}{{ g.collection.header_logo_resource or '#' }}{% endif %}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
+            <img src="{{ cimages.get_header_logo(g.collection, session.lang) }}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
           </a>
         </h2>
         <div class="mainMenu" id="mainMenu">
           <div class="row">
             <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-              <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" class="image" alt="logomarca da coleção {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
+              <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" class="image" alt="logomarca da coleção {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
             </div>
           </div>
           {% include "collection/includes/nav.html" %}

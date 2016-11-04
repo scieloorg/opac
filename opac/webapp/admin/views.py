@@ -28,7 +28,7 @@ from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer, import_feed
-from opac_schema.v1.models import Sponsor, Resource, Journal, Issue, Article
+from opac_schema.v1.models import Sponsor, Journal, Issue, Article
 from webapp.admin.custom_widget import CKEditorField
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _(u'Tem certeza que quer publicar os itens selecionados?')
@@ -308,34 +308,6 @@ class OpacBaseAdminView(mongoengine.ModelView):
         return login.current_user.is_authenticated
 
 
-class ResourceAdminView(OpacBaseAdminView):
-    can_create = True
-    can_edit = True
-    can_delete = True
-
-    def _url_formatter(self, context, model, name):
-        return Markup("<a href='{url}' target='_blank'>Open</a>".format(
-            url=model.url))
-
-    column_formatters = {
-        'url': _url_formatter,
-    }
-
-    form_overrides = dict(
-        type=Select2Field,
-        language=Select2Field,
-    )
-    form_args = dict(
-        type=dict(choices=choices.RESOURCE_TYPE_CHOICES),
-        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
-    )
-
-    def on_model_change(self, form, model, is_created):
-        # é necessario definir um valor para o campo ``_id`` na criação.
-        if is_created:
-            model._id = str(uuid4().hex)
-
-
 class NewsAdminView(OpacBaseAdminView):
     can_create = False
     can_edit = True
@@ -364,7 +336,7 @@ class NewsAdminView(OpacBaseAdminView):
         language=Select2Field,
     )
     form_args = dict(
-        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+        language=dict(choices=choices.LANGUAGES_CHOICES),
     )
     column_exclude_list = (
         '_id', 'description',
@@ -445,32 +417,11 @@ class CollectionAdminView(OpacBaseAdminView):
     edit_modal = True
     form_excluded_columns = ('acronym', )
     column_exclude_list = [
-        'logo_resource', 'header_alter_logo_resource', 'header_logo_resource',
-        'footer_resource', '_id', 'about',
+        'home_logo_pt', 'home_logo_es', 'home_logo_en',
+        'header_logo_pt', 'header_logo_es', 'header_logo_en',
+        'menu_logo_pt', 'menu_logo_es', 'menu_logo_en',
+        'logo_footer', 'logo_drop_menu'
         ]
-
-    form_ajax_refs = {
-        'logo_resource': CustomQueryAjaxModelLoader(
-            name='logo_resource',
-            model=Resource,
-            fields=['url', 'type', 'language', 'description']
-        ),
-        'header_logo_resource': CustomQueryAjaxModelLoader(
-            name='header_logo_resource',
-            model=Resource,
-            fields=['url', 'type', 'language', 'description']
-        ),
-        'header_alter_logo_resource': CustomQueryAjaxModelLoader(
-            name='header_alter_logo_resource',
-            model=Resource,
-            fields=['url', 'type', 'language', 'description']
-        ),
-        'footer_resource': CustomQueryAjaxModelLoader(
-            name='footer_resource',
-            model=Resource,
-            fields=['url', 'type', 'language', 'description']
-        )
-    }
 
     inline_models = (InlineFormAdmin(Sponsor),)
 
@@ -737,7 +688,7 @@ class PagesAdminView(OpacBaseAdminView):
     )
 
     form_args = dict(
-        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+        language=dict(choices=choices.LANGUAGES_CHOICES),
         journal=dict(choices=[('', '------')] +
                      [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
     )
@@ -791,7 +742,7 @@ class PressReleaseAdminView(OpacBaseAdminView):
     }
 
     form_args = dict(
-        language=dict(choices=choices.RESOURCE_LANGUAGES_CHOICES),
+        language=dict(choices=choices.LANGUAGES_CHOICES),
     )
 
     def on_model_change(self, form, model, is_created):

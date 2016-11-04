@@ -1,4 +1,4 @@
-{% import 'macros/resources.html' as mresources %}
+{% import 'macros/images.html' as cimages %}
 
 <div class="alternativeHeader">
   <div class="container">
@@ -6,13 +6,13 @@
       <a href="#" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
       <h2>
         <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção: {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-          <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" class="image" data-lang="{{ session.lang }}">
+          <img src="{{ g.collection.logo_drop_menu }}" class="image" data-lang="{{ session.lang }}">
         </a>
       </h2>
       <div class="mainMenu" id="alternativeMainMenu">
         <div class="row">
           <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-              <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" class="image"
+              <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" class="image"
                    alt="{% trans %}logomarca da colleção:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
           </div>
         </div>
@@ -42,7 +42,7 @@
     <div class="col-md-4 col-md-5 menuItens">
       <ul>
         <li>
-          <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="Homepage do periódico">
+          <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
             <span class="glyphBtn home"></span>
           </a>
         </li>
@@ -92,11 +92,11 @@
         </li>
         <li>
           {% if journal.scielo_issn or journal.eletronic_issn or journal.print_issn %}
-            <a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="Métricas">
+            <a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
               <span class="glyphBtn metrics"></span>
             </a>
           {% else %}
-            <a target="_blank" href="//analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="Métricas">
+            <a target="_blank" href="//analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
               <span class="glyphBtn metrics"></span>
             </a>
           {% endif %}

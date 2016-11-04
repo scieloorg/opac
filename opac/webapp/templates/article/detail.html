@@ -1,5 +1,4 @@
 {% extends "article/base.html" %}
-{% import 'macros/articles.html' as marticles %}
 
 {% block main_content %}
 
@@ -7,10 +6,7 @@
       <div class="container">
           <div class="row">
               <div class="col-md-12 col-sm-12 articleBlock">
-                <!-- article -->
-                <iframe scrolling="no" width="100%" height="1000px" frameborder="0"
-                        src="{{ marticles.get_pdf_url_by_lang(article, article_lang|default(article.original_language)) }}"></iframe>
-                <!-- article -->
+
               </div>
           </div>
       </div>

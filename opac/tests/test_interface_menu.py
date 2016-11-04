@@ -386,18 +386,13 @@ class MenuTestCase(BaseTestCase):
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
-            resource = utils.makeOneResource()
-
             article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'htmls': [resource],
                                              'issue': issue,
                                              'elocation': 'e1234560'})
             article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'htmls': [resource],
                                              'issue': issue,
                                              'elocation': 'e1234561'})
             article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'htmls': [resource],
                                              'issue': issue,
                                              'elocation': 'e1234562'})
 
@@ -448,16 +443,11 @@ class MenuTestCase(BaseTestCase):
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
-            resource = utils.makeOneResource()
-
             article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'htmls': [resource],
                                             'elocation': 'e1234562'})
             article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'htmls': [resource],
                                              'elocation': 'e1234562'})
             article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'htmls': [resource],
                                              'elocation': 'e1234562'})
 
             response = self.client.get(url_for('main.article_detail',
@@ -498,20 +488,15 @@ class MenuTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             collection = utils.makeOneCollection()
 
-            resource = utils.makeOneResource()
-
             issue = utils.makeOneIssue({'journal': journal,
                                         'year': '2016', 'volume': '1',
                                         'number': '1', 'order': '1', })
 
             article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'htmls': [resource],
                                              'elocation': 'e1234562'})
             article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'htmls': [resource],
                                              'elocation': 'e1234562'})
             article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'htmls': [resource],
                                              'elocation': 'e1234562'})
 
             response = self.client.get(url_for('main.article_detail',

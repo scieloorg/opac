@@ -1,4 +1,4 @@
-{% import 'macros/resources.html' as mresources %}
+{% import 'macros/images.html' as cimages %}
 
 <header>
   <div class="container">
@@ -12,7 +12,7 @@
       <div class="col-md-6 col-sm-4 brandLogo">
         <h1>
           <a href="{{ url_for('.index') }}">
-            <img src="{{ mresources.get_resources_url(g.collection.logo_resource, 'img', session.lang) }}" class="image" data-lang="{{ session.lang }}">
+            <img src="{{ cimages.get_home_logo(g.collection, session.lang) }}" class="image" data-lang="{{ session.lang }}">
           </a>
         </h1>
       </div>

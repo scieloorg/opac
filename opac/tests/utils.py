@@ -18,7 +18,6 @@ def makeOneCollection(attrib=None):
     name = attrib.get('name', 'collection of %s' % config_acronym)
     acronym = attrib.get('acronym', config_acronym)
 
-    resource = makeOneResource({'type': 'img'})
     metrics = {
             'total_journal': attrib.get('total_journal', 0),
             'total_issue': attrib.get('total_issue', 0),
@@ -31,34 +30,12 @@ def makeOneCollection(attrib=None):
         'name': name,
         'acronym': acronym,
         'metrics': metrics,
-        'logo_resource': attrib.get('logo_resource', None),
         'sponsors': attrib.get('sponsors', None),
-        'header_logo_resource': attrib.get('header_logo_resource', resource)
     }
     for k, v in attrib.iteritems():
         if k not in collection.keys():
             collection[k] = v
     return models.Collection(**collection).save()
-
-
-def makeOneResource(attrib=None):
-    """
-    Retorna um objeto ``Resource`` com os atributos obrigatórios:
-    ``_id``, ``url``, ``type``.
-    Atualiza o objeto de retorno com os valores do param ``attrib``.
-    """
-    attrib = attrib or {}
-    default_id = attrib.get('_id', str(uuid4().hex))
-
-    resource = {
-            '_id': default_id,
-            'url': attrib.get('url', 'http://somedomain.com.br'),
-            'language': attrib.get('language', 'en'),
-            'type': attrib.get('type', 'html'),
-            'description': attrib.get('description', 'some description'),
-        }
-
-    return models.Resource(**resource).save()
 
 
 def makeOneSponsor(attrib=None):

@@ -1,5 +1,4 @@
 {% extends "issue/base.html" %}
-{% import 'macros/articles.html' as marticles %}
 
 {% block main_content %}
 
@@ -142,11 +141,12 @@
 
                               <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">{% trans %}Texto{% endtrans %}</a>
 
-                              {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %}
+                              {# Necessário depois de definido o novo modelo para o artigo ajustar esse link #}
+                              {# {% with pdf_url = marticles.get_pdf_url_by_lang(article, lang|default(article.original_language)) %} #}
                                 {% if pdf_url %}
                                   | <a href="{{ pdf_url }}" target="_blank">PDF</a>
                                 {% endif %}
-                              {% endwith %}
+                              {# {% endwith %} #}
 
                               {# | <a href="#">Press-release</a> #}
                             </li>

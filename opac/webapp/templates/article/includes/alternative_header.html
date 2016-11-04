@@ -1,4 +1,4 @@
-{% import 'macros/resources.html' as mresources %}
+{% import 'macros/images.html' as cimages %}
 
 <div class="alternativeHeader">
   <div class="container">
@@ -6,12 +6,12 @@
           <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
           <h2>
               <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-              <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
+              <img src="{{ g.collection.logo_drop_menu }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
           </h2>
           <div class="mainMenu" id="alternativeMainMenu">
               <div class="row">
                   <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-                      <img src="{{ mresources.get_resources_url(g.collection.header_alter_logo_resource, 'img', session.lang) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
+                      <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
                   </div>
               </div>
               <nav>
