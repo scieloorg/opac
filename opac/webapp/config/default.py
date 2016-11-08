@@ -238,7 +238,7 @@ DEBUG_TB_PANELS = [
     'flask_debugtoolbar.panels.route_list.RouteListDebugPanel',
     'flask_debugtoolbar.panels.profiler.ProfilerDebugPanel',
     # Mongo:
-    'flask_mongoengine.panels.MongoDebugPanel'
+    # 'flask_mongoengine.panels.MongoDebugPanel'
 ]
 
 

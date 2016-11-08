@@ -6,7 +6,7 @@
       <a href="#" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
       <h2>
         <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção: {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-          <img src="{{ g.collection.logo_drop_menu }}" class="image" data-lang="{{ session.lang }}">
+          <img src="{{ g.collection.logo_drop_menu|default("", true) }}" class="image" data-lang="{{ session.lang }}">
         </a>
       </h2>
       <div class="mainMenu" id="alternativeMainMenu">

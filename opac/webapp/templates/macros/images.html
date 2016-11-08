@@ -3,33 +3,33 @@
 #}
 {% macro get_home_logo(collection, lang) -%}
     {%- if lang == 'en' -%}
-        {{ collection.home_logo_en }}
+        {{ collection.home_logo_en|default("", true) }}
     {%- elif lang == 'es' -%}
-        {{ collection.home_logo_es }}
+        {{ collection.home_logo_es|default("", true) }}
     {%- elif lang == 'pt_BR' -%}
-        {{ collection.home_logo_pt }}
+        {{ collection.home_logo_pt|default("", true) }}
     {%- endif -%}
 {%- endmacro %}
 
 
 {% macro get_header_logo(collection, lang) -%}
     {%- if lang == 'en' -%}
-        {{ collection.header_logo_en }}
+        {{ collection.header_logo_en|default("", true) }}
     {%- elif lang == 'es' -%}
-        {{ collection.header_logo_es }}
+        {{ collection.header_logo_es|default("", true) }}
     {%- elif lang == 'pt_BR' -%}
-        {{ collection.header_logo_pt }}
+        {{ collection.header_logo_pt|default("", true) }}
     {%- endif -%}
 {%- endmacro %}
 
 
 {% macro get_menu_logo(collection, lang) -%}
     {%- if lang == 'en' -%}
-        {{ collection.menu_logo_en }}
+        {{ collection.menu_logo_en|default("", true) }}
     {%- elif lang == 'es' -%}
-        {{ collection.menu_logo_es }}
+        {{ collection.menu_logo_es|default("", true) }}
     {%- elif lang == 'pt_BR' -%}
-        {{ collection.menu_logo_pt }}
+        {{ collection.menu_logo_pt|default("", true) }}
     {%- endif -%}
 {%- endmacro %}
 
