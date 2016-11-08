@@ -48,7 +48,7 @@ def get_locale():
     if 'lang' not in session.keys():
         session['lang'] = lang_from_headers
 
-    if not lang_from_headers and 'lang' not in session.keys():
+    if not lang_from_headers and not session['lang']:
         # Caso não seja possível detectar o idioma e não tenhamos a chave lang
         # no seção, fixamos o idioma padrão.
         session['lang'] = current_app.config.get('BABEL_DEFAULT_LOCALE')
