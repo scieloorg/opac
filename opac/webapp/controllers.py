@@ -312,7 +312,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         order_by = 'title'
         worksheet_name = _(u'Lista Alfabética')
     elif list_type == 'areas':
-        CSV_HEADERS = ['areas', ] + common_headers
+        CSV_HEADERS = ['Areas', ] + common_headers
         order_by = 'study_areas'
         worksheet_name = _(u'Lista Temática')
     elif list_type == 'wos':
@@ -337,37 +337,37 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         csv_file.seek(0)
 
         return csv_file.getvalue()
+    else:
+        output = cStringIO.StringIO()
 
-    output = cStringIO.StringIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
-    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet(worksheet_name)
+        worksheet.set_column('A:A', 50)
+        worksheet.set_column('C:C', 13)
+        worksheet.set_column('D:D', 13)
 
-    worksheet = workbook.add_worksheet(worksheet_name)
-    worksheet.set_column('A:A', 50)
-    worksheet.set_column('C:C', 13)
-    worksheet.set_column('D:D', 13)
+        cell_head_format = workbook.add_format()
+        cell_head_format.set_bg_color('#CCCCCC')
+        cell_head_format.set_font_size(10)
+        cell_head_format.set_bold()
 
-    cell_head_format = workbook.add_format()
-    cell_head_format.set_bg_color('#CCCCCC')
-    cell_head_format.set_font_size(10)
-    cell_head_format.set_bold()
+        for i, head in enumerate(CSV_HEADERS):
+            worksheet.write(0, i, head, cell_head_format)
 
-    for i, head in enumerate(common_headers):
-        worksheet.write(0, i, head, cell_head_format)
+        cell_format = workbook.add_format()
+        cell_head_format.set_font_size(10)
 
-    cell_format = workbook.add_format()
-    cell_head_format.set_font_size(10)
+        for i, journal in enumerate(journals):
+            for j, data in enumerate(format_csv_row(list_type, journal)):
+                # Adiciona 1 ao índice para maner o cabeçalho.
+                worksheet.write(i+1, j, data, cell_format)
 
-    for i, journal in enumerate(journals):
-        for j, data in enumerate(format_csv_row(list_type, journal)):
-            # Adiciona 1 ao índice para maner o cabeçalho.
-            worksheet.write(i+1, j, data, cell_format)
+        workbook.close()
 
-    workbook.close()
+        output.seek(0)
 
-    output.seek(0)
-
-    return output.read()
+        return output.read()
 
 
 def get_journal_by_jid(jid, **kwargs):
