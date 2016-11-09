@@ -9,7 +9,8 @@
 
 import datetime
 import unicodecsv
-import cStringIO
+import cStringIO, mimetypes
+import xlsxwriter
 from collections import OrderedDict
 
 from slugify import slugify
@@ -23,6 +24,7 @@ from opac_schema.v1.models import(
     Pages,
     PressRelease)
 from flask import current_app, url_for
+from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
 from flask_oauthlib.client import OAuth
@@ -278,7 +280,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
     return {'meta': meta, 'objects': groups_dict}
 
 
-def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug'):
+def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug', extension='xls'):
 
     def format_csv_row(list_type, journal):
 
@@ -308,26 +310,64 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
     if list_type == 'alpha':
         CSV_HEADERS = common_headers
         order_by = 'title'
+        worksheet_name = _(u'Lista Alfabética')
     elif list_type == 'areas':
         CSV_HEADERS = ['areas', ] + common_headers
         order_by = 'study_areas'
+        worksheet_name = _(u'Lista Temática')
     elif list_type == 'wos':
         CSV_HEADERS = ['WoS', ] + common_headers
         order_by = 'index_at'
+        worksheet_name = _(u'Lista Web of Science')
     elif list_type == 'publisher':
         CSV_HEADERS = ['Publisher', ] + common_headers
         order_by = 'publisher_name'
-
-    csv_file = cStringIO.StringIO()
-    csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
-    csv_writer.writerow(CSV_HEADERS)
+        worksheet_name = _(u'Lista by Institution')
 
     journals = get_journals(title_query, is_public, order_by=order_by)
 
-    for journal in journals:
-        csv_writer.writerow(format_csv_row(list_type, journal))
-    csv_file.seek(0)
-    return csv_file.getvalue()
+    if extension == 'csv':
+
+        csv_file = cStringIO.StringIO()
+        csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
+        csv_writer.writerow(CSV_HEADERS)
+
+        for journal in journals:
+            csv_writer.writerow(format_csv_row(list_type, journal))
+        csv_file.seek(0)
+
+        return csv_file.getvalue()
+
+    output = cStringIO.StringIO()
+
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+
+    worksheet = workbook.add_worksheet(worksheet_name)
+    worksheet.set_column('A:A', 50)
+    worksheet.set_column('C:C', 13)
+    worksheet.set_column('D:D', 13)
+
+    cell_head_format = workbook.add_format()
+    cell_head_format.set_bg_color('#CCCCCC')
+    cell_head_format.set_font_size(10)
+    cell_head_format.set_bold()
+
+    for i, head in enumerate(common_headers):
+        worksheet.write(0, i, head, cell_head_format)
+
+    cell_format = workbook.add_format()
+    cell_head_format.set_font_size(10)
+
+    for i, journal in enumerate(journals):
+        for j, data in enumerate(format_csv_row(list_type, journal)):
+            # Adiciona 1 ao índice para maner o cabeçalho.
+            worksheet.write(i+1, j, data, cell_format)
+
+    workbook.close()
+
+    output.seek(0)
+
+    return output.read()
 
 
 def get_journal_by_jid(jid, **kwargs):
