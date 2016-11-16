@@ -475,7 +475,9 @@ def download_journal_list(list_type, extension):
         else:
             mimetype = 'text/csv'
         query = request.args.get('query', '', type=unicode)
-        data = controllers.get_journal_generator_for_csv(list_type=list_type, title_query=query)
+        data = controllers.get_journal_generator_for_csv(list_type=list_type,
+                                                         title_query=query,
+                                                         extension=extension.lower())
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         filename = 'journals_%s_%s.%s' % (list_type, timestamp, extension)
         response = Response(data, mimetype=mimetype)
