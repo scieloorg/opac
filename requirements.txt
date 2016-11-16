@@ -21,7 +21,7 @@ feedparser==5.2.1
 -e git+https://git@github.com/scieloorg/opac_schema@v2.21#egg=opac_schema
 Flask-HTMLmin==1.2
 python-slugify==1.2.1
-requests==2.11.1
+requests==2.12.1
 Flask-OAuthlib==0.9.3
 gunicorn==19.6.0
 xlsxwriter==0.9.3
