@@ -22,7 +22,7 @@ create_catalog:
 update_catalog:
 	pybabel update -i opac/webapp/translations/messages.pot -d opac/webapp/translations
 
-# compila as traduções dos .po em arquivos .mo prontos para serm utilizados.
+# compila as traduções dos .po em arquivos .mo prontos para serem utilizados.
 compile_messages:
 	pybabel compile -d opac/webapp/translations
 
