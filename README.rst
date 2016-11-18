@@ -51,3 +51,14 @@ Reportar problemas, ou solicitar mudanças
 
 Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalidade, pode `criar um ticket <https://github.com/scieloorg/opac/issues>`_ com seus pedidos.
 
+=========================================
+Equipe responsável por instalação, desenvolvimento e manutenção
+=========================================
+
+Jamil Atta Junior (Desenvolvimento) <jamil.atta@scielo.org> 
+
+Juan Funez (Desenvolvimento) <juan.funez@scielo.org>
+
+Rondineli Gama Saad (Infraestrutura) <rondineli.saad@gmail.com>
+
+
