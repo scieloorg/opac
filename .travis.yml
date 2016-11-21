@@ -13,7 +13,7 @@ before_install:
 script:
   - docker-compose -f docker-compose-build.yml build
   - docker-compose -f docker-compose-build.yml up -d
-  - docker exec opac_webapp_1 make test
+  - docker exec opac_opac_webapp_1 make test
   - docker run -it --net host --pid host --cap-add audit_control -v /var/lib:/var/lib -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label docker_bench_security docker/docker-bench-security
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
