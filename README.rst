@@ -59,6 +59,6 @@ Jamil Atta Junior (Desenvolvimento) <jamil.atta@scielo.org>
 
 Juan Funez (Desenvolvimento) <juan.funez@scielo.org>
 
-Rondineli Gama Saad (Infraestrutura) <rondineli.saad@gmail.com>
+Rondineli Gama Saad (Infraestrutura) <rondineli.saad@scielo.org>
 
 
