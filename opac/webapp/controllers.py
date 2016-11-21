@@ -246,7 +246,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
         - ``themes_count`` com a quantidade de chaves dentro do dict ``objects``
     - ``objects`` é um dicionario de periódicos agrupados pela área de conhecimento.
         - cada chave é definida pelos valores do campo indicado pelo param: ``grouper_field``
-        que podem ser dados pelos campos: ``study_areas``, ``index_at``, ou ``publisher_name``
+        que podem ser dados pelos campos: ``subject_categories``, ``study_areas``, ``index_at`` ou ``publisher_name``
         - para cada chave, se listam os periódicos nessa categoria, com a estrutura de dados
         retornada pela função: ``get_journal_json_data``
     """
