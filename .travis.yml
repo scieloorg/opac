@@ -4,6 +4,7 @@ services:
 - docker
 before_install:
 - pip install docker-compose
+- docker --version
 - docker login --username=$DOCKER_USER --password=$DOCKER_PASS
 script:
 - docker-compose -f docker-compose-build.yml build
