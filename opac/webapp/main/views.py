@@ -450,7 +450,7 @@ def journals_search_by_theme_ajax():
     filter = request.args.get('filter', 'areas', type=unicode)
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter)
+        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter)
     elif filter == 'wos':
         objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter)
     elif filter == 'publisher':
