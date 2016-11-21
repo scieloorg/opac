@@ -13,5 +13,7 @@ script:
   -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd
   -v /etc:/etc --label docker_bench_security docker/docker-bench-security
 after_success:
-- if [ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_EVENT_TYPE" == "push"]; then docker
-  build -t $TRAVIS_REPO_SLUG .; docker push $TRAVIS_REPO_SLUG; fi
+- if [ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_EVENT_TYPE" == "push"]; then
+  docker build -t $TRAVIS_REPO_SLUG .;
+  docker push $TRAVIS_REPO_SLUG;
+  fi
