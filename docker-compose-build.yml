@@ -11,7 +11,7 @@ services:
           - "27017:27017"
 
     opac_webapp:
-        build: scieloorg/opac
+        build: .
         user: nobody
         restart: always
         hostname: opac_webapp
