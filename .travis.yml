@@ -28,4 +28,3 @@ after_success:
   docker build -t $TRAVIS_REPO_SLUG .;
   docker push $TRAVIS_REPO_SLUG;
   fi
-
