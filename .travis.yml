@@ -24,8 +24,9 @@ script:
   -v /etc:/etc --label docker_bench_security docker/docker-bench-security
 
 after_success:
-- docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+- docker login -u="$DOCKER_USER" -p="$DOCKER_PASS
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
   docker build -t $TRAVIS_REPO_SLUG .;
   docker push $TRAVIS_REPO_SLUG;
   fi
+
