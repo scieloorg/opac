@@ -1,11 +1,19 @@
 sudo: required
+
 language: python
+
+env:
+  global:
+  - secure: NIIfhMqrwB9lHIuwOpF8mGw8JEB82Df1mo7ayf+ZzMQpHLcOPiHbjaNeYe2EY9nS2JpLiuXwwdHRkfX/arVWNR4pKzh3IomK84XzAhAtN2Sl5WrrSZFbqhPcEbit1t3K++O5iq7U0YEOVcfBPU6IGTQLc44q5Fl2X0W0dEN6vBc/JT4KblQQ7Ps436+ImBsLLs7WbSakSCYExXX7z8RdmdAvpn623SnCb5mqaVrGy2Jk4dRLtY0b1/2j/hmPYZCEduGGo9H9e//UUZOfiEk8v2qAjCDTD6XLL/eXtOtNOJ3ZHerOy3cXchgzeKDbPOyjM0Ai3GlSaFqlovzAKr3bQCDs/EhPoGg57U9GpiRvM9QjsNJCkCqx9U65an7/xI1vbmvP0f/MDgVZki32Dsveou5ZLmkmamgYaCsxeOSUAKG2BraSsgi9hBTIkK2rAswYee6l4z9cIoWnZY9XxCknGlZL1IHJM881NpW9fO7SeRk0jn0OZloLXUC79E/1XaZVGST6aGoEvUd6Lxaz0QObNfRcTD8wCl7XGd862JWe+SBsdX/QPC/x8d9yAuZ/OVnPer9fMKhqVEtm4zmYb9+jS9P6q9b/UdLqxywI1qtyssMdpz/IaSucNFg1+guOhd+iobQX5wVwf0TWMzv/dt/I0nATsG0Vu0U4KK2BtEM65Dg=
+  - secure: Qf1bQrOoEbpdw9V0U4rgzdZQKRw+D0Ogyz7vjbr9zPF5MG7dkM7l80QPUnz2k9UzMHVY0E1bqtxTNc5qy884vBBfxAeW/0ZaCxPbSUpCZbVB6h48B6XvXecsjl+J2tqRWnl7W6SJnBSG0PV2PZfdAqTUpxFq7NzBqme2A+6QHk58jrx5dV7uuKO7zco1gzV9fRUPyFRFm4ZixGOKIUw2UN5LtnZphg7nv27QRc5S//mGvz/xy5LuAEHkEW1WfyrQEZ9BoYKPZFdX2g7A2gGl6AqbD+GwQeMqD+C1hAIedNax4H93r8NzG86vw5NGUHhaJFo/yNouBFEBYipRV6/UBXlutxFnTOXscy+GrQkEdiqD9gqiVONzDkB+0ZnaQRF1Kvz67U3xMeqEpSYY4lX3bE1TSLG8JXClE+QMyZ4YTfUTyDCkTFiLkAmldh6huNiIVHWMzh6bhJ8cae4uDGBYO8Uvni4Zk7YMwqAzWxu9mfvDkEh8T5r4ur9fmaMkyCfFjZ44Kub2RVNcSBzK3CktoGOSvJsbvjcyZtKxdlVbYkcIgY44Uhb9K8bv5w3RambynJUKNxcBXILs3xSi8Tibqa/dO+tidmoxMgMWO7ehoB0g4g4bvYVc3AZVgYxBHPnP6JVr9EpSkQI4TGWVYb4js/2/ZVxQyAaz8dJPlpKA680=
+
 services:
 - docker
+
 before_install:
 - pip install docker-compose
 - docker --version
-- docker login --username=$DOCKER_USER --password=$DOCKER_PASS
+
 script:
 - docker-compose -f docker-compose-build.yml build
 - docker-compose -f docker-compose-build.yml up -d
@@ -13,8 +21,8 @@ script:
 - docker run -it --net host --pid host --cap-add audit_control -v /var/lib:/var/lib
   -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd
   -v /etc:/etc --label docker_bench_security docker/docker-bench-security
+
 after_success:
-- if [ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_EVENT_TYPE" == "push"]; then
-  docker build -t $TRAVIS_REPO_SLUG .;
-  docker push $TRAVIS_REPO_SLUG;
-  fi
+- docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push"]; then docker
+  build -t $TRAVIS_REPO_SLUG .; docker push $TRAVIS_REPO_SLUG; fi
