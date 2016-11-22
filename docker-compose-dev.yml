@@ -12,7 +12,7 @@ services:
         image: mongo:latest
         restart: always
         user: mongodb
-        hostname: opac_mongo
+        hostname: opac-mongo
         ports:
           - "27017:27017"
 
@@ -37,7 +37,7 @@ services:
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_MONGODB_NAME=opac
-            - OPAC_MONGODB_HOST=opac_mongo
+            - OPAC_MONGODB_HOST=opac-mongo
             - OPAC_DATABASE_DIR=/app/data
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
