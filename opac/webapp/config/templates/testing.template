@@ -21,6 +21,14 @@ import os
 
     Para saber mais sobre configuração, acesse a configuração base:
         /opac/app/config/default.py
+
+  - Banco Mongo:
+    - OPAC_MONGODB_NAME:    nome do banco (default: 'opac_test')
+    - OPAC_MONGODB_HOST:    host do banco (default: 'localhost')
+    - OPAC_MONGODB_PORT:    porta do banco (default: 27017)
+    - OPAC_MONGODB_USER:    [opcional] usuário para acessar o banco (default: None)
+    - OPAC_MONGODB_PASS:    [opcional] password para acessar o banco (default: None)
+
 """
 
 
@@ -80,11 +88,11 @@ SECRET_KEY = 'a-dummy-testing-secret'
 
 # Configurações do banco de dados Mongodb
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
-MONGODB_NAME = 'opac_test'
-MONGODB_HOST = 'localhost'
-MONGODB_PORT = 27017
-# MONGODB_USER = os.environ.get('OPAC_MONGODB_USER', None)
-# MONGODB_PASS = os.environ.get('OPAC_MONGODB_PASS', None)
+MONGODB_NAME = os.environ.get('OPAC_MONGODB_NAME', 'opac_test')
+MONGODB_HOST = os.environ.get('OPAC_MONGODB_HOST', 'localhost')
+MONGODB_PORT = os.environ.get('OPAC_MONGODB_PORT', 27017)
+MONGODB_USER = os.environ.get('OPAC_MONGODB_USER', None)
+MONGODB_PASS = os.environ.get('OPAC_MONGODB_PASS', None)
 
 MONGODB_SETTINGS = {
     'db': MONGODB_NAME,
