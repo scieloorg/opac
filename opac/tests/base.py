@@ -1,7 +1,7 @@
 # coding:utf-8
 import os
 import time
-import atexit
+# import atexit
 import shutil
 import tempfile
 import unittest
@@ -29,23 +29,25 @@ class MongoInstance(object):
     def get_instance(cls):
         if cls._instance is None:
             cls._instance = cls()
-            atexit.register(cls._instance.shutdown)
+            # atexit.register(cls._instance.shutdown)
         return cls._instance
 
     def __init__(self):
 
         self._tmpdir = tempfile.mkdtemp()
         self.mongo_settings = current_app.config['MONGODB_SETTINGS']
-        self._process = subprocess.Popen(['mongod', '--bind_ip', 'localhost',
-                                          '--port', str(self.mongo_settings['port']),
-                                          '--dbpath', self._tmpdir,
-                                          '--nojournal', '--nohttpinterface',
-                                          '--noauth', '--smallfiles',
-                                          '--syncdelay', '0',
-                                          '--maxConns', '10',
-                                          '--nssize', '1', ],
-                                         stdout=open(os.devnull, 'wb'),
-                                         stderr=subprocess.STDOUT)
+
+        # Comentado para que não tenha a necessidade de um mongodb local
+        # self._process = subprocess.Popen(['mongod', '--bind_ip', 'localhost',
+        #                                   '--port', str(self.mongo_settings['port']),
+        #                                   '--dbpath', self._tmpdir,
+        #                                   '--nojournal', '--nohttpinterface',
+        #                                   '--noauth', '--smallfiles',
+        #                                   '--syncdelay', '0',
+        #                                   '--maxConns', '10',
+        #                                   '--nssize', '1', ],
+        #                                  stdout=open(os.devnull, 'wb'),
+        #                                  stderr=subprocess.STDOUT)
 
         # XXX: wait for the instance to be ready
         #      Mongo is ready in a glance, we just wait to be able to open a
@@ -53,13 +55,14 @@ class MongoInstance(object):
         for i in range(3):
             time.sleep(0.1)
             try:
-                self._conn = pymongo.MongoClient('localhost', self.mongo_settings['port'])
+                self._conn = pymongo.MongoClient(self.mongo_settings['host'],
+                                                 self.mongo_settings['port'])
             except pymongo.errors.ConnectionFailure:
                 continue
             else:
                 break
         else:
-            self.shutdown()
+            # self.shutdown()
             assert False, 'Cannot connect to the mongodb test instance'
 
     @property
@@ -70,12 +73,12 @@ class MongoInstance(object):
     def db(self):
         return self._conn[self.mongo_settings['db']]
 
-    def shutdown(self):
-        if self._process:
-            self._process.terminate()
-            self._process.wait()
-            self._process = None
-            shutil.rmtree(self._tmpdir, ignore_errors=True)
+    # def shutdown(self):
+    #     if self._process:
+    #         self._process.terminate()
+    #         self._process.wait()
+    #         self._process = None
+    #         shutil.rmtree(self._tmpdir, ignore_errors=True)
 
 
 class BaseTestCase(TestCase):
