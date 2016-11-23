@@ -1,22 +1,26 @@
 sudo: required
+
 language: python
-env:
-  global:
-  - secure: tUnePGPYVgLhgLB0m7A3/VKsgf2gUdMk1UOkfUvZocVbh4ZZvprcA3jGVI98sVYKZouEWiUSDb1IIB4ipCAN2J1TWAAxvtWf32PI7C2K6eHOxk7+sp8TOMmxbVvZlrPf74RnNgfCytz5513TKoYFvPqfELIZTPMbwm8rxKROcoG6nWNKHqRnSMTtIkx/W9I3reQa0AveNBf6fbO3Q4ps6FqcfQZQ5O6Lh0I7FHOESGpLJ2xAS1GEGc19AhG2t37L2fBT2ENaP/76Jc6W46ObbgX6rrM3krg5pPSuFC8D9ACCcCpTgcGmyxNk/DCik+yn8TZ8FF8cyT+ZgI0n3s+My2Rbqb1HK1pilfDwRmTtQ+e0nxvePevizimvWZVdW96zAr91IzgfsFZ+Bo82ppbTDJXcOZUk2QLDwONeJcEMtJJVRABbYf3UvZ3HmkFJkJd2xw43oM8fKPLz9zWF2wB/TujxM6l5CNSRu0EqGTMj7hLwbWQFAlPix4EyUyNW27V4J3OndD2qivu2NiK9oOuJesCo8K1ltnV+UWK9dBaHBtHFQ8pun1VDdn3jI0iIgwejpTeKHkKastgOjIgeiV5Dv3CjA35uyUWpnj3KAXGCa0y76giLjU6SrJL671cNjrw8HcE/txn7Gk5akja9u/UCO+gIxg0rNbK9rZY4/kLqM+g=
-  - secure: QMmIBogww0lWPyzTqSwV8by/g+MEIRybmYJDj1j8At8+eZ11FVJ7sUeae+pbUtwB07yXrHY1zkf0i75K/iawIJOIemlquN4S5YzeCqVJxeHv1AJr/JT6ieqSdN5B38Oo7asAcz9BYA6jVRZ1QiMcE2MUuXveSQwAemq+mzHUPdXcVT0KC9gl037H/Kcb5Y99Xh0qLqOWbG+yfeA6VbVIMiy31MUolyiKstVRNy+ldb+V0Fn8MlvJr05rijMQzFlBBWCiCYCkGZdUXapDYQMFidB9aPvOJuYikPVN5rOVelvfhr0+ILT3UZkybjuwypq9a80+7WV35x6YH2dwledk6SLpOIqxNwzijE4Gx6ToJ6fvtgKX8xyJITRrxRXUhJ6i8ylPASkgxL9fMonAwsfhhXhVx6RNb4LGNhePvxZ5El2vfavFrIMi3np3inGoO7gFAw4Xh2u7Le+muZGUCJtzMo8V9oMYCk5MUcKky5MJU4z58bMZDIx6bq3bcqPq0GoJu3PIE/huj5gA/l41Th+FQ9X0z90MwcsSfMFCZjRTI8rVFHlnejm+YmUtU3q6Ghy6UG47myaHYDxK6qaJoNmQUZCqORlRtbqx2ovpOsi/Aj5Hlfey/0KN3bNgTokD4uG/S80lW/rK9CEsIePmWeBR6J4wxaEIQnuAh+HxgYVto10=
-  - secure: Sl56q6em5lG4Z52YzxjMZfyo4MyayX/01RpC9CusGzojfIvz9nKOkkWXJi7is6CRVldmaXkVN7OFJgmJstvzP4pEWQvaUf7oGZ4reF7yvLB3nQCCXJYaPdBSCxxAvHqOYrQ6taohYbortaCydfMYM7rkHA+WNA9IY5UBk23/qsBbjO4RV5ke2DeMAD+dPvIT+Utbv+/Q7/XclgsG92DnisyaZVAQ1S/aFT2UCeKyHTX3e8KFRNnIcpmUuPrHrqms5HWYsYxaO8/BWjsKTmhTqeH437bQ36aNt38F/1iZU48FB/vARFp/b0m/B3jalOr1jhFIkwSAG+vNr74SRaZV8npSJ+WIKoOV0KV7SvPZjlzhelKGNjRa8wBlPgr5FbYFAEMR70VYGMJjbEs7sV8pWd9zDn8M68pMi1tWSzRKahF7HoT8ZEoUq7NIdgmE+8ooI69jk3ur7NtuUKmY4vGMrzyG1aGZywcDXCH1LUsJOFmzVCc7gJ+5GFODZF0wxQrYAF9uQTLh9WGcKqQ93tA2ooArSOj6AVELGdMG58aCsBR0i1X4ngcOB/RSH5BAWq4Smml9JxBc9vQEpHVzuZSF05+pYBPXrHvrBX0s1dxBrwBLwuPy2bjvSXpqPQ0IQ2tB1y+ZX6iP2+iB+H541AS9d7nuYy/XRbtGHqBG6vNfWY8=
+
 services:
-  - docker
+- docker
+
 before_install:
-  - pip install docker-compose
-  - docker login --email=$DOCKER_EMAIL --username=$DOCKER_USER --password=$DOCKER_PASS
+- pip install docker-compose
+- docker --version
+
 script:
-  - docker-compose -f docker-compose-build.yml build
-  - docker-compose -f docker-compose-build.yml up -d
-  - docker exec opac_opac_webapp_1 make test
-  - docker run -it --net host --pid host --cap-add audit_control -v /var/lib:/var/lib -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label docker_bench_security docker/docker-bench-security
+- docker-compose -f docker-compose-build.yml build
+- docker-compose -f docker-compose-build.yml up -d
+- docker exec opac_opac_webapp_1 make test
+- docker run -it --net host --pid host --cap-add audit_control -v /var/lib:/var/lib
+  -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd
+  -v /etc:/etc --label docker_bench_security docker/docker-bench-security
+
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker build -t $TRAVIS_REPO_SLUG .;
-    docker push $TRAVIS_REPO_SLUG;
-    fi
+- docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
+- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
+  docker build -t $TRAVIS_REPO_SLUG .;
+  docker push $TRAVIS_REPO_SLUG;
+  fi
+
