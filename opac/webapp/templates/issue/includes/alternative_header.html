@@ -33,15 +33,7 @@
               {% trans %}Número atual{% endtrans %}:
             </li>
             <li>
-
-              {% if page=='toc' %}
-                <strong>{{ issue.legend }}</strong>
-              {% endif %}
-
-              {% if page=='grid' %}
-                <strong>{{ last_issue.legend }}</strong>
-              {% endif %}
-
+                <strong><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">{{ last_issue.legend }}</a></strong>
             </li>
           </ul>
         </li>
