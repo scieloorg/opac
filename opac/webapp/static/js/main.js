@@ -290,64 +290,72 @@ var Portal = {
 
 
 		},
-		Slider: function() {
-			var id = $(this).attr("id"),
-				el = $("#"+id),
-				container = el,
-				itens = $(".slide-item", container),
-				wrapper = $(".slide-wrapper", container),
-				prev = $(".slide-back", container),
-				next = $(".slide-next", container),
-				itemProps = {
-					w: itens.eq(0).outerWidth(),
-					h: itens.eq(0).outerHeight()
-				},
-				wrapperWidth = (itens.length*itemProps.w)+100,
-				containerWidth = $(".slide-container", container).outerWidth();
+        Slider: function() {
+            var id = $(this).attr("id"),
+                el = $("#"+id),
+                container = el,
+                itens = $(".slide-item", container),
+                wrapper = $(".slide-wrapper", container),
+                prev = $(".slide-back", container),
+                next = $(".slide-next", container),
+                itemProps = {
+                    w: itens.eq(0).outerWidth(),
+                    h: itens.eq(0).outerHeight()
+                },
+                wrapperWidth = (itens.length*itemProps.w)+100,
+                containerWidth = $(".slide-container", container).outerWidth();
 
-			wrapper.width(wrapperWidth);
-			$(".slide-container", container).height(itemProps.h);
+            wrapper.width(wrapperWidth);
+            $(".slide-container", container).height(itemProps.h);
 
-			prev.css("top",(itemProps.h/2)+"px");
-			next.css("top",(itemProps.h/2)+"px");
+            prev.css("top",(itemProps.h/2)+"px");
+            next.css("top",(itemProps.h/2)+"px");
 
-			prev.hide();
-			if(wrapper.width() <= container.width())
-				next.hide();
-			else
-				next.show();
+            prev.hide();
+            if(wrapper.width() <= container.width())
+                next.hide();
+            else
+                next.show();
 
-			prev.off().on("click",function(e) {
-				e.preventDefault();
-				var left = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
+            prev.off().on("click",function(e) {
+                e.preventDefault();
+                if(window.carrosselAnim == true) return false;
 
-				wrapper.animate({
-					left: "+="+itemProps.w
-				},300,function() {
-					var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-					if(nLeft == 0)
-						prev.hide();
-				});
-				next.show();
+                window.carrosselAnim = true;
+                var left = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
 
-			});
+                wrapper.stop(true,true).animate({
+                    left: "+="+itemProps.w
+                },300,function() {
+                    var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
+                    if(nLeft == 0)
+                        prev.hide();
+                    window.carrosselAnim = false;
+                });
+                next.show();
 
-			next.off().on("click",function(e) {
-				e.preventDefault();
-				var left = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
+            });
 
-				wrapper.animate({
-					left: "-="+itemProps.w
-				},300,function() {
-					var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-					if(nLeft <= -(wrapperWidth-containerWidth-100))
-						next.hide();
-				});
-				prev.show();
-			});
+            next.off().on("click",function(e) {
+                e.preventDefault();
+                if(window.carrosselAnim == true) return false;
 
-		}
-	},
+                window.carrosselAnim = true;
+                var left = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
+
+                wrapper.stop(true,true).animate({
+                    left: "-="+itemProps.w
+                },300,function() {
+                    var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
+                    if(nLeft <= -(wrapperWidth-containerWidth-100))
+                        next.hide();
+                    window.carrosselAnim = false;
+                });
+                prev.show();
+            });
+
+        }
+    },
 	searchFormBuilder = {
         SearchHistory: "",
         Init: function() {
