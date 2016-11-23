@@ -29,3 +29,6 @@ after_success:
   docker tag $TRAVIS_REPO_SLUG:$COMMIT $TRAVIS_REPO_SLUG:travis-$TRAVIS_BUILD_NUMBER;
   docker push $TRAVIS_REPO_SLUG;
   fi
+
+notifications:
+  slack: scielo:6YcYDMh1STDOQT8H7umVuD0R
