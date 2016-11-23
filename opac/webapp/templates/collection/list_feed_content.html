@@ -3,7 +3,7 @@
   <em>{% trans %}Volume{% endtrans %}</em> {{ last_issue.volume }}
   <em>{% trans %}Nº{% endtrans %} {{ last_issue.number }}</em> -
   {{ last_issue.year }}
-  {% if journal.current_status != 'current' %}{% trans %}(inativo){% endtrans %}{% endif %}
+  {% if journal.current_status != 'current' %}{% trans %}({% trans %}inativo{% endtrans %}){% endtrans %}{% endif %}
 </a><strong>{% trans %}de{% endtrans %} {{ journal.issue_count }} {% trans %}números{% endtrans %}</strong>.
 {%- for section, article_list in articles.iteritems() %}
     {%- if section %}

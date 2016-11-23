@@ -15,7 +15,7 @@
     <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} {{ journal.last_issue.number }}</em></span> -
     <span class="journalLastPubDate">{{ journal.last_issue.year }}</span>
     {% if journal.current_status != "current" %}
-      (inativo)
+      ({% trans %}inativo{% endtrans %})
     {% endif %}
     </a>
   </td>
