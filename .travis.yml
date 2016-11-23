@@ -2,6 +2,10 @@ sudo: required
 
 language: python
 
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
 services:
 - docker
 
@@ -19,7 +23,6 @@ script:
 
 after_success:
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
-  COMMIT=${TRAVIS_COMMIT::8}
   docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
   docker build -t $TRAVIS_REPO_SLUG .;
   docker push $TRAVIS_REPO_SLUG;
