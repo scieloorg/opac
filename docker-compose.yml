@@ -20,7 +20,7 @@ services:
         volumes:
             - ./data:/app/data
         links:
-            - opac_mongo:opac_mongo
+            - opac_mongo:opac-mongo
         ports:
             - "8000:8000"
         environment:
