@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-11-17 11:04-0200\n"
+"POT-Creation-Date: 2016-11-23 17:22-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: opac/webapp/admin/views.py:543 opac/webapp/admin/views.py:619
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:23
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:66
-#: opac/webapp/templates/issue/includes/alternative_header.html:118
+#: opac/webapp/templates/issue/includes/alternative_header.html:110
 #: opac/webapp/templates/journal/includes/alternative_header.html:110
 msgid "Periódico"
 msgstr ""
@@ -69,8 +69,8 @@ msgstr ""
 #: opac/tests/test_interface_menu.py:74
 #: opac/webapp/templates/collection/includes/nav.html:30
 #: opac/webapp/templates/collection/includes/nav.html:72
-#: opac/webapp/templates/issue/includes/alternative_header.html:103
-#: opac/webapp/templates/issue/includes/alternative_header.html:107
+#: opac/webapp/templates/issue/includes/alternative_header.html:95
+#: opac/webapp/templates/issue/includes/alternative_header.html:99
 #: opac/webapp/templates/journal/includes/alternative_header.html:95
 #: opac/webapp/templates/journal/includes/alternative_header.html:99
 msgid "Métricas"
@@ -974,7 +974,7 @@ msgid "Permissões"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/alternative_header.html:52
-#: opac/webapp/templates/issue/includes/alternative_header.html:53
+#: opac/webapp/templates/issue/includes/alternative_header.html:45
 #: opac/webapp/templates/journal/includes/alternative_header.html:45
 msgid "Homepage do periódico"
 msgstr ""
@@ -989,19 +989,19 @@ msgid "sumário"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/alternative_header.html:75
-#: opac/webapp/templates/issue/includes/alternative_header.html:77
+#: opac/webapp/templates/issue/includes/alternative_header.html:69
 #: opac/webapp/templates/journal/includes/alternative_header.html:69
 msgid "anterior"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/alternative_header.html:82
-#: opac/webapp/templates/issue/includes/alternative_header.html:84
+#: opac/webapp/templates/issue/includes/alternative_header.html:76
 #: opac/webapp/templates/journal/includes/alternative_header.html:76
 msgid "atual"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/alternative_header.html:89
-#: opac/webapp/templates/issue/includes/alternative_header.html:91
+#: opac/webapp/templates/issue/includes/alternative_header.html:83
 #: opac/webapp/templates/journal/includes/alternative_header.html:83
 msgid "próximo"
 msgstr ""
@@ -1260,7 +1260,7 @@ msgid "Títutlo"
 msgstr ""
 
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:33
-#: opac/webapp/templates/issue/includes/alternative_header.html:97
+#: opac/webapp/templates/issue/includes/alternative_header.html:89
 #: opac/webapp/templates/journal/includes/alternative_header.html:89
 msgid "Buscar"
 msgstr ""
@@ -1356,21 +1356,21 @@ msgid "Homepage"
 msgstr ""
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:6
-#: opac/webapp/templates/issue/includes/alternative_header.html:122
+#: opac/webapp/templates/issue/includes/alternative_header.html:114
 #: opac/webapp/templates/journal/includes/alternative_header.html:114
 #: opac/webapp/templates/journal/includes/header.html:60
 msgid "Submissão de manuscritos"
 msgstr ""
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:9
-#: opac/webapp/templates/issue/includes/alternative_header.html:127
+#: opac/webapp/templates/issue/includes/alternative_header.html:119
 #: opac/webapp/templates/journal/includes/alternative_header.html:119
 #: opac/webapp/templates/journal/includes/header.html:61
 msgid "Instruções aos autores"
 msgstr ""
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:12
-#: opac/webapp/templates/issue/includes/alternative_header.html:132
+#: opac/webapp/templates/issue/includes/alternative_header.html:124
 #: opac/webapp/templates/journal/about.html:33
 #: opac/webapp/templates/journal/includes/alternative_header.html:124
 #: opac/webapp/templates/journal/includes/header.html:62
@@ -1378,7 +1378,7 @@ msgid "Sobre o periódico"
 msgstr ""
 
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:15
-#: opac/webapp/templates/issue/includes/alternative_header.html:137
+#: opac/webapp/templates/issue/includes/alternative_header.html:129
 #: opac/webapp/templates/journal/includes/alternative_header.html:129
 #: opac/webapp/templates/journal/includes/header.html:63
 msgid "Contato"
@@ -1511,12 +1511,12 @@ msgstr ""
 msgid "Número atual"
 msgstr ""
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:64
+#: opac/webapp/templates/issue/includes/alternative_header.html:56
 #: opac/webapp/templates/journal/includes/alternative_header.html:56
 msgid "Números"
 msgstr ""
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:70
+#: opac/webapp/templates/issue/includes/alternative_header.html:62
 #: opac/webapp/templates/journal/includes/alternative_header.html:62
 msgid "todos"
 msgstr ""

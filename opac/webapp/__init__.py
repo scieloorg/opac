@@ -14,7 +14,6 @@ from flask_babelex import lazy_gettext
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.routing import BaseConverter
 
-import jinja_filters
 from opac_schema.v1.models import (
     Collection,
     Sponsor,
@@ -61,7 +60,6 @@ def create_app():
         HTMLMIN(app)
 
     # Registrando os filtros
-    app.jinja_env.filters['abbrmonth'] = jinja_filters.abbrmonth
     app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
 
     # Assets

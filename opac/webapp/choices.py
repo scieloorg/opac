@@ -1,6 +1,7 @@
 # coding: utf-8
 
 from flask_babelex import gettext as _
+from flask_babelex import lazy_gettext as __
 
 UNPUBLISH_REASONS = [
     _(u'Problema de Direito Autoral'),
@@ -9,9 +10,9 @@ UNPUBLISH_REASONS = [
 ]
 
 LANGUAGES_CHOICES = [
-    ('pt_BR', _(u'Português')),
-    ('en', _(u'Inglês')),
-    ('es', _(u'Espanhol')),
+    ('pt_BR', __(u'Português')),
+    ('en', __(u'Inglês')),
+    ('es', __(u'Espanhol')),
 ]
 
 INDEX_NAME = {
@@ -20,32 +21,16 @@ INDEX_NAME = {
     'A&HCI':  u'Arts & Humanities Citation',
 }
 
-MONTHS = {
-          1: _('jan'),
-          2: _('fev'),
-          3: _('mar'),
-          4: _('abr'),
-          5: _('mai'),
-          6: _('jun'),
-          7: _('jul'),
-          8: _('aug'),
-          9: _('set'),
-          10: _('out'),
-          11: _('nov'),
-          12: _('dez')
-}
-
-
 ISO3166_ALPHA2 = {
-    'pt': _(u'Português'),
-    'en': _(u'Inglês'),
-    'es': _(u'Espanhol'),
-    'al': _(u'Albanês'),
-    'cn': _(u'Chinês'),
-    'ro': _(u'Romeno'),
-    'fr': _(u'Francês'),
-    'it': _(u'Italiano'),
-    'ru': _(u'Russo'),
-    'ar': _(u'Árabe'),
-    'zh': _(u'Chinês'),
+    'pt': __(u'Português'),
+    'en': __(u'Inglês'),
+    'es': __(u'Espanhol'),
+    'al': __(u'Albanês'),
+    'cn': __(u'Chinês'),
+    'ro': __(u'Romeno'),
+    'fr': __(u'Francês'),
+    'it': __(u'Italiano'),
+    'ru': __(u'Russo'),
+    'ar': __(u'Árabe'),
+    'zh': __(u'Chinês'),
 }
