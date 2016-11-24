@@ -1,9 +1,9 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <span><b>{{ journal }}</b></span>
-      <strong>{% trans%}Ano {% endtrans %}:</strong><b>{{ journal.last_issue.year }}</b></br>
-      <strong>{% trans%}Volume {% endtrans %}:</strong><b>{{ journal.last_issue.volume }}</b></br>
-      <strong>{% trans%}Número {% endtrans %}:</strong><b>{{ journal.last_issue.number }}</b>
+      <strong>{% trans%}Ano{% endtrans %}: </strong><b>{{ journal.last_issue.year }}</b></br>
+      <strong>{% trans%}Volume{% endtrans %}: </strong><b>{{ journal.last_issue.volume }}</b></br>
+      <strong>{% trans%}Número{% endtrans %}: </strong><b>{{ journal.last_issue.number }}</b>
       <div class="pull-right">
         <a href="{{ journal.url_last_issue }}">
           <strong>{% trans%}Ver {% endtrans %}&raquo;</strong>
