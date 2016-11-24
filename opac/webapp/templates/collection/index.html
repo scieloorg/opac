@@ -74,6 +74,27 @@
         </div>
       </div>
       <div class="row">
+
+        {% if journals %}
+          <div class="block last_issues">
+            <div class="col-md-12">
+              <h2><strong>{% trans %}Fascículos <span>mais recentes</span>{% endtrans %}</strong></h2>
+              <div class="slider" id="last_issues">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for journal in journals %}
+                        {% include "news/includes/issue_last_row.html" %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        {% endif %}
+
         {% if press_releases %}
           <div class="block releases">
             <div class="col-md-12">

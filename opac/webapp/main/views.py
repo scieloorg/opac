@@ -95,7 +95,8 @@ def index():
         'news': news,
         'urls': urls,
         'tweets': tweets,
-        'press_releases': press_releases
+        'press_releases': press_releases,
+        'journals': controllers.get_journals()
     }
 
     return render_template("collection/index.html", **context)
