@@ -440,7 +440,7 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
 
-            self.assertIn(u'Nenhum fascículo encontrado para esse perióico',
+            self.assertIn(u'Nenhum fascículo encontrado para esse periódico',
                           response.data.decode('utf-8'))
 
     def test_issue_grid_with_unknow_journal_id(self):
