@@ -401,6 +401,7 @@ def get_journal_by_acron(acron, **kwargs):
 
     return Journal.objects(acronym=acron, **kwargs).first()
 
+
 def get_journal_by_url_seg(url_seg, **kwargs):
     """
     Retorna um periódico considerando os parâmetros ``url_seg`` e ``kwargs``
