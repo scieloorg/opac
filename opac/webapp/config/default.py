@@ -75,6 +75,9 @@ import os
       - Metrics:
         - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
 
+      - Zone:
+        - LOCAL_ZONE: Default 'America/Sao_Paulo'
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -178,6 +181,9 @@ LANGUAGES = {
 
 # linguagem padrão:
 BABEL_DEFAULT_LOCALE = 'pt_BR'
+
+# Horário local
+LOCAL_ZONE = os.environ.get('LOCAL_ZONE', 'America/Sao_Paulo')
 
 # Código Google Analytics:
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-

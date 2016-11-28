@@ -23,7 +23,7 @@ from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 from mongoengine.base.datastructures import BaseList
 
-from webapp import models, controllers, choices
+from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
@@ -327,9 +327,13 @@ class NewsAdminView(OpacBaseAdminView):
             return Markup("<img src='{url}'>".format(
                 url=model.image_url))
 
+    def _preview_date_format(self, context, model, name):
+        return custom_filters.datetimefilter(model.publication_date)
+
     column_formatters = {
         'url': _url_formatter,
         'image_url': _preview_formatter,
+        'publication_date': _preview_date_format,
     }
 
     form_overrides = dict(
