@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from webapp import choices
+from webapp.utils import utc_to_local
+from flask import current_app
 
 def trans_alpha2(value):
     """
@@ -11,3 +13,7 @@ def trans_alpha2(value):
        return choices.ISO3166_ALPHA2[value]
     else:
         return value
+
+
+def datetimefilter(value, format="%Y-%m-%d %H:%M:%S"):
+    return utc_to_local(value).strftime(format)

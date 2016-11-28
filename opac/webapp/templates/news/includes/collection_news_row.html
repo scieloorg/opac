@@ -1,7 +1,7 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <a href="{{ item.url }}" target="_blank">
-      <span>{{ item.publication_date }}</span>
+      <span>{{ item.publication_date|datetimefilter }}</span>
       <h3>{{ item.title }}</h3>
       <div class="info">
         {% autoescape false %}

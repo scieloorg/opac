@@ -61,6 +61,7 @@ def create_app():
 
     # Registrando os filtros
     app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
+    app.jinja_env.filters['datetimefilter'] = custom_filters.datetimefilter
 
     # Assets
     js = Bundle('js/vendor/jquery-1.11.0.min.js',

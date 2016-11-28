@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import os
+import pytz
 import shutil
 import feedparser
 import datetime
@@ -288,7 +289,7 @@ def import_feed(feed_url, language):
         if 'published_parsed' in item.keys():
             return datetime.datetime(*item.published_parsed[:7])
         else:
-            return datetime.datetime().now()
+            return datetime.datetime.now()
 
     feed = feedparser.parse(feed_url)
 
@@ -334,3 +335,12 @@ def do_request_json(url, params):
     if response.status_code == 200:
         return response.json()
     return {}
+
+
+def utc_to_local(utc_dt):
+
+    local_tz = pytz.timezone(current_app.config['LOCAL_ZONE'])
+
+    local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
+
+    return local_tz.normalize(local_dt)
