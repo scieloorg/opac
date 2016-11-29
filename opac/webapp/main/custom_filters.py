@@ -15,5 +15,5 @@ def trans_alpha2(value):
         return value
 
 
-def datetimefilter(value, format="%Y-%m-%d %H:%M:%S"):
+def datetimefilter(value, format="%Y-%m-%d %H:%M"):
     return utc_to_local(value).strftime(format)

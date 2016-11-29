@@ -30,9 +30,8 @@
             </div>
 
             <div class="col-md-12 content journalSecundary">
-                <h1>{% trans %}Sobre o periódico{% endtrans %}</h1>
                 <div class="row">
-                    <div class="col-md-8 col-sm-8">
+                    <div class="{% if journal.social_networks %}col-md-8 col-sm-8{% else %}col-md-12 col-sm-12{%endif%}">
                         {% if content %}
                           {{ content|safe }}
                         {% else %}
