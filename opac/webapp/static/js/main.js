@@ -189,7 +189,7 @@ var Portal = {
 
 			$(".collapse-title").on("click",function() {
 				var t = $(this),
-					ctt = t.next(".collapse-content");
+					ctt = t.parent().next(".collapse-content");
 
 				if(ctt.is(":visible")) {
 					ctt.slideUp("fast");

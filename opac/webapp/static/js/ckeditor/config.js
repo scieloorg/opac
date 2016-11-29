@@ -30,6 +30,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
 	config.removeButtons = '';
 
+	config.height = 500;
+
 	config.extraPlugins = 'justify,sourcedialog';
 
 	config.allowedContent = true;
