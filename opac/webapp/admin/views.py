@@ -52,6 +52,9 @@ class AdminIndexView(admin.AdminIndexView):
             'issues_public_count': controllers.count_elements_by_type_and_visibility('issue', public_only=True),
             'articles_total_count': controllers.count_elements_by_type_and_visibility('article', public_only=False),
             'articles_public_count': controllers.count_elements_by_type_and_visibility('article', public_only=True),
+            'news_total_count': controllers.count_elements_by_type_and_visibility('news'),
+            'sponsors_total_count': controllers.count_elements_by_type_and_visibility('sponsor'),
+            'pressrelease_total_count': controllers.count_elements_by_type_and_visibility('pressrelease'),
         }
         self._template_args['counts'] = counts
         return super(AdminIndexView, self).index()
@@ -410,6 +413,12 @@ class SponsorAdminView(OpacBaseAdminView):
     column_exclude_list = ('_id', )
     column_searchable_list = ('name',)
 
+    column_labels = dict(
+        name=__(u'Nome'),
+        url=__(u'URL'),
+        logo_url=__(u'URL da logomarca')
+    )
+
     def on_model_change(self, form, model, is_created):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
@@ -419,13 +428,33 @@ class SponsorAdminView(OpacBaseAdminView):
 class CollectionAdminView(OpacBaseAdminView):
     can_edit = True
     edit_modal = True
-    form_excluded_columns = ('acronym', )
+    form_excluded_columns = (
+        'acronym', 'metrics'
+    )
     column_exclude_list = [
-        'home_logo_pt', 'home_logo_es', 'home_logo_en',
+        '_id', 'about', 'home_logo_pt', 'home_logo_es', 'home_logo_en',
         'header_logo_pt', 'header_logo_es', 'header_logo_en',
         'menu_logo_pt', 'menu_logo_es', 'menu_logo_en',
         'logo_footer', 'logo_drop_menu'
-        ]
+    ]
+    column_labels = dict(
+        name=__(u'Nome'),
+        about=__(u'Acerca de'),
+        acronym=__(u'Acrônimo'),
+        address1=__(u'Endereço principal'),
+        address2=__(u'Endereço secundário'),
+        home_logo_pt=__(u'Logo da Home (PT)'),
+        home_logo_en=__(u'Logo da Home (EN)'),
+        home_logo_es=__(u'Logo da Home (ES)'),
+        header_logo_pt=__(u'Logo do cabeçalho (PT)'),
+        header_logo_en=__(u'Logo do cabeçalho (EN)'),
+        header_logo_es=__(u'Logo do cabeçalho (ES)'),
+        menu_logo_pt=__(u'Logo do menu (PT)'),
+        menu_logo_en=__(u'Logo do menu (ES)'),
+        menu_logo_es=__(u'Logo do menu (ES)'),
+        logo_drop_menu=__(u'Logo do menu (drop)'),
+        logo_footer=__(u'Logo do rodapé'),
+    )
 
     inline_models = (InlineFormAdmin(Sponsor),)
 
@@ -436,28 +465,32 @@ class JournalAdminView(OpacBaseAdminView):
         'current_status', 'index_at', 'is_public',
         'unpublish_reason'
     ]
+
     column_searchable_list = [
-        '_id', 'title', 'title_iso', 'short_title', 'print_issn',
-        'eletronic_issn', 'acronym',
+        '_id', 'title', 'title_iso', 'short_title',
+        'print_issn', 'eletronic_issn', 'acronym',
     ]
+
     column_exclude_list = [
-        '_id', 'timeline', 'subject_categories',
+        '_id', 'jid', 'title_slug', 'timeline', 'subject_categories',
         'study_areas', 'social_networks', 'title_iso', 'short_title',
         'subject_descriptors', 'copyrighter', 'online_submission_url',
-        'cover_url', 'logo_url', 'previous_journal_id',
+        'cover_url', 'logo_url', 'previous_journal_ref',
         'publisher_name', 'publisher_country', 'publisher_state',
         'publisher_city', 'publisher_address', 'publisher_telephone',
         'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles',
-        'print_issn', 'eletronic_issn', 'unpublish_reason',
+        'print_issn', 'eletronic_issn', 'unpublish_reason', 'url_segment',
     ]
+
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         scielo_issn=lambda v, c, m, p: '%s\n%s' % (m.print_issn or '', m.eletronic_issn or ''),
     )
+
     column_labels = dict(
         jid=__(u'Id Periódico'),
-        collections=__(u'Coleções'),
+        collection=__(u'Coleção'),
         timeline=__(u'Linha do tempo'),
         subject_categories=__(u'Categorias de assunto'),
         study_areas=__(u'Áreas de estudo'),
@@ -490,6 +523,7 @@ class JournalAdminView(OpacBaseAdminView):
         issue_count=__(u'Total de números'),
         is_public=__(u'Publicado?'),
         unpublish_reason=__(u'Motivo de despublicação'),
+        url_segment=__(u'Segmento de URL'),
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -534,9 +568,9 @@ class IssueAdminView(OpacBaseAdminView):
         'iid', 'journal', 'volume', 'number', 'label'
     ]
     column_exclude_list = [
-        '_id', 'sections', 'cover_url', 'suppl_text',
+        '_id', 'iid', 'sections', 'cover_url', 'suppl_text',
         'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
-        'unpublish_reason'
+        'unpublish_reason', 'url_segment'
     ]
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
@@ -546,7 +580,7 @@ class IssueAdminView(OpacBaseAdminView):
         iid=__(u'Id Número'),
         journal=__(u'Periódico'),
         sections=__(u'Seções'),
-        cover_url=__(u'Url do capa'),
+        cover_url=__(u'Url da capa'),
         volume=__(u'Volume'),
         number=__(u'Número'),
         created=__(u'Criado'),
@@ -561,6 +595,8 @@ class IssueAdminView(OpacBaseAdminView):
         order=__(u'Ordem'),
         is_public=__(u'Publicado?'),
         unpublish_reason=__(u'Motivo de despublicação'),
+        pid=__(u'PID'),
+        url_segment=__(u'Segmento de URL'),
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -602,21 +638,27 @@ class ArticleAdminView(OpacBaseAdminView):
     column_filters = [
         'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason'
     ]
+
     column_searchable_list = [
         'aid', 'issue', 'journal', 'title', 'domain_key'
     ]
+
     column_exclude_list = [
-        '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
+        '_id', 'aid', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
         'unpublish_reason', 'translated_titles', 'sections', 'pdfs', 'languages',
-        'original_language', 'created', 'abstract',
+        'original_language', 'created', 'abstract', 'authors', 'order',
+        'abstract_languages', 'elocation', 'fpage', 'lpage', 'url_segment'
     ]
+
     column_details_exclude_list = [
         'xml',
     ]
+
     column_formatters = dict(
         created=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
         updated=lambda v, c, m, p: m.created.strftime('%Y-%m-%d %H:%M:%S'),
     )
+
     column_labels = dict(
         aid=__(u'Id Artigo'),
         issue=__(u'Número'),
@@ -630,6 +672,17 @@ class ArticleAdminView(OpacBaseAdminView):
         domain_key=__(u'Chave de domínio'),
         is_public=__(u'Publicado?'),
         unpublish_reason=__(u'Motivo de despublicação'),
+        url_segment=__(u'Segmento de URL'),
+        pid=__(u'PID'),
+        original_language=__(u'Idioma original'),
+        translated_titles=__(u'Idiomas das traduções'),
+        sections=__(u'Seções'),
+        authors=__(u'Autores'),
+        abstract=__(u'Resumo'),
+        order=__(u'Ordem'),
+        doi=__(u'DOI'),
+        languages=__(u'Idiomas'),
+        abstract_languages=__(u'Idiomas dos resumos'),
     )
 
     @action('publish', _(u'Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
@@ -681,6 +734,14 @@ class PagesAdminView(OpacBaseAdminView):
     column_exclude_list = [
         '_id', 'content',
     ]
+
+    column_labels = dict(
+        name=__(u'Nome'),
+        language=__(u'Idioma'),
+        content=__(u'Conteúdo'),
+        journal=__(u'Periódico'),
+        description=__(u'Descrição'),
+    )
 
     create_template = 'admin/pages/edit.html'
     edit_template = 'admin/pages/edit.html'

@@ -1484,14 +1484,14 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         expected_column_exclude_list = [
-            '_id', 'timeline', 'subject_categories',
+            '_id', 'jid', 'title_slug', 'timeline', 'subject_categories',
             'study_areas', 'social_networks', 'title_iso', 'short_title',
             'subject_descriptors', 'copyrighter', 'online_submission_url',
-            'cover_url', 'logo_url', 'previous_journal_id',
+            'cover_url', 'logo_url', 'previous_journal_ref',
             'publisher_name', 'publisher_country', 'publisher_state',
             'publisher_city', 'publisher_address', 'publisher_telephone',
             'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles',
-            'print_issn', 'eletronic_issn', 'unpublish_reason',
+            'print_issn', 'eletronic_issn', 'unpublish_reason', 'url_segment',
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1578,7 +1578,7 @@ class JournalAdminViewTests(BaseTestCase):
         journal_index_url = url_for('journal.index_view')
         expected_column_labels = [
             'jid',
-            'collections',
+            'collection',
             'timeline',
             'subject_categories',
             'study_areas',
@@ -1611,7 +1611,9 @@ class JournalAdminViewTests(BaseTestCase):
             'issue_count',
             'is_public',
             'unpublish_reason',
+            'url_segment',
         ]
+
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -3547,9 +3549,10 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         expected_column_exclude_list = [
-            '_id', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
+            '_id', 'aid', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
             'unpublish_reason', 'translated_titles', 'sections', 'pdfs', 'languages',
-            'original_language', 'created', 'abstract',
+            'original_language', 'created', 'abstract', 'authors', 'order',
+            'abstract_languages', 'elocation', 'fpage', 'lpage', 'url_segment'
         ]
         # when
         with self.client as client:
@@ -3640,6 +3643,17 @@ class ArticleAdminViewTests(BaseTestCase):
             'domain_key',
             'is_public',
             'unpublish_reason',
+            'url_segment',
+            'pid',
+            'original_language',
+            'translated_titles',
+            'sections',
+            'authors',
+            'abstract',
+            'order',
+            'doi',
+            'languages',
+            'abstract_languages',
         ]
 
         # when
@@ -4402,11 +4416,11 @@ class CollectionAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         collection_index_url = url_for('collection.index_view')
         expected_column_exclude_list = [
-            'home_logo_pt', 'home_logo_es', 'home_logo_en',
+            '_id', 'about', 'home_logo_pt', 'home_logo_es', 'home_logo_en',
             'header_logo_pt', 'header_logo_es', 'header_logo_en',
             'menu_logo_pt', 'menu_logo_es', 'menu_logo_en',
             'logo_footer', 'logo_drop_menu'
-            ]
+        ]
 
         # when
         with self.client as client:
@@ -4444,7 +4458,7 @@ class CollectionAdminViewTests(BaseTestCase):
         create_user(admin_user['email'], admin_user['password'], True)
         login_url = url_for('admin.login_view')
         collection_index_url = url_for('collection.index_view')
-        expected_form_excluded_columns = ('acronym', )
+        expected_form_excluded_columns = ('acronym', 'metrics')
         # when
         with self.client as client:
             # login do usuario admin

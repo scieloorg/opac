@@ -66,5 +66,36 @@
           {% endif %}
       </div>
     </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{% trans %}News{% endtrans %}:</h3>
+        </div>
+        <div class="panel-body">
+          <h2>{{counts.news_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">{% trans %}Sponsors{% endtrans %}:</h3>
+        </div>
+        <div class="panel-body">
+          <h2>{{counts.sponsors_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3 class="panel-title">{% trans %}Press Releases{% endtrans %}:</h3>
+        </div>
+        <div class="panel-body">
+          <h2>{{counts.pressrelease_total_count}} <small>{% trans %}Total{% endtrans %}</small></h2>
+        </div>
+      </div>
+    </div>
+
   </div>
 {% endblock body %}

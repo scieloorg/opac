@@ -22,7 +22,8 @@ from opac_schema.v1.models import(
     Collection,
     News,
     Pages,
-    PressRelease)
+    PressRelease,
+    Sponsor)
 from flask import current_app, url_for
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
@@ -883,6 +884,12 @@ def count_elements_by_type_and_visibility(type, public_only=False):
             return Article.objects(is_public=True).count()
         else:
             return Article.objects.count()
+    elif type == 'news':
+        return News.objects.count()
+    elif type == 'sponsor':
+        return Sponsor.objects.count()
+    elif type == 'pressrelease':
+        return PressRelease.objects.count()
     else:
         raise ValueError(u"Parâmetro 'type' errado, tente: 'journal' ou 'issue' ou 'article'.")
 
