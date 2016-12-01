@@ -9,6 +9,8 @@ services:
         hostname: opac-mongo
         ports:
           - "27017:27017"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
 
     opac_webapp:
         build: .
@@ -18,6 +20,7 @@ services:
         depends_on:
             - opac_mongo
         volumes:
+            - /etc/localtime:/etc/localtime:ro
             - ./data:/app/data
         links:
             - opac_mongo:opac-mongo

@@ -7,6 +7,8 @@ services:
         hostname: mailhog
         ports:
             - "8025:8025"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
 
     opac_mongo:
         image: mongo:latest
@@ -14,7 +16,9 @@ services:
         user: mongodb
         hostname: opac-mongo
         ports:
-          - "27017:27017"
+            - "27017:27017"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
 
     opac_webapp:
         build:
@@ -28,9 +32,10 @@ services:
             - opac_mongo
             - mailhog
         volumes:
+            - /etc/localtime:/etc/localtime:ro
             - .:/app
         links:
-            - opac_mongo:opac_mongo
+            - opac_mongo:opac-mongo
             - mailhog:mailhog
         ports:
             - "8000:8000"
