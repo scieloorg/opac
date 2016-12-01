@@ -5,6 +5,14 @@ SciELO - On-line Public Access Catalog
 .. image:: https://travis-ci.org/scieloorg/opac.svg
     :target: https://travis-ci.org/scieloorg/opac
 
+.. image:: https://pyup.io/repos/github/scieloorg/opac/shield.svg
+     :target: https://pyup.io/repos/github/scieloorg/opac/
+     :alt: Updates
+
+.. image:: https://pyup.io/repos/github/scieloorg/opac/python-3-shield.svg
+     :target: https://pyup.io/repos/github/scieloorg/opac/
+     :alt: Python 3
+
 
 =========================
 Instalação e configuração
