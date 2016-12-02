@@ -24,4 +24,4 @@ python-slugify==1.2.1
 requests==2.12.3
 Flask-OAuthlib==0.9.3
 gunicorn==19.6.0
-xlsxwriter==0.9.3
+xlsxwriter==0.9.4
