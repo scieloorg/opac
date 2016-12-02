@@ -107,17 +107,17 @@ def create_app():
         template_mode='bootstrap3',
         base_template="admin/opac_base.html")
 
-    admin.add_view(views.CollectionAdminView(Collection, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Coleção')))
-    admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Periódico')))
-    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Fascículo')))
-    admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Artigo')))
-    admin.add_view(views.SponsorAdminView(Sponsor, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Financiador')))
-    admin.add_view(views.PressReleaseAdminView(PressRelease, category=lazy_gettext(u'Catálogo'), name=lazy_gettext(u'Press Release')))
-    admin.add_view(views.NewsAdminView(News, name=lazy_gettext(u'Notícias')))
-    admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext(u'Ativos')))
-    admin.add_view(views.ImageAdminView(Image, dbsql.session, category=lazy_gettext(u'Ativos')))
-    admin.add_view(views.PagesAdminView(Pages, name=lazy_gettext(u'Páginas')))
-    admin.add_view(views.UserAdminView(User, dbsql.session, category=lazy_gettext(u'Gestão'), name=lazy_gettext(u'Usuário')))
+    admin.add_view(views.CollectionAdminView(Collection, category=lazy_gettext('Catálogo'), name=lazy_gettext('Coleção')))
+    admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext('Catálogo'), name=lazy_gettext('Periódico')))
+    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext('Catálogo'), name=lazy_gettext('Fascículo')))
+    admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext('Catálogo'), name=lazy_gettext('Artigo')))
+    admin.add_view(views.SponsorAdminView(Sponsor, category=lazy_gettext('Catálogo'), name=lazy_gettext('Financiador')))
+    admin.add_view(views.PressReleaseAdminView(PressRelease, category=lazy_gettext('Catálogo'), name=lazy_gettext('Press Release')))
+    admin.add_view(views.NewsAdminView(News, name=lazy_gettext('Notícias')))
+    admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext('Ativos')))
+    admin.add_view(views.ImageAdminView(Image, dbsql.session, category=lazy_gettext('Ativos')))
+    admin.add_view(views.PagesAdminView(Pages, name=lazy_gettext('Páginas')))
+    admin.add_view(views.UserAdminView(User, dbsql.session, category=lazy_gettext('Gestão'), name=lazy_gettext('Usuário')))
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)

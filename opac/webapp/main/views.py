@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import unicode_literals
+
 
 import logging
 from datetime import datetime
@@ -7,7 +7,7 @@ from collections import OrderedDict
 from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response
 from werkzeug.contrib.atom import AtomFeed
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 from . import main
 from flask import current_app, send_from_directory, g
@@ -19,9 +19,9 @@ import webapp
 
 logger = logging.getLogger(__name__)
 
-JOURNAL_UNPUBLISH = _(u"O periódico está indisponível por motivo de: ")
-ISSUE_UNPUBLISH = _(u"O fascículo está indisponível por motivo de: ")
-ARTICLE_UNPUBLISH = _(u"O artigo está indisponível por motivo de: ")
+JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
+ISSUE_UNPUBLISH = _("O fascículo está indisponível por motivo de: ")
+ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 
 
 def url_external(endpoint, **kwargs):
@@ -35,7 +35,7 @@ def add_collection_to_g():
         try:
             collection = controllers.get_current_collection()
             setattr(g, 'collection', collection)
-        except Exception, e:
+        except Exception as e:
             # discutir o que fazer aqui
             setattr(g, 'collection', {})
 
@@ -43,9 +43,9 @@ def add_collection_to_g():
 @babel.localeselector
 def get_locale():
     langs = current_app.config.get('LANGUAGES')
-    lang_from_headers = request.accept_languages.best_match(langs.keys())
+    lang_from_headers = request.accept_languages.best_match(list(langs.keys()))
 
-    if 'lang' not in session.keys():
+    if 'lang' not in list(session.keys()):
         session['lang'] = lang_from_headers
 
     if not lang_from_headers and not session['lang']:
@@ -60,8 +60,8 @@ def get_locale():
 def set_locale(lang_code):
     langs = current_app.config.get('LANGUAGES')
 
-    if lang_code not in langs.keys():
-        abort(400, _(u'Código de idioma inválido'))
+    if lang_code not in list(langs.keys()):
+        abort(400, _('Código de idioma inválido'))
 
     # salvar o lang code na sessão
     session['lang'] = lang_code
@@ -116,15 +116,15 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
         article = None
 
     if not journal:
-        abort(404, _(u'Periódico não encontrado'))
+        abort(404, _('Periódico não encontrado'))
 
     if not issue:
-        abort(404, _(u'Fascículo não encontrado'))
+        abort(404, _('Fascículo não encontrado'))
 
     press_release = controllers.get_press_release(journal, issue, lang_code, article)
 
     if not press_release:
-        abort(404, _(u'Press Release não encontrado'))
+        abort(404, _('Press Release não encontrado'))
 
     context = {
         'press_release': press_release
@@ -146,8 +146,8 @@ def collection_list_feed():
     language = session.get('lang', default_lang) or default_lang
     collection = controllers.get_current_collection()
 
-    title = 'SciELO - %s - %s' % (collection.name, _(u'Últimos periódicos inseridos na coleção'))
-    subtitle = _(u'10 últimos periódicos inseridos na coleção %s' % collection.name)
+    title = 'SciELO - %s - %s' % (collection.name, _('Últimos periódicos inseridos na coleção'))
+    subtitle = _('10 últimos periódicos inseridos na coleção %s' % collection.name)
 
     feed = AtomFeed(title,
                     subtitle=subtitle,
@@ -157,7 +157,7 @@ def collection_list_feed():
         title_query='', page=1, order_by='-created', per_page=10)
 
     if not journals.items:
-        feed.add(u'Nenhum periódico encontrado',
+        feed.add('Nenhum periódico encontrado',
                  url=request.url,
                  updated=datetime.now())
 
@@ -224,7 +224,7 @@ def router_legacy():
     pid = request.args.get('pid')
 
     if not script_php or not pid:
-        abort(404, _(u'Página não encontrado'))
+        abort(404, _('Página não encontrado'))
 
     if script_php == 'sci_serial':
 
@@ -232,7 +232,7 @@ def router_legacy():
         journal = controllers.get_journal_by_issn(pid)
 
         if not journal:
-            abort(404, _(u'Periódico não encontrada'))
+            abort(404, _('Periódico não encontrada'))
 
         if not journal.is_public:
             abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -244,7 +244,7 @@ def router_legacy():
         issue = controllers.get_issue_by_pid(pid)
 
         if not issue:
-            abort(404, _(u'Fascículo não encontrado'))
+            abort(404, _('Fascículo não encontrado'))
 
         if not issue.is_public:
             abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
@@ -259,7 +259,7 @@ def router_legacy():
         article = controllers.get_article_by_pid(pid)
 
         if not article:
-            abort(404, _(u'Artigo não encontrado'))
+            abort(404, _('Artigo não encontrado'))
 
         if not article.is_public:
             abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -279,7 +279,7 @@ def router_legacy():
         journal = controllers.get_journal_by_issn(pid)
 
         if not journal:
-            abort(404, _(u'Periódico não encontrado'))
+            abort(404, _('Periódico não encontrado'))
 
         if not journal.is_public:
             abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -292,7 +292,7 @@ def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
-        abort(404, _(u'Periódico não encontrado'))
+        abort(404, _('Periódico não encontrado'))
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -343,7 +343,7 @@ def journal_feed(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
-        abort(404, _(u'Periódico não encontrado'))
+        abort(404, _('Periódico não encontrado'))
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -360,7 +360,7 @@ def journal_feed(url_seg):
     # ######### TODO: Revisar/Melhorar/Consertar #########
     try:
         feed_language = session['lang'][:2].lower()
-    except Exception, e:
+    except Exception as e:
         feed_language = 'pt'
 
     for article in articles:
@@ -393,7 +393,7 @@ def about_journal(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
-        abort(404, _(u'Periódico não encontrado'))
+        abort(404, _('Periódico não encontrado'))
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -429,10 +429,10 @@ def about_journal(url_seg):
 def journals_search_alpha_ajax():
 
     if not request.is_xhr:
-        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+        abort(400, _('Requisição inválida. Deve ser por ajax'))
 
-    query = request.args.get('query', '', type=unicode)
-    query_filter = request.args.get('query_filter', '', type=unicode)
+    query = request.args.get('query', '', type=str)
+    query_filter = request.args.get('query_filter', '', type=str)
     page = request.args.get('page', 1, type=int)
     response_data = controllers.get_alpha_list_from_paginated_journals(
         title_query=query, query_filter=query_filter, page=page)
@@ -444,11 +444,11 @@ def journals_search_alpha_ajax():
 def journals_search_by_theme_ajax():
 
     if not request.is_xhr:
-        abort(400, _(u'Requisição inválida. Deve ser por ajax'))
+        abort(400, _('Requisição inválida. Deve ser por ajax'))
 
-    query = request.args.get('query', '', type=unicode)
-    query_filter = request.args.get('query_filter', '', type=unicode)
-    filter = request.args.get('filter', 'areas', type=unicode)
+    query = request.args.get('query', '', type=str)
+    query_filter = request.args.get('query_filter', '', type=str)
+    filter = request.args.get('filter', 'areas', type=str)
 
     if filter == 'areas':
         objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter)
@@ -459,7 +459,7 @@ def journals_search_by_theme_ajax():
     else:
         return jsonify({
             'error': 401,
-            'message': _(u'Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".')
+            'message': _('Parámetro "filter" é inválido, deve ser "areas", "wos" ou "publisher".')
         })
     return jsonify(objects)
 
@@ -467,22 +467,22 @@ def journals_search_by_theme_ajax():
 @main.route("/journals/download/<string:list_type>/<string:extension>/", methods=['GET', ])
 def download_journal_list(list_type, extension):
     if extension.lower() not in ['csv', 'xls']:
-        abort(401, _(u'Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
+        abort(401, _('Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
     elif list_type.lower() not in ['alpha', 'areas', 'wos', 'publisher']:
-        abort(401, _(u'Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
+        abort(401, _('Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
     else:
         if extension.lower() == 'xls':
             mimetype = 'application/vnd.ms-excel'
         else:
             mimetype = 'text/csv'
-        query = request.args.get('query', '', type=unicode)
+        query = request.args.get('query', '', type=str)
         data = controllers.get_journal_generator_for_csv(list_type=list_type,
                                                          title_query=query,
                                                          extension=extension.lower())
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         filename = 'journals_%s_%s.%s' % (list_type, timestamp, extension)
         response = Response(data, mimetype=mimetype)
-        response.headers['Content-Disposition'] = u'attachment; filename=%s' % filename
+        response.headers['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
 ####################################Issue#######################################
@@ -492,7 +492,7 @@ def issue_grid(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
     if not journal:
-        abort(404, _(u'Periódico não encontrado'))
+        abort(404, _('Periódico não encontrado'))
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -509,13 +509,14 @@ def issue_grid(url_seg):
         'ahead': issues_data['ahead'],
         'result_dict': issues_data['ordered_for_grid'],
     }
+
     return render_template("issue/grid.html", **context)
 
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/')
 def issue_toc(url_seg, url_seg_issue):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    section_filter = request.args.get('section', '', type=unicode)
+    section_filter = request.args.get('section', '', type=str)
 
     if not session.get('lang'):
         lang = default_lang
@@ -525,7 +526,7 @@ def issue_toc(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
-        abort(404, _(u'Fascículo não encontrado'))
+        abort(404, _('Fascículo não encontrado'))
 
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
@@ -537,14 +538,14 @@ def issue_toc(url_seg, url_seg_issue):
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
     if articles:
-        sections = articles.item_frequencies('section').keys()
+        sections = list(articles.item_frequencies('section').keys())
         sections = sorted([k for k in sections if k is not None])
     else:
         sections = []
 
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
-    if section_filter != u'':
+    if section_filter != '':
         articles = articles.filter(section__iexact=section_filter)
 
     issue_list = [_issue for _issue in issues]
@@ -572,7 +573,7 @@ def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
-        abort(404, _(u'Fascículo não encontrado'))
+        abort(404, _('Fascículo não encontrado'))
 
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
@@ -591,7 +592,7 @@ def issue_feed(url_seg, url_seg_issue):
     # ######### TODO: Revisar/Melhorar/Consertar #########
     try:
         feed_language = session['lang'][:2].lower()
-    except Exception, e:
+    except Exception as e:
         feed_language = 'pt'
 
     for article in articles:
@@ -623,12 +624,12 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
-        abort(404, _(u'Issue não encontrado'))
+        abort(404, _('Issue não encontrado'))
 
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _(u'Artigo não encontrado'))
+        abort(404, _('Artigo não encontrado'))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.
@@ -669,9 +670,9 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 @main.route("/metasearch/", methods=['GET'])
 def metasearch():
-    url = request.args.get('url', current_app.config['URL_SEARCH'], type=unicode)
+    url = request.args.get('url', current_app.config['URL_SEARCH'], type=str)
     params = {}
-    for k, v in request.args.items():
+    for k, v in list(request.args.items()):
         if k != 'url':
             params[k] = v
     xml = utils.do_request(url, request.args)
@@ -681,12 +682,12 @@ def metasearch():
 
 @main.route("/email_share/", methods=['GET'])
 def email_share():
-    print vars(request)
-    from_email = request.args.get('yourEmail', type=unicode)
-    recipents = request.args.get('email', type=unicode)
-    share_url = request.args.get('share_url', type=unicode)
-    subject = request.args.get('subject', type=unicode)
-    comment = request.args.get('comment', type=unicode)
+    print(vars(request))
+    from_email = request.args.get('yourEmail', type=str)
+    recipents = request.args.get('email', type=str)
+    share_url = request.args.get('share_url', type=str)
+    subject = request.args.get('subject', type=str)
+    comment = request.args.get('comment', type=str)
 
     sent, message = controllers.send_email_share(
             from_email,

@@ -1,10 +1,10 @@
 # coding: utf-8
 
 from flask import url_for
-from base import BaseTestCase
+from .base import BaseTestCase
 from flask import current_app
 
-import utils
+from . import utils
 
 
 class HeaderTestCase(BaseTestCase):
@@ -25,9 +25,9 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('lang-en', response.data)
-                self.assertIn('lang-es', response.data)
-                self.assertNotIn('lang-pt', response.data)
+                self.assertIn(b'lang-en', response.data)
+                self.assertIn(b'lang-es', response.data)
+                self.assertNotIn(b'lang-pt', response.data)
 
     def test_current_language_when_set_en(self):
         """
@@ -45,9 +45,9 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('lang-pt', response.data)
-                self.assertIn('lang-es', response.data)
-                self.assertNotIn('lang-en', response.data)
+                self.assertIn(b'lang-pt', response.data)
+                self.assertIn(b'lang-es', response.data)
+                self.assertNotIn(b'lang-en', response.data)
 
     def test_current_language_when_set_es(self):
         """
@@ -65,9 +65,9 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('lang-pt', response.data)
-                self.assertIn('lang-en', response.data)
-                self.assertNotIn('lang-es', response.data)
+                self.assertIn(b'lang-pt', response.data)
+                self.assertIn(b'lang-en', response.data)
+                self.assertNotIn(b'lang-es', response.data)
 
     def test_current_header_logo_when_set_pt_BR(self):
         """
@@ -85,7 +85,7 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('data-lang="pt_BR"', response.data)
+                self.assertIn(b'data-lang="pt_BR"', response.data)
 
     def test_current_header_logo_when_set_en(self):
         """
@@ -102,7 +102,7 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('data-lang="en"', response.data)
+                self.assertIn(b'data-lang="en"', response.data)
 
     def test_current_header_logo_when_set_es(self):
         """
@@ -119,4 +119,4 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn('data-lang="es"', response.data)
+                self.assertIn(b'data-lang="es"', response.data)

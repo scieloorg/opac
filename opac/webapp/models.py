@@ -16,12 +16,12 @@ from flask import current_app
 from webapp.utils import thumbgen_filename
 from . import dbsql as db
 from . import login_manager
-import notifications
+from . import notifications
 
 LANGUAGES_CHOICES = [
-    (u'pt', u'Português'),
-    (u'en', u'English'),
-    (u'es', u'Español'),
+    ('pt', 'Português'),
+    ('en', 'English'),
+    ('es', 'Español'),
 ]
 
 
@@ -50,13 +50,13 @@ class User(UserMixin, db.Model):
 
     def send_confirmation_email(self):
         if not self._check_valid_email():
-            raise ValueError(u'Usuário deve ter email válido para realizar o envío')
+            raise ValueError('Usuário deve ter email válido para realizar o envío')
         else:
             return notifications.send_confirmation_email(self.email)
 
     def send_reset_password_email(self):
         if not self._check_valid_email():
-            raise ValueError(u'Usuário deve ter email válido para realizar o envío')
+            raise ValueError('Usuário deve ter email válido para realizar o envío')
         else:
             return notifications.send_reset_password_email(self.email)
 
@@ -66,7 +66,7 @@ class User(UserMixin, db.Model):
         retorna False em outro caso.
         """
         from webapp.admin.forms import EmailForm
-        if not self.email or self.email == '' or self.email == u'':
+        if not self.email or self.email == '' or self.email == '':
             return False
         else:
             form = EmailForm(data={'email': self.email})

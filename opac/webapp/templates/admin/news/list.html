@@ -10,7 +10,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                {% for feed_language, feed_data in config['RSS_NEWS_FEEDS'].iteritems() %}
+                {% for feed_language, feed_data in config['RSS_NEWS_FEEDS'].items() %}
                     <li>
                         <a class="trigger_import_feed"
                            href="{{ url_for('.feeds_import_from', feed_name=feed_data['display_name'], feed_lang=feed_language) }}"

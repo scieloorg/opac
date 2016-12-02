@@ -9,7 +9,7 @@
 
 import datetime
 import unicodecsv
-import cStringIO, mimetypes
+import io, mimetypes
 import xlsxwriter
 from collections import OrderedDict
 
@@ -30,9 +30,9 @@ from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
 from flask_oauthlib.client import OAuth
 from webapp import dbsql
-from models import User
-from choices import INDEX_NAME
-import utils
+from .models import User
+from .choices import INDEX_NAME
+from . import utils
 
 from mongoengine import Q
 
@@ -122,7 +122,7 @@ def get_journals(title_query='', is_public=True, query_filter="", order_by="titl
     filters = {}
 
     if query_filter not in ["", "current", "no-current"]:
-        raise ValueError(u"Parámetro: 'query_filter' é inválido!")
+        raise ValueError("Parámetro: 'query_filter' é inválido!")
     elif query_filter == "current":
         filters = {
             "current_status": "current",
@@ -182,7 +182,7 @@ def get_journal_json_data(journal):
             "instructions": "#",
             "submission": "#"
         },
-        "title": "Interface - Comunica\u00e7\u00e3o, Sa\u00fade, Educa\u00e7\u00e3o"
+        "title": "Interface - Comunica\\u00e7\\u00e3o, Sa\\u00fade, Educa\\u00e7\\u00e3o"
     },
     """
 
@@ -258,7 +258,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
     for journal in journals:
         grouper_field_iterable = getattr(journal, grouper_field, None)
         if grouper_field_iterable:
-            if isinstance(grouper_field_iterable, unicode):
+            if isinstance(grouper_field_iterable, str):
                 grouper_field_iterable = [grouper_field_iterable]
         else:
             continue
@@ -275,7 +275,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
 
     meta = {
         'total': journals.count(),
-        'themes_count': len(groups_dict.keys()),
+        'themes_count': len(list(groups_dict.keys())),
     }
 
     return {'meta': meta, 'objects': groups_dict}
@@ -290,12 +290,12 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         last_issue_year = journal.last_issue.year or ''
 
         common_fields = [
-            unicode(journal.title),
-            unicode(journal.issue_count),
-            unicode(last_issue_volume) or u'',
-            unicode(last_issue_number) or u'',
-            unicode(last_issue_year) or u'',
-            unicode(journal.current_status == 'current'),
+            str(journal.title),
+            str(journal.issue_count),
+            str(last_issue_volume) or '',
+            str(last_issue_number) or '',
+            str(last_issue_year) or '',
+            str(journal.current_status == 'current'),
         ]
 
         if list_type == 'alpha':
@@ -311,25 +311,25 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
     if list_type == 'alpha':
         CSV_HEADERS = common_headers
         order_by = 'title'
-        worksheet_name = _(u'Lista Alfabética')
+        worksheet_name = _('Lista Alfabética')
     elif list_type == 'areas':
         CSV_HEADERS = ['Areas', ] + common_headers
         order_by = 'study_areas'
-        worksheet_name = _(u'Lista Temática')
+        worksheet_name = _('Lista Temática')
     elif list_type == 'wos':
         CSV_HEADERS = ['WoS', ] + common_headers
         order_by = 'index_at'
-        worksheet_name = _(u'Lista Web of Science')
+        worksheet_name = _('Lista Web of Science')
     elif list_type == 'publisher':
         CSV_HEADERS = ['Publisher', ] + common_headers
         order_by = 'publisher_name'
-        worksheet_name = _(u'Lista by Institution')
+        worksheet_name = _('Lista by Institution')
 
     journals = get_journals(title_query, is_public, order_by=order_by)
 
     if extension == 'csv':
 
-        csv_file = cStringIO.StringIO()
+        csv_file = io.StringIO()
         csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
         csv_writer.writerow(CSV_HEADERS)
 
@@ -339,7 +339,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
 
         return csv_file.getvalue()
     else:
-        output = cStringIO.StringIO()
+        output = io.StringIO()
 
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
@@ -382,7 +382,7 @@ def get_journal_by_jid(jid, **kwargs):
     """
 
     if not jid:
-        raise ValueError(__(u'Obrigatório um jid.'))
+        raise ValueError(__('Obrigatório um jid.'))
 
     return Journal.objects(jid=jid, **kwargs).first()
 
@@ -398,7 +398,7 @@ def get_journal_by_acron(acron, **kwargs):
     """
 
     if not acron:
-        raise ValueError(__(u'Obrigatório um acronym.'))
+        raise ValueError(__('Obrigatório um acronym.'))
 
     return Journal.objects(acronym=acron, **kwargs).first()
 
@@ -414,7 +414,7 @@ def get_journal_by_url_seg(url_seg, **kwargs):
     """
 
     if not url_seg:
-        raise ValueError(__(u'Obrigatório um url_seg.'))
+        raise ValueError(__('Obrigatório um url_seg.'))
 
     return Journal.objects(url_segment=url_seg, **kwargs).first()
 
@@ -430,7 +430,7 @@ def get_journal_by_issn(issn, **kwargs):
     """
 
     if not issn:
-        raise ValueError(__(u'Obrigatório um issn.'))
+        raise ValueError(__('Obrigatório um issn.'))
 
     return Journal.objects(Q(print_issn=issn) | Q(eletronic_issn=issn), **kwargs).first()
 
@@ -468,9 +468,9 @@ def set_journal_is_public_bulk(jids, is_public=True, reason=''):
     """
 
     if not jids:
-        raise ValueError(__(u'Obrigatório uma lista de ids.'))
+        raise ValueError(__('Obrigatório uma lista de ids.'))
 
-    for journal in get_journals_by_jid(jids).values():
+    for journal in list(get_journals_by_jid(jids).values()):
         journal.is_public = is_public
         journal.unpublish_reason = reason
         journal.save()
@@ -574,7 +574,7 @@ def get_issue_by_iid(iid, **kwargs):
     """
 
     if not iid:
-        raise ValueError(__(u'Obrigatório um iid.'))
+        raise ValueError(__('Obrigatório um iid.'))
 
     return Issue.objects.filter(iid=iid, **kwargs).first()
 
@@ -612,9 +612,9 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
     """
 
     if not iids:
-        raise ValueError(__(u'Obrigatório uma lista de ids.'))
+        raise ValueError(__('Obrigatório uma lista de ids.'))
 
-    for issue in get_issues_by_iid(iids).values():
+    for issue in list(get_issues_by_iid(iids).values()):
         issue.is_public = is_public
         issue.unpublish_reason = reason
         issue.save()
@@ -631,7 +631,7 @@ def get_issue_by_acron_issue(jacron, year, issue_label):
     jiid = get_journal_by_acron(jacron)
 
     if not jacron and year and issue_label:
-        raise ValueError(__(u'Obrigatório um jacron e issue_label.'))
+        raise ValueError(__('Obrigatório um jacron e issue_label.'))
 
     return Issue.objects.filter(journal=jiid, year=int(year), label=issue_label).first()
 
@@ -644,7 +644,7 @@ def get_issue_by_pid(pid):
     """
 
     if not pid:
-        raise ValueError(__(u'Obrigatório um PID.'))
+        raise ValueError(__('Obrigatório um PID.'))
 
     return Issue.objects.filter(pid=pid).first()
 
@@ -660,7 +660,7 @@ def get_issue_by_url_seg(url_seg, url_seg_issue):
     jiid = get_journal_by_url_seg(url_seg)
 
     if not url_seg and url_seg_issue:
-        raise ValueError(__(u'Obrigatório um url_seg e url_seg_issue.'))
+        raise ValueError(__('Obrigatório um url_seg e url_seg_issue.'))
 
     return Issue.objects.filter(journal=jiid, url_segment=url_seg_issue).first()
 
@@ -676,7 +676,7 @@ def get_article_by_aid(aid, **kwargs):
     """
 
     if not aid:
-        raise ValueError(__(u'Obrigatório um aid.'))
+        raise ValueError(__('Obrigatório um aid.'))
 
     return Article.objects(aid=aid, **kwargs).first()
 
@@ -690,7 +690,7 @@ def get_article_by_url_seg(url_seg_article, **kwargs):
     """
 
     if not url_seg_article:
-        raise ValueError(__(u'Obrigatório um url_seg_article.'))
+        raise ValueError(__('Obrigatório um url_seg_article.'))
 
     return Article.objects(url_segment=url_seg_article, **kwargs).first()
 
@@ -706,7 +706,7 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     """
 
     if not iid and url_seg_article:
-        raise ValueError(__(u'Obrigatório um iid and url_seg_article.'))
+        raise ValueError(__('Obrigatório um iid and url_seg_article.'))
 
     return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
 
@@ -743,9 +743,9 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
     """
 
     if not aids:
-        raise ValueError(__(u'Obrigatório uma lista de ids.'))
+        raise ValueError(__('Obrigatório uma lista de ids.'))
 
-    for article in get_articles_by_aid(aids).values():
+    for article in list(get_articles_by_aid(aids).values()):
         article.is_public = is_public
         article.unpublish_reason = reason
         article.save()
@@ -764,7 +764,7 @@ def get_articles_by_iid(iid, **kwargs):
     """
 
     if not iid:
-        raise ValueError(__(u'Obrigatório um iid.'))
+        raise ValueError(__('Obrigatório um iid.'))
 
     return Article.objects(issue=iid, **kwargs).order_by('order')
 
@@ -777,7 +777,7 @@ def get_article_by_pid(pid, **kwargs):
     """
 
     if not pid:
-        raise ValueError(__(u'Obrigatório um pid.'))
+        raise ValueError(__('Obrigatório um pid.'))
 
     return Article.objects(pid=pid, **kwargs).first()
 
@@ -789,9 +789,9 @@ def create_news_record(news_model_data):
     try:
         from uuid import uuid4
         news = News(**news_model_data)
-        news._id = unicode(uuid4().hex)
+        news._id = str(uuid4().hex)
         news.save()
-    except Exception, e:
+    except Exception as e:
         raise e
 
 
@@ -811,8 +811,8 @@ def get_user_by_email(email):
     caso não seja uma ``string`` retorna um ValueError.
     """
 
-    if not isinstance(email, basestring):
-        raise ValueError(__(u'Parâmetro email deve ser uma string'))
+    if not isinstance(email, str):
+        raise ValueError(__('Parâmetro email deve ser uma string'))
 
     return dbsql.session.query(User).filter_by(email=email).first()
 
@@ -823,7 +823,7 @@ def get_user_by_id(id):
     """
 
     if not isinstance(id, int):
-        raise ValueError(__(u'Parâmetro email deve ser uma inteiro'))
+        raise ValueError(__('Parâmetro email deve ser uma inteiro'))
 
     return dbsql.session.query(User).get(id)
 
@@ -891,7 +891,7 @@ def count_elements_by_type_and_visibility(type, public_only=False):
     elif type == 'pressrelease':
         return PressRelease.objects.count()
     else:
-        raise ValueError(u"Parâmetro 'type' errado, tente: 'journal' ou 'issue' ou 'article'.")
+        raise ValueError("Parâmetro 'type' errado, tente: 'journal' ou 'issue' ou 'article'.")
 
 
 def send_email_share(from_email, recipents, share_url, subject, comment):
@@ -905,16 +905,16 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
     - ``subject``   : Assunto
     - ``comment``   : Comentário adicional
     """
-    subject = subject or __(u'Compartilhamento de link SciELO')
-    share = __(u'O usuário %s compartilha este link: %s, da SciELO' % (from_email, share_url))
-    comment = u'%s<br/><br/>%s' % (share, comment)
+    subject = subject or __('Compartilhamento de link SciELO')
+    share = __('O usuário %s compartilha este link: %s, da SciELO' % (from_email, share_url))
+    comment = '%s<br/><br/>%s' % (share, comment)
 
     sent, message = utils.send_email(recipents, subject, comment)
 
     if not sent:
         return (sent, message)
 
-    return (True, __(u'Mensagem enviada!'))
+    return (True, __('Mensagem enviada!'))
 
 
 # -------- PAGES --------

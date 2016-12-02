@@ -172,11 +172,11 @@ TOKEN_MAX_AGE = 86400
 
 # Linguagens suportados
 LANGUAGES = {
-    'pt_BR': u'Português',
-    'en': u'English',
-    'es': u'Español',
-    'es_ES': u'Español (España)',
-    'es_MX': u'Español (México)',
+    'pt_BR': 'Português',
+    'en': 'English',
+    'es': 'Español',
+    'es_ES': 'Español (España)',
+    'es_MX': 'Español (México)',
 }
 
 # linguagem padrão:
@@ -216,11 +216,11 @@ OPAC_METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.o
 NEWS_LIST_LIMIT = 10
 RSS_NEWS_FEEDS = {
   'pt_BR': {
-    'display_name': u'SciELO em Perspectiva',
+    'display_name': 'SciELO em Perspectiva',
     'url': 'http://blog.scielo.org/feed/'
   },
   'es': {
-    'display_name': u'SciELO en Perspectiva',
+    'display_name': 'SciELO en Perspectiva',
     'url': 'http://blog.scielo.org/es/feed/',
   },
   'en': {

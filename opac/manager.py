@@ -16,7 +16,7 @@ if FLASK_COVERAGE:
     try:
         import coverage
     except ImportError:
-        msg = u'A variável de ambiente %r esta indicando que você quer executar tests com coverage, porém não é possível importar o modulo coverage'
+        msg = 'A variável de ambiente %r esta indicando que você quer executar tests com coverage, porém não é possível importar o modulo coverage'
         raise RuntimeError(msg % variable_name)
     COV = None
     if FLASK_COVERAGE:
@@ -66,12 +66,12 @@ def reset_dbsql(force_delete=False):
     db_path = app.config['DATABASE_PATH']
     if not os.path.exists(db_path) or force_delete:
         reset_db()
-        print u'O banco esta limpo!'
-        print u'Para criar um novo usuário execute o comando: create_superuser'
-        print u'python manager.py create_superuser'
+        print('O banco esta limpo!')
+        print('Para criar um novo usuário execute o comando: create_superuser')
+        print('python manager.py create_superuser')
     else:
-        print u'O banco já existe (em %s).' % db_path
-        print u'remova este arquivo manualmente ou utilize --force.'
+        print('O banco já existe (em %s).' % db_path)
+        print('remova este arquivo manualmente ou utilize --force.')
 
 
 @manager.command
@@ -83,11 +83,11 @@ def create_tables_dbsql(force_delete=False):
     db_path = app.config['DATABASE_PATH']
     if not os.path.exists(db_path):
         create_db_tables()
-        print u'As tabelas foram criadas com sucesso!'
+        print('As tabelas foram criadas com sucesso!')
     else:
-        print u'O banco já existe (em %s).' % db_path
-        print u'Para remover e crias as tabelas use o camando:'
-        print u'python manager.py reset_dbsql --help'
+        print('O banco já existe (em %s).' % db_path)
+        print('Para remover e crias as tabelas use o camando:')
+        print('python manager.py reset_dbsql --help')
 
 
 @manager.command
@@ -103,37 +103,37 @@ def create_superuser():
     user_password = None
 
     while user_email is None:
-        user_email = raw_input(u'Email: ').strip()
+        user_email = input('Email: ').strip()
         if user_email == '':
             user_email = None
-            print u'Email não pode ser vazio'
+            print('Email não pode ser vazio')
         else:
             form = EmailForm(data={'email': user_email})
             if not form.validate():
                 user_email = None
-                print u'Deve inserir um email válido!'
+                print('Deve inserir um email válido!')
             elif controllers.get_user_by_email(user_email):
                 user_email = None
-                print u'Já existe outro usuário com esse email!'
+                print('Já existe outro usuário com esse email!')
 
     os.system("stty -echo")
     while user_password is None:
-        user_password = raw_input(u'Senha: ').strip()
+        user_password = input('Senha: ').strip()
         if user_password == '':
             user_password = None
-            print u'Senha não pode ser vazio'
+            print('Senha não pode ser vazio')
     os.system("stty echo")
 
-    email_confirmed = raw_input('\nEmail confirmado? [y/N]: ').strip()
+    email_confirmed = input('\nEmail confirmado? [y/N]: ').strip()
     if email_confirmed.upper() in ('Y', 'YES'):
         email_confirmed = True
     else:
         email_confirmed = False
-        print u'Deve enviar o email de confirmação pelo admin'
+        print('Deve enviar o email de confirmação pelo admin')
 
     # cria usuario
     create_user(user_email, user_password, email_confirmed)
-    print u'Novo usuário criado com sucesso!'
+    print('Novo usuário criado com sucesso!')
 
 
 @manager.command
@@ -182,7 +182,7 @@ def upload_images(directory='.'):
 
     extensions = app.config['IMAGES_ALLOWED_EXTENSIONS_RE']
 
-    print "Coletando todas a imagens da pasta: %s" % directory
+    print("Coletando todas a imagens da pasta: %s" % directory)
 
     for root, dirnames, filenames in os.walk(directory):
         for extension in extensions:

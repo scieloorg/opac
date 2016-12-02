@@ -3,9 +3,9 @@
 import flask
 from flask import url_for, current_app
 
-from base import BaseTestCase
+from .base import BaseTestCase
 
-import utils
+from . import utils
 
 
 class TOCTestCase(BaseTestCase):
@@ -44,7 +44,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'pt_BR')
 
-            self.assertIn(u"Artigo Com Título Em Português",
+            self.assertIn("Artigo Com Título Em Português",
                           response.data.decode('utf-8'))
 
     def ttest_the_title_of_the_article_list_when_language_ES(self):
@@ -80,7 +80,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'es')
 
-            self.assertIn(u"Título Del Artículo En Portugués",
+            self.assertIn("Título Del Artículo En Portugués",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_when_language_EN(self):
@@ -116,7 +116,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'en')
 
-            self.assertIn(u"Article Title In Portuguese",
+            self.assertIn("Article Title In Portuguese",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_without_translated(self):
@@ -150,7 +150,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'en')
 
-            self.assertIn(u"Article Y",
+            self.assertIn("Article Y",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_without_unknow_language_for_article(self):
@@ -184,7 +184,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'es_MX')
 
-            self.assertIn(u"Article Y",
+            self.assertIn("Article Y",
                           response.data.decode('utf-8'))
 
     def test_the_title_of_the_article_list_with_and_without_translated(self):
@@ -225,8 +225,8 @@ class TOCTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'es')
 
-            self.assertIn(u"Article Y",
+            self.assertIn("Article Y",
                           response.data.decode('utf-8'))
 
-            self.assertIn(u"Título Del Artículo En Portugués",
+            self.assertIn("Título Del Artículo En Portugués",
                           response.data.decode('utf-8'))

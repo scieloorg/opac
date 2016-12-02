@@ -9,8 +9,8 @@ from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app, url_for
-import controllers
-import models
+from . import controllers
+from . import models
 import webapp
 import re
 import requests
@@ -31,7 +31,7 @@ def namegen_filename(obj, file_data=None):
         utilizando o nome (campo "name" do modelo) e mantendo a extensão original
     """
 
-    if isinstance(obj, basestring):
+    if isinstance(obj, str):
         _, extension = os.path.splitext(obj)
         return secure_filename('%s%s' % (_, extension))
     else:
@@ -178,7 +178,7 @@ def send_email(recipient, subject, html):
                       html=html)
         webapp.mail.send(msg)
         return (True, '')
-    except Exception, e:
+    except Exception as e:
         return (False, e.message)
 
 
@@ -200,7 +200,7 @@ def create_db_tables():
     try:
         webapp.dbsql.create_all()
         webapp.dbsql.session.commit()
-    except Exception, e:
+    except Exception as e:
         # TODO: melhorar o informe do erro
         raise e
 
@@ -242,7 +242,7 @@ def generate_thumbnail(input_filename):
         img.thumbnail(size)
         img.save(image_path)
     except Exception as e:
-        print e
+        print(e)
     else:
         return image_path
 
@@ -286,7 +286,7 @@ def get_resources_url(resource_list, type, lang):
 def import_feed(feed_url, language):
 
     def get_item_date(item):
-        if 'published_parsed' in item.keys():
+        if 'published_parsed' in list(item.keys()):
             return datetime.datetime(*item.published_parsed[:7])
         else:
             return datetime.datetime.now()
@@ -294,7 +294,7 @@ def import_feed(feed_url, language):
     feed = feedparser.parse(feed_url)
 
     if feed.bozo == 1:
-        msg = u'Não é possível parsear o feed (%s), possívelmente esteja malformado.' % feed_url
+        msg = 'Não é possível parsear o feed (%s), possívelmente esteja malformado.' % feed_url
         return (False, msg)
     elif len(feed.entries) == 0:
         msg = 'No tem entries para importar.'

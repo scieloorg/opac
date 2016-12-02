@@ -5,7 +5,7 @@
   {{ last_issue.year }}
   {% if journal.current_status != 'current' %}({% trans %}inativo{% endtrans %}){% endif %}
 </a><strong>{% trans %}de{% endtrans %} {{ journal.issue_count }} {% trans %}números{% endtrans %}</strong>.
-{%- for section, article_list in articles.iteritems() %}
+{%- for section, article_list in articles.items() %}
     {%- if section %}
         <h1>{{ section }}</h1>
     {%- endif %}

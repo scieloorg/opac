@@ -37,7 +37,7 @@
         <hr>
         <p class="text-center text-capitalize">
           <small>
-            {% for k,v in config.LANGUAGES.iteritems() %}
+            {% for k,v in config.LANGUAGES.items() %}
               <a href="{{ url_for('main.set_locale', lang_code=k) }}">
                 {% if k == session['lang'] %}
                   <strong>{{ v }}</strong>

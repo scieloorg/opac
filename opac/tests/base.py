@@ -1,7 +1,6 @@
 # coding:utf-8
 import os
 import time
-# import atexit
 import shutil
 import tempfile
 import unittest
