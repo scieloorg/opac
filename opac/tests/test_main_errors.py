@@ -4,9 +4,9 @@ import traceback
 from flask_babelex import lazy_gettext as __
 from flask import current_app, abort
 from webapp import dbsql
-from base import BaseTestCase
+from .base import BaseTestCase
 
-ERROR_MSG = __(u'Mensagem de erro explicativo para o usuário')
+ERROR_MSG = __('Mensagem de erro explicativo para o usuário')
 
 
 class ErrorsTestCase(BaseTestCase):
@@ -60,7 +60,7 @@ class ErrorsTestCase(BaseTestCase):
         self.assertEqual('text/html; charset=utf-8', response.content_type)
         self.assert_template_used("errors/400.html")
         context_msg = self.get_context_variable('message')
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, context_msg)
 
     def test_bad_request_json(self):
@@ -68,9 +68,9 @@ class ErrorsTestCase(BaseTestCase):
         self.assert_400(response)
         self.assertEqual('application/json', response.content_type)
         self.assertIsNotNone(response.json)
-        self.assertIn('error', response.json.keys())
+        self.assertIn('error', list(response.json.keys()))
         json_msg = response.json['error']
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, json_msg)
 
     def test_forbidden(self):
@@ -79,7 +79,7 @@ class ErrorsTestCase(BaseTestCase):
         self.assertEqual('text/html; charset=utf-8', response.content_type)
         self.assert_template_used("errors/403.html")
         context_msg = self.get_context_variable('message')
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, context_msg)
 
     def test_forbidden_json(self):
@@ -88,9 +88,9 @@ class ErrorsTestCase(BaseTestCase):
         self.assert_403(response)
         self.assertEqual('application/json', response.content_type)
         self.assertIsNotNone(response.json)
-        self.assertIn('error', response.json.keys())
+        self.assertIn('error', list(response.json.keys()))
         json_msg = response.json['error']
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, json_msg)
 
     def test_page_not_found(self):
@@ -99,7 +99,7 @@ class ErrorsTestCase(BaseTestCase):
         self.assertEqual('text/html; charset=utf-8', response.content_type)
         self.assert_template_used("errors/404.html")
         context_msg = self.get_context_variable('message')
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, context_msg)
 
     def test_page_not_found_json(self):
@@ -108,9 +108,9 @@ class ErrorsTestCase(BaseTestCase):
         self.assert_404(response)
         self.assertEqual('application/json', response.content_type)
         self.assertIsNotNone(response.json)
-        self.assertIn('error', response.json.keys())
+        self.assertIn('error', list(response.json.keys()))
         json_msg = response.json['error']
-        expected_msg = u'<p>%s</p>' % ERROR_MSG
+        expected_msg = '<p>%s</p>' % ERROR_MSG
         self.assertEqual(expected_msg, json_msg)
 
     def test_internal_server_error(self):
@@ -134,4 +134,4 @@ class ErrorsTestCase(BaseTestCase):
         # reativamos a impressão de exceções no console
         self._restore_traceback_print_exception()
         self.assertEqual('application/json', response.content_type)
-        self.assertEquals(response.json, {'error': 'internal server error'})
+        self.assertEqual(response.json, {'error': 'internal server error'})

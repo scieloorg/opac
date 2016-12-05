@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from base import BaseTestCase
+from .base import BaseTestCase
 from flask_admin.contrib.mongoengine.tools import parse_like_term
 from flask_babelex import lazy_gettext as __
 from uuid import uuid4
@@ -35,7 +35,9 @@ class CustomFiltersTestCase(BaseTestCase):
             expected = Q(**{'journal__in': journals})
 
             self.assertIn('journal__in', result.query)
-            self.assertItemsEqual(expected.query['journal__in'], result.query['journal__in'])
+
+            self.assertListEqual([ _ for _ in expected.query['journal__in']],
+                                 [ _ for _ in result.query['journal__in']])
 
     def test_flt_search_reference_issue(self):
 
@@ -50,7 +52,8 @@ class CustomFiltersTestCase(BaseTestCase):
         expected = Q(**{'issue__in': issues})
 
         self.assertIn('issue__in', result.query)
-        self.assertItemsEqual(expected.query['issue__in'], result.query['issue__in'])
+        self.assertListEqual([ _ for _ in expected.query['issue__in']],
+                             [ _ for _ in result.query['issue__in']])
 
     def test_flt_list_field(self):
 
@@ -76,7 +79,7 @@ class CustomFiltersTestCase(BaseTestCase):
         result = filter_converter.convert('ReferenceField', Issue.journal, 'journal')
         expected = [f(Issue.journal, 'journal') for f in filtes_reference_field]
 
-        self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
+        self.assertListEqual([vars(i) for i in expected], [vars(i) for i in result])
 
     def test_filters_list_field(self):
 
@@ -86,28 +89,28 @@ class CustomFiltersTestCase(BaseTestCase):
         result = filter_converter.convert('ListField', Journal.index_at, 'index_at')
         expected = [f(Journal.index_at, 'index_at') for f in filtes_list_field]
 
-        self.assertItemsEqual([vars(i) for i in expected], [vars(i) for i in result])
+        self.assertListEqual([vars(i) for i in expected], [vars(i) for i in result])
 
     def test_custom_filter_not_equal(self):
 
         journal = makeOneJournal({'title': 'title-%s' % str(uuid4().hex)})
         makeOneIssue({'journal': journal})
         column = Issue.journal
-        custom_filter = CustomFilterNotEqual(column=column, name=__(u'Periódico'))
+        custom_filter = CustomFilterNotEqual(column=column, name=__('Periódico'))
 
         result = custom_filter.apply(Issue.objects, journal.title)
 
         journals = Journal.objects.filter(Q(**{'title__ne': journal.title}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertItemsEqual(expected, result)
+        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
 
     def test_custom_filter_like(self):
 
         journal = makeOneJournal({'title': 'title-%s' % str(uuid4().hex)})
         makeOneIssue({'journal': journal})
         column = Issue.journal
-        custom_filter = CustomFilterLike(column=column, name=__(u'Periódico'))
+        custom_filter = CustomFilterLike(column=column, name=__('Periódico'))
 
         result = custom_filter.apply(Issue.objects, journal.title)
 
@@ -115,14 +118,14 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__%s' % term: data}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertItemsEqual(expected, result)
+        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
 
     def test_custom_filter_not_like(self):
 
         journal = makeOneJournal({'title': 'title-%s' % str(uuid4().hex)})
         makeOneIssue({'journal': journal})
         column = Issue.journal
-        custom_filter = CustomFilterNotLike(column=column, name=__(u'Periódico'))
+        custom_filter = CustomFilterNotLike(column=column, name=__('Periódico'))
 
         result = custom_filter.apply(Issue.objects, journal.title)
 
@@ -130,32 +133,33 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__not__%s' % term: data}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertItemsEqual(expected, result)
+        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
 
     def test_custom_filter_in_list(self):
 
         journal = makeOneJournal({'title': 'title-%s' % str(uuid4().hex)})
         makeOneIssue({'journal': journal})
         column = Issue.journal
-        custom_filter = CustomFilterInList(column=column, name=__(u'Periódico'))
+        custom_filter = CustomFilterInList(column=column, name=__('Periódico'))
 
         result = custom_filter.apply(Issue.objects, [journal.title])
 
         journals = Journal.objects.filter(Q(**{'title__in': [journal.title]}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertItemsEqual(expected, result)
+        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
 
     def test_custom_filter_not_in_list(self):
 
         journal = makeOneJournal({'title': 'title-%s' % str(uuid4().hex)})
         makeOneIssue({'journal': journal})
         column = Issue.journal
-        custom_filter = CustomFilterNotInList(column=column, name=__(u'Periódico'))
+        custom_filter = CustomFilterNotInList(column=column, name=__('Periódico'))
 
         result = custom_filter.apply(Issue.objects, [journal.title])
 
         journals = Journal.objects.filter(Q(**{'title__nin': [journal.title]}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertItemsEqual(expected, result)
+        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+

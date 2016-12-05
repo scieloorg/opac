@@ -32,8 +32,8 @@ def makeOneCollection(attrib=None):
         'metrics': metrics,
         'sponsors': attrib.get('sponsors', None),
     }
-    for k, v in attrib.iteritems():
-        if k not in collection.keys():
+    for k, v in attrib.items():
+        if k not in list(collection.keys()):
             collection[k] = v
     return models.Collection(**collection).save()
 
@@ -68,7 +68,7 @@ def makeOneJournal(attrib=None):
     default_title = "journal-%s" % default_id
     default_title_iso = default_title[:6]
 
-    if 'social_networks' in attrib.keys():
+    if 'social_networks' in list(attrib.keys()):
         social_networks = []
         for sn in attrib['social_networks']:
             social_account = models.SocialNetwork(
@@ -89,13 +89,13 @@ def makeOneJournal(attrib=None):
         'acronym': attrib.get('acronym', "journal_acron"),
         'mission': attrib.get('mission',
                               [{'language': 'pt',
-                               'description': u'Esse periódico tem com objetivo xpto'
+                               'description': 'Esse periódico tem com objetivo xpto'
                                 },
                                {'language': 'es',
-                               'description': u'Esta revista tiene como objetivo xpto'
+                               'description': 'Esta revista tiene como objetivo xpto'
                                 },
                                {'language': 'en',
-                               'description': u'This journal is aiming xpto'
+                               'description': 'This journal is aiming xpto'
                                 }])
     }
     journal.update(attrib)
@@ -139,7 +139,7 @@ def makeOneIssue(attrib=None):
 
     if not journal:
         journal = makeOneJournal()
-    elif isinstance(journal, str) or isinstance(journal, unicode):
+    elif isinstance(journal, str) or isinstance(journal, str):
         # o valor de: journal é o Id do journal
         try:
             journal = models.Journal.objects.get(_id=journal)
@@ -166,8 +166,8 @@ def makeOneIssue(attrib=None):
         'journal': journal.id
     }
 
-    for k, v in attrib.iteritems():
-        if k not in issue.keys():
+    for k, v in attrib.items():
+        if k not in list(issue.keys()):
             issue[k] = v
 
     return models.Issue(**issue).save()
@@ -211,7 +211,7 @@ def makeOneArticle(attrib=None):
 
     if not journal:
         journal = makeOneJournal()
-    elif isinstance(journal, str) or isinstance(journal, unicode):
+    elif isinstance(journal, str) or isinstance(journal, str):
         # o valor de: journal é o Id do journal
         try:
             journal = models.Journal.objects.get(_id=journal)
@@ -224,7 +224,7 @@ def makeOneArticle(attrib=None):
 
     if not issue:
         issue = makeOneIssue({'journal': journal})
-    elif isinstance(issue, str) or isinstance(issue, unicode):
+    elif isinstance(issue, str) or isinstance(issue, str):
         # o valor de: issue é o Id do issue
         try:
             issue = models.Issue.objects.get(_id=issue, journal=journal.id)
@@ -255,8 +255,8 @@ def makeOneArticle(attrib=None):
         'languages': attrib.get('languages', ['pt', ]),
     }
 
-    for k, v in attrib.iteritems():
-        if k not in article.keys():
+    for k, v in attrib.items():
+        if k not in list(article.keys()):
             article[k] = v
 
     return models.Article(**article).save()

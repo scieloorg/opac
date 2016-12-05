@@ -6,12 +6,12 @@ from flask_testing import TestCase
 from flask import url_for, request, g, current_app
 from webapp import create_app, dbsql, dbmongo
 
-from base import MongoInstance, BaseTestCase
+from .base import MongoInstance, BaseTestCase
 
 from opac_schema.v1 import models
 
-import utils
-from base import BaseTestCase
+from . import utils
+from .base import BaseTestCase
 
 
 class MainTestCase(BaseTestCase):
@@ -84,12 +84,12 @@ class MainTestCase(BaseTestCase):
         '/set_locale/<string:lang_code>' deve retornar uma página com
         ``status_code``400 e manter o idioma padrão ``pt_BR``.
         """
-        expected_message = u'<p>Código de idioma inválido</p>'
+        expected_message = '<p>Código de idioma inválido</p>'
 
         with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='en_US'))
             self.assertEqual(400, response.status_code)
-            self.assertIn(u'Código de idioma inválido',
+            self.assertIn('Código de idioma inválido',
                           response.data.decode('utf-8'))
             self.assertTemplateUsed('errors/400.html')
 
@@ -132,7 +132,7 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
 
-        self.assertIn(u'Nenhum periódico encontrado',
+        self.assertIn('Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     @unittest.skip("Revisar/Refazer, agora a lista é carregada com ajax")
@@ -173,7 +173,7 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
 
-        self.assertIn(u'Nenhum periódico encontrado',
+        self.assertIn('Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     @unittest.skip("Revisar/Refazer, agora a lista é carregada com ajax")
@@ -205,7 +205,7 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
 
-        self.assertIn(u'Nenhum periódico encontrado',
+        self.assertIn('Nenhum periódico encontrado',
                       response.data.decode('utf-8'))
 
     def test_collection_list_feed(self):
@@ -255,7 +255,7 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.collection_list_feed'))
 
             self.assertStatus(response, 200)
-            self.assertIn(u'Nenhum periódico encontrado',
+            self.assertIn('Nenhum periódico encontrado',
                           response.data.decode('utf-8'))
 
     def test_collection_list_feed_without_issues(self):
@@ -299,7 +299,7 @@ class MainTestCase(BaseTestCase):
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('journal/detail.html')
-            self.assertIn(u'Revista X',
+            self.assertIn('Revista X',
                           response.data.decode('utf-8'))
             self.assertEqual(self.get_context_variable('journal').id, journal.id)
 
@@ -318,7 +318,7 @@ class MainTestCase(BaseTestCase):
                                    url_seg=unknow_url_seg))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Periódico não encontrado',
+        self.assertIn('Periódico não encontrado',
                       response.data.decode('utf-8'))
 
     def test_journal_detail_with_attrib_is_public_false(self):
@@ -336,7 +336,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'plágio', response.data.decode('utf-8'))
+        self.assertIn('plágio', response.data.decode('utf-8'))
 
     def test_journal_feed(self):
         """
@@ -375,7 +375,7 @@ class MainTestCase(BaseTestCase):
                                    url_seg=unknow_id))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Periódico não encontrado',
+        self.assertIn('Periódico não encontrado',
                       response.data.decode('utf-8'))
 
     def test_journal_feed_with_attrib_is_public_false(self):
@@ -393,7 +393,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'plágio', response.data.decode('utf-8'))
+        self.assertIn('plágio', response.data.decode('utf-8'))
 
     # ISSUE
 
@@ -440,7 +440,7 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
 
-            self.assertIn(u'Nenhum fascículo encontrado para esse periódico',
+            self.assertIn('Nenhum fascículo encontrado para esse periódico',
                           response.data.decode('utf-8'))
 
     def test_issue_grid_with_unknow_journal_id(self):
@@ -461,7 +461,7 @@ class MainTestCase(BaseTestCase):
 
         self.assertStatus(response, 404)
 
-        self.assertIn(u'Periódico não encontrado',
+        self.assertIn('Periódico não encontrado',
                       response.data.decode('utf-8'))
 
     def test_issue_grid_with_attrib_is_public_false(self):
@@ -478,7 +478,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Problema de Direito Autoral',
+        self.assertIn('Problema de Direito Autoral',
                       response.data.decode('utf-8'))
 
     def test_issue_toc(self):
@@ -523,7 +523,7 @@ class MainTestCase(BaseTestCase):
                                        url_seg_issue=unknow_url_seg))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
+        self.assertIn('Fascículo não encontrado', response.data.decode('utf-8'))
 
     def test_issue_toc_with_attrib_is_public_false(self):
         """
@@ -543,7 +543,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
+        self.assertIn('Fascículo incorreto', response.data.decode('utf-8'))
 
     def test_issue_toc_with_journal_attrib_is_public_false(self):
         """
@@ -565,7 +565,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
 
     def test_issue_feed(self):
         """
@@ -593,7 +593,7 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/feed_content.html')
-            self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
+            self.assertIn('Vol. 10 No. 31', response.data.decode('utf-8'))
 
     def test_issue_feed_unknow_issue_id(self):
         """
@@ -612,7 +612,7 @@ class MainTestCase(BaseTestCase):
                                    url_seg_issue=unknow_url_seg))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Fascículo não encontrado', response.data.decode('utf-8'))
+        self.assertIn('Fascículo não encontrado', response.data.decode('utf-8'))
 
     def test_issue_feed_with_attrib_is_public_false(self):
         """
@@ -633,7 +633,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Fascículo incorreto', response.data.decode('utf-8'))
+        self.assertIn('Fascículo incorreto', response.data.decode('utf-8'))
 
     def test_issue_feed_with_journal_attrib_is_public_false(self):
         """
@@ -655,7 +655,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
 
     # ARTICLE
 
@@ -707,7 +707,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Artigo não encontrado', response.data.decode('utf-8'))
+        self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
 
     def test_article_detail_with_journal_attrib_is_public_false(self):
         """
@@ -736,7 +736,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
 
     def test_article_detail_with_issue_attrib_is_public_false(self):
         """
@@ -764,7 +764,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Facículo rejeitado', response.data.decode('utf-8'))
+        self.assertIn('Facículo rejeitado', response.data.decode('utf-8'))
 
     def test_article_detail_with_article_attrib_is_public_false(self):
         """
@@ -790,7 +790,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn(u'Artigo com problemas de licença', response.data.decode('utf-8'))
+        self.assertIn('Artigo com problemas de licença', response.data.decode('utf-8'))
 
     # HOMEPAGE
 

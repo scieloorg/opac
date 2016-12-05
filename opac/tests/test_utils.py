@@ -1,8 +1,8 @@
 # coding: utf-8
 
-from base import BaseTestCase
+from .base import BaseTestCase
 
-import utils
+from . import utils
 
 from webapp import utils as wutils
 

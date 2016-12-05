@@ -4,13 +4,13 @@ from uuid import uuid4
 
 from werkzeug.security import check_password_hash
 
-from base import BaseTestCase
+from .base import BaseTestCase
 
 from opac_schema.v1 import models
 
 from webapp import controllers, dbsql, utils as ut
 
-import utils
+from . import utils
 
 
 class JournalControllerTestCase(BaseTestCase):
@@ -111,25 +111,25 @@ class JournalControllerTestCase(BaseTestCase):
                 'themes_count': 6
             },
             'objects': {
-                u'Health Sciences': [
+                'Health Sciences': [
                     controllers.get_journal_json_data(journal1),
                     controllers.get_journal_json_data(journal2)
                 ],
-                u'Engineering': [
+                'Engineering': [
                     controllers.get_journal_json_data(journal4),
                     controllers.get_journal_json_data(journal6)
                 ],
-                u'Biological Sciences': [
+                'Biological Sciences': [
                     controllers.get_journal_json_data(journal2),
                     controllers.get_journal_json_data(journal4)
                 ],
-                u'Linguistics': [
+                'Linguistics': [
                     controllers.get_journal_json_data(journal5)
                 ],
-                u'Human Sciences': [
+                'Human Sciences': [
                     controllers.get_journal_json_data(journal4)
                 ],
-                u'Exact and Earth Sciences': [
+                'Exact and Earth Sciences': [
                     controllers.get_journal_json_data(journal3)
                 ]
             }
@@ -141,7 +141,7 @@ class JournalControllerTestCase(BaseTestCase):
         self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
         self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
-        for grouper, journals in expected['objects'].iteritems():
+        for grouper, journals in expected['objects'].items():
             self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
                                  sorted([journal['id'] for journal in journals]))
 
@@ -201,18 +201,18 @@ class JournalControllerTestCase(BaseTestCase):
                 'themes_count': 3
             },
             'objects': {
-                u'SCIE': [
+                'SCIE': [
                     controllers.get_journal_json_data(journal1),
                     controllers.get_journal_json_data(journal2),
                     controllers.get_journal_json_data(journal3),
                     controllers.get_journal_json_data(journal5)
                 ],
-                u'SSCI': [
+                'SSCI': [
                     controllers.get_journal_json_data(journal2),
                     controllers.get_journal_json_data(journal4),
                     controllers.get_journal_json_data(journal5)
                 ],
-                u'ICSE': [
+                'ICSE': [
                     controllers.get_journal_json_data(journal4)
                 ]
             }
@@ -223,7 +223,7 @@ class JournalControllerTestCase(BaseTestCase):
         self.assertEqual(expected['meta']['total'], grouped_objects['meta']['total'])
         self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
         self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
-        for grouper, journals in expected['objects'].iteritems():
+        for grouper, journals in expected['objects'].items():
             self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
                                  sorted([journal['id'] for journal in journals]))
 
@@ -282,19 +282,19 @@ class JournalControllerTestCase(BaseTestCase):
                 'themes_count': 4
             },
             'objects': {
-                u'CNPQ': [
+                'CNPQ': [
                     controllers.get_journal_json_data(journal1)
                 ],
-                u'SciELO': [
+                'SciELO': [
                     controllers.get_journal_json_data(journal2),
                     controllers.get_journal_json_data(journal3),
                     controllers.get_journal_json_data(journal4),
                     controllers.get_journal_json_data(journal5)
                 ],
-                u'FAPESP': [
+                'FAPESP': [
                     controllers.get_journal_json_data(journal4)
                 ],
-                u'FUNDAÇÃO XPTO': [
+                'FUNDAÇÃO XPTO': [
                     controllers.get_journal_json_data(journal4),
                     controllers.get_journal_json_data(journal6)
                 ]
@@ -307,7 +307,7 @@ class JournalControllerTestCase(BaseTestCase):
         self.assertEqual(expected['meta']['themes_count'], grouped_objects['meta']['themes_count'])
         self.assertEqual(len(expected['objects']), len(grouped_objects['objects']))
 
-        for grouper, journals in expected['objects'].iteritems():
+        for grouper, journals in expected['objects'].items():
             self.assertListEqual(sorted([journal['id'] for journal in expected['objects'][grouper]]),
                                  sorted([journal['id'] for journal in journals]))
 
@@ -385,9 +385,9 @@ class JournalControllerTestCase(BaseTestCase):
 
         journals = controllers.get_journals_by_jid(['jid1', 'jid12', 'jid123'])
 
-        expected = [u'jid1', u'jid12', u'jid123']
+        expected = ['jid1', 'jid12', 'jid123']
 
-        self.assertListEqual(sorted([journal for journal in journals.iterkeys()]),
+        self.assertListEqual(sorted([journal for journal in journals.keys()]),
                              sorted(expected))
 
     def test_get_journals_by_jid_with_not_found_jids(self):
@@ -435,7 +435,7 @@ class JournalControllerTestCase(BaseTestCase):
 
         journals = controllers.get_journals_by_jid(ids)
 
-        for journal in journals.itervalues():
+        for journal in journals.values():
             self.assertFalse(journal.is_public)
 
     def test_set_journal_is_public_bulk_without_jids(self):
@@ -454,7 +454,7 @@ class JournalControllerTestCase(BaseTestCase):
 
         journals = controllers.get_journals_by_jid(ids)
 
-        for journal in journals.itervalues():
+        for journal in journals.values():
             self.assertTrue(journal.is_public)
 
 
@@ -574,9 +574,9 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(['iid1', 'iid12', 'iid123'])
 
-        expected = [u'iid1', u'iid12', u'iid123']
+        expected = ['iid1', 'iid12', 'iid123']
 
-        self.assertListEqual(sorted([issue for issue in issues.iterkeys()]),
+        self.assertListEqual(sorted([issue for issue in issues.keys()]),
                              sorted(expected))
 
     def test_get_issues_by_iid_without_issue(self):
@@ -604,7 +604,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(ids)
 
-        for issue in issues.itervalues():
+        for issue in issues.values():
             self.assertFalse(issue.is_public)
 
     def test_set_issue_is_public_bulk_setting_reason(self):
@@ -624,8 +624,8 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(ids)
 
-        for issue in issues.itervalues():
-            self.assertEqual(u'plágio', issue.unpublish_reason)
+        for issue in issues.values():
+            self.assertEqual('plágio', issue.unpublish_reason)
 
     def test_set_issue_is_public_bulk_without_iids(self):
         """
@@ -643,7 +643,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_iid(ids)
 
-        for issue in issues.itervalues():
+        for issue in issues.values():
             self.assertTrue(issue.is_public)
 
 
@@ -706,9 +706,9 @@ class ArticleControllerTestCase(BaseTestCase):
 
         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
-        expected = [u'aid1', u'aid12', u'aid123']
+        expected = ['aid1', 'aid12', 'aid123']
 
-        self.assertListEqual(sorted([article for article in articles.iterkeys()]),
+        self.assertListEqual(sorted([article for article in articles.keys()]),
                              sorted(expected))
 
     def test_get_articles_by_aid_with_not_found_jids(self):
@@ -756,7 +756,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         articles = controllers.get_articles_by_aid(ids)
 
-        for article in articles.itervalues():
+        for article in articles.values():
             self.assertFalse(article.is_public)
 
     def test_set_article_is_public_bulk_without_aids(self):
@@ -776,7 +776,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         articles = controllers.get_articles_by_aid(ids)
 
-        for article in articles.itervalues():
+        for article in articles.values():
             self.assertTrue(article.is_public)
 
     def test_get_articles_by_iid(self):
@@ -792,7 +792,7 @@ class ArticleControllerTestCase(BaseTestCase):
         self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
                               'journal': 'oak,ajimn1'})
 
-        expected = [u'012ijs9y24', u'2183ikos90']
+        expected = ['012ijs9y24', '2183ikos90']
 
         articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
 

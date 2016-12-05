@@ -3,9 +3,9 @@
 import flask
 from flask import url_for, current_app
 
-from base import BaseTestCase
+from .base import BaseTestCase
 
-import utils
+from . import utils
 
 
 class JournalHomeTestCase(BaseTestCase):
@@ -34,7 +34,7 @@ class JournalHomeTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'pt_BR')
 
-            self.assertIn(u"Esse periódico tem com objetivo xpto",
+            self.assertIn("Esse periódico tem com objetivo xpto",
                           response.data.decode('utf-8'))
 
     def test_journal_detail_mission_with_ES_language(self):
@@ -60,7 +60,7 @@ class JournalHomeTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'es')
 
-            self.assertIn(u"Esta revista tiene como objetivo xpto",
+            self.assertIn("Esta revista tiene como objetivo xpto",
                           response.data.decode('utf-8'))
 
     def test_journal_detail_mission_with_EN_language(self):
@@ -86,7 +86,7 @@ class JournalHomeTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'en')
 
-            self.assertIn(u"This journal is aiming xpto",
+            self.assertIn("This journal is aiming xpto",
                           response.data.decode('utf-8'))
 
     def test_journal_without_social_networks_show_no_links(self):
@@ -110,13 +110,13 @@ class JournalHomeTestCase(BaseTestCase):
                 # then
                 self.assertEqual(journal.social_networks, [])
                 self.assertStatus(response, 200)
-                social_networks_class = u"journalLinks"
+                social_networks_class = "journalLinks"
                 self.assertIn(social_networks_class, response.data.decode('utf-8'))
-                twitter_btn_class = u"bigTwitter"
+                twitter_btn_class = "bigTwitter"
                 self.assertNotIn(twitter_btn_class, response.data.decode('utf-8'))
-                facebook_btn_class = u"bigFacebook"
+                facebook_btn_class = "bigFacebook"
                 self.assertNotIn(facebook_btn_class, response.data.decode('utf-8'))
-                google_btn_class = u"bigGooglePlus"
+                google_btn_class = "bigGooglePlus"
                 self.assertNotIn(google_btn_class, response.data.decode('utf-8'))
 
     def test_journal_with_twitter_social_networks_show_links(self):
@@ -137,8 +137,8 @@ class JournalHomeTestCase(BaseTestCase):
                 'collection': collection,
                 'social_networks': [
                     {
-                        'network': u'twitter',
-                        'account': u'http://twitter.com/@foo'
+                        'network': 'twitter',
+                        'account': 'http://twitter.com/@foo'
                     }
                 ]
             }
@@ -148,16 +148,16 @@ class JournalHomeTestCase(BaseTestCase):
                 response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
-                social_networks_class = u"journalLinks"
+                social_networks_class = "journalLinks"
                 self.assertIn(social_networks_class, response.data.decode('utf-8'))
-                twitter_btn_class = u"bigTwitter"
+                twitter_btn_class = "bigTwitter"
                 self.assertIn(twitter_btn_class, response.data.decode('utf-8'))
-                facebook_btn_class = u"bigFacebook"
+                facebook_btn_class = "bigFacebook"
                 self.assertNotIn(facebook_btn_class, response.data.decode('utf-8'))
-                google_btn_class = u"bigGooglePlus"
+                google_btn_class = "bigGooglePlus"
                 self.assertNotIn(google_btn_class, response.data.decode('utf-8'))
 
-                expected_social_link = u'<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
+                expected_social_link = '<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
                     account=journal_data['social_networks'][0]['account'],
                     network=journal_data['social_networks'][0]['network'].title(),
                 )
@@ -181,8 +181,8 @@ class JournalHomeTestCase(BaseTestCase):
                 'collection': collection,
                 'social_networks': [
                     {
-                        'network': u'facebook',
-                        'account': u'http://facebook.com/foo'
+                        'network': 'facebook',
+                        'account': 'http://facebook.com/foo'
                     }
                 ]
             }
@@ -192,16 +192,16 @@ class JournalHomeTestCase(BaseTestCase):
                 response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
-                social_networks_class = u"journalLinks"
+                social_networks_class = "journalLinks"
                 self.assertIn(social_networks_class, response.data.decode('utf-8'))
-                twitter_btn_class = u"bigTwitter"
+                twitter_btn_class = "bigTwitter"
                 self.assertNotIn(twitter_btn_class, response.data.decode('utf-8'))
-                facebook_btn_class = u"bigFacebook"
+                facebook_btn_class = "bigFacebook"
                 self.assertIn(facebook_btn_class, response.data.decode('utf-8'))
-                google_btn_class = u"bigGooglePlus"
+                google_btn_class = "bigGooglePlus"
                 self.assertNotIn(google_btn_class, response.data.decode('utf-8'))
 
-                expected_social_link = u'<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
+                expected_social_link = '<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
                     account=journal_data['social_networks'][0]['account'],
                     network=journal_data['social_networks'][0]['network'].title(),
                 )
@@ -225,8 +225,8 @@ class JournalHomeTestCase(BaseTestCase):
                 'collection': collection,
                 'social_networks': [
                     {
-                        'network': u'google',
-                        'account': u'http://plus.google.com/+foo'
+                        'network': 'google',
+                        'account': 'http://plus.google.com/+foo'
                     }
                 ]
             }
@@ -236,16 +236,16 @@ class JournalHomeTestCase(BaseTestCase):
                 response = c.get(url_for('main.journal_detail', url_seg=journal.url_segment))
                 # then
                 self.assertStatus(response, 200)
-                social_networks_class = u"journalLinks"
+                social_networks_class = "journalLinks"
                 self.assertIn(social_networks_class, response.data.decode('utf-8'))
-                twitter_btn_class = u"bigTwitter"
+                twitter_btn_class = "bigTwitter"
                 self.assertNotIn(twitter_btn_class, response.data.decode('utf-8'))
-                facebook_btn_class = u"bigFacebook"
+                facebook_btn_class = "bigFacebook"
                 self.assertNotIn(facebook_btn_class, response.data.decode('utf-8'))
-                google_btn_class = u"bigGooglePlus"
+                google_btn_class = "bigGooglePlus"
                 self.assertIn(google_btn_class, response.data.decode('utf-8'))
 
-                expected_social_link = u'<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
+                expected_social_link = '<a href="{account}" data-toggle="tooltip" title="{network}">'.format(
                     account=journal_data['social_networks'][0]['account'],
                     network=journal_data['social_networks'][0]['network'].title(),
                 )

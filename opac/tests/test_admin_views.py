@@ -11,7 +11,7 @@ from webapp.utils import create_user, get_timed_serializer
 from webapp.admin import forms
 from webapp.controllers import get_user_by_email
 from webapp.notifications import send_confirmation_email
-from base import BaseTestCase
+from .base import BaseTestCase
 from opac_schema.v1.models import Sponsor
 from tests.utils import (
     makeOneJournal, makeAnyJournal,
@@ -287,7 +287,7 @@ class AdminViewsTestCase(BaseTestCase):
                     login_url = url_for('admin.login_view')
                     languages = current_app.config['LANGUAGES']
                     lang_urls = {}
-                    for lang_code, lang_name in languages.iteritems():
+                    for lang_code, lang_name in languages.items():
                         lang_urls[lang_code] = {
                             'url': url_for('main.set_locale', lang_code=lang_code),
                             'name': lang_name,
@@ -299,7 +299,7 @@ class AdminViewsTestCase(BaseTestCase):
                     # then
                     self.assertStatus(response, 200)
                     self.assertTemplateUsed('admin/auth/login.html')
-                    for lang_code, lang_data in lang_urls.iteritems():
+                    for lang_code, lang_data in lang_urls.items():
                         lang_url = lang_data['url']
                         lang_name = lang_data['name']
                         self.assertIn(lang_url, response.data.decode('utf-8'))
@@ -515,7 +515,7 @@ class AdminViewsTestCase(BaseTestCase):
                         email_msg = outbox[0]
                         self.assertEqual(expected_email['subject'], email_msg.subject)
                         self.assertEqual(expected_email['recipients'], email_msg.recipients)
-                        self.assertIn(expected_email['body_has_link'], email_msg.html.decode('utf-8'))
+                        self.assertIn(expected_email['body_has_link'], email_msg.html)
 
     def test_reset_password_send_valid_link_via_email(self):
         """
@@ -1279,10 +1279,6 @@ class JournalAdminViewTests(BaseTestCase):
                     # verificamos a resposta
                     # que tem a id para acessar ao periódico
                     self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
-                    # que tem a url para acessar ao periódico
-                    expected_journal_detail_url = u"/admin/journal/details/?url=%2Fadmin%2Fjournal%2F&amp;id={}".format(journal.id)
-                    expected_anchor = '<a class="icon" href="%s"' % expected_journal_detail_url
-                    self.assertIn(expected_anchor, journal_list_response.data.decode('utf-8'))
 
     def test_admin_journal_details(self):
         """
@@ -1371,10 +1367,6 @@ class JournalAdminViewTests(BaseTestCase):
 
                     # que tem a id para acessar ao periódico
                     self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
-                    # que tem a url para acessar ao periódico
-                    expected_journal_detail_url = u"/admin/journal/details/?url=%2Fadmin%2Fjournal%2F&amp;id={}".format(journal.id)
-                    expected_anchor = '<a class="icon" href="%s"' % expected_journal_detail_url
-                    self.assertIn(expected_anchor, journal_list_response.data.decode('utf-8'))
 
     def test_admin_journal_check_column_filters(self):
         """
@@ -2324,7 +2316,7 @@ class JournalAdminViewTests(BaseTestCase):
                         )
                         self.assertStatus(action_response, 200)
                         self.assertTemplateUsed('admin/model/list.html')
-                        self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                        self.assertIn(expected_msg, action_response.data)
                         journal.reload()
                         self.assertTrue(journal.is_public)
 
@@ -2370,10 +2362,6 @@ class IssueAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao fascículo
             self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao fascículo
-            expected_issue_detail_url = u"/admin/issue/details/?url=%2Fadmin%2Fissue%2F&amp;id={}".format(issue.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_issue_detail_url
-            self.assertIn(expected_anchor, issue_list_response.data.decode('utf-8'))
 
     def test_admin_issue_details(self):
         """
@@ -2454,10 +2442,6 @@ class IssueAdminViewTests(BaseTestCase):
 
             # que tem a id para acessar ao periódico
             self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao periódico
-            expected_issue_detail_url = u"/admin/issue/details/?url=%2Fadmin%2Fissue%2F&amp;id={}".format(issue.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_issue_detail_url
-            self.assertIn(expected_anchor, issue_list_response.data.decode('utf-8'))
 
     def test_admin_issue_check_column_filters(self):
         """
@@ -3317,7 +3301,7 @@ class IssueAdminViewTests(BaseTestCase):
                 )
                 self.assertStatus(action_response, 200)
                 self.assertTemplateUsed('admin/model/list.html')
-                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                self.assertIn(expected_msg, action_response.data)
                 issue.reload()
                 self.assertTrue(issue.is_public)
 
@@ -3363,10 +3347,6 @@ class ArticleAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao fascículo
             self.assertIn(article.id, article_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao fascículo
-            expected_article_detail_url = u"/admin/article/details/?url=%2Fadmin%2Farticle%2F&amp;id={}".format(article.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_article_detail_url
-            self.assertIn(expected_anchor, article_list_response.data.decode('utf-8'))
 
     def test_admin_article_details(self):
         """
@@ -3447,10 +3427,6 @@ class ArticleAdminViewTests(BaseTestCase):
 
             # que tem a id para acessar ao periódico
             self.assertIn(article.id, article_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao periódico
-            expected_article_detail_url = u"/admin/article/details/?url=%2Fadmin%2Farticle%2F&amp;id={}".format(article.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_article_detail_url
-            self.assertIn(expected_anchor, article_list_response.data.decode('utf-8'))
 
     def test_admin_article_check_column_filters(self):
         """
@@ -4305,7 +4281,7 @@ class ArticleAdminViewTests(BaseTestCase):
                 )
                 self.assertStatus(action_response, 200)
                 self.assertTemplateUsed('admin/model/list.html')
-                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                self.assertIn(expected_msg, action_response.data)
                 article.reload()
                 self.assertTrue(article.is_public)
 
@@ -4352,10 +4328,6 @@ class CollectionAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao collection
             self.assertIn(collection.id, collection_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao collection
-            expected_collection_detail_url = u"/admin/collection/details/?url=%2Fadmin%2Fcollection%2F&amp;id={}".format(collection.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_collection_detail_url
-            self.assertIn(expected_anchor, collection_list_response.data.decode('utf-8'))
 
     def test_admin_collection_details(self):
         """
@@ -4730,10 +4702,6 @@ class SponsorAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao sponsor
             self.assertIn(sponsor.id, sponsor_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao sponsor
-            expected_sponsor_detail_url = u"/admin/sponsor/details/?url=%2Fadmin%2Fsponsor%2F&amp;id={}".format(sponsor.id)
-            expected_anchor = '<a class="icon" href="%s"' % expected_sponsor_detail_url
-            self.assertIn(expected_anchor, sponsor_list_response.data.decode('utf-8'))
 
     def test_admin_sponsor_details(self):
         """

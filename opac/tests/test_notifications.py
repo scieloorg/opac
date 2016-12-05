@@ -3,7 +3,7 @@
 from flask import url_for, render_template
 from webapp.notifications import send_confirmation_email, send_reset_password_email
 from webapp import utils
-from base import BaseTestCase
+from .base import BaseTestCase
 from mock import patch
 from itsdangerous import URLSafeTimedSerializer
 
@@ -88,8 +88,8 @@ class NotificationsTestCase(BaseTestCase):
             try:
                 ts = utils.get_timed_serializer()
                 ts.dumps(recipient_email)
-            except Exception, e:
-                expected = (False, u'Token inválido: %s' % str(e))
+            except Exception as e:
+                expected = (False, 'Token inválido: %s' % str(e))
 
             result = send_confirmation_email(recipient_email)
             self.assertEqual(expected, result)
@@ -112,8 +112,8 @@ class NotificationsTestCase(BaseTestCase):
             try:
                 ts = utils.get_timed_serializer()
                 ts.dumps(recipient_email)
-            except Exception, e:
-                expected = (False, u'Token inválido: %s' % unicode(e))
+            except Exception as e:
+                expected = (False, 'Token inválido: %s' % str(e))
 
             result = send_reset_password_email(recipient_email)
             self.assertEqual(expected, result)
@@ -143,7 +143,7 @@ class NotificationsTestCase(BaseTestCase):
             result = send_confirmation_email(recipient_email)
             mock.assert_called_with(
                 recipient_email,
-                u"Confirmação de email",
+                "Confirmação de email",
                 render_template('email/activate.html', confirm_url=confirm_url)
             )
 
@@ -175,7 +175,7 @@ class NotificationsTestCase(BaseTestCase):
 
             mock.assert_called_with(
                 recipient_email,
-                u"Instruções para recuperar sua senha",
+                "Instruções para recuperar sua senha",
                 render_template('email/recover.html', recover_url=recover_url)
             )
 

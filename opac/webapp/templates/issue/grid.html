@@ -51,8 +51,8 @@
                   </span>
                 </td>
               {% endif %}
-              {% for year,v in result_dict.iteritems() %}
-                {% for volume, issue_list in v.iteritems() %}
+              {% for year,v in result_dict.items() %}
+                {% for volume, issue_list in v.items() %}
                   <tr>
                     <td>{{ year }}</td>
                     <th>

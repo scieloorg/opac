@@ -16,4 +16,4 @@ if __name__ == '__main__':
             resp = requests.get(url)
 
             if resp.status_code != 200:
-                print "URL %s, Status Code: %s" % (url, resp.status_code)
+                print("URL %s, Status Code: %s" % (url, resp.status_code))

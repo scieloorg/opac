@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from base import BaseTestCase
+from .base import BaseTestCase
 from sqlalchemy.exc import IntegrityError
 from webapp import models, dbsql
 
@@ -33,7 +33,7 @@ class UserModelTestCase(BaseTestCase):
         user_from_db = dbsql.session.query(models.User).filter_by(
             email=data['email']).first()
         self.assertIsNotNone(user_from_db)
-        self.assertEquals(data['email'], user_from_db.email)
+        self.assertEqual(data['email'], user_from_db.email)
         self.assertIsNotNone(user_from_db.password)
         self.assertFalse(user_from_db.email_confirmed)
 
@@ -55,7 +55,7 @@ class UserModelTestCase(BaseTestCase):
         # when
         new_user = models.User(**data)
         # then
-        self.assertEquals(data['email'], unicode(new_user))
+        self.assertEqual(data['email'], new_user.email)
 
     def test_create_user_with_valid_email_and_password_and_confirm_email_is_ok(self):
         """
@@ -84,7 +84,7 @@ class UserModelTestCase(BaseTestCase):
         user_from_db = dbsql.session.query(models.User).filter_by(
             email=data['email']).first()
         self.assertIsNotNone(user_from_db)
-        self.assertEquals(data['email'], user_from_db.email)
+        self.assertEqual(data['email'], user_from_db.email)
         self.assertIsNotNone(user_from_db.password)
         self.assertTrue(user_from_db.email_confirmed)
 
@@ -112,7 +112,7 @@ class UserModelTestCase(BaseTestCase):
         user_from_db = dbsql.session.query(models.User).filter_by(
             email=data['email']).first()
         self.assertIsNotNone(user_from_db)
-        self.assertEquals(data['email'], user_from_db.email)
+        self.assertEqual(data['email'], user_from_db.email)
         self.assertIsNone(user_from_db.password)
         self.assertFalse(user_from_db.email_confirmed)
 
@@ -256,7 +256,7 @@ class UserModelTestCase(BaseTestCase):
         new_user = models.User(**data)
         # then
         expected_response = (True, '')
-        self.assertEquals(expected_response, new_user.send_confirmation_email())
+        self.assertEqual(expected_response, new_user.send_confirmation_email())
 
     def test_user_without_email_send_confirmation_email_works(self):
         """
@@ -296,7 +296,7 @@ class UserModelTestCase(BaseTestCase):
         new_user = models.User(**data)
         # then
         expected_response = (True, '')
-        self.assertEquals(expected_response, new_user.send_reset_password_email())
+        self.assertEqual(expected_response, new_user.send_reset_password_email())
 
     def test_user_without_email_send_reset_password_email_works(self):
         """
@@ -345,7 +345,7 @@ class LoadUserTestCase(BaseTestCase):
         user_from_db = dbsql.session.query(models.User).filter_by(
             email=data['email']).first()
         user_loaded = models.load_user(user_from_db.id)
-        self.assertEquals(user_from_db.email, user_loaded.email)
+        self.assertEqual(user_from_db.email, user_loaded.email)
 
     def test_invalid_user_raise_error(self):
         """
