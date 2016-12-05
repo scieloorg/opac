@@ -1279,10 +1279,6 @@ class JournalAdminViewTests(BaseTestCase):
                     # verificamos a resposta
                     # que tem a id para acessar ao periódico
                     self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
-                    # que tem a url para acessar ao periódico
-                    # expected_journal_detail_url = u"/admin/journal/details/?url=%2Fadmin%2Fjournal%2F&amp;id={}".format(journal.id)
-                    # expected_anchor = '<a class="icon" href="%s"' % expected_journal_detail_url
-                    # self.assertIn(expected_anchor, journal_list_response.data.decode('utf-8'))
 
     def test_admin_journal_details(self):
         """
@@ -1371,10 +1367,6 @@ class JournalAdminViewTests(BaseTestCase):
 
                     # que tem a id para acessar ao periódico
                     self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
-                    # que tem a url para acessar ao periódico
-                    # expected_journal_detail_url = u"/admin/journal/details/?url=%2Fadmin%2Fjournal%2F&amp;id={}".format(journal.id)
-                    # expected_anchor = '<a class="icon" href="%s"' % expected_journal_detail_url
-                    # self.assertIn(expected_anchor, journal_list_response.data.decode('utf-8'))
 
     def test_admin_journal_check_column_filters(self):
         """
@@ -2370,10 +2362,6 @@ class IssueAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao fascículo
             self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao fascículo
-            # expected_issue_detail_url = u"/admin/issue/details/?url=%2Fadmin%2Fissue%2F&amp;id={}".format(issue.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_issue_detail_url
-            # self.assertIn(expected_anchor, issue_list_response.data.decode('utf-8'))
 
     def test_admin_issue_details(self):
         """
@@ -2454,10 +2442,6 @@ class IssueAdminViewTests(BaseTestCase):
 
             # que tem a id para acessar ao periódico
             self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao periódico
-            # expected_issue_detail_url = u"/admin/issue/details/?url=%2Fadmin%2Fissue%2F&amp;id={}".format(issue.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_issue_detail_url
-            # self.assertIn(expected_anchor, issue_list_response.data.decode('utf-8'))
 
     def test_admin_issue_check_column_filters(self):
         """
@@ -3363,10 +3347,6 @@ class ArticleAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao fascículo
             self.assertIn(article.id, article_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao fascículo
-            # expected_article_detail_url = u"/admin/article/details/?url=%2Fadmin%2Farticle%2F&amp;id={}".format(article.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_article_detail_url
-            # self.assertIn(expected_anchor, article_list_response.data.decode('utf-8'))
 
     def test_admin_article_details(self):
         """
@@ -3447,10 +3427,6 @@ class ArticleAdminViewTests(BaseTestCase):
 
             # que tem a id para acessar ao periódico
             self.assertIn(article.id, article_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao periódico
-            # expected_article_detail_url = u"/admin/article/details/?url=%2Fadmin%2Farticle%2F&amp;id={}".format(article.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_article_detail_url
-            # self.assertIn(expected_anchor, article_list_response.data.decode('utf-8'))
 
     def test_admin_article_check_column_filters(self):
         """
@@ -4352,10 +4328,6 @@ class CollectionAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao collection
             self.assertIn(collection.id, collection_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao collection
-            # expected_collection_detail_url = u"/admin/collection/details/?url=%2Fadmin%2Fcollection%2F&amp;id={}".format(collection.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_collection_detail_url
-            # self.assertIn(expected_anchor, collection_list_response.data.decode('utf-8'))
 
     def test_admin_collection_details(self):
         """
@@ -4730,10 +4702,6 @@ class SponsorAdminViewTests(BaseTestCase):
             # verificamos a resposta
             # que tem a id para acessar ao sponsor
             self.assertIn(sponsor.id, sponsor_list_response.data.decode('utf-8'))
-            # que tem a url para acessar ao sponsor
-            # expected_sponsor_detail_url = u"/admin/sponsor/details/?url=%2Fadmin%2Fsponsor%2F&amp;id={}".format(sponsor.id)
-            # expected_anchor = '<a class="icon" href="%s"' % expected_sponsor_detail_url
-            # self.assertIn(expected_anchor, sponsor_list_response.data.decode('utf-8'))
 
     def test_admin_sponsor_details(self):
         """
