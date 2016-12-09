@@ -24,7 +24,7 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile-dev
-        command: gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --reload --log-level DEBUG
+        command: gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --reload --timeout 1000 --log-level DEBUG
         user: nobody
         restart: always
         hostname: opac_webapp
@@ -47,3 +47,5 @@ services:
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
             - OPAC_SECRET_KEY=s3kr3tk3y
+        stdin_open: True
+        tty: true
