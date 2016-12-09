@@ -6,45 +6,47 @@
 {% block main_content %}
   <section class="collection">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12 col-sm-12 metrics">
-          <h2>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }} <span>{% trans %}em números | Métricas{% endtrans %}</span></h2>
-          <div class="levelMenu">
-            <div class="col-md-10 col-sm-10 numbers">
-              <div class="col-md-3 col-sm-3">
-                {{ g.collection.metrics.total_journal }}
-                <span>{% trans %}períodicos{% endtrans %}</span>
+      {% if g.collection.metrics %}
+        <div class="row">
+          <div class="col-md-12 col-sm-12 metrics">
+            <h2>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }} <span>{% trans %}em números | Métricas{% endtrans %}</span></h2>
+            <div class="levelMenu">
+              <div class="col-md-10 col-sm-10 numbers">
+                <div class="col-md-3 col-sm-3">
+                  {{ g.collection.metrics.total_journal }}
+                  <span>{% trans %}períodicos{% endtrans %}</span>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  {{ g.collection.metrics.total_issue }}
+                  <span>{% trans %}números{% endtrans %}</span>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  {{ g.collection.metrics.total_article }}
+                  <span>{% trans %}artigos{% endtrans %}</span>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  {{ g.collection.metrics.total_citation }}
+                  <span>{% trans %}citações{% endtrans %}</span>
+                </div>
               </div>
-              <div class="col-md-3 col-sm-3">
-                {{ g.collection.metrics.total_issue }}
-                <span>{% trans %}números{% endtrans %}</span>
+              <div class="col-md-2 col-sm-2">
+                <ul>
+                  <li>
+                    <a href="{{ urls.downloads }}" target="_blank">{% trans %}Downloads{% endtrans %}</a>
+                  </li>
+                  <li>
+                    <a href="{{ urls.references }}" target="_blank">{% trans %}Citações{% endtrans %}</a>
+                  </li>
+                  <li>
+                    <a href="{{ urls.other }}" target="_blank">{% trans %}Outros indicadores{% endtrans %}</a>
+                  </li>
+                </ul>
               </div>
-              <div class="col-md-3 col-sm-3">
-                {{ g.collection.metrics.total_article }}
-                <span>{% trans %}artigos{% endtrans %}</span>
-              </div>
-              <div class="col-md-3 col-sm-3">
-                {{ g.collection.metrics.total_citation }}
-                <span>{% trans %}citações{% endtrans %}</span>
-              </div>
+              <div class="clearfix"></div>
             </div>
-            <div class="col-md-2 col-sm-2">
-              <ul>
-                <li>
-                  <a href="{{ urls.downloads }}" target="_blank">{% trans %}Downloads{% endtrans %}</a>
-                </li>
-                <li>
-                  <a href="{{ urls.references }}" target="_blank">{% trans %}Citações{% endtrans %}</a>
-                </li>
-                <li>
-                  <a href="{{ urls.other }}" target="_blank">{% trans %}Outros indicadores{% endtrans %}</a>
-                </li>
-              </ul>
-            </div>
-            <div class="clearfix"></div>
           </div>
         </div>
-      </div>
+      {% endif %}
       <div class="row">
         <div class="col-md-12 col-sm-12 periodicals">
           <h2>{% trans %}Lista de periódicos{% endtrans %}</h2>
