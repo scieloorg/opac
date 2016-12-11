@@ -87,6 +87,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # NUNCA deixar DEBUG = 'True' em produção
 # OPAC_DEBUG_MODE DEVE SER SEMPRE UM STRING 'False' OR 'True'
 DEBUG = os.environ.get('OPAC_DEBUG_MODE', 'False') == 'True'
+DEBUG = False
 
 # ativa/desativa o modo Testing da app
 # NUNCA deixar TESTING = True em produção
@@ -249,12 +250,9 @@ DEBUG_TB_PANELS = [
 
 
 # Configurações do API Twitter
-TWITTER_CONSUMER_KEY = os.environ.get('OPAC_TWITTER_CONSUMER_KEY', 'consum3r-k3y')
-TWITTER_CONSUMER_SECRET = os.environ.get('OPAC_TWITTER_CONSUMER_SECRET', 'consum3r-secr3t')
-TWITTER_ACCESS_TOKEN = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN', 'acc3ss-tok3n-secr3t')
-TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN_SECRET', 'acc3ss-tok3n-secr3t')
+TWITTER_CONSUMER_KEY = os.environ.get('OPAC_TWITTER_CONSUMER_KEY', '')
+TWITTER_CONSUMER_SECRET = os.environ.get('OPAC_TWITTER_CONSUMER_SECRET', '')
+TWITTER_ACCESS_TOKEN = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN', '')
+TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN_SECRET', '')
 TWITTER_SCREEN_NAME = os.environ.get('OPAC_TWITTER_SCREEN_NAME', 'RedeSciELO')
 TWITTER_LIMIT = '10'
-
-
-
