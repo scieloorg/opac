@@ -87,7 +87,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # NUNCA deixar DEBUG = 'True' em produção
 # OPAC_DEBUG_MODE DEVE SER SEMPRE UM STRING 'False' OR 'True'
 DEBUG = os.environ.get('OPAC_DEBUG_MODE', 'False') == 'True'
-DEBUG = False
 
 # ativa/desativa o modo Testing da app
 # NUNCA deixar TESTING = True em produção
