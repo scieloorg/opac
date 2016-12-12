@@ -11,6 +11,8 @@ import datetime
 import unicodecsv
 import io, mimetypes
 import xlsxwriter
+import tweepy
+
 from collections import OrderedDict
 
 from slugify import slugify
@@ -28,7 +30,6 @@ from flask import current_app, url_for
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
-from flask_oauthlib.client import OAuth
 from webapp import dbsql
 from .models import User
 from .choices import INDEX_NAME
@@ -52,33 +53,28 @@ def get_current_collection():
 def get_collection_tweets():
 
     tweets = []
-    oauth = OAuth(current_app)
-    twitter = oauth.remote_app(
-        'twitter',
-        base_url='https://api.twitter.com/1.1/',
-        request_token_url='https://api.twitter.com/oauth/request_token',
-        access_token_url='https://api.twitter.com/oauth/access_token',
-        authorize_url='https://api.twitter.com/oauth/authenticate',
-        consumer_key=current_app.config['TWITTER_CONSUMER_KEY'],
-        consumer_secret=current_app.config['TWITTER_CONSUMER_SECRET']
-    )
 
-    @twitter.tokengetter
-    def get_twitter_token():
-        return (
-            current_app.config['TWITTER_ACCESS_TOKEN'],
-            current_app.config['TWITTER_ACCESS_TOKEN_SECRET']
-        )
+    consumer_key = current_app.config['TWITTER_CONSUMER_KEY']
+    consumer_secret = current_app.config['TWITTER_CONSUMER_SECRET']
 
-    response = twitter.request('statuses/user_timeline.json', data={
-        'screen_name': current_app.config['TWITTER_SCREEN_NAME'],
-        'count': current_app.config['TWITTER_LIMIT'],
-    })
+    access_token = current_app.config['TWITTER_ACCESS_TOKEN']
+    access_token_secret = current_app.config['TWITTER_ACCESS_TOKEN_SECRET']
 
-    if response.status == 200:
-        tweets = response.data
+    if all([consumer_key, consumer_secret, access_token, access_token_secret]):
+        try:
+            auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+            auth.set_access_token(access_token, access_token_secret)
 
-    return tweets
+            api = tweepy.API(auth, timeout=2)
+            public_tweets = api.user_timeline(count=10)
+        except:
+            return []
+        else:
+            tweets = [tweet for tweet in public_tweets]
+        return tweets
+    else:
+        # falta pelo menos uma credencial do twitter
+        return []
 
 
 # -------- PRESSRELEASES --------
