@@ -30,7 +30,6 @@ from flask import current_app, url_for
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
-from flask_oauthlib.client import OAuth
 from webapp import dbsql
 from .models import User
 from .choices import INDEX_NAME
