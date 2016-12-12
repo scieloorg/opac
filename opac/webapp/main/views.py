@@ -76,7 +76,7 @@ def index():
 
     news = controllers.get_latest_news_by_lang(language)
 
-    # tweets = controllers.get_collection_tweets()
+    tweets = controllers.get_collection_tweets()
     press_releases = controllers.get_press_releases({'language': language})
 
     urls = {
@@ -94,7 +94,7 @@ def index():
     context = {
         'news': news,
         'urls': urls,
-        # 'tweets': tweets,
+        'tweets': tweets,
         'press_releases': press_releases,
         'journals': controllers.get_journals()
     }
