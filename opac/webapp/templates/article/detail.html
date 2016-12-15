@@ -6,7 +6,11 @@
       <div class="container">
           <div class="row">
               <div class="col-md-12 col-sm-12 articleBlock">
-
+              {% if html %}
+                {{ html.source|safe }}
+              {% else %}
+                Este artigo contém somente o pdf
+              {% endif %}
               </div>
           </div>
       </div>
