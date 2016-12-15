@@ -44,13 +44,13 @@
                             </a>
                             <ul class="dropdown-menu">
                                 {# Necessário depois de definido o novo modelo para o artigo ajustar esse link #}
-                                {# {% for pdf_resource in article.pdfs %}
+                                {% for pdf in pdfs %}
                                     <li>
-                                        <a href="{{ mresources.get_resource_url(pdf_resource, 'PDF', pdf_resource.language) }}">
-                                            {{ pdf_resource.language|upper }}
+                                        <a href="{{ pdf.url }}">
+                                            {{ pdf.lang|trans_alpha2 }}
                                         </a>
                                     </li>
-                                {% endfor %} #}
+                                {% endfor %}
                             </ul>
                         {% else %}
                             <a href="javascript:;" class="btn dropdown-toggle disabled" data-toggle="dropdown">
