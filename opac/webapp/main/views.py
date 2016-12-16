@@ -653,12 +653,22 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
 
+    if article.htmls:
+        try:
+            html = [html for html in article.htmls if html['lang'] == lang_code]
+        except IndexError as e:
+            abort(404, _('Artigo não encontrado'))
+    else:
+        html = None
+
     context = {
         'next_article': next_article,
         'previous_article': previous_article,
         'article': article,
         'journal': journal,
         'issue': issue,
+        'html': html[0] if html else None,
+        'pdfs': article.pdfs,
         'article_lang': lang_code
     }
 
