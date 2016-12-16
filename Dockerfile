@@ -1,10 +1,16 @@
-FROM python:3.5
+FROM python:3.5-alpine
 ENV PYTHONUNBUFFERED 1
+
+RUN apk --update add --no-cache \
+    git gcc build-base zlib-dev jpeg-dev
+
 COPY . /app
 WORKDIR /app
 VOLUME /app/data
-RUN pip install -r requirements.txt && \
-    pip install -r /app/requirements.dev.txt
+
+RUN pip --no-cache-dir install -r requirements.txt && \
+    pip --no-cache-dir install -r /app/requirements.dev.txt
+
 RUN make compile_messages
 USER nobody
 EXPOSE 8000

@@ -1,6 +1,9 @@
 # coding: utf-8
 import os
 
+from raven.contrib.flask import Sentry
+import logging
+
 from flask import Flask
 from flask_htmlmin import HTMLMIN
 from flask_assets import Environment, Bundle
@@ -30,8 +33,10 @@ dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
 mail = Mail()
 babel = Babel()
+sentry = Sentry()
 
 from .main import custom_filters
+
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -50,6 +55,12 @@ def create_app():
     # Configurações
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+
+    # Sentry:
+    if app.config['USE_SENTRY']:
+        dsn = app.config['SENTRY_DSN']
+        sentry.init_app(app, dsn=dsn,  logging=True, level=logging.ERROR)
+
     # login
     login_manager.session_protection = 'strong'
     login_manager.login_view = 'admin.login_view'

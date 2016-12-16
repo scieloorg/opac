@@ -75,8 +75,12 @@ import os
       - Metrics:
         - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
 
-      - Zone:
+      - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
+
+      - Sentry
+        - OPAC_USE_SENTRY:  ativa/desativa a integarção com Sentry, se sim definir como: 'True' (default: 'False')
+        - OPAC_SENTRY_DSN: (string) DSN definido pelo sentry para este projeto. Utilizado só se OPAC_USE_SENTRY == True  (default: '')
 
 """
 
@@ -255,3 +259,7 @@ TWITTER_ACCESS_TOKEN = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN', '')
 TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('OPAC_TWITTER_ACCESS_TOKEN_SECRET', '')
 TWITTER_SCREEN_NAME = os.environ.get('OPAC_TWITTER_SCREEN_NAME', 'RedeSciELO')
 TWITTER_LIMIT = '10'
+
+# Sentry settings:
+USE_SENTRY = os.environ.get('OPAC_USE_SENTRY', 'False') == 'True'
+SENTRY_DSN = os.environ.get('OPAC_SENTRY_DSN', '')

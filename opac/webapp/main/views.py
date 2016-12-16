@@ -73,7 +73,6 @@ def set_locale(lang_code):
 def index():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang)
-
     news = controllers.get_latest_news_by_lang(language)
 
     tweets = controllers.get_collection_tweets()
