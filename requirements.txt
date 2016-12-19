@@ -1,27 +1,27 @@
 Flask==0.11.1
-mongoengine==0.10.7
-flask-mongoengine==0.8
+mongoengine==0.11.0
+flask-mongoengine==0.8.2
 Flask-Assets==0.12
 jsmin==2.2.1
 cssmin==0.2.0
 webassets==0.12.0
 Flask-Admin==1.4.2
 Flask-SQLAlchemy==2.1
-SQLAlchemy-Utils==0.32.11
+SQLAlchemy-Utils==0.32.12
 Flask-Security==1.7.5
 Flask-Login==0.4.0
 Flask-Script==2.0.5
 Flask-Mail==0.9.1
 Pillow==3.4.2
 Flask-BabelEx==0.9.3
-Flask-Migrate==2.0.1
+Flask-Migrate==2.0.2
 unicodecsv==0.14.1
 feedparser==5.2.1
 -e git+https://git@github.com/scieloorg/legendarium@v0.1.4#egg=legendarium
 -e git+https://git@github.com/scieloorg/opac_schema@v2.23#egg=opac_schema
 Flask-HTMLmin==1.2
 python-slugify==1.2.1
-requests==2.12.3
-Flask-OAuthlib==0.9.3
+requests==2.12.4
 gunicorn==19.6.0
 xlsxwriter==0.9.4
+tweepy==3.5.0
