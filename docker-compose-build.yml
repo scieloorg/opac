@@ -13,7 +13,12 @@ services:
             - /etc/localtime:/etc/localtime:ro
 
     opac_webapp:
-        build: .
+        build:
+            context: .
+            args:
+                - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+                - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
+                - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
         user: nobody
         restart: always
         hostname: opac_webapp

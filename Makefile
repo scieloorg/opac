@@ -1,9 +1,34 @@
+default: test
 
-#########
-## deps #
-#########
-update_requirements:
-	pip install --upgrade -r requirements.txt
+COMPOSE_FILE_DEV = docker-compose-dev.yml
+OPAC_BUILD_DATE= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+OPAC_VCS_REF= $(shell git rev-parse --short HEAD)
+OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
+
+############################################
+## atalhos docker-compose desenvolvimento ##
+############################################
+
+dev_compose_build:
+	docker-compose -f $(COMPOSE_FILE_DEV) build
+
+dev_compose_up:
+	docker-compose -f $(COMPOSE_FILE_DEV) up -d
+
+dev_compose_logs:
+	docker-compose -f $(COMPOSE_FILE_DEV) logs -f
+
+dev_compose_stop:
+	docker-compose -f $(COMPOSE_FILE_DEV) stop
+
+dev_compose_ps:
+	docker-compose -f $(COMPOSE_FILE_DEV) ps
+
+dev_compose_rm:
+	docker-compose -f $(COMPOSE_FILE_DEV) rm -f
+
+dev_compose_exec_shell_webapp:
+	docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp sh
 
 #########
 ## i18n #

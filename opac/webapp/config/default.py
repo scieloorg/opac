@@ -82,6 +82,10 @@ import os
         - OPAC_USE_SENTRY:  ativa/desativa a integarção com Sentry, se sim definir como: 'True' (default: 'False')
         - OPAC_SENTRY_DSN: (string) DSN definido pelo sentry para este projeto. Utilizado só se OPAC_USE_SENTRY == True  (default: '')
 
+      - docker build args (ignorar warnings na construção de imagem para desenvolvimento)
+        - OPAC_BUILD_DATE: data de build. definida em tempo de construção da imagem.
+        - OPAC_VCS_REF: commit do código. definida pelo travis em tempo de construção da imagem.
+        - OPAC_WEBAPP_VERSION: 'versão do OPAC WEBAPP'. definida pelo travis em tempo de construção da imagem.
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -263,3 +267,8 @@ TWITTER_LIMIT = '10'
 # Sentry settings:
 USE_SENTRY = os.environ.get('OPAC_USE_SENTRY', 'False') == 'True'
 SENTRY_DSN = os.environ.get('OPAC_SENTRY_DSN', '')
+
+# build args:
+BUILD_DATE = os.environ.get('OPAC_BUILD_DATE', None)
+VCS_REF = os.environ.get('OPAC_VCS_REF', None)
+WEBAPP_VERSION = os.environ.get('OPAC_WEBAPP_VERSION', None)

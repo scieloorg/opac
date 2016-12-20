@@ -5,6 +5,10 @@ from setuptools import setup, find_packages
 
 long_description = open('README.rst', 'r').read()
 
+with open('VERSION') as version_file:
+    version = version_file.read()
+    version = version.strip()
+
 install_requirements = [
     'Flask>=0.10.1',
     'mongoengine>=0.10.0',
@@ -35,7 +39,7 @@ dependency_links = [
 
 setup(
     name='opac',
-    version='0.11-dev',
+    version=version,
     long_description=long_description,
     packages=find_packages(),
     include_package_data=True,

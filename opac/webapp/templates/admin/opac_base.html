@@ -53,7 +53,17 @@
       </div>
     </div>
   </div>
-
+  {% if config.BUILD_DATE or config.VCS_REF or config.WEBAPP_VERSION %}
+    <div class="container">
+      <div class="text-center">
+        <small>
+          {% if config.BUILD_DATE %}{{config.BUILD_DATE}} | {% endif %}
+          {% if config.VCS_REF %} {{config.VCS_REF}} | {% endif %}
+          {% if config.WEBAPP_VERSION %} {{ config.WEBAPP_VERSION }}{% endif %}
+        </small>
+      </div>
+    </div>
+  {% endif %}
   <script src="{{ url_for('static', filename='js/vendor/jquery.popupwindows.js') }}"> </script>
   <script src="{{ url_for('static', filename='js/admin/common.js') }}"> </script>
 
