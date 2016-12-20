@@ -5,9 +5,9 @@ language: python
 env:
   global:
   - COMMIT=${TRAVIS_COMMIT::8}
-  - OPAC_BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+  - OPAC_BUILD_DATE=eval date -u +"%Y-%m-%dT%H:%M:%SZ"
   - OPAC_VCS_REF=$COMMIT
-  - OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
+  - OPAC_WEBAPP_VERSION=eval cat VERSION
 
 services:
 - docker
