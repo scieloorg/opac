@@ -259,7 +259,10 @@ def create_image(image_path, filename):
 
     image_destiation_path = os.path.join(image_root, filename)
 
-    shutil.copyfile(image_path, image_destiation_path)
+    try:
+        shutil.copyfile(image_path, image_destiation_path)
+    except FileNotFoundError as e:
+        print("ERROR: %s" % e)
 
     generate_thumbnail(image_destiation_path)
 
@@ -267,6 +270,8 @@ def create_image(image_path, filename):
 
     webapp.dbsql.session.add(img)
     webapp.dbsql.session.commit()
+
+    return img
 
 
 def get_resource_url(resource, type, lang):
