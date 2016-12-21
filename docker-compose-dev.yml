@@ -24,6 +24,10 @@ services:
         build:
             context: .
             dockerfile: ./Dockerfile-dev
+            args:
+                - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+                - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
+                - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
         command: gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --reload --timeout 1000 --log-level DEBUG
         user: nobody
         restart: always
