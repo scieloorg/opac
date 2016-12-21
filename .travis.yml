@@ -27,7 +27,7 @@ script:
 after_success:
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
   docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
-  docker build -t $TRAVIS_REPO_SLUG:$COMMIT .;
+  docker build -t $TRAVIS_REPO_SLUG:$COMMIT --build-arg BUILD_DATE=$OPAC_BUILD_DATE --build-arg VCS_REF=$OPAC_VCS_REF --build-arg VERSION=$OPAC_WEBAPP_VERSION .;
   docker tag $TRAVIS_REPO_SLUG:$COMMIT $TRAVIS_REPO_SLUG:latest;
   docker tag $TRAVIS_REPO_SLUG:$COMMIT $TRAVIS_REPO_SLUG:travis-$TRAVIS_BUILD_NUMBER;
   docker push $TRAVIS_REPO_SLUG;
