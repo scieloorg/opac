@@ -25,13 +25,13 @@ RUN apk --update add --no-cache \
 
 COPY . /app
 WORKDIR /app
-VOLUME /app/data
 
 RUN pip --no-cache-dir install -r requirements.txt && \
     pip --no-cache-dir install -r /app/requirements.dev.txt
 
 RUN make compile_messages
 RUN chown -R nobody:nogroup /app
+VOLUME /app/data
 USER nobody
 EXPOSE 8000
 
