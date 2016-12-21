@@ -2,8 +2,10 @@
 # coding: utf-8
 import os
 import sys
+import json
 import fnmatch
 import unittest
+from uuid import uuid4
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEBAPP_PATH = os.path.abspath(os.path.join(HERE, 'webapp'))
@@ -194,6 +196,55 @@ def upload_images(directory='.'):
                 image_path = os.path.join(root, filename)
 
                 create_image(image_path, filename)
+
+@manager.command
+@manager.option('-d', '--domain', dest="domain")
+@manager.option('-f', '--filename', dest="filename")
+def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info.json"):
+    """
+    Esse comando realiza o cadastro dos metadados de uma coleção a partir de um
+    arquivo JSON, localizado em: fixtures/default_info.json.
+
+    Por padrão o conteúdo é o da coleção SciELO Brasil.
+
+    As imagens são coletadas da pasta: fixtures/imgs
+    """
+
+    data = json.load(open(filename))
+
+    collection = Collection.objects.first()
+
+    collection.name = data['collection']['name']
+    collection.address1 = data['collection']['address1']
+    collection.address2 = data['collection']['address2']
+
+    print("Cadastrando as imagens da coleção %s" % collection.name)
+
+    for imgs in data['collection']['images']:
+
+        for key, val in imgs.items():
+
+            img = create_image(val, os.path.basename(val))
+
+            setattr(collection, key, '%s%s' % (domain, img.get_absolute_url))
+
+    print("Cadastrando os financiadores da coleção %s" % collection.name)
+
+    sponsors = []
+
+    for _ in data['sponsors']:
+        sponsor = Sponsor()
+        sponsor._id = str(uuid4().hex)
+        sponsor.name = _['name']
+        img = create_image(_['logo_path'], os.path.basename(_['logo_path']))
+        sponsor.logo_url = '%s%s' % (domain, img.get_absolute_url)
+        sponsor.url = _['url']
+        sponsor.save()
+        sponsors.append(sponsor)
+
+    collection.sponsors = sponsors
+
+    collection.save()
 
 if __name__ == '__main__':
     manager.run()

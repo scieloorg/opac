@@ -1,0 +1,51 @@
+{
+    "collection": {
+        "name": "SciELO Social Science",
+        "address1": "SciELO - Scientific Electronic Library Online FAPESP - BIREME",
+        "address2": "Avenida Onze de Junho, 269 - Vila Clementino 04041-050 São Paulo SP - Brazil Phone: +55 11 5083-3639/59 scielo@scielo.org",
+        "images": [{
+            "home_logo_pt": "fixtures/imgs/home_logo_pt.png"
+        }, {
+            "home_logo_es": "fixtures/imgs/home_logo_es.png"
+        }, {
+            "home_logo_en": "fixtures/imgs/home_logo_en.png"
+        }, {
+            "header_logo_pt": "fixtures/imgs/header_logo_pt.png"
+        }, {
+            "header_logo_es": "fixtures/imgs/header_logo_es.png"
+        }, {
+            "header_logo_en": "fixtures/ims/header_logo_en.png"
+        }, {
+            "menu_logo_pt": "fixtures/ims/menu_logo_pt.png"
+        }, {
+            "menu_logo_es": "fixtures/imgs/menu_logo_es.png"
+        }, {
+            "menu_logo_en": "fixtures/imgs/menu_logo_en.png"
+        }, {
+            "logo_footer": "fixtures/imgs/logo_footer.png"
+        }, {
+            "logo_drop_menu": "fixtures/imgs/logo_drop_menu.png"
+        }]
+    },
+    "sponsors": [{
+        "name": "FAPESP",
+        "url": "http://www.fapesp.br/",
+        "logo_path": "fixtures/imgs/fapesp.png"
+    }, {
+        "name": "CNPQ",
+        "url": "http://www.cnpq.br/",
+        "logo_path": "fixtures/imgs/cnpq.png"
+    }, {
+        "name": "BVS",
+        "url": "http://bvsalud.org/",
+        "logo_path": "fixtures/imgs/bvs.png"
+    }, {
+        "name": "BIREME",
+        "url": "http://regional.bvsalud.org/bvs/bireme/homepage.htm",
+        "logo_path": "fixtures/imgs/bireme.png"
+    }, {
+        "name": "FAP",
+        "url": "http://www.fapunifesp.edu.br/",
+        "logo_path": "fixtures/imgs/fap.png"
+    }]
+}
