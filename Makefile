@@ -3,8 +3,8 @@ default: test
 COMPOSE_FILE_DEV = docker-compose-dev.yml
 COMPOSE_FILE_BUILD = docker-compose-build.yml
 
-OPAC_BUILD_DATE= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-OPAC_VCS_REF= $(shell git rev-parse --short HEAD)
+OPAC_BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+OPAC_VCS_REF=$(strip $(shell git rev-parse --short HEAD))
 OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
 
 opac_version:
@@ -46,6 +46,10 @@ dev_compose_exec_shell_webapp:
 #####################################################
 
 travis_compose_build:
+	@echo "[Travis Build] opac version: " $(OPAC_WEBAPP_VERSION)
+	@echo "[Travis Build] lates commit: " $(OPAC_VCS_REF)
+	@echo "[Travis Build] build date: " $(OPAC_BUILD_DATE)
+	@echo "[Travis Build] compose file: " $(COMPOSE_FILE_BUILD)
 	@docker-compose -f $(COMPOSE_FILE_BUILD) build
 
 travis_compose_up:
