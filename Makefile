@@ -80,7 +80,7 @@ release_docker_build:
 	@echo "[Building] Image full tag: $(TRAVIS_REPO_SLUG):$(COMMIT)"
 	@docker build \
 	-t $(TRAVIS_REPO_SLUG):$(COMMIT) \
-	--build-arg OPAC_BUILD_DATE=$(OPAC_WEBAPP_VERSION) \
+	--build-arg OPAC_BUILD_DATE=$(OPAC_BUILD_DATE) \
 	--build-arg OPAC_VCS_REF=$(OPAC_VCS_REF) \
 	--build-arg OPAC_WEBAPP_VERSION=$(OPAC_WEBAPP_VERSION) .
 
