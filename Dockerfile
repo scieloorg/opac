@@ -10,7 +10,7 @@ ENV OPAC_BUILD_DATE ${OPAC_BUILD_DATE}
 ENV OPAC_VCS_REF ${OPAC_VCS_REF}
 ENV OPAC_WEBAPP_VERSION ${OPAC_WEBAPP_VERSION}
 
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL org.label-schema.build-date=$OPAC_BUILD_DATE \
       org.label-schema.name="OPAC WebApp - development build" \
       org.label-schema.description="OPAC WebApp main app" \
       org.label-schema.url="https://github.com/scieloorg/opac/" \
