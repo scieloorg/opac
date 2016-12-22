@@ -13,6 +13,13 @@ SciELO - On-line Public Access Catalog
      :target: https://pyup.io/repos/github/scieloorg/opac/
      :alt: Python 3
 
+.. image:: https://images.microbadger.com/badges/image/scieloorg/opac.svg
+     :target: https://microbadger.com/images/scieloorg/opac
+     :alt: Image info from microbadger.com
+
+.. image:: https://images.microbadger.com/badges/version/scieloorg/opac.svg
+     :target: https://microbadger.com/images/scieloorg/opac
+     :alt: Image latest version
 
 =========================
 Instalação e configuração
