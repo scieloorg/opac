@@ -23,6 +23,6 @@ Flask-HTMLmin==1.2
 python-slugify==1.2.1
 requests==2.12.4
 gunicorn==19.6.0
-xlsxwriter==0.9.4
+xlsxwriter==0.9.5
 tweepy==3.5.0
 raven[flask]==5.32.0
