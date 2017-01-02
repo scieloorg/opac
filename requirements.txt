@@ -1,4 +1,4 @@
-Flask==0.11.1
+Flask==0.12
 mongoengine==0.11.0
 flask-mongoengine==0.8.2
 Flask-Assets==0.12
@@ -23,6 +23,6 @@ Flask-HTMLmin==1.2
 python-slugify==1.2.1
 requests==2.12.4
 gunicorn==19.6.0
-xlsxwriter==0.9.4
+xlsxwriter==0.9.6
 tweepy==3.5.0
 raven[flask]==5.32.0
