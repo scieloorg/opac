@@ -1,6 +1,6 @@
 {
     "collection": {
-        "name": "SciELO Social Science",
+        "name": "SciELO",
         "address1": "SciELO - Scientific Electronic Library Online FAPESP - BIREME",
         "address2": "Avenida Onze de Junho, 269 - Vila Clementino 04041-050 São Paulo SP - Brazil Phone: +55 11 5083-3639/59 scielo@scielo.org",
         "images": [{
@@ -14,9 +14,9 @@
         }, {
             "header_logo_es": "fixtures/imgs/header_logo_es.png"
         }, {
-            "header_logo_en": "fixtures/ims/header_logo_en.png"
+            "header_logo_en": "fixtures/imgs/header_logo_en.png"
         }, {
-            "menu_logo_pt": "fixtures/ims/menu_logo_pt.png"
+            "menu_logo_pt": "fixtures/imgs/menu_logo_pt.png"
         }, {
             "menu_logo_es": "fixtures/imgs/menu_logo_es.png"
         }, {
