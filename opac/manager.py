@@ -214,37 +214,41 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
 
     collection = Collection.objects.first()
 
-    collection.name = data['collection']['name']
-    collection.address1 = data['collection']['address1']
-    collection.address2 = data['collection']['address2']
+    if collection:
+        collection.name = data['collection']['name']
+        collection.address1 = data['collection']['address1']
+        collection.address2 = data['collection']['address2']
 
-    print("Cadastrando as imagens da coleção %s" % collection.name)
+        print("Cadastrando as imagens da coleção %s" % collection.name)
 
-    for imgs in data['collection']['images']:
+        for imgs in data['collection']['images']:
 
-        for key, val in imgs.items():
+            for key, val in imgs.items():
 
-            img = create_image(val, os.path.basename(val))
+                img = create_image(val, os.path.basename(val))
 
-            setattr(collection, key, '%s%s' % (domain, img.get_absolute_url))
+                setattr(collection, key, '%s%s' % (domain, img.get_absolute_url))
 
-    print("Cadastrando os financiadores da coleção %s" % collection.name)
+        print("Cadastrando os financiadores da coleção %s" % collection.name)
 
-    sponsors = []
+        sponsors = []
 
-    for _ in data['sponsors']:
-        sponsor = Sponsor()
-        sponsor._id = str(uuid4().hex)
-        sponsor.name = _['name']
-        img = create_image(_['logo_path'], os.path.basename(_['logo_path']))
-        sponsor.logo_url = '%s%s' % (domain, img.get_absolute_url)
-        sponsor.url = _['url']
-        sponsor.save()
-        sponsors.append(sponsor)
+        for _ in data['sponsors']:
+            sponsor = Sponsor()
+            sponsor._id = str(uuid4().hex)
+            sponsor.name = _['name']
+            img = create_image(_['logo_path'], os.path.basename(_['logo_path']))
+            sponsor.logo_url = '%s%s' % (domain, img.get_absolute_url)
+            sponsor.url = _['url']
+            sponsor.save()
+            sponsors.append(sponsor)
 
-    collection.sponsors = sponsors
+        collection.sponsors = sponsors
 
-    collection.save()
+        collection.save()
+
+    else:
+        print("Nenhuma coleção encontrada!")
 
 if __name__ == '__main__':
     manager.run()
