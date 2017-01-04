@@ -163,4 +163,3 @@ class CustomFiltersTestCase(BaseTestCase):
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
         self.assertListEqual([_ for _ in expected], [_ for _ in result])
-

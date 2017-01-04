@@ -117,7 +117,7 @@ def makeAnyJournal(items=3, attrib=None):  # noqa
     """
     journals = []
 
-    for item in range(items):
+    for _ in range(items):
 
         journal = makeOneJournal(attrib)
 
