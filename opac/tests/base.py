@@ -33,7 +33,7 @@ class MongoInstance(object):
         # XXX: wait for the instance to be ready
         #      Mongo is ready in a glance, we just wait to be able to open a
         #      Connection.
-        for i in range(3):
+        for _ in range(3):
             time.sleep(0.1)
             try:
                 self._conn = pymongo.MongoClient(self.mongo_settings['host'],

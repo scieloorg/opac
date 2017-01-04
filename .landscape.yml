@@ -1,9 +1,9 @@
 doc-warnings: false
 test-warnings: true
-strictness: high
+strictness: medium
+autodetect: false
 uses:
   - flask
-autodetect: true
 python-targets: 3
 pep8:
   disable:

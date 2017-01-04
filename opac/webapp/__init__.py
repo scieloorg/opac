@@ -58,7 +58,7 @@ def create_app():
     # Sentry:
     if app.config['USE_SENTRY']:
         dsn = app.config['SENTRY_DSN']
-        sentry.init_app(app, dsn=dsn,  logging=True, level=logging.ERROR)
+        sentry.init_app(app, dsn=dsn, logging=True, level=logging.ERROR)
 
     # login
     login_manager.session_protection = 'strong'
