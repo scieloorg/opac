@@ -2,7 +2,7 @@
 
 from webapp import choices
 from webapp.utils import utc_to_local
-from flask import current_app
+
 
 def trans_alpha2(value):
     """

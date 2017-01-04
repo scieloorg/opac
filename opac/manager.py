@@ -18,8 +18,8 @@ if FLASK_COVERAGE:
     try:
         import coverage
     except ImportError:
-        msg = 'A variável de ambiente %r esta indicando que você quer executar tests com coverage, porém não é possível importar o modulo coverage'
-        raise RuntimeError(msg % variable_name)
+        msg = 'Não é possível importar o modulo coverage'
+        raise RuntimeError(msg)
     COV = None
     if FLASK_COVERAGE:
         COV = coverage.coverage(branch=True, include='opac/webapp/*')
@@ -34,7 +34,6 @@ from webapp.utils import reset_db, create_db_tables, create_user, create_image
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from webapp.admin.forms import EmailForm
-from flask import current_app
 
 app = create_app()
 migrate = Migrate(app, dbsql)

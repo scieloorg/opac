@@ -1,9 +1,10 @@
 # coding: utf-8
 
-from flask import url_for, current_app
+from flask import current_app
 from .base import BaseTestCase
 
 from . import utils
+
 
 class LegacyURLTestCase(BaseTestCase):
 

@@ -3,7 +3,6 @@
 import traceback
 from flask_babelex import lazy_gettext as __
 from flask import current_app, abort
-from webapp import dbsql
 from .base import BaseTestCase
 
 ERROR_MSG = __('Mensagem de erro explicativo para o usuário')

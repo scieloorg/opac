@@ -1,0 +1,10 @@
+doc-warnings: false
+test-warnings: true
+strictness: medium
+uses:
+  - flask
+autodetect: true
+python-targets: 3
+pep8:
+  disable:
+    - E501  # line too long

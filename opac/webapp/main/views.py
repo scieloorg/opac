@@ -1,21 +1,17 @@
 # coding: utf-8
 
-
 import logging
 from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
-from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response
+from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response, send_from_directory, g
 from werkzeug.contrib.atom import AtomFeed
 from urllib.parse import urljoin
 
 from . import main
-from flask import current_app, send_from_directory, g
 from webapp import babel
 from webapp import controllers
-from webapp import models
 from webapp import utils
-import webapp
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +31,7 @@ def add_collection_to_g():
         try:
             collection = controllers.get_current_collection()
             setattr(g, 'collection', collection)
-        except Exception as e:
+        except Exception:
             # discutir o que fazer aqui
             setattr(g, 'collection', {})
 
@@ -359,7 +355,7 @@ def journal_feed(url_seg):
     # ######### TODO: Revisar/Melhorar/Consertar #########
     try:
         feed_language = session['lang'][:2].lower()
-    except Exception as e:
+    except Exception:
         feed_language = 'pt'
 
     for article in articles:
@@ -514,13 +510,8 @@ def issue_grid(url_seg):
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/')
 def issue_toc(url_seg, url_seg_issue):
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    # default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     section_filter = request.args.get('section', '', type=str)
-
-    if not session.get('lang'):
-        lang = default_lang
-    else:
-        lang = session.get('lang')[:2]
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -591,7 +582,7 @@ def issue_feed(url_seg, url_seg_issue):
     # ######### TODO: Revisar/Melhorar/Consertar #########
     try:
         feed_language = session['lang'][:2].lower()
-    except Exception as e:
+    except Exception:
         feed_language = 'pt'
 
     for article in articles:
@@ -656,7 +647,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if article.htmls:
         try:
             html = [html for html in article.htmls if html['lang'] == lang_code]
-        except IndexError as e:
+        except IndexError:
             abort(404, _('Artigo não encontrado'))
     else:
         html = None

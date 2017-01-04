@@ -1,12 +1,8 @@
 # coding: utf-8
 
-from uuid import uuid4
-
 from werkzeug.security import check_password_hash
 
 from .base import BaseTestCase
-
-from opac_schema.v1 import models
 
 from webapp import controllers, dbsql, utils as ut
 
@@ -190,7 +186,7 @@ class JournalControllerTestCase(BaseTestCase):
             "index_at": ["SSCI", "SCIE"],
             "last_issue": {"volume": "5", "number": "5", "year": "2016"}
         })
-        journal6 = self._makeOne({
+        self._makeOne({
             "index_at": ["SSCI"],
             "last_issue": {"volume": "6", "number": "6", "year": "2016"}
         })
@@ -353,10 +349,10 @@ class JournalControllerTestCase(BaseTestCase):
         Testando a função controllers.get_journal_by_jid() deve retornar um
         objeto ``Journal`` com o id=jid123 e com is_public=false.
         """
-        journal1 = self._makeOne(attrib={'_id': 'jid1', 'is_public': True})
-        journal2 = self._makeOne(attrib={'_id': 'jid2', 'is_public': True})
+        self._makeOne(attrib={'_id': 'jid1', 'is_public': True})
+        self._makeOne(attrib={'_id': 'jid2', 'is_public': True})
         journal3 = self._makeOne(attrib={'_id': 'jid3', 'is_public': False})
-        journal4 = self._makeOne(attrib={'_id': 'jid4', 'is_public': False})
+        self._makeOne(attrib={'_id': 'jid4', 'is_public': False})
 
         self.assertEqual(
             controllers.get_journal_by_jid('jid3', is_public=False).id,

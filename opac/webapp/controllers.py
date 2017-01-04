@@ -7,9 +7,8 @@
     acessem diretamente a camada inferior de modelos.
 """
 
-import datetime
 import unicodecsv
-import io, mimetypes
+import io
 import xlsxwriter
 import tweepy
 
@@ -17,7 +16,7 @@ from collections import OrderedDict
 
 from slugify import slugify
 
-from opac_schema.v1.models import(
+from opac_schema.v1.models import (
     Journal,
     Issue,
     Article,

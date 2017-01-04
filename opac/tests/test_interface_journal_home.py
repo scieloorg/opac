@@ -20,7 +20,7 @@ class JournalHomeTestCase(BaseTestCase):
 
         with self.client as c:
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
                                          url_seg=journal.url_segment)}
@@ -46,7 +46,7 @@ class JournalHomeTestCase(BaseTestCase):
 
         with self.client as c:
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
                                          url_seg=journal.url_segment)}
@@ -72,15 +72,15 @@ class JournalHomeTestCase(BaseTestCase):
 
         with self.client as c:
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             header = {'Referer': url_for('main.journal_detail',
                                          url_seg=journal.url_segment)}
 
-            response = c.get(url_for('main.set_locale',
-                                     lang_code='en'),
-                                     headers=header,
-                                     follow_redirects=True)
+            response = c.get(
+                url_for('main.set_locale', lang_code='en'),
+                headers=header,
+                follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 

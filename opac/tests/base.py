@@ -1,13 +1,8 @@
 # coding:utf-8
-import os
 import time
-import shutil
 import tempfile
-import unittest
-import subprocess
 
 import pymongo
-from opac_schema.v1 import models as schema_models
 from flask import current_app
 from flask_testing import TestCase
 from webapp import dbsql

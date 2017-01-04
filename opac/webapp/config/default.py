@@ -56,7 +56,8 @@ import os
         - GA_TRACKING_CODE:     código de google analytics (acesse https://goo.gl/HE77SO para resgatar seu código)
 
       - Upload de imagens:
-        - OPAC_MEDIA_ROOT:      path absoluto da pasta que vai armazenar as imagens subidas pelos usuários pelo admin. (default: /[repo dir]/opac/opac/webapp/media/)
+        - OPAC_MEDIA_ROOT:      path absoluto da pasta que vai armazenar as imagens subidas pelos usuários pelo admin.
+                                (default: /[repo dir]/opac/opac/webapp/media/)
         - OPAC_MEDIA_URL:       URL para servir as imagens. (default: '/media')
 
       - Extensions:

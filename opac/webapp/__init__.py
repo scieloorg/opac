@@ -1,5 +1,4 @@
 # coding: utf-8
-import os
 
 from raven.contrib.flask import Sentry
 import logging

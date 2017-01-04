@@ -17,7 +17,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
                 response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
                                  headers={'Referer': '/'},
@@ -37,7 +37,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
                 response = c.get(url_for('main.set_locale', lang_code='en'),
                                  headers={'Referer': '/'},
@@ -57,7 +57,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
                 response = c.get(url_for('main.set_locale', lang_code='es'),
                                  headers={'Referer': '/'},
@@ -76,7 +76,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
 
                 response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
@@ -94,7 +94,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
                 response = c.get(url_for('main.set_locale', lang_code='en'),
                                  headers={'Referer': '/'},
@@ -111,7 +111,7 @@ class HeaderTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             with self.client as c:
                 response = c.get(url_for('main.set_locale', lang_code='es'),
                                  headers={'Referer': '/'},

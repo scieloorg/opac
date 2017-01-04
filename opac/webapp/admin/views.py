@@ -1,27 +1,21 @@
 # coding: utf-8
-import os
 import logging
 import socket
 from datetime import datetime
-from functools import partial
 from uuid import uuid4
-from werkzeug import secure_filename
 from jinja2 import Markup
 from flask_babelex import gettext as _
-from flask_babelex import ngettext
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
 from flask_admin.actions import action
 from flask_admin.form import Select2Field
 from wtforms.fields import SelectField
-from wtforms import fields as wtforms_fields
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
 from flask import url_for, redirect, request, flash, abort, current_app
 from flask_admin.contrib import sqla, mongoengine
 from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
-from mongoengine.base.datastructures import BaseList
 
 from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
@@ -88,7 +82,7 @@ class AdminIndexView(admin.AdminIndexView):
             ts = get_timed_serializer()
             email = ts.loads(token, salt="email-confirm-key",
                              max_age=current_app.config['TOKEN_MAX_AGE'])
-        except Exception as e:  # possiveis exceções: https://pythonhosted.org/itsdangerous/#exceptions
+        except Exception:  # possiveis exceções: https://pythonhosted.org/itsdangerous/#exceptions
             # qualquer exeção invalida a operação de confirmação
             abort(404)  # melhorar mensagem de erro para o usuário
 
@@ -132,7 +126,7 @@ class AdminIndexView(admin.AdminIndexView):
             ts = get_timed_serializer()
             email = ts.loads(token, salt="recover-key",
                              max_age=current_app.config['TOKEN_MAX_AGE'])
-        except Exception as e:
+        except Exception:
             abort(404)
 
         form = forms.PasswordForm(request.form)
@@ -173,8 +167,8 @@ class UserAdminView(sqla.ModelView):
                 flash(_('Enviamos o email de confirmação para: %(email)s',
                         email=model.email))
             else:
-                flash(_('Ocorreu um erro no envio do email de confirmação para: %(email)s',
-                        email=model.email),
+                flash(_('Ocorreu um erro no envio do email de confirmação para: %(email)s %(error_msg)s',
+                        email=model.email, error_msg=error_msg),
                       'error')
 
     def is_accessible(self):
@@ -532,7 +526,7 @@ class JournalAdminView(OpacBaseAdminView):
             controllers.set_journal_is_public_bulk(ids, True)
             # Adicionar mais contexto sobre as consequência dessa ação
             flash(_('Periódico(s) publicado(s) com sucesso!!'))
-        except Exception as ex:
+        except Exception:
             flash(_('Ocorreu um erro tentando publicar o(s) periódico(s)!!'), 'error')
 
     def unpublish_journals(self, ids, reason):
