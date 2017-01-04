@@ -67,7 +67,7 @@ def get_prev_article(articles, article):
         try:
             if articles.index(article) == 0:
                 return None
-            return articles[articles.index(article)-1]
+            return articles[articles.index(article) - 1]
         except IndexError:
             return None
     else:
@@ -89,7 +89,7 @@ def get_next_article(articles, article):
         try:
             if len(articles) == articles.index(article):
                 return None
-            return articles[articles.index(article)+1]
+            return articles[articles.index(article) + 1]
         except IndexError:
             return None
     else:
@@ -112,7 +112,7 @@ def get_prev_issue(issues, issue):
     """
     if len(issues) >= 2:
         try:
-            return issues[issues.index(issue)+1]
+            return issues[issues.index(issue) + 1]
         except IndexError:
             return None
     else:
@@ -139,7 +139,7 @@ def get_next_issue(issues, issue):
             # Caso o fascículo seja o primeiro retorna None
             if issues.index(issue) == 0:
                 return None
-            return issues[issues.index(issue)-1]
+            return issues[issues.index(issue) - 1]
         except IndexError:
             return None
     else:

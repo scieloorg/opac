@@ -10,7 +10,7 @@ def trans_alpha2(value):
     """
 
     if value in choices.ISO3166_ALPHA2:
-       return choices.ISO3166_ALPHA2[value]
+        return choices.ISO3166_ALPHA2[value]
     else:
         return value
 

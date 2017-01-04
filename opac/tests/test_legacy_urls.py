@@ -28,7 +28,6 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('journal/detail.html')
 
-
     def test_issue_grid(self):
         """
         Testa o acesso a grade de fascículos da revista pela URL antiga.
@@ -51,7 +50,6 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('issue/grid.html')
 
-
     def test_issue_toc(self):
         """
         Testa o acesso ao toc de um fascículos pela URL antiga.
@@ -62,8 +60,10 @@ class LegacyURLTestCase(BaseTestCase):
 
             journal = utils.makeOneJournal({'print_issn': '0000-0000'})
 
-            issue = utils.makeOneIssue({'journal': journal.id,
-                                        'pid': '0000-000020160001'})
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
 
             with self.client as c:
 
@@ -75,7 +75,6 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('issue/toc.html')
 
-
     def test_article_text(self):
         """
         Testa o acesso ao artigo pela URL antiga.
@@ -86,12 +85,16 @@ class LegacyURLTestCase(BaseTestCase):
 
             journal = utils.makeOneJournal({'print_issn': '0000-0000'})
 
-            issue = utils.makeOneIssue({'journal': journal.id,
-                                        'pid': '0000-000020160001'})
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
 
-            article = utils.makeOneArticle({'journal': journal.id,
-                                  'issue': issue.id,
-                                  'pid': '0000-00002016000100251'})
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'pid': '0000-00002016000100251'
+            })
 
             with self.client as c:
 
@@ -103,7 +106,6 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('article/detail.html')
 
-
     def test_article_abstract(self):
         """
         Testa o acesso ao abstract do artigo pela URL antiga.
@@ -114,11 +116,15 @@ class LegacyURLTestCase(BaseTestCase):
 
             journal = utils.makeOneJournal({'print_issn': '0000-0000'})
 
-            issue = utils.makeOneIssue({'journal': journal.id,
-                                        'pid': '0000-000020160001'})
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
 
-            article = utils.makeOneArticle({'journal': journal.id, 'issue': issue.id,
-                                  'pid': '0000-00002016000100251'})
+            article = utils.makeOneArticle({
+                'journal': journal.id, 'issue': issue.id,
+                'pid': '0000-00002016000100251'
+            })
 
             with self.client as c:
 

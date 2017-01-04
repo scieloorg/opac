@@ -11,7 +11,7 @@ from . import utils
 class TOCTestCase(BaseTestCase):
 
     # TOC
-    def test_the_title_of_the_article_list_when_language_PT(self):
+    def test_the_title_of_the_article_list_when_language_pt(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Português.
@@ -52,7 +52,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertIn("Artigo Com Título Em Português", response.data.decode('utf-8'))
 
-    def ttest_the_title_of_the_article_list_when_language_ES(self):
+    def ttest_the_title_of_the_article_list_when_language_es(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Espanhol.
@@ -93,7 +93,7 @@ class TOCTestCase(BaseTestCase):
             self.assertIn("Título Del Artículo En Portugués",
                           response.data.decode('utf-8'))
 
-    def test_the_title_of_the_article_list_when_language_EN(self):
+    def test_the_title_of_the_article_list_when_language_en(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Inglês.

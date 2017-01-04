@@ -607,9 +607,9 @@ class AdminViewsTestCase(BaseTestCase):
 
                     new_password = 'blaus'
                     response = c.post(
-                            resert_url_with_token,
-                            data={'password': new_password},
-                            follow_redirects=True)
+                        resert_url_with_token,
+                        data={'password': new_password},
+                        follow_redirects=True)
                     self.assertStatus(response, 200)
                     # verificação da nova senha do usuario
                     user = get_user_by_email(credentials['email'])
@@ -658,9 +658,9 @@ class AdminViewsTestCase(BaseTestCase):
 
                     invalid_password = ''
                     response = c.post(
-                            resert_url_with_token,
-                            data={'password': invalid_password},
-                            follow_redirects=True)
+                        resert_url_with_token,
+                        data={'password': invalid_password},
+                        follow_redirects=True)
                     self.assertStatus(response, 200)
                     context_form = self.get_context_variable('form')
                     expected_form_error = {'password': [u'This field is required.']}
@@ -759,9 +759,9 @@ class AdminViewsTestCase(BaseTestCase):
                     # tentamos recuperar a senha com o link/token do email
                     new_password = '321'
                     response = c.post(
-                            resert_url_with_token,
-                            data={'password': new_password},
-                            follow_redirects=True)
+                        resert_url_with_token,
+                        data={'password': new_password},
+                        follow_redirects=True)
                     self.assertStatus(response, 200)
                     self.assertTemplateUsed('admin/auth/unconfirm_email.html')
                     user = get_user_by_email(credentials['email'])

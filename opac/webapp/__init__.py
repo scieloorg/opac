@@ -34,7 +34,7 @@ mail = Mail()
 babel = Babel()
 sentry = Sentry()
 
-from .main import custom_filters
+from .main import custom_filters  # noqa
 
 
 class RegexConverter(BaseConverter):

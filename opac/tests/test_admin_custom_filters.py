@@ -104,7 +104,7 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__ne': journal.title}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+        self.assertListEqual([_ for _ in expected], [_ for _ in result])
 
     def test_custom_filter_like(self):
 
@@ -119,7 +119,7 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__%s' % term: data}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+        self.assertListEqual([_ for _ in expected], [_ for _ in result])
 
     def test_custom_filter_not_like(self):
 
@@ -134,7 +134,7 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__not__%s' % term: data}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+        self.assertListEqual([_ for _ in expected], [_ for _ in result])
 
     def test_custom_filter_in_list(self):
 
@@ -148,7 +148,7 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__in': [journal.title]}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+        self.assertListEqual([_ for _ in expected], [_ for _ in result])
 
     def test_custom_filter_not_in_list(self):
 
@@ -162,5 +162,5 @@ class CustomFiltersTestCase(BaseTestCase):
         journals = Journal.objects.filter(Q(**{'title__nin': [journal.title]}))
         expected = Issue.objects.filter(Q(**{'%s__in' % column.name: journals}))
 
-        self.assertListEqual([ _ for _ in expected], [ _ for _ in result])
+        self.assertListEqual([_ for _ in expected], [_ for _ in result])
 

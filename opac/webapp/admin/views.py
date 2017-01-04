@@ -796,7 +796,7 @@ class PressReleaseAdminView(OpacBaseAdminView):
         'article': CustomQueryAjaxModelLoader(
             name='article',
             model=Article,
-            fields=['title', 'doi', 'pid',]
+            fields=['title', 'doi', 'pid']
         ),
     }
 

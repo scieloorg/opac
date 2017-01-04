@@ -1,6 +1,6 @@
 doc-warnings: false
 test-warnings: true
-strictness: medium
+strictness: high
 uses:
   - flask
 autodetect: true

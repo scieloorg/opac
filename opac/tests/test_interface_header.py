@@ -9,7 +9,7 @@ from . import utils
 
 class HeaderTestCase(BaseTestCase):
 
-    def test_current_language_when_set_pt_BR(self):
+    def test_current_language_when_set_pt_br(self):
         """
         Teste para alterar o idioma da interface, nesse teste a URL:
         '/set_locale/pt_BR' deve manter na inteface somente o
@@ -69,7 +69,7 @@ class HeaderTestCase(BaseTestCase):
                 self.assertIn(b'lang-en', response.data)
                 self.assertNotIn(b'lang-es', response.data)
 
-    def test_current_header_logo_when_set_pt_BR(self):
+    def test_current_header_logo_when_set_pt_br(self):
         """
         Testa se o logo é alterado quando é alterado o idioma na interface,
         nesse teste o logo deve retorna no contexto do idioma Português.

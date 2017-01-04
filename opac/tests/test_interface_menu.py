@@ -518,11 +518,11 @@ class MenuTestCase(BaseTestCase):
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
             expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for(
-                    '.article_detail',
-                    url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment,
-                    url_seg_article=article2.url_segment,
-                    lang_code='pt')
+                '.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article2.url_segment,
+                lang_code='pt')
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 

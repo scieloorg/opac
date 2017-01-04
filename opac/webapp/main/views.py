@@ -76,14 +76,14 @@ def index():
 
     urls = {
         'downloads': '{0}/w/accesses?collection={1}'.format(
-                                current_app.config['OPAC_METRICS_URL'],
-                                current_app.config['OPAC_COLLECTION']),
+            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['OPAC_COLLECTION']),
         'references': '{0}/w/publication/size?collection={1}'.format(
-                                current_app.config['OPAC_METRICS_URL'],
-                                current_app.config['OPAC_COLLECTION']),
+            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['OPAC_COLLECTION']),
         'other': '{0}/?collection={1}'.format(
-                                current_app.config['OPAC_METRICS_URL'],
-                                current_app.config['OPAC_COLLECTION'])
+            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['OPAC_COLLECTION'])
     }
 
     context = {
@@ -96,7 +96,8 @@ def index():
 
     return render_template("collection/index.html", **context)
 
-###################################PressRelease#################################
+# ##################################PressRelease#################################
+
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/pressrelease/<string:lang_code>/', defaults={'url_seg_article': None})
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/pressrelease/<string:lang_code>/')
@@ -128,7 +129,8 @@ def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
     return render_template("includes/press_release.html", **context)
 
 
-###################################Collection###################################
+# ##################################Collection###################################
+
 
 @main.route('/journals/')
 def collection_list():
@@ -209,7 +211,7 @@ def about_collection():
 
     return render_template("collection/about.html", **context)
 
-####################################Journal#####################################
+# ###################################Journal#####################################
 
 
 @main.route('/scielo.php/')
@@ -308,8 +310,9 @@ def journal_detail(url_seg):
         previous_issue = None
 
     # Press releases
-    press_releases = controllers.get_press_releases({'journal': journal,
-                                                     'language': language})
+    press_releases = controllers.get_press_releases({
+        'journal': journal,
+        'language': language})
 
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
@@ -480,7 +483,8 @@ def download_journal_list(list_type, extension):
         response.headers['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
 
-####################################Issue#######################################
+# ###################################Issue#######################################
+
 
 @main.route('/<string:url_seg>/issues/')
 def issue_grid(url_seg):
@@ -544,16 +548,16 @@ def issue_toc(url_seg, url_seg_issue):
     next_issue = utils.get_next_issue(issue_list, issue)
 
     context = {
-                'next_issue': next_issue,
-                'previous_issue': previous_issue,
-                'journal': journal,
-                'issue': issue,
-                'articles': articles,
-                'sections': sections,
-                'section_filter': section_filter,
-                # o primiero item da lista é o último fascículo.
-                'last_issue': issues[0] if issues else None
-               }
+        'next_issue': next_issue,
+        'previous_issue': previous_issue,
+        'journal': journal,
+        'issue': issue,
+        'articles': articles,
+        'sections': sections,
+        'section_filter': section_filter,
+        # o primiero item da lista é o último fascículo.
+        'last_issue': issues[0] if issues else None
+    }
 
     return render_template("issue/toc.html", **context)
 
@@ -605,7 +609,8 @@ def issue_feed(url_seg, url_seg_issue):
 
     return feed.get_response()
 
-###################################Article######################################
+# ##################################Article######################################
+
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/')
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
@@ -666,7 +671,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     return render_template("article/detail.html", **context)
 
 
-###################################Search#######################################
+# ##################################Search#######################################
+
 
 @main.route("/metasearch/", methods=['GET'])
 def metasearch():
@@ -678,7 +684,8 @@ def metasearch():
     xml = utils.do_request(url, request.args)
     return Response(xml, mimetype='text/xml')
 
-################################E-mail share####################################
+# ###############################E-mail share####################################
+
 
 @main.route("/email_share/", methods=['GET'])
 def email_share():
@@ -690,15 +697,17 @@ def email_share():
     comment = request.args.get('comment', type=str)
 
     sent, message = controllers.send_email_share(
-            from_email,
-            recipents.split(";"),
-            share_url,
-            subject,
-            comment
-        )
+        from_email,
+        recipents.split(";"),
+        share_url,
+        subject,
+        comment
+    )
+
     return jsonify({'sent': sent, 'message': message.encode('utf-8')})
 
-###################################Others#######################################
+# ##################################Others#######################################
+
 
 @main.route("/media/<path:filename>/", methods=['GET'])
 def download_file_by_filename(filename):

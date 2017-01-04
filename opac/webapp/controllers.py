@@ -304,19 +304,19 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
 
     common_headers = ['Title', 'issues', 'Last volume', 'Last number', 'Last year', 'Is active?']
     if list_type == 'alpha':
-        CSV_HEADERS = common_headers
+        csv_headers = common_headers
         order_by = 'title'
         worksheet_name = _('Lista Alfabética')
     elif list_type == 'areas':
-        CSV_HEADERS = ['Areas', ] + common_headers
+        csv_headers = ['Areas', ] + common_headers
         order_by = 'study_areas'
         worksheet_name = _('Lista Temática')
     elif list_type == 'wos':
-        CSV_HEADERS = ['WoS', ] + common_headers
+        csv_headers = ['WoS', ] + common_headers
         order_by = 'index_at'
         worksheet_name = _('Lista Web of Science')
     elif list_type == 'publisher':
-        CSV_HEADERS = ['Publisher', ] + common_headers
+        csv_headers = ['Publisher', ] + common_headers
         order_by = 'publisher_name'
         worksheet_name = _('Lista by Institution')
 
@@ -326,7 +326,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
 
         csv_file = io.StringIO()
         csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
-        csv_writer.writerow(CSV_HEADERS)
+        csv_writer.writerow(csv_headers)
 
         for journal in journals:
             csv_writer.writerow(format_csv_row(list_type, journal))
@@ -348,7 +348,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         cell_head_format.set_font_size(10)
         cell_head_format.set_bold()
 
-        for i, head in enumerate(CSV_HEADERS):
+        for i, head in enumerate(csv_headers):
             worksheet.write(0, i, head, cell_head_format)
 
         cell_format = workbook.add_format()
@@ -357,7 +357,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
         for i, journal in enumerate(journals):
             for j, data in enumerate(format_csv_row(list_type, journal)):
                 # Adiciona 1 ao índice para maner o cabeçalho.
-                worksheet.write(i+1, j, data, cell_format)
+                worksheet.write(i + 1, j, data, cell_format)
 
         workbook.close()
 

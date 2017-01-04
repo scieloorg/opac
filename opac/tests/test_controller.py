@@ -11,7 +11,7 @@ from . import utils
 
 class JournalControllerTestCase(BaseTestCase):
 
-    def _makeOne(self, attrib=None):
+    def _make_one(self, attrib=None):
         """
         Retorna um objeto ``Journal`` com os atributos obrigatórios:
         ``_id``, ``jid``, ``is_public``, o param ``attrib`` atualiza os
@@ -19,7 +19,7 @@ class JournalControllerTestCase(BaseTestCase):
         """
         return utils.makeOneJournal(attrib=attrib)
 
-    def _makeAny(self, items=3):
+    def _make_any(self, items=3):
         """
         Retorna uma lista de objetos ``Journal`` com atributos ``jid``,
         ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
@@ -31,7 +31,7 @@ class JournalControllerTestCase(BaseTestCase):
         Teste da função controllers.get_journals() para retornar um objeto:
         ``Journal``.
         """
-        journal = self._makeOne()
+        journal = self._make_one()
         self.assertEqual(controllers.get_journals()[0], journal)
 
     def test_get_public_journal(self):
@@ -39,7 +39,7 @@ class JournalControllerTestCase(BaseTestCase):
         Teste da função controllers.get_journals() para retorna um objeto:
         ``Journal`` explicitanto o artibuto is_public=True.
         """
-        journal = self._makeOne()
+        journal = self._make_one()
         self.assertEqual(controllers.get_journals(is_public=True)[0], journal)
 
     def test_get_not_public_journal(self):
@@ -47,7 +47,7 @@ class JournalControllerTestCase(BaseTestCase):
         Teste da função controllers.get_journals() para retorna um objeto:
         ``Journal`` explicitanto o artibuto is_public=False.
         """
-        journal = self._makeOne({'is_public': False})
+        journal = self._make_one({'is_public': False})
         self.assertEqual(controllers.get_journals(is_public=False)[0], journal)
 
     def test_get_journal_order_by_acronym(self):
@@ -55,13 +55,13 @@ class JournalControllerTestCase(BaseTestCase):
         Teste da função controllers.get_journals() para retorna um objeto:
         ``Journal`` considerando a ordenação por acrônimo.
         """
-        journalC = self._makeOne({'acronym': 'revistaC'})
-        journalA = self._makeOne({'acronym': 'revistaA'})
-        journalB = self._makeOne({'acronym': 'revistaB'})
+        journal3 = self._make_one({'acronym': 'revistaC'})
+        journal1 = self._make_one({'acronym': 'revistaA'})
+        journal2 = self._make_one({'acronym': 'revistaB'})
 
         self.assertListEqual(
             [journal for journal in controllers.get_journals(order_by='acronym')],
-            [journalA, journalB, journalC])
+            [journal1, journal2, journal3])
 
     def test_get_journal_without_itens(self):
         """
@@ -76,27 +76,27 @@ class JournalControllerTestCase(BaseTestCase):
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({
+        journal1 = self._make_one({
             "study_areas": ["Health Sciences"],
             "last_issue": {"volume": "1", "number": "1", "year": "2016"}
         })
-        journal2 = self._makeOne({
+        journal2 = self._make_one({
             "study_areas": ["Health Sciences", "Biological Sciences"],
             "last_issue": {"volume": "2", "number": "2", "year": "2016"}
         })
-        journal3 = self._makeOne({
+        journal3 = self._make_one({
             "study_areas": ["Exact and Earth Sciences"],
             "last_issue": {"volume": "3", "number": "3", "year": "2016"}
         })
-        journal4 = self._makeOne({
+        journal4 = self._make_one({
             "study_areas": ["Human Sciences", "Biological Sciences", "Engineering"],
             "last_issue": {"volume": "4", "number": "4", "year": "2016"}
         })
-        journal5 = self._makeOne({
+        journal5 = self._make_one({
             "study_areas": ["Linguistics"],
             "last_issue": {"volume": "5", "number": "5", "year": "2016"}
         })
-        journal6 = self._makeOne({
+        journal6 = self._make_one({
             "study_areas": ["Engineering"],
             "last_issue": {"volume": "6", "number": "6", "year": "2016"}
         })
@@ -166,27 +166,27 @@ class JournalControllerTestCase(BaseTestCase):
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({
+        journal1 = self._make_one({
             "index_at": ["SCIE"],
             "last_issue": {"volume": "1", "number": "1", "year": "2016"}
         })
-        journal2 = self._makeOne({
+        journal2 = self._make_one({
             "index_at": ["SCIE", "SSCI"],
             "last_issue": {"volume": "2", "number": "2", "year": "2016"}
         })
-        journal3 = self._makeOne({
+        journal3 = self._make_one({
             "index_at": ["SCIE"],
             "last_issue": {"volume": "3", "number": "3", "year": "2016"}
         })
-        journal4 = self._makeOne({
+        journal4 = self._make_one({
             "index_at": ["SSCI", "ICSE"],
             "last_issue": {"volume": "4", "number": "4", "year": "2016"}
         })
-        journal5 = self._makeOne({
+        journal5 = self._make_one({
             "index_at": ["SSCI", "SCIE"],
             "last_issue": {"volume": "5", "number": "5", "year": "2016"}
         })
-        self._makeOne({
+        self._make_one({
             "index_at": ["SSCI"],
             "last_issue": {"volume": "6", "number": "6", "year": "2016"}
         })
@@ -247,27 +247,27 @@ class JournalControllerTestCase(BaseTestCase):
         está de acordo com o esperado.
         """
 
-        journal1 = self._makeOne({
+        journal1 = self._make_one({
             "publisher_name": "CNPQ",
             "last_issue": {"volume": "1", "number": "1", "year": "2016"}
         })
-        journal2 = self._makeOne({
+        journal2 = self._make_one({
             "publisher_name": "SciELO",
             "last_issue": {"volume": "2", "number": "2", "year": "2016"}
         })
-        journal3 = self._makeOne({
+        journal3 = self._make_one({
             "publisher_name": "FAPESP",
             "last_issue": {"volume": "3", "number": "3", "year": "2016"}
         })
-        journal4 = self._makeOne({
+        journal4 = self._make_one({
             "publisher_name": "FUNDAÇÃO XPTO",
             "last_issue": {"volume": "4", "number": "4", "year": "2016"}
         })
-        journal5 = self._makeOne({
+        journal5 = self._make_one({
             "publisher_name": "FAPESP",
             "last_issue": {"volume": "5", "number": "5", "year": "2016"}
         })
-        journal6 = self._makeOne({
+        journal6 = self._make_one({
             "publisher_name": "FUNDAÇÃO XPTO",
             "last_issue": {"volume": "6", "number": "6", "year": "2016"}
         })
@@ -331,7 +331,7 @@ class JournalControllerTestCase(BaseTestCase):
         Testando a função controllers.get_journal_by_jid() deve retornar um
         objeto ``Journal`` com o id=jid123.
         """
-        journal = self._makeOne(attrib={'_id': 'jid123'})
+        journal = self._make_one(attrib={'_id': 'jid123'})
 
         self.assertEqual(controllers.get_journal_by_jid('jid123').id,
                          journal.id)
@@ -349,10 +349,10 @@ class JournalControllerTestCase(BaseTestCase):
         Testando a função controllers.get_journal_by_jid() deve retornar um
         objeto ``Journal`` com o id=jid123 e com is_public=false.
         """
-        self._makeOne(attrib={'_id': 'jid1', 'is_public': True})
-        self._makeOne(attrib={'_id': 'jid2', 'is_public': True})
-        journal3 = self._makeOne(attrib={'_id': 'jid3', 'is_public': False})
-        self._makeOne(attrib={'_id': 'jid4', 'is_public': False})
+        self._make_one(attrib={'_id': 'jid1', 'is_public': True})
+        self._make_one(attrib={'_id': 'jid2', 'is_public': True})
+        journal3 = self._make_one(attrib={'_id': 'jid3', 'is_public': False})
+        self._make_one(attrib={'_id': 'jid4', 'is_public': False})
 
         self.assertEqual(
             controllers.get_journal_by_jid('jid3', is_public=False).id,
@@ -371,13 +371,13 @@ class JournalControllerTestCase(BaseTestCase):
         lista contendo objetos ``Journal`` .
         """
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
-        self._makeOne(attrib={'_id': 'jid1'})
-        self._makeOne(attrib={'_id': 'jid12'})
-        self._makeOne(attrib={'_id': 'jid123'})
+        self._make_one(attrib={'_id': 'jid1'})
+        self._make_one(attrib={'_id': 'jid12'})
+        self._make_one(attrib={'_id': 'jid123'})
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
         journals = controllers.get_journals_by_jid(['jid1', 'jid12', 'jid123'])
 
@@ -392,13 +392,13 @@ class JournalControllerTestCase(BaseTestCase):
         lista contendo objetos ``Journal`` .
         """
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
-        self._makeOne(attrib={'_id': 'jid1'})
-        self._makeOne(attrib={'_id': 'jid12'})
-        self._makeOne(attrib={'_id': 'jid123'})
+        self._make_one(attrib={'_id': 'jid1'})
+        self._make_one(attrib={'_id': 'jid12'})
+        self._make_one(attrib={'_id': 'jid123'})
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
         journals = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
@@ -420,9 +420,9 @@ class JournalControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de journals.
         """
 
-        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
-        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
-        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+        self._make_one(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._make_one(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._make_one(attrib={'_id': '0wklwmnsiu', 'is_public': True})
 
         controllers.set_journal_is_public_bulk(
             ['okls9slqwj', 'kaomkwisdp', '0wklwmnsiu'], is_public=False)
@@ -439,9 +439,9 @@ class JournalControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de journals, sem ids.
         """
 
-        self._makeOne(attrib={'_id': 'okls9slqwj', 'is_public': True})
-        self._makeOne(attrib={'_id': 'kaomkwisdp', 'is_public': True})
-        self._makeOne(attrib={'_id': '0wklwmnsiu', 'is_public': True})
+        self._make_one(attrib={'_id': 'okls9slqwj', 'is_public': True})
+        self._make_one(attrib={'_id': 'kaomkwisdp', 'is_public': True})
+        self._make_one(attrib={'_id': '0wklwmnsiu', 'is_public': True})
 
         self.assertRaises(ValueError,
                           controllers.set_journal_is_public_bulk, [], is_public=False)
@@ -456,7 +456,7 @@ class JournalControllerTestCase(BaseTestCase):
 
 class IssueControllerTestCase(BaseTestCase):
 
-    def _makeOne(self, attrib=None):
+    def _make_one(self, attrib=None):
         """
         Retorna um objeto ``Issue`` com os atributos obrigatórios:
         ``_id``, ``jid``, ``is_public`` e ``journal``, o param ``attrib`` atualiza os
@@ -464,7 +464,7 @@ class IssueControllerTestCase(BaseTestCase):
         """
         return utils.makeOneIssue(attrib=attrib)
 
-    def _makeAny(self, journal=None, items=3):
+    def _make_any(self, journal=None, items=3):
         """
         Retorna uma lista de objetos ``Journal`` com atributos ``jid``,
         ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
@@ -477,7 +477,7 @@ class IssueControllerTestCase(BaseTestCase):
         ``Issue``.
         """
 
-        issue = self._makeOne()
+        issue = self._make_one()
 
         self.assertEqual(controllers.get_issues_by_jid(issue.journal.id)[0].id,
                          issue.id)
@@ -490,10 +490,10 @@ class IssueControllerTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        self._makeOne({'_id': '1', 'journal': journal.id})
-        self._makeOne({'_id': '2', 'journal': journal.id})
-        self._makeOne({'_id': '3', 'journal': journal.id})
-        self._makeOne({'_id': '4', 'journal': journal.id})
+        self._make_one({'_id': '1', 'journal': journal.id})
+        self._make_one({'_id': '2', 'journal': journal.id})
+        self._make_one({'_id': '3', 'journal': journal.id})
+        self._make_one({'_id': '4', 'journal': journal.id})
 
         issues = [issue.id for issue in controllers.get_issues_by_jid(journal.id)]
 
@@ -508,10 +508,10 @@ class IssueControllerTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        self._makeOne({'_id': '1', 'journal': journal.id, 'number': '10'})
-        self._makeOne({'_id': '2', 'journal': journal.id, 'number': '9'})
-        self._makeOne({'_id': '3', 'journal': journal.id, 'number': '8'})
-        self._makeOne({'_id': '4', 'journal': journal.id, 'number': '7'})
+        self._make_one({'_id': '1', 'journal': journal.id, 'number': '10'})
+        self._make_one({'_id': '2', 'journal': journal.id, 'number': '9'})
+        self._make_one({'_id': '3', 'journal': journal.id, 'number': '8'})
+        self._make_one({'_id': '4', 'journal': journal.id, 'number': '7'})
 
         issues = [issue.id for issue in controllers.get_issues_by_jid(journal.id, order_by=['number'])]
 
@@ -532,7 +532,7 @@ class IssueControllerTestCase(BaseTestCase):
         Teste da função controllers.get_issue_by_iid() para retornar um objeto:
         ``Issue``.
         """
-        issue = self._makeOne()
+        issue = self._make_one()
         self.assertEqual(controllers.get_issue_by_iid(issue.id), issue)
 
     def test_get_issue_by_iid_without_id(self):
@@ -547,9 +547,9 @@ class IssueControllerTestCase(BaseTestCase):
         Teste da função controllers.get_issue_by_iid() para retornar um objeto:
         ``Issue``.
         """
-        issue = self._makeOne({'volume': '10', 'number': '4'})
+        issue = self._make_one({'volume': '10', 'number': '4'})
 
-        self._makeAny(items=30)
+        self._make_any(items=30)
 
         self.assertEqual(controllers.get_issue_by_iid(issue.id, volume='10',
                          number='4'), issue)
@@ -560,13 +560,13 @@ class IssueControllerTestCase(BaseTestCase):
         lista contendo objetos ``Issue``.
         """
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
-        self._makeOne(attrib={'_id': 'iid1'})
-        self._makeOne(attrib={'_id': 'iid12'})
-        self._makeOne(attrib={'_id': 'iid123'})
+        self._make_one(attrib={'_id': 'iid1'})
+        self._make_one(attrib={'_id': 'iid12'})
+        self._make_one(attrib={'_id': 'iid123'})
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
         issues = controllers.get_issues_by_iid(['iid1', 'iid12', 'iid123'])
 
@@ -589,9 +589,9 @@ class IssueControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de issues.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'is_public': True})
-        self._makeOne(attrib={'_id': '2183ikos90', 'is_public': True})
-        self._makeOne(attrib={'_id': '9298wjso89', 'is_public': True})
+        self._make_one(attrib={'_id': '012ijs9y24', 'is_public': True})
+        self._make_one(attrib={'_id': '2183ikos90', 'is_public': True})
+        self._make_one(attrib={'_id': '9298wjso89', 'is_public': True})
 
         controllers.set_issue_is_public_bulk(
             ['012ijs9y24', '2183ikos90', '9298wjso89'], is_public=False)
@@ -609,9 +609,9 @@ class IssueControllerTestCase(BaseTestCase):
         ``reason``.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'is_public': True})
-        self._makeOne(attrib={'_id': '2183ikos90', 'is_public': True})
-        self._makeOne(attrib={'_id': '9298wjso89', 'is_public': True})
+        self._make_one(attrib={'_id': '012ijs9y24', 'is_public': True})
+        self._make_one(attrib={'_id': '2183ikos90', 'is_public': True})
+        self._make_one(attrib={'_id': '9298wjso89', 'is_public': True})
 
         ids = ['012ijs9y24', '2183ikos90', '9298wjso89']
 
@@ -628,9 +628,9 @@ class IssueControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de journals, sem ids.
         """
 
-        self._makeOne(attrib={'_id': '0ow9sms9ms', 'is_public': True})
-        self._makeOne(attrib={'_id': '90k2ud90ds', 'is_public': True})
-        self._makeOne(attrib={'_id': '98jd9dhydk', 'is_public': True})
+        self._make_one(attrib={'_id': '0ow9sms9ms', 'is_public': True})
+        self._make_one(attrib={'_id': '90k2ud90ds', 'is_public': True})
+        self._make_one(attrib={'_id': '98jd9dhydk', 'is_public': True})
 
         self.assertRaises(ValueError,
                           controllers.set_issue_is_public_bulk, [], is_public=False)
@@ -645,7 +645,7 @@ class IssueControllerTestCase(BaseTestCase):
 
 class ArticleControllerTestCase(BaseTestCase):
 
-    def _makeOne(self, attrib=None):
+    def _make_one(self, attrib=None):
         """
         Retorna um objeto ``Article`` com os atributos obrigatórios:
         ``_id``, ``jid``, ``is_public`` e ``issue`` o param ``attrib`` atualiza
@@ -653,7 +653,7 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         return utils.makeOneArticle(attrib=attrib)
 
-    def _makeAny(self, issue=None, items=3):
+    def _make_any(self, issue=None, items=3):
         """
         Retorna uma lista de objetos ``Article`` com atributos ``jid``,
         ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
@@ -666,7 +666,7 @@ class ArticleControllerTestCase(BaseTestCase):
         ``Article``.
         """
 
-        article = self._makeOne()
+        article = self._make_one()
 
         self.assertEqual(controllers.get_article_by_aid(article.id).id,
                          article.id)
@@ -692,13 +692,13 @@ class ArticleControllerTestCase(BaseTestCase):
         lista contendo objetos ``Article`` .
         """
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
-        self._makeOne(attrib={'_id': 'aid1'})
-        self._makeOne(attrib={'_id': 'aid12'})
-        self._makeOne(attrib={'_id': 'aid123'})
+        self._make_one(attrib={'_id': 'aid1'})
+        self._make_one(attrib={'_id': 'aid12'})
+        self._make_one(attrib={'_id': 'aid123'})
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
         articles = controllers.get_articles_by_aid(['aid1', 'aid12', 'aid123'])
 
@@ -713,13 +713,13 @@ class ArticleControllerTestCase(BaseTestCase):
         None.
         """
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
-        self._makeOne(attrib={'_id': 'aid1'})
-        self._makeOne(attrib={'_id': 'aid12'})
-        self._makeOne(attrib={'_id': 'aid123'})
+        self._make_one(attrib={'_id': 'aid1'})
+        self._make_one(attrib={'_id': 'aid12'})
+        self._make_one(attrib={'_id': 'aid123'})
 
-        self._makeAny(items=5)
+        self._make_any(items=5)
 
         articles = controllers.get_journals_by_jid(['k8u1jid1', '0823mgjid12',
                                                    '-012-js7jid123'])
@@ -741,9 +741,9 @@ class ArticleControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de article
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'is_public': True})
-        self._makeOne(attrib={'_id': '2183ikos90', 'is_public': True})
-        self._makeOne(attrib={'_id': '9298wjso89', 'is_public': True})
+        self._make_one(attrib={'_id': '012ijs9y24', 'is_public': True})
+        self._make_one(attrib={'_id': '2183ikos90', 'is_public': True})
+        self._make_one(attrib={'_id': '9298wjso89', 'is_public': True})
 
         controllers.set_article_is_public_bulk(
             ['012ijs9y24', '2183ikos90', '9298wjso89'], is_public=False)
@@ -761,9 +761,9 @@ class ArticleControllerTestCase(BaseTestCase):
         retorna um ValueError.
         """
 
-        self._makeOne(attrib={'_id': '9ms9kos9js', 'is_public': True})
-        self._makeOne(attrib={'_id': 'lksnsh8snk', 'is_public': True})
-        self._makeOne(attrib={'_id': '7153gj6ysb', 'is_public': True})
+        self._make_one(attrib={'_id': '9ms9kos9js', 'is_public': True})
+        self._make_one(attrib={'_id': 'lksnsh8snk', 'is_public': True})
+        self._make_one(attrib={'_id': '7153gj6ysb', 'is_public': True})
 
         self.assertRaises(ValueError,
                           controllers.set_article_is_public_bulk, [], is_public=False)
@@ -781,12 +781,23 @@ class ArticleControllerTestCase(BaseTestCase):
         lista de articles.
         """
 
-        self._makeOne(attrib={'_id': '012ijs9y24', 'issue': '90210j83',
-                              'journal': 'oak,ajimn1'})
-        self._makeOne(attrib={'_id': '2183ikos90', 'issue': '90210j83',
-                              'journal': 'oak,ajimn1'})
-        self._makeOne(attrib={'_id': '9298wjso89', 'issue': '90210j82',
-                              'journal': 'oak,ajimn1'})
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjso89',
+            'issue': '90210j82',
+            'journal': 'oak,ajimn1'
+        })
 
         expected = ['012ijs9y24', '2183ikos90']
 
@@ -799,8 +810,7 @@ class ArticleControllerTestCase(BaseTestCase):
         Testando a função controllers.get_articles_by_iid(), sem param iid deve
         retorna um ValueError.
         """
-        self.assertRaises(ValueError,
-                          controllers.get_articles_by_iid, [])
+        self.assertRaises(ValueError, controllers.get_articles_by_iid, [])
 
 
 class UserControllerTestCase(BaseTestCase):
@@ -868,8 +878,7 @@ class UserControllerTestCase(BaseTestCase):
         user como string, deve retornar um ValueError.
         """
 
-        self.assertRaises(ValueError, controllers.set_user_email_confirmed,
-                          'AnotherObject')
+        self.assertRaises(ValueError, controllers.set_user_email_confirmed, 'AnotherObject')
 
     def test_set_user_password(self):
         """

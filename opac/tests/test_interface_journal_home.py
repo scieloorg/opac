@@ -11,7 +11,7 @@ from . import utils
 class JournalHomeTestCase(BaseTestCase):
 
     # Mission
-    def test_journal_detail_mission_with_PT_language(self):
+    def test_journal_detail_mission_with_pt_language(self):
         """
         Teste para verificar se na interface inicial da revista esta retornando
         o texto no idioma Português.
@@ -37,7 +37,7 @@ class JournalHomeTestCase(BaseTestCase):
             self.assertIn("Esse periódico tem com objetivo xpto",
                           response.data.decode('utf-8'))
 
-    def test_journal_detail_mission_with_ES_language(self):
+    def test_journal_detail_mission_with_es_language(self):
         """
         Teste para verificar se na interface inicial da revista esta retornando o texto no
         idioma Espanhol.
@@ -63,7 +63,7 @@ class JournalHomeTestCase(BaseTestCase):
             self.assertIn("Esta revista tiene como objetivo xpto",
                           response.data.decode('utf-8'))
 
-    def test_journal_detail_mission_with_EN_language(self):
+    def test_journal_detail_mission_with_en_language(self):
         """
         Teste para verificar se na interface inicial da revista esta retornando
         o texto no idioma Inglês.
