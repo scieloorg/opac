@@ -8,3 +8,6 @@ python-targets: 3
 pep8:
   disable:
     - E501  # line too long
+pylint:
+  disable:
+    - line-too-long
