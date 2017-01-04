@@ -16,10 +16,9 @@ import re
 import requests
 
 try:
-    from PIL import Image, ImageOps
+    from PIL import Image
 except ImportError:
     Image = None
-    ImageOps = None
 
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
 REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
@@ -68,7 +67,7 @@ def get_prev_article(articles, article):
         try:
             if articles.index(article) == 0:
                 return None
-            return articles[articles.index(article)-1]
+            return articles[articles.index(article) - 1]
         except IndexError:
             return None
     else:
@@ -90,7 +89,7 @@ def get_next_article(articles, article):
         try:
             if len(articles) == articles.index(article):
                 return None
-            return articles[articles.index(article)+1]
+            return articles[articles.index(article) + 1]
         except IndexError:
             return None
     else:
@@ -113,7 +112,7 @@ def get_prev_issue(issues, issue):
     """
     if len(issues) >= 2:
         try:
-            return issues[issues.index(issue)+1]
+            return issues[issues.index(issue) + 1]
         except IndexError:
             return None
     else:
@@ -140,7 +139,7 @@ def get_next_issue(issues, issue):
             # Caso o fascículo seja o primeiro retorna None
             if issues.index(issue) == 0:
                 return None
-            return issues[issues.index(issue)-1]
+            return issues[issues.index(issue) - 1]
         except IndexError:
             return None
     else:
@@ -261,7 +260,8 @@ def create_image(image_path, filename):
 
     try:
         shutil.copyfile(image_path, image_destiation_path)
-    except FileNotFoundError as e:
+    except IOError as e:
+        # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
         print("ERROR: %s" % e)
 
     generate_thumbnail(image_destiation_path)

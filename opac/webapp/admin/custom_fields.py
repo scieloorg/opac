@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import os
 from flask_admin.form.upload import ImageUploadField, FileUploadField, ImageUploadInput, FileUploadInput
 from flask import current_app
 

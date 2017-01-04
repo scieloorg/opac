@@ -1,13 +1,8 @@
 # coding:utf-8
-import os
 import time
-import shutil
 import tempfile
-import unittest
-import subprocess
 
 import pymongo
-from opac_schema.v1 import models as schema_models
 from flask import current_app
 from flask_testing import TestCase
 from webapp import dbsql
@@ -38,7 +33,7 @@ class MongoInstance(object):
         # XXX: wait for the instance to be ready
         #      Mongo is ready in a glance, we just wait to be able to open a
         #      Connection.
-        for i in range(3):
+        for _ in range(3):
             time.sleep(0.1)
             try:
                 self._conn = pymongo.MongoClient(self.mongo_settings['host'],
@@ -62,7 +57,7 @@ class MongoInstance(object):
 class BaseTestCase(TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestCase, self).__init__(*args, **kwargs)
+        super(BaseTestCase, self).__init__(*args, **kwargs)
         self.instance = MongoInstance.get_instance()
         self.conn = self.instance.conn
         self.db = self.instance.db
@@ -72,7 +67,7 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         dbsql.create_all()
-        super(TestCase, self).setUp()
+        super(BaseTestCase, self).setUp()
 
     def tearDown(self):
         dbsql.session.remove()

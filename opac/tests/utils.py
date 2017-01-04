@@ -5,7 +5,7 @@ from flask import current_app
 from opac_schema.v1 import models
 
 
-def makeOneCollection(attrib=None):
+def makeOneCollection(attrib=None):  # noqa
     """
     Retorna um objeto ``Collection`` com os atributos obrigatórios:
     ``_id``, ``acronym``, ``name``.
@@ -19,11 +19,11 @@ def makeOneCollection(attrib=None):
     acronym = attrib.get('acronym', config_acronym)
 
     metrics = {
-            'total_journal': attrib.get('total_journal', 0),
-            'total_issue': attrib.get('total_issue', 0),
-            'total_article': attrib.get('total_article', 0),
-            'total_citation': attrib.get('total_citation', 0)
-        }
+        'total_journal': attrib.get('total_journal', 0),
+        'total_issue': attrib.get('total_issue', 0),
+        'total_article': attrib.get('total_article', 0),
+        'total_citation': attrib.get('total_citation', 0)
+    }
 
     collection = {
         '_id': default_id,
@@ -38,7 +38,7 @@ def makeOneCollection(attrib=None):
     return models.Collection(**collection).save()
 
 
-def makeOneSponsor(attrib=None):
+def makeOneSponsor(attrib=None):  # noqa
     """
     Retorna um objeto ``Sponsor`` com os atributos obrigatórios:
     ``_id``, ``acronym``, ``name``.
@@ -57,7 +57,7 @@ def makeOneSponsor(attrib=None):
     return models.Sponsor(**collection).save()
 
 
-def makeOneJournal(attrib=None):
+def makeOneJournal(attrib=None):  # noqa
     """
     Retorna um objeto ``Journal`` com os atributos obrigatórios:
     ``_id``, ``jid``, ``is_public``.
@@ -87,22 +87,29 @@ def makeOneJournal(attrib=None):
         'created': attrib.get('created', datetime.datetime.now()),
         'updated': attrib.get('updated', datetime.datetime.now()),
         'acronym': attrib.get('acronym', "journal_acron"),
-        'mission': attrib.get('mission',
-                              [{'language': 'pt',
-                               'description': 'Esse periódico tem com objetivo xpto'
-                                },
-                               {'language': 'es',
-                               'description': 'Esta revista tiene como objetivo xpto'
-                                },
-                               {'language': 'en',
-                               'description': 'This journal is aiming xpto'
-                                }])
+        'mission': attrib.get(
+            'mission',
+            [
+                {
+                    'language': 'pt',
+                    'description': 'Esse periódico tem com objetivo xpto'
+                },
+                {
+                    'language': 'es',
+                    'description': 'Esta revista tiene como objetivo xpto'
+                },
+                {
+                    'language': 'en',
+                    'description': 'This journal is aiming xpto'
+                }
+            ]
+        )
     }
     journal.update(attrib)
     return models.Journal(**journal).save()
 
 
-def makeAnyJournal(items=3, attrib=None):
+def makeAnyJournal(items=3, attrib=None):  # noqa
     """
     Retorna uma lista de objetos ``Journal`` com atributos ``jid``,
     ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
@@ -110,7 +117,7 @@ def makeAnyJournal(items=3, attrib=None):
     """
     journals = []
 
-    for item in range(items):
+    for _ in range(items):
 
         journal = makeOneJournal(attrib)
 
@@ -119,7 +126,7 @@ def makeAnyJournal(items=3, attrib=None):
     return journals
 
 
-def makeOneIssue(attrib=None):
+def makeOneIssue(attrib=None):  # noqa
     """
     Retorna um objeto ``Issue`` com os atributos obrigatórios:
     ``_id``, ``jid``, ``is_public`` e ``journal_jid``.
@@ -173,7 +180,7 @@ def makeOneIssue(attrib=None):
     return models.Issue(**issue).save()
 
 
-def makeAnyIssue(journal=None, items=3, attrib=None):
+def makeAnyIssue(journal=None, items=3, attrib=None):  # noqa
     """
     Retorna uma lista de objetos ``Issue`` com atributos ``iid``,
     ``journal`` limitando a quantidade pelo param ``items``e o param journal
@@ -185,7 +192,7 @@ def makeAnyIssue(journal=None, items=3, attrib=None):
     if not journal:
         journal = makeOneJournal()
 
-    for item in range(items):
+    for _ in range(items):
 
         issue = makeOneIssue(attrib)
 
@@ -194,7 +201,7 @@ def makeAnyIssue(journal=None, items=3, attrib=None):
     return issues
 
 
-def makeOneArticle(attrib=None):
+def makeOneArticle(attrib=None):  # noqa
     """
     Retorna um objeto ``Article`` com os atributos obrigatórios:
     ``_id``, ``aid``, ``is_public``.
@@ -203,7 +210,7 @@ def makeOneArticle(attrib=None):
 
     attrib = attrib or {}
     default_id = attrib.get('_id', str(uuid4().hex))
-    default_pid = attrib.get('pid','0000-00000000000000000')
+    default_pid = attrib.get('pid', '0000-00000000000000000')
     default_title = "article-%s" % default_id
     default_domain_key = "article-domain_key-%s" % default_id
     issue = attrib.get('issue', None)
@@ -262,7 +269,7 @@ def makeOneArticle(attrib=None):
     return models.Article(**article).save()
 
 
-def makeAnyArticle(issue=None, items=3, attrib=None):
+def makeAnyArticle(issue=None, items=3, attrib=None):  # noqa
     """
     Retorna uma lista de objetos ``Article`` com atributos ``aid``,
     ``issue`` limitando a quantidade pelo param ``items`` e o param issue
@@ -274,7 +281,7 @@ def makeAnyArticle(issue=None, items=3, attrib=None):
     if not issue:
         issue = makeOneIssue()
 
-    for item in range(items):
+    for _ in range(items):
 
         article = makeOneArticle(attrib)
 
