@@ -402,25 +402,40 @@ class MenuTestCase(BaseTestCase):
 
             journal = utils.makeOneJournal()
 
-            issue = utils.makeOneIssue({'journal': journal,
-                                        'year': '2016', 'volume': '1',
-                                        'number': '1', 'order': '1', })
+            issue = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016',
+                'volume': '1',
+                'number': '1',
+                'order': '1',
+            })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'issue': issue,
-                                             'elocation': 'e1234560'})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'issue': issue,
-                                             'elocation': 'e1234561'})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'issue': issue,
-                                             'elocation': 'e1234562'})
+            article1 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 1,
+                'elocation': 'e1234560'
+            })
 
-            response = self.client.get(url_for('main.article_detail',
-                                               url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article2.url_segment,
-                                               lang_code='pt'))
+            article2 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 2,
+                'elocation': 'e1234561'
+            })
+
+            article3 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 3,
+                'elocation': 'e1234562'
+            })
+
+            article_detail_url = url_for(
+                'main.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article2.url_segment,
+                lang_code='pt')
+
+            response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')

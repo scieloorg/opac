@@ -185,7 +185,7 @@ def makeAnyIssue(journal=None, items=3, attrib=None):
     if not journal:
         journal = makeOneJournal()
 
-    for item in range(items):
+    for _ in range(items):
 
         issue = makeOneIssue(attrib)
 
@@ -203,7 +203,7 @@ def makeOneArticle(attrib=None):
 
     attrib = attrib or {}
     default_id = attrib.get('_id', str(uuid4().hex))
-    default_pid = attrib.get('pid','0000-00000000000000000')
+    default_pid = attrib.get('pid', '0000-00000000000000000')
     default_title = "article-%s" % default_id
     default_domain_key = "article-domain_key-%s" % default_id
     issue = attrib.get('issue', None)
@@ -274,7 +274,7 @@ def makeAnyArticle(issue=None, items=3, attrib=None):
     if not issue:
         issue = makeOneIssue()
 
-    for item in range(items):
+    for _ in range(items):
 
         article = makeOneArticle(attrib)
 

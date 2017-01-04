@@ -57,7 +57,7 @@ class MongoInstance(object):
 class BaseTestCase(TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestCase, self).__init__(*args, **kwargs)
+        super(BaseTestCase, self).__init__(*args, **kwargs)
         self.instance = MongoInstance.get_instance()
         self.conn = self.instance.conn
         self.db = self.instance.db
@@ -67,7 +67,7 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         dbsql.create_all()
-        super(TestCase, self).setUp()
+        super(BaseTestCase, self).setUp()
 
     def tearDown(self):
         dbsql.session.remove()

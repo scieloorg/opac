@@ -38,19 +38,19 @@ class ErrorsTestCase(BaseTestCase):
             traceback.print_exception = self._previous_print_stack
 
     @current_app.route('/bad_request')
-    def bad_request():
+    def bad_request(self):
         abort(400, ERROR_MSG)
 
     @current_app.route('/forbidden')
-    def forbidden_page():
+    def forbidden_page(self):
         abort(403, ERROR_MSG)
 
     @current_app.route('/page_not_found')
-    def page_not_found():
+    def page_not_found(self):
         abort(404, ERROR_MSG)
 
     @current_app.route('/internal_server_error')
-    def internal_server_error():
+    def internal_server_error(self):
         1 // 0
 
     def test_bad_request(self):
