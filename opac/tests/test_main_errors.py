@@ -3,7 +3,6 @@
 import traceback
 from flask_babelex import lazy_gettext as __
 from flask import current_app, abort
-from webapp import dbsql
 from .base import BaseTestCase
 
 ERROR_MSG = __('Mensagem de erro explicativo para o usuário')
@@ -39,20 +38,20 @@ class ErrorsTestCase(BaseTestCase):
             traceback.print_exception = self._previous_print_stack
 
     @current_app.route('/bad_request')
-    def bad_request():
+    def bad_request():  # pylint:disable=no-method-argument
         abort(400, ERROR_MSG)
 
     @current_app.route('/forbidden')
-    def forbidden_page():
+    def forbidden_page():  # pylint:disable=no-method-argument
         abort(403, ERROR_MSG)
 
     @current_app.route('/page_not_found')
-    def page_not_found():
+    def page_not_found():  # pylint:disable=no-method-argument
         abort(404, ERROR_MSG)
 
     @current_app.route('/internal_server_error')
-    def internal_server_error():
-        1 // 0
+    def internal_server_error():  # pylint:disable=no-method-argument
+        raise Exception('intentional')
 
     def test_bad_request(self):
         response = self.client.get('/bad_request')

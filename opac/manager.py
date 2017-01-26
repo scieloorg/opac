@@ -18,8 +18,8 @@ if FLASK_COVERAGE:
     try:
         import coverage
     except ImportError:
-        msg = 'A variável de ambiente %r esta indicando que você quer executar tests com coverage, porém não é possível importar o modulo coverage'
-        raise RuntimeError(msg % variable_name)
+        msg = 'Não é possível importar o modulo coverage'
+        raise RuntimeError(msg)
     COV = None
     if FLASK_COVERAGE:
         COV = coverage.coverage(branch=True, include='opac/webapp/*')
@@ -27,14 +27,13 @@ if FLASK_COVERAGE:
 else:
     COV = None
 
-from webapp import create_app, dbsql, dbmongo, mail
-from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article
-from webapp import controllers
-from webapp.utils import reset_db, create_db_tables, create_user, create_image
-from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
-from webapp.admin.forms import EmailForm
-from flask import current_app
+from webapp import create_app, dbsql, dbmongo, mail  # noqa
+from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
+from webapp import controllers  # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image  # noqa
+from flask_script import Manager, Shell  # noqa
+from flask_migrate import Migrate, MigrateCommand  # noqa
+from webapp.admin.forms import EmailForm  # noqa
 
 app = create_app()
 migrate = Migrate(app, dbsql)
@@ -196,6 +195,7 @@ def upload_images(directory='.'):
                 image_path = os.path.join(root, filename)
 
                 create_image(image_path, filename)
+
 
 @manager.command
 @manager.option('-d', '--domain', dest="domain")

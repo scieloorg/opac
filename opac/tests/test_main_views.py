@@ -2,16 +2,11 @@
 import unittest
 import flask
 import warnings
-from flask_testing import TestCase
-from flask import url_for, request, g, current_app
-from webapp import create_app, dbsql, dbmongo
+from flask import url_for, g, current_app
 
-from .base import MongoInstance, BaseTestCase
-
-from opac_schema.v1 import models
+from .base import BaseTestCase
 
 from . import utils
-from .base import BaseTestCase
 
 
 class MainTestCase(BaseTestCase):
@@ -45,7 +40,7 @@ class MainTestCase(BaseTestCase):
 
             # when
             with self.client as c:
-                response = self.client.get(url_for('main.index'))
+                response = c.get(url_for('main.index'))
                 # then
                 self.assertStatus(response, 200)
                 self.assertTrue(hasattr(g, 'collection'))
@@ -104,7 +99,7 @@ class MainTestCase(BaseTestCase):
         contendo elementos esperado também deve retornar o template
         ``collection/list_alpha.html``.
         """
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         journals = utils.makeAnyJournal(items=10)
 
         response = self.client.get(url_for('main.collection_list') + '#alpha')
@@ -126,7 +121,7 @@ class MainTestCase(BaseTestCase):
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
 
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
@@ -144,7 +139,7 @@ class MainTestCase(BaseTestCase):
         ``collection/list_theme.html``.
         """
 
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         journals = utils.makeAnyJournal(items=30,
                                         attrib={"study_areas": ["Engineering"]})
         journals = utils.makeAnyJournal(items=30,
@@ -167,7 +162,7 @@ class MainTestCase(BaseTestCase):
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
 
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
@@ -184,7 +179,7 @@ class MainTestCase(BaseTestCase):
         instituição no manager.
         """
 
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         warnings.warn("Necessário definir o atributo instituição no modelo do Manager")
 
         response = self.client.get(url_for('main.collection_list') + '#publisher')
@@ -199,7 +194,7 @@ class MainTestCase(BaseTestCase):
         ``Nenhum periódico encontrado`` no corpo da resposta.
         """
 
-        collecton = utils.makeOneCollection()
+        utils.makeOneCollection()
         response = self.client.get(url_for('main.collection_list'))
 
         self.assertStatus(response, 200)
@@ -217,7 +212,7 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             journals = utils.makeAnyJournal(items=10)
             issues = []
 
@@ -250,7 +245,7 @@ class MainTestCase(BaseTestCase):
         """
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             response = self.client.get(url_for('main.collection_list_feed'))
 
@@ -267,7 +262,7 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             journals = utils.makeAnyJournal(items=10)
 
             response = self.client.get(url_for('main.collection_list_feed'))
@@ -290,7 +285,7 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal({'title': 'Revista X'})
 
@@ -310,7 +305,7 @@ class MainTestCase(BaseTestCase):
         ``Periódico não encontrado``.
         """
 
-        journals = utils.makeAnyJournal(items=6)
+        utils.makeAnyJournal(items=6)
 
         unknow_url_seg = '0k2qhs8slwnui8'
 
@@ -346,10 +341,10 @@ class MainTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
             journal = utils.makeOneJournal({'title': 'Revista X'})
             issue = utils.makeOneIssue({'journal': journal})
-            articles = utils.makeAnyArticle(
+            utils.makeAnyArticle(
                 issue=issue,
                 attrib={'journal': journal.id, 'issue': issue.id}
             )
@@ -367,7 +362,7 @@ class MainTestCase(BaseTestCase):
         ``Periódico não encontrado``.
         """
 
-        journals = utils.makeAnyJournal(items=6)
+        utils.makeAnyJournal(items=6)
 
         unknow_id = '0k2qhs8slwnui8'
 
@@ -406,7 +401,7 @@ class MainTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -430,12 +425,12 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
-            response = self.client.get(url_for('main.issue_grid',
-                                                url_seg=journal.url_segment))
+            response = self.client.get(
+                url_for('main.issue_grid', url_seg=journal.url_segment))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
@@ -452,12 +447,12 @@ class MainTestCase(BaseTestCase):
 
         journal = utils.makeOneJournal()
 
-        issues = utils.makeAnyIssue(attrib={'journal': journal.id})
+        utils.makeAnyIssue(attrib={'journal': journal.id})
 
         unknow_url_seg = '9km2g78o2mnu7'
 
-        response = self.client.get(url_for('main.issue_grid',
-                                            url_seg=unknow_url_seg))
+        response = self.client.get(
+            url_for('main.issue_grid', url_seg=unknow_url_seg))
 
         self.assertStatus(response, 404)
 
@@ -489,7 +484,7 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -514,13 +509,16 @@ class MainTestCase(BaseTestCase):
         """
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue({'journal': journal})
+        utils.makeOneIssue({'journal': journal})
 
         unknow_url_seg = '2014.v3n2'
 
-        response = self.client.get(url_for('main.issue_toc',
-                                       url_seg=journal.url_segment,
-                                       url_seg_issue=unknow_url_seg))
+        unknow_url = url_for(
+            'main.issue_toc',
+            url_seg=journal.url_segment,
+            url_seg_issue=unknow_url_seg)
+
+        response = self.client.get(unknow_url)
 
         self.assertStatus(response, 404)
         self.assertIn('Fascículo não encontrado', response.data.decode('utf-8'))
@@ -575,14 +573,14 @@ class MainTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
             issue = utils.makeOneIssue({'number': '31',
                                         'volume': '10',
                                         'journal': journal})
-            articles = utils.makeAnyArticle(
+            utils.makeAnyArticle(
                 issue=issue,
                 attrib={'journal': issue.journal.id, 'issue': issue.id}
             )
@@ -603,9 +601,9 @@ class MainTestCase(BaseTestCase):
         """
         journal = utils.makeOneJournal()
 
-        issue = utils.makeOneIssue({'journal': journal})
+        utils.makeOneIssue({'journal': journal})
 
-        unknow_url_seg= '2015.v6n3'
+        unknow_url_seg = '2015.v6n3'
 
         response = self.client.get(url_for('main.issue_feed',
                                    url_seg=journal.url_segment,
@@ -666,7 +664,7 @@ class MainTestCase(BaseTestCase):
         """
         with current_app.app_context():
 
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 

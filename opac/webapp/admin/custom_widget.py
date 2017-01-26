@@ -1,5 +1,5 @@
 # coding: utf-8
-from wtforms.widgets import TextArea, TextInput
+from wtforms.widgets import TextArea
 from wtforms.fields import TextAreaField
 
 

@@ -2,8 +2,12 @@
 SciELO - On-line Public Access Catalog
 ======================================
 
-.. image:: https://travis-ci.org/scieloorg/opac.svg
+.. image:: https://travis-ci.org/scieloorg/opac.svg?branch=master
     :target: https://travis-ci.org/scieloorg/opac
+
+.. image:: https://landscape.io/github/scieloorg/opac/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/scieloorg/opac/master
+   :alt: Code Health
 
 .. image:: https://pyup.io/repos/github/scieloorg/opac/shield.svg
      :target: https://pyup.io/repos/github/scieloorg/opac/

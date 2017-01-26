@@ -135,7 +135,7 @@ class Image(db.Model):
 
 # Delete hooks: remove arquivos quando o modelo é apagado
 @listens_for(Image, 'after_delete')
-def delelte_file_hook(mapper, connection, target):
+def delelte_image_hook(mapper, connection, target):
     if target.path:
         media_root = current_app.config['MEDIA_ROOT']
         # Remover a imagem

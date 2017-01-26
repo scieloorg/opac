@@ -15,7 +15,7 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             with self.client as c:
 
@@ -35,7 +35,7 @@ class FooterTestCase(BaseTestCase):
         cadastrada na coleção.
         """
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             with self.client as c:
 
@@ -55,7 +55,7 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -79,7 +79,7 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -103,11 +103,11 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            utils.makeOneIssue({'journal': journal})
 
             with self.client as c:
 
@@ -129,7 +129,7 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -156,7 +156,7 @@ class FooterTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -173,4 +173,3 @@ class FooterTestCase(BaseTestCase):
                 self.assertIn(b'/static/img/oa_logo_32.png', response.data)
                 self.assertIn('href="%s"' % url_for('main.about_collection'), response.data.decode('utf-8'))
                 self.assertIn(b'Open Access', response.data)
-

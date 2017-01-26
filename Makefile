@@ -41,6 +41,10 @@ dev_compose_rm:
 dev_compose_exec_shell_webapp:
 	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp sh
 
+dev_compose_make_test:
+	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp make test
+
+
 #####################################################
 ## atalhos docker-compose build e testes no traivs ##
 #####################################################
@@ -56,7 +60,7 @@ travis_compose_up:
 	@docker-compose -f $(COMPOSE_FILE_BUILD) up -d
 
 travis_compose_make_test:
-	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp make test
+	@docker-compose -f $(COMPOSE_FILE_BUILD) exec opac_webapp make test
 
 travis_run_audit:
 	@docker run \

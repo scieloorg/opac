@@ -1,7 +1,6 @@
 # coding: utf-8
 
-from flask import url_for
-from flask import Flask, url_for, current_app
+from flask import url_for, current_app
 from flask_babelex import lazy_gettext as __
 
 from .base import BaseTestCase
@@ -58,7 +57,7 @@ class MenuTestCase(BaseTestCase):
 
             with self.client as c:
 
-                response = self.client.get(url_for('main.index'))
+                response = c.get(url_for('main.index'))
                 response_data = response.data.decode('utf-8')
                 self.assertStatus(response, 200)
                 expected_anchor1 = """<a href="%s">\n        <strong>%s</strong>""" % (url_for('.index'), collection.name or __('NOME DA COLEÇÃO!!'))
@@ -106,7 +105,7 @@ class MenuTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            collection = utils.makeOneCollection({'name': 'dummy collection'})
+            utils.makeOneCollection({'name': 'dummy collection'})
             with self.client as c:
                 # idioma em 'pt_br'
                 response = c.get(
@@ -148,17 +147,24 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
-            issue1 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '1', 'order': '1', })
-            issue2 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '2', 'order': '2', })
-            issue3 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '3', 'order': '3', })
+            utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '1', 'order': '1',
+            })
+
+            issue2 = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '2', 'order': '2',
+            })
+            issue3 = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '3', 'order': '3',
+            })
 
             response = self.client .get(
                 url_for('main.journal_detail', url_seg=journal.url_segment))
@@ -188,7 +194,7 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             response = self.client.get(url_for('main.journal_detail',
                                        url_seg=journal.url_segment))
@@ -219,11 +225,13 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal,
-                                        'year': '2016', 'volume': '1',
-                                        'number': '1', 'order': '1', })
+            issue = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '1', 'order': '1',
+            })
 
             response = self.client.get(url_for('main.journal_detail',
                                        url_seg=journal.url_segment))
@@ -252,7 +260,7 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
@@ -266,9 +274,12 @@ class MenuTestCase(BaseTestCase):
                                          'year': '2016', 'volume': '1',
                                          'number': '3', 'order': '3', })
 
-            response = self.client .get(url_for('main.issue_toc',
-                                       url_seg=journal.url_segment,
-                                       url_seg_issue=issue2.url_segment))
+            issue_toc_url = url_for(
+                'main.issue_toc',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue2.url_segment)
+
+            response = self.client .get(issue_toc_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
@@ -296,22 +307,32 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
-            issue1 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '1', 'order': '1', })
-            issue2 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '2', 'order': '2', })
-            issue3 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '3', 'order': '3', })
+            utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '1', 'order': '1',
+            })
 
-            response = self.client.get(url_for('main.issue_toc',
-                                       url_seg=journal.url_segment,
-                                       url_seg_issue=issue3.url_segment))
+            issue2 = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '2', 'order': '2'
+            })
 
+            issue3 = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '3', 'order': '3'
+            })
+
+            issue_toc_url = url_for(
+                'main.issue_toc',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue3.url_segment)
+
+            response = self.client.get(issue_toc_url)
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
@@ -337,7 +358,7 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             issue1 = utils.makeOneIssue({'journal': journal,
                                          'year': '2016', 'volume': '1',
@@ -375,50 +396,65 @@ class MenuTestCase(BaseTestCase):
         ``próximo`` estão disponíveis no ``article/detail.html``.
         """
 
-
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
             journal = utils.makeOneJournal()
 
-            issue = utils.makeOneIssue({'journal': journal,
-                                        'year': '2016', 'volume': '1',
-                                        'number': '1', 'order': '1', })
+            issue = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016',
+                'volume': '1',
+                'number': '1',
+                'order': '1',
+            })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'issue': issue,
-                                             'elocation': 'e1234560'})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'issue': issue,
-                                             'elocation': 'e1234561'})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'issue': issue,
-                                             'elocation': 'e1234562'})
+            article1 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 1,
+                'elocation': 'e1234560'
+            })
 
+            article2 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 2,
+                'elocation': 'e1234561'
+            })
 
-            response = self.client.get(url_for('main.article_detail',
-                                               url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article2.url_segment,
-                                               lang_code='pt'))
+            article3 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 3,
+                'elocation': 'e1234562'
+            })
+
+            article_detail_url = url_for(
+                'main.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article2.url_segment,
+                lang_code='pt')
+
+            response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="%s" class="btn group ">\n                    &laquo; artigo anterior\n                </a>' % url_for('.article_detail',
-                                                url_seg=journal.url_segment,
-                                                url_seg_issue=issue.url_segment,
-                                                url_seg_article=article1.url_segment,
-                                                lang_code='pt')
+            expect_btn_anterior = '<a href="%s" class="btn group ">\n                    &laquo; artigo anterior\n                </a>' % url_for(
+                '.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article1.url_segment,
+                lang_code='pt')
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for('.article_detail',
-                                url_seg=journal.url_segment,
-                                url_seg_issue=issue.url_segment,
-                                url_seg_article=article3.url_segment,
-                                lang_code='pt')
+            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for(
+                '.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article3.url_segment,
+                lang_code='pt')
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -437,24 +473,42 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal,
-                                        'year': '2016', 'volume': '1',
-                                        'number': '1', 'order': '1', })
+            issue = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016',
+                'volume': '1',
+                'number': '1',
+                'order': '1'
+            })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                            'elocation': 'e1234562'})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'elocation': 'e1234562'})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'elocation': 'e1234562'})
+            utils.makeOneArticle({
+                'issue': issue,
+                'order': 1,
+                'elocation': 'e1234562'
+            })
 
-            response = self.client.get(url_for('main.article_detail',
-                                                url_seg=journal.url_segment,
-                                                url_seg_issue=issue.url_segment,
-                                                url_seg_article=article3.url_segment,
-                                                lang_code='pt'))
+            article2 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 2,
+                'elocation': 'e1234562'
+            })
+
+            article3 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 3,
+                'elocation': 'e1234562'
+            })
+
+            article_detail_url = url_for(
+                'main.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article3.url_segment,
+                lang_code='pt')
+
+            response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -463,11 +517,12 @@ class MenuTestCase(BaseTestCase):
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for('.article_detail',
-                                                url_seg=journal.url_segment,
-                                                url_seg_issue=issue.url_segment,
-                                                url_seg_article=article2.url_segment,
-                                                lang_code='pt')
+            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for(
+                '.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article2.url_segment,
+                lang_code='pt')
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -486,24 +541,40 @@ class MenuTestCase(BaseTestCase):
 
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
-            collection = utils.makeOneCollection()
+            utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal,
-                                        'year': '2016', 'volume': '1',
-                                        'number': '1', 'order': '1', })
+            issue = utils.makeOneIssue({
+                'journal': journal,
+                'year': '2016', 'volume': '1',
+                'number': '1', 'order': '1'
+            })
 
-            article1 = utils.makeOneArticle({'issue': issue, 'order': 1,
-                                             'elocation': 'e1234562'})
-            article2 = utils.makeOneArticle({'issue': issue, 'order': 2,
-                                             'elocation': 'e1234562'})
-            article3 = utils.makeOneArticle({'issue': issue, 'order': 3,
-                                             'elocation': 'e1234562'})
+            article1 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 1,
+                'elocation': 'e1234562'
+            })
 
-            response = self.client.get(url_for('main.article_detail',
-                                                url_seg=journal.url_segment,
-                                                url_seg_issue=issue.url_segment,
-                                                url_seg_article=article1.url_segment,
-                                                lang_code='pt'))
+            article2 = utils.makeOneArticle({
+                'issue': issue,
+                'order': 2,
+                'elocation': 'e1234562'
+            })
+
+            utils.makeOneArticle({
+                'issue': issue,
+                'order': 3,
+                'elocation': 'e1234562'
+            })
+
+            article_detail_url = url_for(
+                'main.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article1.url_segment,
+                lang_code='pt')
+
+            response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -512,13 +583,18 @@ class MenuTestCase(BaseTestCase):
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
-            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for('.article_detail',
-                                url_seg=journal.url_segment,
-                                url_seg_issue=issue.url_segment,
-                                url_seg_article=article2.url_segment,
-                                lang_code='pt')
+            expect_btn_proximo = '<a href="%s" class="btn group ">\n                    artigo seguinte &raquo;\n                </a>' % url_for(
+                '.article_detail',
+                url_seg=journal.url_segment,
+                url_seg_issue=issue.url_segment,
+                url_seg_article=article2.url_segment,
+                lang_code='pt')
 
-            expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
+            expected_btns = [
+                expect_btn_anterior,
+                expect_btn_atual,
+                expect_btn_proximo
+            ]
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
