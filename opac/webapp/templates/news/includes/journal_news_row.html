@@ -1,9 +1,10 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <span>{{ item.publication_date }}</span>
-    <h3>{{ item.title }}</h3>
+    <h3>{{ item.title[:70] }}{% if item.title|length > 70 %}...{% endif %}</h3>
     <div class="ellipsis">
-      {{ item.description|striptags|title|replace('Read More →', '') }}
+      {{ item.description[:150]|striptags|title|replace('Read More →', '') }}
+      {% if item.description|length > 150 %}...{% endif %}
     </div>
     <a href="{{ item.url }}" target="_blank"><strong>{% trans%}Continue lendo{% endtrans %} &raquo;</strong></a>
   </div>

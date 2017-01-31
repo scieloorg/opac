@@ -98,36 +98,27 @@
         {% endif %}
 
         {% if press_releases %}
-          <div class="block releases">
-            <div class="col-md-12">
-              <h2>Press-releases</h2>
-              <div class="slider" id="pressrelases">
-                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-                <div class="slide-container">
-                  <div class="slide-wrapper">
-                    {% for press_release in press_releases %}
-                      <div class="slide-item release">
-                        <div class="col-md-12">
-                          {% if press_release.article %}
-                            {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
-                              {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, url_seg_article=press_release.article.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
-                              <a data-toggle="modal" href="#">{{ press_release.title }}</a>
-                          {% else %}
-                            {# Comentando o link para o press release até que se tenha uma definição de como iremos tratar isso #}
-                              {# <a data-toggle="modal" href="{{ url_for('.pressrelease', url_seg=press_release.journal.url_segment, url_seg_issue=press_release.issue.url_segment, lang_code=session.lang ) }}" data-target="#press_release_modal">{{ press_release.title }}</a> #}
-                              <a data-toggle="modal" href="#">{{ press_release.title }}</a>
-                          {% endif %}
-                        </div>
-                      </div>
-                    {% endfor %}
+            <div class="block releases">
+              <div class="col-md-12">
+                <h2>SciELO <span>Press Releases</span></h2>
+                <div class="slider" id="pressreleases">
+                  <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                  <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                  <div class="slide-container">
+                    <div class="slide-wrapper">
+                      {% for press_release in press_releases %}
+                        <a href="{{ press_release.url }}" target="_blank">
+                        {% with is_highlight = loop.index == 1 %}
+                          {% include "press_release/includes/collection_press_releases_row.html" %}
+                        {% endwith %}
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
               </div>
+              <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-          </div>
-        {% endif %}
+          {% endif %}
 
         {% if news %}
           <div class="block perspective">
