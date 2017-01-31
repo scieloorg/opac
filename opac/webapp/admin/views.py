@@ -365,7 +365,7 @@ class NewsAdminView(OpacBaseAdminView):
                 flash(msg, 'error')
             else:
                 feed_url = feeds[feed_lang]['url']
-                imported_ok, error_msg = news_import(feed_url, feed_lang)
+                imported_ok = news_import(feed_url, feed_lang)
                 if imported_ok:
                     msg = _('O feed: %s [%s], foi importado com sucesso !!' % (
                         feed_name, feed_lang))
@@ -385,7 +385,7 @@ class NewsAdminView(OpacBaseAdminView):
         try:
             feeds = current_app.config['RSS_NEWS_FEEDS']
             for language, feed in feeds.items():
-                imported_ok, error_msg = news_import(feed['url'], language)
+                imported_ok = news_import(feed['url'], language)
                 if imported_ok:
                     flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
                         feed['display_name'], language)))

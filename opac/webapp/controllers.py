@@ -205,8 +205,7 @@ def get_journal_json_data(journal):
     return j_data
 
 
-def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title_slug", page=1,
-                                           per_page=20):
+def get_alpha_list_from_paginated_journals(title_query, query_filter="", order_by="title_slug", page=1, per_page=20):
     """
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """

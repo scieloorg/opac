@@ -59,16 +59,7 @@ def import_all_press_releases_posts(url, language):
             if len(journal) == 0:
                 continue
 
-            pr_data = dict(url=item.link,
-                           jornal=journal,
-                           image_url=url_for('static',
-                                             filename='img/fallback_image.png',
-                                             _external=True),
-                           publication_date=get_item_date(item),
-                           title=item.title[:256],
-                           description=item.summary,
-                           language=language)
-            controllers.create_press_release_record(pr_data)
+            save_press_release(pr=item, journal=journal, language=language)
 
     return True, False
 
@@ -81,12 +72,16 @@ def import_all_press_releases_posts_by_category(url, language):
         entries = get_items_from_feed(dynamic_url)
 
         for item in entries[0]:
-            pr_data = dict(url=item.link,
-                           journal=journal,
-                           publication_date=get_item_date(item),
-                           title=item.title[:256],
-                           content=item.summary,
-                           language=language)
-            controllers.create_press_release_record(pr_data)
+            save_press_release(pr=item, journal=journal, language=language)
 
     return True, False
+
+
+def save_press_release(pr, journal, language):
+    pr_data = dict(url=pr.link,
+                   journal=journal,
+                   publication_date=get_item_date(pr),
+                   title=pr.title[:256],
+                   content=pr.summary[:300],
+                   language=language)
+    controllers.create_press_release_record(pr_data)
