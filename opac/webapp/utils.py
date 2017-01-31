@@ -3,13 +3,12 @@
 import os
 import pytz
 import shutil
-import feedparser
-import datetime
+
+
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app, url_for
-from . import controllers
 from . import models
 import webapp
 import re
@@ -21,7 +20,9 @@ except ImportError:
     Image = None
 
 CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
-REGEX_EMAIL = re.compile(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", re.IGNORECASE)  # RFC 2822 (simplified)
+REGEX_EMAIL = re.compile(
+    r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+    re.IGNORECASE)  # RFC 2822 (simplified)
 
 
 def namegen_filename(obj, file_data=None):
@@ -147,7 +148,6 @@ def get_next_issue(issues, issue):
 
 
 def get_label_issue(issue):
-
     label = 'Vol. %s ' % issue.volume if issue.volume else ''
     label += 'No. %s ' % issue.number if issue.number else ''
     label += '- %s' % issue.year if issue.year else ''
@@ -288,40 +288,6 @@ def get_resources_url(resource_list, type, lang):
     return None
 
 
-def import_feed(feed_url, language):
-
-    def get_item_date(item):
-        if 'published_parsed' in list(item.keys()):
-            return datetime.datetime(*item.published_parsed[:7])
-        else:
-            return datetime.datetime.now()
-
-    feed = feedparser.parse(feed_url)
-
-    if feed.bozo == 1:
-        msg = 'Não é possível parsear o feed (%s), possívelmente esteja malformado.' % feed_url
-        return (False, msg)
-    elif len(feed.entries) == 0:
-        msg = 'No tem entries para importar.'
-        return (True, msg)
-    else:
-        entries = feed['items']
-        entries_count = 0
-        for item in entries:
-            news_data = {
-                # '_id': item.get('id', None),
-                'url': item.link,
-                'image_url': url_for('static', filename='img/fallback_image.png', _external=True),
-                'publication_date': get_item_date(item),
-                'title': item.title[:256],
-                'description': item.summary,
-                'language': language,  # ignoramos o language do feed pq vem errado
-            }
-            controllers.create_news_record(news_data)
-            entries_count += 1
-        return (True, entries_count)
-
-
 def do_request(url, params):
     try:
         response = requests.get(url, params=params)
@@ -343,7 +309,6 @@ def do_request_json(url, params):
 
 
 def utc_to_local(utc_dt):
-
     local_tz = pytz.timezone(current_app.config['LOCAL_ZONE'])
 
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)

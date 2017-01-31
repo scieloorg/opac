@@ -238,6 +238,36 @@ RSS_NEWS_FEEDS = {
     },
 }
 
+RSS_PRESS_RELEASES_FEEDS = {
+    'pt_BR': {
+        'display_name': 'SciELO em Perspectiva Press Releases',
+        'url': 'http://pressreleases.scielo.org/feed/'
+    },
+    'es': {
+        'display_name': 'SciELO en Perspectiva Press Releases',
+        'url': 'http://pressreleases.scielo.org/es/feed/',
+    },
+    'en': {
+        'display_name': 'SciELO in Perspective Press Releases',
+        'url': 'http://pressreleases.scielo.org/en/feed/',
+    },
+}
+
+RSS_PRESS_RELEASES_FEEDS_BY_CATEGORY = {
+    'pt_BR': {
+        'display_name': 'SciELO em Perspectiva Press Releases',
+        'url': 'http://pressreleases.scielo.org/blog/category/{1}/feed/'
+    },
+    'es': {
+        'display_name': 'SciELO en Perspectiva Press Releases',
+        'url': 'http://pressreleases.scielo.org/{0}/category/press-releases/{1}/feed/',
+    },
+    'en': {
+        'display_name': 'SciELO in Perspective Press Releases',
+        'url': 'http://pressreleases.scielo.org/{0}/category/press-releases/{1}/feed/',
+    },
+}
+
 # paineis do flask-debug-toolbar somente ativos quando DEBUG = True
 
 DEBUG_TB_PANELS = [
