@@ -76,3 +76,4 @@ target/
 # media images
 opac/webapp/media/files/*.*
 opac/webapp/media/images/*.*
+.idea

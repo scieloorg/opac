@@ -18,7 +18,7 @@ Flask-Migrate==2.0.3
 unicodecsv==0.14.1
 feedparser==5.2.1
 -e git+https://git@github.com/scieloorg/legendarium@v0.1.4#egg=legendarium
--e git+https://git@github.com/scieloorg/opac_schema@v2.23#egg=opac_schema
+-e git+https://git@github.com/scieloorg/opac_schema@v2.24#egg=opac_schema
 Flask-HTMLmin==1.2
 python-slugify==1.2.1
 requests==2.13.0

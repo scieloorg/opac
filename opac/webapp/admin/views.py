@@ -21,7 +21,8 @@ from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
-from webapp.utils import get_timed_serializer, import_feed
+from webapp.utils import get_timed_serializer
+from webapp.helpers.rss_feeds_importer import import_all_press_releases_posts, news_import, import_all_press_releases_posts_by_category
 from opac_schema.v1.models import Sponsor, Journal, Issue, Article
 from webapp.admin.custom_widget import CKEditorField
 
@@ -364,7 +365,7 @@ class NewsAdminView(OpacBaseAdminView):
                 flash(msg, 'error')
             else:
                 feed_url = feeds[feed_lang]['url']
-                imported_ok, error_msg = import_feed(feed_url, feed_lang)
+                imported_ok, error_msg = news_import(feed_url, feed_lang)
                 if imported_ok:
                     msg = _('O feed: %s [%s], foi importado com sucesso !!' % (
                         feed_name, feed_lang))
@@ -384,7 +385,7 @@ class NewsAdminView(OpacBaseAdminView):
         try:
             feeds = current_app.config['RSS_NEWS_FEEDS']
             for language, feed in feeds.items():
-                imported_ok, error_msg = import_feed(feed['url'], language)
+                imported_ok, error_msg = news_import(feed['url'], language)
                 if imported_ok:
                     flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
                         feed['display_name'], language)))
@@ -775,6 +776,7 @@ class PressReleaseAdminView(OpacBaseAdminView):
 
     create_template = 'admin/pressrelease/edit.html'
     edit_template = 'admin/pressrelease/edit.html'
+    list_template = 'admin/pressrelease/list.html'
 
     form_overrides = dict(
         language=Select2Field,
@@ -812,3 +814,43 @@ class PressReleaseAdminView(OpacBaseAdminView):
             model._id = str(uuid4().hex)
 
         model.updated = datetime.now()
+
+    @admin.expose('/feeds/import/all/')
+    def import_all_press_releases(self):
+        try:
+            pr = current_app.config['RSS_PRESS_RELEASES_FEEDS']
+
+            for language, feed in pr.items():
+                imported_ok = import_all_press_releases_posts(feed['url'], language)
+
+                if imported_ok:
+                    flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
+                        feed['display_name'], language)))
+                else:
+                    flash(_('Ocorreu um erro tentando importar o feed: %s [%s].' % (
+                        feed['display_name'], language)), 'error')
+
+        except Exception as ex:
+            flash(_('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
+
+        return redirect(url_for('.index_view'))
+
+    @admin.expose('/feeds/import/all/by/category')
+    def import_all_press_releases_posts_by_category(self):
+        try:
+            pr = current_app.config['RSS_PRESS_RELEASES_FEEDS_BY_CATEGORY']
+
+            for language, feed in pr.items():
+                imported_ok = import_all_press_releases_posts_by_category(feed['url'], language)
+
+                if imported_ok:
+                    flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
+                        feed['display_name'], language)))
+                else:
+                    flash(_('Ocorreu um erro tentando importar o feed: %s [%s].' % (
+                        feed['display_name'], language)), 'error')
+
+        except Exception as ex:
+            flash(_('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
+
+        return redirect(url_for('.index_view'))

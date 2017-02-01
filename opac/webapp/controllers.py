@@ -33,6 +33,7 @@ from webapp import dbsql
 from .models import User
 from .choices import INDEX_NAME
 from . import utils
+from uuid import uuid4
 
 from mongoengine import Q
 
@@ -50,7 +51,6 @@ def get_current_collection():
 
 
 def get_collection_tweets():
-
     tweets = []
 
     consumer_key = current_app.config['TWITTER_CONSUMER_KEY']
@@ -79,7 +79,6 @@ def get_collection_tweets():
 # -------- PRESSRELEASES --------
 
 def get_press_release(journal, issue, lang_code, article=None):
-
     filters = {}
 
     if article:
@@ -93,7 +92,6 @@ def get_press_release(journal, issue, lang_code, article=None):
 
 
 def get_press_releases(query_filter=None, order_by="publication_date"):
-
     if not query_filter:
         query_filter = {}
 
@@ -186,7 +184,8 @@ def get_journal_json_data(journal):
         'title': journal.title,
         'links': {
             'detail': url_for('main.journal_detail', url_seg=journal.url_segment),
-            'submission': journal.online_submission_url or url_for('main.about_journal', url_seg=journal.url_segment) + '#submission',
+            'submission': journal.online_submission_url or url_for('main.about_journal',
+                                                                   url_seg=journal.url_segment) + '#submission',
             'instructions': url_for('main.about_journal', url_seg=journal.url_segment) + '#instructions',
             'about': url_for('main.about_journal', url_seg=journal.url_segment),
             'contact': url_for('main.about_journal', url_seg=journal.url_segment) + '#contact',
@@ -206,7 +205,8 @@ def get_journal_json_data(journal):
     return j_data
 
 
-def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title_slug", page=1, per_page=20):
+def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title_slug", page=1,
+                                           per_page=20):
     """
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """
@@ -276,8 +276,8 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
     return {'meta': meta, 'objects': groups_dict}
 
 
-def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug', extension='xls'):
-
+def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=True, order_by='title_slug',
+                                  extension='xls'):
     def format_csv_row(list_type, journal):
 
         last_issue_volume = journal.last_issue.volume or ''
@@ -552,9 +552,9 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
     last_issue = issues[0] if issues else None
 
     return {
-        'ahead': issue_ahead,               # ahead of print
-        'ordered_for_grid': result_dict,    # lista de fascículos odenadas para a grade
-        'volume_issue': volume_issue,       # lista de volumes que são fascículos
+        'ahead': issue_ahead,  # ahead of print
+        'ordered_for_grid': result_dict,  # lista de fascículos odenadas para a grade
+        'volume_issue': volume_issue,  # lista de volumes que são fascículos
         'previous_issue': previous_issue,
         'last_issue': last_issue
     }
@@ -782,10 +782,22 @@ def get_article_by_pid(pid, **kwargs):
 
 def create_news_record(news_model_data):
     try:
-        from uuid import uuid4
         news = News(**news_model_data)
         news._id = str(uuid4().hex)
         news.save()
+    except Exception as e:
+        raise e
+
+
+def create_press_release_record(pr_model_data):
+    try:
+        pr = PressRelease.objects(**pr_model_data)[:1]
+
+        if len(pr) == 0:  # On create add an id
+            pr_model_data['_id'] = uuid4().hex
+
+        pr.modify(upsert=True, new=True, **pr_model_data)
+
     except Exception as e:
         raise e
 
@@ -916,15 +928,12 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
 
 
 def get_page_by_journal_acron_lang(acron, language):
-
     return Pages.objects(language=language, journal=acron).first()
 
 
 def get_page_by_id(id):
-
     return Pages.objects.get(_id=id)
 
 
 def get_pages_by_lang(lang, journal=''):
-
     return Pages.objects(language=lang, journal=journal)
