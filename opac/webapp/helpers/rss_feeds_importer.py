@@ -68,7 +68,7 @@ def import_all_press_releases_posts_by_category(url, language):
     journals = controllers.get_journals()
 
     for journal in journals:
-        dynamic_url = url.format(language, journal.acronym)   # warning: Concatenations on this url see the default.py
+        dynamic_url = url.format(language, journal.acronym)
         entries = get_items_from_feed(dynamic_url)
 
         for item in entries[0]:
