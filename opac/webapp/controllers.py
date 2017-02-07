@@ -91,7 +91,7 @@ def get_press_release(journal, issue, lang_code, article=None):
     return PressRelease.objects(**filters).first()
 
 
-def get_press_releases(query_filter=None, order_by="publication_date"):
+def get_press_releases(query_filter=None, order_by="-publication_date"):
     if not query_filter:
         query_filter = {}
 
