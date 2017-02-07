@@ -2,12 +2,7 @@
   <div class="col-md-12">
     <a href="{{ press_release.url }}" target="_blank">
       <span>{{ press_release.publication_date|datetimefilter }}</span>
-      <h3>{{ press_release.title }}</h3>
-      <div class="info">
-        {% autoescape false %}
-          {{ press_release.content[:(256-(press_release.title|length))]|striptags|replace('Read More →', '') }}
-        {% endautoescape %}<strong>{% trans%}continue lendo{% endtrans %} &raquo;</strong>
-      </div>
+      <h3>{{ press_release.title[:75] }}{% if press_release.title|length > 75  %}...{% endif %}</h3>
     </a>
   </div>
 </div>
