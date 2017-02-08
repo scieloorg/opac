@@ -35,4 +35,4 @@ VOLUME /app/data
 USER nobody
 EXPOSE 8000
 
-CMD gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --log-level INFO
+CMD gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --timeout 150 --log-level INFO

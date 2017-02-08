@@ -109,7 +109,7 @@
                       {% for press_release in press_releases %}
                         <a href="{{ press_release.url }}" target="_blank">
                         {% with is_highlight = loop.index == 1 %}
-                          {% include "press_release/includes/collection_press_releases_row.html" %}
+                          {% include "press_release/includes/press_releases_row.html" %}
                         {% endwith %}
                       {% endfor %}
                     </div>

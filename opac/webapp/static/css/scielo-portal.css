@@ -1265,11 +1265,7 @@ button.btn:active {
   padding-bottom: 10px;
 }
 .slide-item.release h3 {
-  /*color: @DarkBlue;
-      font-size: 1.3em;
-      margin: 0;
-      height: 110px;*/
-  color: #6789d3;
+  color: #6789d3 !important;
   margin: 0;
   font-size: 1em;
 }
@@ -2508,7 +2504,7 @@ button.btn:active {
   border-radius: 4px;
 }
 .journal .news h3 {
-  color: #00314c;
+  color: #00314c !important;
   margin: 0 0 5px;
   font-size: 1.5em;
   height: 70px;
