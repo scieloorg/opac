@@ -3533,7 +3533,7 @@ button.btn:active {
 .collection .slide-item.perspective a,
 .collection .slide-item.twitter a {
   color: #6789d3;
-  font-weight: bold;
+  font-weight: bold !important;
 }
 .collection .perspective .slide-item .col-md-12,
 .collection .twitter .slide-item .col-md-12 {

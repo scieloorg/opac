@@ -27,7 +27,6 @@ from opac_schema.v1.models import (
     PressRelease)
 
 login_manager = LoginManager()
-assets = Environment()
 dbmongo = MongoEngine()
 dbsql = SQLAlchemy()
 mail = Mail()
@@ -66,7 +65,7 @@ def create_app():
     login_manager.init_app(app)
 
     # Minificando o HTML
-    if not app.config['DEBUG']:
+    if  app.config['DEBUG']:
         HTMLMIN(app)
 
     # Registrando os filtros
@@ -74,22 +73,30 @@ def create_app():
     app.jinja_env.filters['datetimefilter'] = custom_filters.datetimefilter
 
     # Assets
-    js = Bundle('js/vendor/jquery-1.11.0.min.js',
-                'js/vendor/underscore-min.js',
-                'js/vendor/bootstrap.min.js',
+    js = Bundle(
+                'js/vendor/jquery.js',
+                'js/vendor/underscore.js',
+                'js/vendor/bootstrap.js',
                 'js/vendor/clipboard.js',
                 'js/common.js',
                 'js/main.js',
-                filters='jsmin', output='js/bundle.js')
+                filters='jsmin',
+                output='js/bundle.js',
+                remove_duplicates=True)
 
     css = Bundle('css/bootstrap.min.css',
                  'css/scielo-portal.css',
                  'css/style.css',
-                 filters='cssmin', output='css/bundle.css')
+                 filters='cssmin',
+                 output='css/bundle.css',
+                 remove_duplicates=True)
 
+    assets = Environment(app)
     assets.register('js_all', js)
     assets.register('css_all', css)
+    assets.debug = app.config['DEBUG']
     assets.init_app(app)
+
     # i18n
     babel.init_app(app)
     # Debug Toolbar

@@ -42,9 +42,9 @@ services:
             - opac_mongo:opac-mongo
             - mailhog:mailhog
         ports:
-            - "8000:8000"
+            - "8001:8000"
         environment:
-            - OPAC_DEBUG_MODE=True
+            - OPAC_DEBUG_MODE=False
             - OPAC_MONGODB_NAME=opac
             - OPAC_MONGODB_HOST=opac-mongo
             - OPAC_DATABASE_DIR=/app/data
