@@ -65,7 +65,7 @@ def create_app():
     login_manager.init_app(app)
 
     # Minificando o HTML
-    if  app.config['DEBUG']:
+    if not app.config['DEBUG']:
         HTMLMIN(app)
 
     # Registrando os filtros
