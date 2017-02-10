@@ -324,7 +324,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
 
     if extension == 'csv':
 
-        csv_file = io.StringIO()
+        csv_file = io.BytesIO()
         csv_writer = unicodecsv.writer(csv_file, encoding='utf-8')
         csv_writer.writerow(csv_headers)
 
@@ -334,7 +334,7 @@ def get_journal_generator_for_csv(list_type='alpha', title_query='', is_public=T
 
         return csv_file.getvalue()
     else:
-        output = io.StringIO()
+        output = io.BytesIO()
 
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 

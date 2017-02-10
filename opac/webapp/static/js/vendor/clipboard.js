@@ -283,12 +283,12 @@ module.exports = select;
 
 },{}],7:[function(require,module,exports){
 function E () {
-    // Keep this empty so it's easier to inherit from
+	// Keep this empty so it's easier to inherit from
   // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
 }
 
 E.prototype = {
-    on: function (name, callback, ctx) {
+	on: function (name, callback, ctx) {
     var e = this.e || (this.e = {});
 
     (e[name] || (e[name] = [])).push({
