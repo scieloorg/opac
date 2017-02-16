@@ -1,6 +1,6 @@
 Flask==0.12
 mongoengine==0.11.0
-flask-mongoengine==0.8.2
+flask-mongoengine==0.9.1
 Flask-Assets==0.12
 jsmin==2.2.1
 cssmin==0.2.0
