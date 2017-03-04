@@ -22,7 +22,7 @@ feedparser==5.2.1
 Flask-HTMLmin==1.2
 python-slugify==1.2.1
 requests==2.13.0
-gunicorn==19.6.0
+gunicorn==19.7.0
 xlsxwriter==0.9.6
 tweepy==3.5.0
 raven[flask]==6.0.0
