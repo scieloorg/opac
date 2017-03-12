@@ -5,7 +5,7 @@ Flask-Assets==0.12
 jsmin==2.2.1
 cssmin==0.2.0
 webassets==0.12.1
-Flask-Admin==1.4.2
+Flask-Admin==1.5.0
 Flask-SQLAlchemy==2.2
 SQLAlchemy-Utils==0.32.12
 Flask-Security==1.7.5
