@@ -223,50 +223,6 @@ URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', 'http://search.scielo.org/')
 OPAC_METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
 
 NEWS_LIST_LIMIT = 10
-RSS_NEWS_FEEDS = {
-    'pt_BR': {
-        'display_name': 'SciELO em Perspectiva',
-        'url': 'http://blog.scielo.org/feed/'
-    },
-    'es': {
-        'display_name': 'SciELO en Perspectiva',
-        'url': 'http://blog.scielo.org/es/feed/',
-    },
-    'en': {
-        'display_name': 'SciELO in Perspective',
-        'url': 'http://blog.scielo.org/en/feed/',
-    },
-}
-
-RSS_PRESS_RELEASES_FEEDS = {
-    'pt_BR': {
-        'display_name': 'SciELO em Perspectiva Press Releases',
-        'url': 'http://pressreleases.scielo.org/feed/'
-    },
-    'es': {
-        'display_name': 'SciELO en Perspectiva Press Releases',
-        'url': 'http://pressreleases.scielo.org/es/feed/',
-    },
-    'en': {
-        'display_name': 'SciELO in Perspective Press Releases',
-        'url': 'http://pressreleases.scielo.org/en/feed/',
-    },
-}
-
-RSS_PRESS_RELEASES_FEEDS_BY_CATEGORY = {
-    'pt_BR': {
-        'display_name': 'SciELO em Perspectiva Press Releases',
-        'url': 'http://pressreleases.scielo.org/blog/category/{1}/feed/'
-    },
-    'es': {
-        'display_name': 'SciELO en Perspectiva Press Releases',
-        'url': 'http://pressreleases.scielo.org/{0}/category/press-releases/{1}/feed/',
-    },
-    'en': {
-        'display_name': 'SciELO in Perspective Press Releases',
-        'url': 'http://pressreleases.scielo.org/{0}/category/press-releases/{1}/feed/',
-    },
-}
 
 # paineis do flask-debug-toolbar somente ativos quando DEBUG = True
 

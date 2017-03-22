@@ -3,9 +3,9 @@ default: test
 COMPOSE_FILE_DEV = docker-compose-dev.yml
 COMPOSE_FILE_BUILD = docker-compose-build.yml
 
-OPAC_BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-OPAC_VCS_REF=$(strip $(shell git rev-parse --short HEAD))
-OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
+export OPAC_BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+export OPAC_VCS_REF=$(strip $(shell git rev-parse --short HEAD))
+export OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
 
 opac_version:
 	@echo "Version file: " $(OPAC_WEBAPP_VERSION)

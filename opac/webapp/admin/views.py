@@ -22,7 +22,6 @@ from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer
-from webapp.helpers.rss_feeds_importer import import_all_press_releases_posts, news_import, import_all_press_releases_posts_by_category
 from opac_schema.v1.models import Sponsor, Journal, Issue, Article
 from webapp.admin.custom_widget import CKEditorField
 
@@ -308,11 +307,9 @@ class OpacBaseAdminView(mongoengine.ModelView):
 
 class NewsAdminView(OpacBaseAdminView):
     can_create = False
-    can_edit = True
-    can_delete = True
+    can_edit = False
+    can_delete = False
     page_size = 30
-
-    list_template = 'admin/news/list.html'
 
     def _url_formatter(self, context, model, name):
         return Markup("<a href='{url}' target='_blank'>Open</a>".format(
@@ -349,53 +346,6 @@ class NewsAdminView(OpacBaseAdminView):
     column_searchable_list = [
         '_id', 'title', 'description',
     ]
-
-    @admin.expose('/feeds/import/from/<string:feed_name>/<string:feed_lang>')
-    def feeds_import_from(self, feed_name, feed_lang):
-        try:
-            feeds = current_app.config['RSS_NEWS_FEEDS']
-
-            if feed_lang not in list(feeds.keys()):
-                msg = _('O idioma: %s, não consta no nosso cadastro de feeds.' % (
-                    feed_lang))
-                flash(msg, 'error')
-            elif feed_name not in feeds[feed_lang]['display_name']:
-                msg = _('O feed: "%s", no idioma: "%s", não consta no nosso cadastro de feeds.' % (
-                    feed_name, feed_lang))
-                flash(msg, 'error')
-            else:
-                feed_url = feeds[feed_lang]['url']
-                imported_ok, error_msg = news_import(feed_url, feed_lang)
-                if imported_ok:
-                    msg = _('O feed: %s [%s], foi importado com sucesso !!' % (
-                        feed_name, feed_lang))
-                    flash(msg)
-                else:
-                    # logger.error(error_msg)
-                    msg = _('Ocorreu um erro tentando importar o feed: %s [%s].' % (
-                        feed_name, feed_lang))
-                    flash(msg, 'error')
-        except Exception as ex:
-            msg = _('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex))
-            flash(msg, 'error')
-        return redirect(url_for('.index_view'))
-
-    @admin.expose('/feeds/import/all/')
-    def feeds_import_all(self):
-        try:
-            feeds = current_app.config['RSS_NEWS_FEEDS']
-            for language, feed in feeds.items():
-                imported_ok, error_msg = news_import(feed['url'], language)
-                if imported_ok:
-                    flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
-                        feed['display_name'], language)))
-                else:
-                    # logger.error(error_msg)
-                    flash(_('Ocorreu um erro tentando importar o feed: %s [%s].' % (
-                        feed['display_name'], language)), 'error')
-        except Exception as ex:
-            flash(_('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
-        return redirect(url_for('.index_view'))
 
 
 class SponsorAdminView(OpacBaseAdminView):
@@ -760,10 +710,10 @@ class PagesAdminView(OpacBaseAdminView):
 
 
 class PressReleaseAdminView(OpacBaseAdminView):
-    can_create = True
-    can_edit = True
+    can_create = False
+    can_edit = False
     edit_modal = False
-    can_delete = True
+    can_delete = False
     create_modal = False
     edit_modal = False
     can_view_details = True
@@ -773,10 +723,6 @@ class PressReleaseAdminView(OpacBaseAdminView):
     column_exclude_list = [
         '_id', 'content', 'created', 'updated',
     ]
-
-    create_template = 'admin/pressrelease/edit.html'
-    edit_template = 'admin/pressrelease/edit.html'
-    list_template = 'admin/pressrelease/list.html'
 
     form_overrides = dict(
         language=Select2Field,
@@ -805,52 +751,3 @@ class PressReleaseAdminView(OpacBaseAdminView):
     form_args = dict(
         language=dict(choices=choices.LANGUAGES_CHOICES),
     )
-
-    def on_model_change(self, form, model, is_created):
-
-        # é necessario definir um valor para o campo ``_id`` na criação.
-        if is_created:
-            model.created = datetime.now()
-            model._id = str(uuid4().hex)
-
-        model.updated = datetime.now()
-
-    @admin.expose('/feeds/import/all/')
-    def import_all_press_releases(self):
-        try:
-            pr = current_app.config['RSS_PRESS_RELEASES_FEEDS']
-
-            for language, feed in pr.items():
-                imported_ok = import_all_press_releases_posts(feed['url'], language)
-
-                if imported_ok:
-                    flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
-                        feed['display_name'], language)))
-                else:
-                    flash(_('Ocorreu um erro tentando importar o feed: %s [%s].' % (
-                        feed['display_name'], language)), 'error')
-
-        except Exception as ex:
-            flash(_('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
-
-        return redirect(url_for('.index_view'))
-
-    @admin.expose('/feeds/import/all/by/category')
-    def import_all_press_releases_posts_by_category(self):
-        try:
-            pr = current_app.config['RSS_PRESS_RELEASES_FEEDS_BY_CATEGORY']
-
-            for language, feed in pr.items():
-                imported_ok = import_all_press_releases_posts_by_category(feed['url'], language)
-
-                if imported_ok:
-                    flash(_('O feed: %s [%s], foi importado com sucesso !!' % (
-                        feed['display_name'], language)))
-                else:
-                    flash(_('Ocorreu um erro tentando importar o feed: %s [%s].' % (
-                        feed['display_name'], language)), 'error')
-
-        except Exception as ex:
-            flash(_('Ocorreu um erro tentando atualizar os feed RSS!!, %s' % str(ex)), 'error')
-
-        return redirect(url_for('.index_view'))

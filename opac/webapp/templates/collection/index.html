@@ -75,9 +75,9 @@
           </div>
         </div>
       </div>
-      <div class="row">
 
-        {% if journals %}
+      {% if journals %}
+        <div class="row">
           <div class="block last_issues">
             <div class="col-md-12">
               <h2><strong>{% trans %}Fascículos <span>mais recentes</span>{% endtrans %}</strong></h2>
@@ -95,32 +95,33 @@
             </div>
             <div class="clearfix"></div>
           </div>
-        {% endif %}
+        </div> {# /row #}
+      {% endif %}
 
-        {% if press_releases %}
-            <div class="block releases">
-              <div class="col-md-12">
-                <h2>SciELO <span>Press Releases</span></h2>
-                <div class="slider" id="pressreleases">
-                  <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
-                  <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
-                  <div class="slide-container">
-                    <div class="slide-wrapper">
-                      {% for press_release in press_releases %}
-                        <a href="{{ press_release.url }}" target="_blank">
-                        {% with is_highlight = loop.index == 1 %}
-                          {% include "press_release/includes/press_releases_row.html" %}
-                        {% endwith %}
-                      {% endfor %}
-                    </div>
+      {% if press_releases %}
+        <div class="row">
+          <div class="block releases">
+            <div class="col-md-12">
+              <h2>SciELO <span>Press Releases</span></h2>
+              <div class="slider" id="pressreleases">
+                <a href="javascript:;" class="slide-back"><span class="glyphBtn arrowLeft"></span></a>
+                <a href="javascript:;" class="slide-next"><span class="glyphBtn arrowRight"></span></a>
+                <div class="slide-container">
+                  <div class="slide-wrapper">
+                    {% for press_release in press_releases %}
+                      {% include "press_release/includes/press_releases_row.html" %}
+                    {% endfor %}
                   </div>
                 </div>
               </div>
-              <div class="clearfix"></div>
             </div>
-          {% endif %}
+            <div class="clearfix"></div>
+          </div>
+        </div> {# /row #}
+      {% endif %}
 
-        {% if news %}
+      {% if news %}
+        <div class="row">
           <div class="block perspective">
             <div class="col-md-12">
               <h2>SciELO <span>{% trans %}em perspectiva{% endtrans %}</span></h2>
@@ -130,9 +131,7 @@
                 <div class="slide-container">
                   <div class="slide-wrapper">
                     {% for item in news %}
-                      {% with is_highlight = loop.index == 1 %}
-                        {% include "news/includes/collection_news_row.html" %}
-                      {% endwith %}
+                      {% include "news/includes/collection_news_row.html" %}
                     {% endfor %}
                   </div>
                 </div>
@@ -140,9 +139,11 @@
             </div>
             <div class="clearfix"></div>
           </div>
-        {% endif %}
+        </div> {# /row #}
+      {% endif %}
 
-        {% if tweets %}
+      {% if tweets %}
+        <div class="row">
           <div class="block twitter">
             <div class="col-md-12">
               <h2><span>Twitter</span> <a href="https://twitter.com/{{ config.TWITTER_SCREEN_NAME }}" target="_blank">@{{ config.TWITTER_SCREEN_NAME }}</a></h2>
@@ -162,9 +163,9 @@
             </div>
             <div class="clearfix"></div>
           </div>
-        {% endif %}
+        </div> {# /row #}
+      {% endif %}
 
-      </div>
     </div>
   </section>
 
