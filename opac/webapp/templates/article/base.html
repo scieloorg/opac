@@ -1,19 +1,35 @@
 {% extends "base.html" %}
-{% block body_class %}journal article{% endblock %}
-{% block content %}
-  {% include "journal/includes/header.html" %}
 
-  <!-- alterar o levelmenu -->
-  {% include "article/includes/levelMenu.html" %}
+{% block body_class %}journal article{% endblock %}
+
+{% block extra_css %}
+
+    {{ url_for('static', filename='css/article-styles.css') }}
+
+{% endblock %}
+
+{% block content %}
+
+  {% include "article/includes/header.html" %}
+
+  {% include "article/includes/alternative_header.html" %}
 
   {% block main_content %}{% endblock %}
 
+  {% include "article/includes/modal/author.html" %}
+
+  {% include "article/includes/modal/download.html" %}
+
+  {% include "article/includes/modal/how_cited.html" %}
+
+  {% include "article/includes/modal/related_article.html" %}
+
+  {% include "article/includes/modal/send_mail.html" %}
+
+  {% include "article/includes/modal/translate_article.html" %}
+
+  {% include "article/includes/modal/translate_version.html" %}
+
   {% include "includes/footer.html" %}
-
-  {% if request.endpoint == 'main.article_detail' %}
-    {% include "article/includes/alternative_header.html" %}
-  {% endif %}
-
-  {% include "collection/includes/email_modal.html" %}
 
 {% endblock %}

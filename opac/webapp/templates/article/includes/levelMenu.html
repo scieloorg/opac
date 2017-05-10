@@ -1,14 +1,11 @@
-
 <section class="levelMenu">
     <div class="container">
         <div class="col-md-2 col-sm-2">
-            <h2>&#160;</h2>
             <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
-                <span class="glyphBtn home"></span> {% trans %}home da revista{% endtrans %}
+                <span class="sci-ico-home"></span> {% trans %}home da revista{% endtrans %}
             </a>
         </div>
-        <div class="col-md-5 col-sm-5">
-            <h2>&#160;</h2>
+        <div class="col-md-7 col-sm-7">
             <div class="btn-group">
 
                 {# Sumário #}
@@ -33,45 +30,68 @@
 
             </div>
         </div>
-        <div class="col-md-5 col-sm-5 downloadOptions">
-            <h2><span class="glyphBtn articleDownload"></span> {% trans %}Outras versões deste artigo{% endtrans %}</h2>
-            <div class="btn-group">
-                <ul>
-                    <li class="group" style="width: 33.3333%;">
-                        {% if article.pdfs|length > 0 %}
-                            <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphBtn pdfDownload"></span> PDF
-                            </a>
-                            <ul class="dropdown-menu">
-                                {# Necessário depois de definido o novo modelo para o artigo ajustar esse link #}
-                                {% for pdf in pdfs %}
-                                    <li>
-                                        <a href="{{ pdf.url }}">
-                                            {{ pdf.lang|trans_alpha2 }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <a href="javascript:;" class="btn dropdown-toggle disabled" data-toggle="dropdown">
-                                <span class="glyphBtn pdfDownload"></span> PDF
-                            </a>
-                        {% endif %}
+        <!-- Está estatico  -->
+        <div class="col-md-3 col-sm-3 share">
 
-                    </li>
+            <a data-toggle="tooltip" href="javascript:window.print();" class="sharePrint" title="Imprimir">
+              <span class="glyphBtn print"></span>
+            </a>
+            <a data-toggle="tooltip" href="{{ url_for('main.collection_list_feed')}}" title="Atom" target="_blank">
+              <span class="glyphBtn rssMini"></span>
+            </a>
 
-                    <li class="group" style="width: 33.3333%;">
-                        <a href="javascript:;" class="btn group disabled"><span class="glyphBtn readcubeView"></span> readcube</a>
-                    </li>
-                    <li class="group" style="width: 33.3333%;">
-                        {% if article.xml %}
-                            <a href="{{ article.xml }}" class="btn group"><span class="glyphBtn xmlDownload"></span> XML</a>
-                        {% else %}
-                            <a href="javascript:;" class="btn group disabled"><span class="glyphBtn xmlDownload"></span> XML</a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
+            <span class="divisor"></span>
+            {% trans %}Compartilhe{% endtrans %}
+
+            <a data-toggle="tooltip" href="#" class="sendViaMail" title="{% trans %}Enviar link por e-mail{% endtrans %}">
+              <span class="glyphBtn sendMail"></span>
+            </a>
+            <a data-toggle="tooltip" href="#" class="shareFacebook" title="{% trans %}Compartilhar no Facebook{% endtrans %}">
+              <span class="glyphBtn facebook"></span>
+            </a>
+            <a data-toggle="tooltip" href="#" class="shareTwitter" title="{% trans %}Compartilhar no Twitter{% endtrans %}">
+              <span class="glyphBtn twitter"></span>
+            </a>
+            <a data-toggle="dropdown" href="#" class="dropdown-toggle dropdown-tooltip" title="{% trans %}Outras redes sociais{% endtrans %}">
+              <span class="glyphBtn otherNetworks"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header">
+                {% trans %}Outras redes sociais{% endtrans %}
+              </li>
+              <li>
+                <a href="#" class="shareGooglePlus">
+                  <span class="glyphBtn googlePlus"></span> Google+
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareLinkedIn">
+                  <span class="glyphBtn linkedIn"></span> LinkedIn
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareReddit">
+                  <span class="glyphBtn reddit"></span> Reddit
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareStambleUpon">
+                  <span class="glyphBtn stambleUpon"></span> StambleUpon
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareCiteULike">
+                  <span class="glyphBtn citeULike"></span> CiteULike
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareMendeley">
+                  <span class="glyphBtn mendeley"></span> Mendeley
+                </a>
+              </li>
+            </ul>
+
         </div>
+        <!-- Está estatico  -->
     </div>
 </section>
