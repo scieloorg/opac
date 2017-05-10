@@ -659,9 +659,9 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
             html_url = [html for html in article.htmls if html['lang'] == lang_code]
 
             # Obtemos o html do SSM
-            result = requests.get(html_url[0])
+            result = requests.get(html_url[0]['url'])
 
-            if request.status_code == 200 and len(result.content) > 0:
+            if result.status_code == 200 and len(result.content) > 0:
 
                 # Criamos um objeto do tip soup
                 soup = BeautifulSoup(result.content, 'html.parser')
