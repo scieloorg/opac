@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 
-    <link rel="stylesheet" href="/static/css/article-styles.css">
+    {{ url_for('static', filename='css/article-styles.css') }}
 
 {% endblock %}
 
@@ -12,9 +12,7 @@
 
   {% include "article/includes/header.html" %}
 
-  {% if request.endpoint == 'main.article_detail' %}
-    {% include "article/includes/alternative_header.html" %}
-  {% endif %}
+  {% include "article/includes/alternative_header.html" %}
 
   {% block main_content %}{% endblock %}
 

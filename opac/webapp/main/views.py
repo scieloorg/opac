@@ -657,20 +657,26 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if article.htmls:
         try:
             html_url = [html for html in article.htmls if html['lang'] == lang_code]
+
+            # Obtemos o html do SSM
+            result = requests.get(html_url[0])
+
+            if request.status_code == 200 and len(result.content) > 0:
+
+                # Criamos um objeto do tip soup
+                soup = BeautifulSoup(result.content, 'html.parser')
+
+                # Fatiamos o HTML pelo div com class: articleTxt
+                html_article = soup.find('div', attrs={'class': 'articleTxt'})
+
+                # Obtemos os modals do HTML pelo div com class: modal
+                html_modals = soup.find_all('div', attrs={'class': 'modal'})
+
+            else:
+                abort(404, _('Artigo não encontrado'))
+
         except IndexError:
             abort(404, _('Artigo não encontrado'))
-
-    # Obtemos o html do SSM
-    result = requests.get(html_url[0])
-
-    # Criamos um objeto do tip soup
-    soup = BeautifulSoup(result.content, 'html.parser')
-
-    # Fatiamos o HTML pelo div com class: articleTxt
-    html_article = soup.find('div', attrs={'class': 'articleTxt'})
-
-    # Obtemos os modals do HTML pelo div com class: modal
-    html_modals = soup.find_all('div', attrs={'class': 'modal'})
 
     context = {
         'next_article': next_article,
