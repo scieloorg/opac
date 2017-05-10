@@ -2,19 +2,29 @@
 
 {% block main_content %}
 
-  <section class="articleCtt">
+    {% include "article/includes/levelMenu.html" %}
+
+    <!-- article -->
+      <!-- <iframe scrolling="no" width="100%" frameborder="0"
+            src="http://localhost:8001/media/assets/resp/v78n3/test.html"></iframe> -->
+    <!-- article -->
+
+    <section class="articleCtt">
       <div class="container">
-          <div class="row">
-              <div class="col-md-12 col-sm-12 articleBlock">
-              {% if html %}
-                {{ html.source|safe }}
-              {% else %}
-                Este artigo contém somente o pdf
-              {% endif %}
-              </div>
-          </div>
+      {% if html %}
+        {{ html|safe }}
+      {% endif %}
       </div>
-  </section>
+    </section>
+
+    {% if modals %}
+      {% for modal in modals %}
+        {{ modal|safe }}
+      {% endfor %}
+    {% endif %}
+
+  {% include "article/includes/floating_menu.html" %}
+
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}
