@@ -2,131 +2,50 @@
 
 <div class="alternativeHeader">
   <div class="container">
-      <div class="col-md-2 col-sm-3 mainNav">
-          <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
-          <h2>
-              <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-              <img src="{{ g.collection.logo_drop_menu|default("", true) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
-          </h2>
-          <div class="mainMenu" id="alternativeMainMenu">
-              <div class="row">
-                  <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-                      <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-                  </div>
+    <div class="col-md-2 col-sm-3 mainNav">
+      <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
+      <h2>
+          <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
+          <img src="{{ g.collection.logo_drop_menu|default("", true) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
+      </h2>
+      <div class="mainMenu" id="alternativeMainMenu">
+          <div class="row">
+              <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
+                  <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
               </div>
-              <nav>
-                  <ul>
-                  </ul>
-              </nav>
           </div>
+          <nav>
+            <ul>
+            </ul>
+          </nav>
       </div>
-      <div class="col-md-4 col-sm-5 journalInfo">
-          <ul>
-              <li>
-                  <a href="" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="text">
-                      {% if article.title %}
-                        {{ article.get_title_by_lang(session.lang)|truncate(40) }}
-                      {% endif %}
-                    </span> <span class="glyphBtn grayArrowDown"></span>
-                  </a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-header">
-                      <strong>{{ article.legend }}</strong>
-                    </li>
-                    <li><strong>{{ article.get_title_by_lang(session.lang) }}</strong></li>
-                    <li class="author">H. Rodríguez-Angulo; J. Toro-Mendoza; J. Marques; R. Bonfante-Cabarcas; A. Mijares;</li>
-                    <li class="listLink">
-                        <a href="#authorInfo" class="goto trigger" data-rel="#authorInfoBtn">{% trans %}Sobre os autores{% endtrans %}</a>
-                    </li>
-                    <li class="listLink">
-                        <a href="#authorInfo" class="goto trigger" data-rel="#copyrightInfoBtn">{% trans %}Permissões{% endtrans %}</a>
-                    </li>
-                  </ul>
-              </li>
+    </div>
+    <div class="col-md-5 col-sm-6 journalInfo">
+      <ul>
+        <li>
+          <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="text"><span class="truncate">{{ journal.title }} </span><span class="sci-ico-arrowDown"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <div class="col-md-9 col-sm-8 brandLogo">
+              <div class="row">
+                <img src="" alt="Logomarca da {{ journal.title }}">
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-4 journalMenu">
+              <ul>
+                <li><a href="{{ journal.online_submission_url|default('', true) }}" target="_blank"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
+                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
+                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
+              </ul>
+            </div>
           </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-2 col-md-offset-2 col-sm-3 journalMenu">
+      <div class="language">
+        {% include "includes/language.html" %}
       </div>
-      <div class="col-md-6 col-md-5 menuItens">
-          <ul>
-              <li>
-                <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
-                  <span class="glyphBtn home"></span>
-                </a>
-              </li>
-              <li>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <span class="glyphBtn articles"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-header">
-                    {% trans %}Artigos de{% endtrans %} {{ journal.last_issue.year }}, V.{{ journal.last_issue.volume }} N.{{ journal.last_issue.volume }}
-                  </li>
-
-                  {# Sumário #}
-                  <li>
-                    <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}">
-                      &bull; {% trans %}sumário{% endtrans %}
-                    </a>
-                  </li>
-
-                  {# Anterior #}
-                  <li class="{% if not previous_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment, lang_code=article.original_language) }}">
-                      &laquo; {% trans %}anterior{% endtrans %}
-                    </a>
-                  </li>
-
-                  {# Atual #}
-                  <li>
-                    <a href="" class="disabled">
-                      &bull; {% trans %}atual{% endtrans %}
-                    </a>
-                  </li>
-
-                  {# Próximo #}
-                  <li class="{% if not next_article %} disabled {% endif %}">
-                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment, lang_code=article.original_language) }}">
-                      &raquo; {% trans %}próximo{% endtrans %}
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphBtn pdfDownload"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="dropdown-header">{% trans %}Baixar{% endtrans %} PDF</li>
-                    <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
-                    <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
-                    <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="#" class="showTooltip" data-placement="bottom" title="{% trans %}Visualizar no Readcube{% endtrans %}">
-                  <span class="glyphBtn readcubeView"></span>
-                </a>
-              </li>
-              <li>
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphBtn xmlDownload"></span>
-                  </a>
-                  <ul class="dropdown-menu" role="menu">
-                      <li class="dropdown-header">{% trans %}Baixar{% endtrans %} XML</li>
-                      <li><a href="#">{% trans %}Português{% endtrans %}</a></li>
-                      <li><a href="#">{% trans %}Inglês{% endtrans %}</a></li>
-                      <li><a href="#">{% trans %}Espanhol{% endtrans %}</a></li>
-                  </ul>
-              </li>
-              <li>
-                <a href="#" class="showTooltip expandReduceText" data-expandreducetext="true" data-placement="bottom" title="{% trans %}Expandir/Reduzir texto{% endtrans %}">
-                  <span class="glyphBtn expandTextIcon"></span>
-                </a>
-              </li>
-              <li>
-                <a href="#top" class="showTooltip goto" data-placement="bottom" title="{% trans %}Topo{% endtrans %}">
-                  <span class="glyphBtn gotoTopoIcon"></span>
-                </a>
-              </li>
-          </ul>
-      </div>
+    </div>
   </div>
 </div>

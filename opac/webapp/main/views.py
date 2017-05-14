@@ -1,6 +1,8 @@
 # coding: utf-8
 
 import logging
+import requests
+from bs4 import BeautifulSoup
 from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
@@ -649,13 +651,32 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
 
+    html_article = None
+    html_modals = None
+
     if article.htmls:
         try:
-            html = [html for html in article.htmls if html['lang'] == lang_code]
+            html_url = [html for html in article.htmls if html['lang'] == lang_code]
+
+            # Obtemos o html do SSM
+            result = requests.get(html_url[0]['url'])
+
+            if result.status_code == 200 and len(result.content) > 0:
+
+                # Criamos um objeto do tip soup
+                soup = BeautifulSoup(result.content, 'html.parser')
+
+                # Fatiamos o HTML pelo div com class: articleTxt
+                html_article = soup.find('div', attrs={'class': 'articleTxt'})
+
+                # Obtemos os modals do HTML pelo div com class: modal
+                html_modals = soup.find_all('div', attrs={'class': 'modal'})
+
+            else:
+                abort(404, _('Artigo não encontrado'))
+
         except IndexError:
             abort(404, _('Artigo não encontrado'))
-    else:
-        html = None
 
     context = {
         'next_article': next_article,
@@ -663,7 +684,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'article': article,
         'journal': journal,
         'issue': issue,
-        'html': html[0] if html else None,
+        'html': html_article,
+        'modals': html_modals,
         'pdfs': article.pdfs,
         'article_lang': lang_code
     }
