@@ -6,7 +6,7 @@
       <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
       <h2>
           <a href="{{ url_for('.index') }}" title="{% trans %}Ir para a homepage da coleção:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-          <img src="{{ g.collection.logo_drop_menu|default("", true) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
+          <img class="header_drop_image" src="{{ g.collection.logo_drop_menu|default("", true) }}" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}"></a>
       </h2>
       <div class="mainMenu" id="alternativeMainMenu">
           <div class="row">
@@ -20,7 +20,7 @@
           </nav>
       </div>
     </div>
-    <div class="col-md-5 col-sm-6 journalInfo">
+    <div class="col-md-6 col-sm-6 journalInfo">
       <ul>
         <li>
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="text"><span class="truncate">{{ journal.title }} </span><span class="sci-ico-arrowDown"></span></a>

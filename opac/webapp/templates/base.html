@@ -42,6 +42,8 @@
 
     {% block extra_css %}{% endblock %}
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" async/>
+
   </head>
   <body class="{% block body_class %}{% endblock %}">
     <a name="top"></a>

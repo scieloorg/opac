@@ -6,7 +6,7 @@
       <input type="hidden" name="lang" id="lang" value="{% if session.lang %}{{ session.lang[:2] }}{% endif %}">
       <input type="hidden" name="filter[in][]" value="{{ config.OPAC_COLLECTION }}">
     </form>
-    <form name="searchFormBuilder" action="//search.scielo.org/" method="get" class="searchForm searchFormBuilder">
+    <form name="searchFormBuilder" action="http://search.scielo.org/" method="get" class="searchForm searchFormBuilder">
       <div class="col-md-10 col-sm-10">
 
         <div class="input-group col-md-12 col-sm-12">

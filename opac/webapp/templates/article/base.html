@@ -3,9 +3,7 @@
 {% block body_class %}journal article{% endblock %}
 
 {% block extra_css %}
-
-    {{ url_for('static', filename='css/article-styles.css') }}
-
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/article-styles.css') }}" type="text/css" async/>
 {% endblock %}
 
 {% block content %}
