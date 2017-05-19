@@ -652,7 +652,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     next_article = utils.get_next_article(article_list, article)
 
     html_article = None
-    html_modals = None
 
     if article.htmls:
         try:
@@ -682,7 +681,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'journal': journal,
         'issue': issue,
         'html': html_article,
-        'modals': html_modals,
         'pdfs': article.pdfs,
         'article_lang': lang_code
     }

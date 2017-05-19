@@ -12,12 +12,6 @@
       </div>
     </section>
 
-    {% if modals %}
-      {% for modal in modals %}
-        {{ modal|safe }}
-      {% endfor %}
-    {% endif %}
-
   {% include "article/includes/floating_menu.html" %}
 
   {% include "journal/includes/contact_footer.html" %}
