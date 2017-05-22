@@ -663,11 +663,10 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
             if result.status_code == 200 and len(result.content) > 0:
 
                 # Criamos um objeto do tip soup
-                soup = BeautifulSoup(result.content, 'html.parser')
+                soup = BeautifulSoup(result.content.decode('utf-8'), 'html.parser')
 
                 # Fatiamos o HTML pelo div com class: articleTxt
-                html_article = soup.find('div', attrs={'id': 'standalonearticle'})
-
+                html_article = soup.find('div', {'id': 'standalonearticle'})
             else:
                 abort(404, _('Artigo não encontrado'))
 
