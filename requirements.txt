@@ -25,5 +25,5 @@ requests==2.14.2
 gunicorn==19.7.1
 xlsxwriter==0.9.6
 tweepy==3.5.0
-raven[flask]==6.0.0
+raven[flask]==6.1.0
 beautifulsoup4==4.6.0
