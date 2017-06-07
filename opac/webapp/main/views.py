@@ -549,6 +549,13 @@ def issue_toc(url_seg, url_seg_issue):
     previous_issue = utils.get_prev_issue(issue_list, issue)
     next_issue = utils.get_next_issue(issue_list, issue)
 
+    for article in articles:
+        article_text_languages = [doc['lang'] for doc in article.htmls]
+        article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
+
+        setattr(article, "article_text_languages", article_text_languages)
+        setattr(article, "article_pdf_languages", article_pdf_languages)
+
     context = {
         'next_issue': next_issue,
         'previous_issue': previous_issue,
