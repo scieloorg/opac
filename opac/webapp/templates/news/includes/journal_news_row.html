@@ -1,7 +1,7 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <span>{{ item.publication_date }}</span>
-    <h3>{{ item.title|truncate(70, True) }}</h3>
+    <h3>{{ item.title|truncate(55, True) }}</h3>
     <div class="ellipsis">
       {{ item.description|striptags|replace('Read More →', '')|truncate(180) }}
     </div>
