@@ -1,14 +1,15 @@
 <div class="row collectionListSearch">
   <div class="col-md-6">
-    <div class="btn-group">
-      <input id="all_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="" checked="checked">
-      <label for="all_{{filter_id}}" class="btn btn-radio-group">{% trans %}Todos{% endtrans %}</label>
-
-      <input id="current_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="current">
-      <label for="current_{{filter_id}}" class="btn btn-radio-group">{% trans %}Títulos correntes{% endtrans %}</label>
-
-      <input id="no_current_{{filter_id}}" type="radio" class="btn-radio-group" name="{{ filter_id|default('query_filter') }}" value="no-current">
-      <label for="no_current_{{filter_id}}" class="btn btn-radio-group">{% trans %}Títulos não-correntes{% endtrans %}</label>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn active">
+        <input type="radio" id="all_{{filter_id}}" autocomplete="off" name="{{ filter_id|default('query_filter') }}" value="" checked="checked">{% trans %}Todos{% endtrans %}
+      </label>
+      <label class="btn">
+        <input type="radio" id="current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="current" autocomplete="off">{% trans %}Títulos correntes{% endtrans %}
+      </label>
+      <label class="btn">
+        <input type="radio" id="no_current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="no-current" autocomplete="off">{% trans %}Títulos não-correntes{% endtrans %}
+      </label>
     </div>
   </div>
   <div class="col-md-6 col-sm-12">
