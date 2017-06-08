@@ -432,8 +432,7 @@ class MenuTestCase(BaseTestCase):
                 'main.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment,
-                lang_code='pt')
+                url_seg_article=article2.url_segment)
 
             response = self.client.get(article_detail_url)
 
@@ -444,8 +443,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article1.url_segment,
-                lang_code='pt')
+                url_seg_article=article1.url_segment)
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
@@ -453,8 +451,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article3.url_segment,
-                lang_code='pt')
+                url_seg_article=article3.url_segment)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -505,15 +502,14 @@ class MenuTestCase(BaseTestCase):
                 'main.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article3.url_segment,
-                lang_code='pt')
+                url_seg_article=article3.url_segment)
 
             response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//pt/" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
+            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
@@ -521,8 +517,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment,
-                lang_code='pt')
+                url_seg_article=article2.url_segment)
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -571,15 +566,14 @@ class MenuTestCase(BaseTestCase):
                 'main.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article1.url_segment,
-                lang_code='pt')
+                url_seg_article=article1.url_segment)
 
             response = self.client.get(article_detail_url)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//pt/" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
+            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
@@ -587,8 +581,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail',
                 url_seg=journal.url_segment,
                 url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment,
-                lang_code='pt')
+                url_seg_article=article2.url_segment)
 
             expected_btns = [
                 expect_btn_anterior,
