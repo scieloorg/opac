@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import os
+import re
 import pytz
 import shutil
 
@@ -8,10 +9,9 @@ import shutil
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
-from flask import current_app, url_for
+from flask import current_app
 from . import models
 import webapp
-import re
 import requests
 
 try:
