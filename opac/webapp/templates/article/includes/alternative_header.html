@@ -27,12 +27,14 @@
           <ul class="dropdown-menu" role="menu">
             <div class="col-md-9 col-sm-8 brandLogo">
               <div class="row">
-                <img src="" alt="Logomarca da {{ journal.title }}">
+              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}"><img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" /></a>
               </div>
             </div>
             <div class="col-md-3 col-sm-4 journalMenu">
               <ul>
-                <li><a href="{{ journal.online_submission_url|default('', true) }}" target="_blank"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+                {% if journal.online_submission_url %}
+                  <li><a href="{{ journal.online_submission_url|default('', true) }}" target="_blank"><span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}</a></li>
+                {% endif %}
                 <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
                 <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
                 <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
