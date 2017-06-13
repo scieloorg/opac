@@ -16,11 +16,6 @@
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.collection_list') }}#publisher" class="tab_link">
-              {% trans %}Lista de periódicos por editoras{% endtrans %}
-            </a>
-          </li>
-          <li>
             <a href="{{ config.URL_SEARCH }}?q=*&lang={% if session.lang %}{{ session.lang[:2] }}{% endif %}&filter[in][]={{config.OPAC_COLLECTION}}">
               {% trans %}Busca{% endtrans %}
             </a>

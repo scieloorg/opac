@@ -3,7 +3,7 @@
 {% block body_class %}journal article{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/article-styles.css') }}" type="text/css" async/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async/>
 {% endblock %}
 
 {% block content %}
@@ -29,5 +29,9 @@
   {% include "article/includes/modal/translate_version.html" %}
 
   {% include "includes/footer.html" %}
+
+{% block extra_js %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/scielo-article-min.js') }}"></script>
+{% endblock %}
 
 {% endblock %}

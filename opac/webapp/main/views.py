@@ -98,38 +98,6 @@ def index():
 
     return render_template("collection/index.html", **context)
 
-# ##################################PressRelease#################################
-
-
-@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/pressrelease/<string:lang_code>/', defaults={'url_seg_article': None})
-@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/pressrelease/<string:lang_code>/')
-def pressrelease(url_seg, url_seg_issue, url_seg_article, lang_code):
-    journal = controllers.get_journal_by_url_seg(url_seg)
-
-    issue = controllers.get_issue_by_url_seg(journal.url_segment, url_seg_issue)
-
-    if url_seg_article:
-        article = controllers.get_article_by_url_seg(url_seg_article)
-    else:
-        article = None
-
-    if not journal:
-        abort(404, _('Periódico não encontrado'))
-
-    if not issue:
-        abort(404, _('Fascículo não encontrado'))
-
-    press_release = controllers.get_press_release(journal, issue, lang_code, article)
-
-    if not press_release:
-        abort(404, _('Press Release não encontrado'))
-
-    context = {
-        'press_release': press_release
-    }
-
-    return render_template("includes/press_release.html", **context)
-
 
 # ##################################Collection###################################
 
