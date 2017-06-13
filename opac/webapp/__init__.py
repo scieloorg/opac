@@ -74,18 +74,14 @@ def create_app():
 
     # Assets
     js = Bundle(
-                'js/vendor/jquery.js',
-                'js/vendor/underscore.js',
-                'js/vendor/bootstrap.js',
-                'js/vendor/clipboard.js',
+                'js/scielo-bundle-min.js',
                 'js/common.js',
-                'js/main.js',
                 filters='jsmin',
                 output='js/bundle.js',
                 remove_duplicates=True)
 
-    css = Bundle('css/bootstrap.min.css',
-                 'css/scielo-portal.css',
+    css = Bundle('css/scielo-bundle.css',
+                 'css/style.css',
                  filters='cssmin',
                  output='css/bundle.css',
                  remove_duplicates=True)

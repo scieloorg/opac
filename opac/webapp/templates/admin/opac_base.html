@@ -1,13 +1,4 @@
 {% extends 'admin/base.html' %}
-{% block head_css %}
-    <link href="{{ admin_static.url(filename='bootstrap/bootstrap3/css/bootstrap.min.css', v='3.3.5') }}" rel="stylesheet">
-    <link href="{{ admin_static.url(filename='admin/css/bootstrap3/admin.css', v='1.1.1') }}" rel="stylesheet">
-    <style>
-      body {
-        padding-top: 4px;
-      }
-    </style>
-{% endblock %}
 {% block brand %}
   <a class="navbar-brand" href="{{url_for('admin.index')}}">{{ admin_view.admin.name }}</a>
 {% endblock %}
@@ -64,7 +55,7 @@
       </div>
     </div>
   {% endif %}
-  <script src="{{ url_for('static', filename='js/vendor/jquery.popupwindows.js') }}"> </script>
+  <script src="{{ url_for('static', filename='js/jquery.popupwindows.js') }}"> </script>
   <script src="{{ url_for('static', filename='js/admin/common.js') }}"> </script>
 
 {% endblock %}
