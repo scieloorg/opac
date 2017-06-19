@@ -490,17 +490,10 @@ class JournalAdminView(OpacBaseAdminView):
                     ex=str(ex)),
                   'error')
 
-    @action('unpublish_by_copyright', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_by_copyright(self, ids):
+    # Veja: https://github.com/scieloorg/opac/issues/411#issuecomment-265515533
+    @action('unpublish_default', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_default(self, ids):
         self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
-
-    @action('unpublish_plagiarism', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_plagiarism(self, ids):
-        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[1])
-
-    @action('unpublish_abuse', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_abuse(self, ids):
-        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[2])
 
 
 class IssueAdminView(OpacBaseAdminView):
@@ -565,17 +558,10 @@ class IssueAdminView(OpacBaseAdminView):
                     ex=str(ex)),
                   'error')
 
-    @action('unpublish_by_copyright', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_by_copyright(self, ids):
-        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[0])
-
-    @action('unpublish_plagiarism', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_plagiarism(self, ids):
-        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[1])
-
-    @action('unpublish_abuse', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_abuse(self, ids):
-        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[2])
+    # Veja: https://github.com/scieloorg/opac/issues/411#issuecomment-265515533
+    @action('unpublish_default', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_default(self, ids):
+        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
 
 
 class ArticleAdminView(OpacBaseAdminView):
@@ -652,17 +638,10 @@ class ArticleAdminView(OpacBaseAdminView):
                     ex=str(ex)),
                   'error')
 
-    @action('unpublish_by_copyright', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_by_copyright(self, ids):
-        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[0])
-
-    @action('unpublish_plagiarism', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[1]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_plagiarism(self, ids):
-        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[1])
-
-    @action('unpublish_abuse', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[2]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
-    def unpublish_abuse(self, ids):
-        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[2])
+    # Veja: https://github.com/scieloorg/opac/issues/411#issuecomment-265515533
+    @action('unpublish_default', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
+    def unpublish_default(self, ids):
+        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
 
 
 class PagesAdminView(OpacBaseAdminView):

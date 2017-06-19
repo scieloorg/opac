@@ -4,9 +4,7 @@ from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 
 UNPUBLISH_REASONS = [
-    _('Problema de Direito Autoral'),
-    _('Plágio'),
-    _('Abuso ou Conteúdo Indevido'),
+    _('Conteúdo temporariamente indisponível'),
 ]
 
 LANGUAGES_CHOICES = [
