@@ -39,11 +39,11 @@
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
       {% if journal.scielo_issn or journal.eletronic_issn or journal.print_issn %}
-        <a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}" class="btn single">
+        <a target="_blank" href="http://analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}" class="btn single">
           <span class="glyphBtn metrics"></span> {% trans %}métricas{% endtrans %}
         </a>
       {% else %}
-        <a target="_blank" href="//analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="btn single">
+        <a target="_blank" href="http://analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}" class="btn single">
           <span class="glyphBtn metrics"></span> {% trans %}métricas{% endtrans %}
         </a>
       {% endif %}
