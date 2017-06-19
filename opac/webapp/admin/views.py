@@ -561,7 +561,7 @@ class IssueAdminView(OpacBaseAdminView):
     # Veja: https://github.com/scieloorg/opac/issues/411#issuecomment-265515533
     @action('unpublish_default', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_default(self, ids):
-        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
+        self.unpublish_issues(ids, choices.UNPUBLISH_REASONS[0])
 
 
 class ArticleAdminView(OpacBaseAdminView):
@@ -641,7 +641,7 @@ class ArticleAdminView(OpacBaseAdminView):
     # Veja: https://github.com/scieloorg/opac/issues/411#issuecomment-265515533
     @action('unpublish_default', _('Despublicar por %s' % choices.UNPUBLISH_REASONS[0]), ACTION_UNPUBLISH_CONFIRMATION_MSG)
     def unpublish_default(self, ids):
-        self.unpublish_journals(ids, choices.UNPUBLISH_REASONS[0])
+        self.unpublish_articles(ids, choices.UNPUBLISH_REASONS[0])
 
 
 class PagesAdminView(OpacBaseAdminView):
