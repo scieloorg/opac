@@ -322,16 +322,16 @@ class MainTestCase(BaseTestCase):
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
-
+        unpublish_reason = 'plágio'
         journal = utils.makeOneJournal({
             'is_public': False,
-            'unpublish_reason': 'plágio'})
+            'unpublish_reason': unpublish_reason})
 
         response = self.client.get(url_for('main.journal_detail',
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('plágio', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_journal_feed(self):
         """
@@ -379,16 +379,16 @@ class MainTestCase(BaseTestCase):
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
-
+        unpublish_reason = 'plágio'
         journal = utils.makeOneJournal({
             'is_public': False,
-            'unpublish_reason': 'plágio'})
+            'unpublish_reason': unpublish_reason})
 
         response = self.client.get(url_for('main.journal_feed',
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('plágio', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     # ISSUE
 
@@ -465,16 +465,15 @@ class MainTestCase(BaseTestCase):
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
-
+        unpublish_reason = 'Problema de Direito Autoral'
         journal = utils.makeOneJournal({'is_public': False,
-                                       'unpublish_reason': 'Problema de Direito Autoral'})
+                                       'unpublish_reason': unpublish_reason})
 
         response = self.client.get(url_for('main.issue_grid',
                                            url_seg=journal.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('Problema de Direito Autoral',
-                      response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_issue_toc(self):
         """
@@ -529,11 +528,11 @@ class MainTestCase(BaseTestCase):
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
+        unpublish_reason = 'Fascículo incorreto'
         journal = utils.makeOneJournal()
-
         issue = utils.makeOneIssue({
             'is_public': False,
-            'unpublish_reason': 'Fascículo incorreto',
+            'unpublish_reason': unpublish_reason,
             'journal': journal})
 
         response = self.client.get(url_for('main.issue_toc',
@@ -541,7 +540,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('Fascículo incorreto', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_issue_toc_with_journal_attrib_is_public_false(self):
         """
@@ -550,10 +549,10 @@ class MainTestCase(BaseTestCase):
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
         """
-
+        unpublish_reason = 'Revista removida da coleção'
         journal = utils.makeOneJournal({
             'is_public': False,
-            'unpublish_reason': 'Revista removida da coleção'})
+            'unpublish_reason': unpublish_reason})
         issue = utils.makeOneIssue({
             'is_public': True,
             'journal': journal.id})
@@ -563,7 +562,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_issue_feed(self):
         """
@@ -619,11 +618,11 @@ class MainTestCase(BaseTestCase):
         404 e msg cadastrada no atributo ``reason``.
         """
 
+        unpublish_reason = 'Fascículo incorreto'
         journal = utils.makeOneJournal()
-
         issue = utils.makeOneIssue({
             'is_public': False,
-            'unpublish_reason': 'Fascículo incorreto',
+            'unpublish_reason': unpublish_reason,
             'journal': journal})
 
         response = self.client.get(url_for('main.issue_feed',
@@ -640,10 +639,10 @@ class MainTestCase(BaseTestCase):
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
         """
-
+        unpublish_reason = 'Revista removida da coleção'
         journal = utils.makeOneJournal({
             'is_public': False,
-            'unpublish_reason': 'Revista removida da coleção'})
+            'unpublish_reason': unpublish_reason})
         issue = utils.makeOneIssue({
             'is_public': True,
             'journal': journal.id})
@@ -653,7 +652,7 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     # ARTICLE
 
@@ -714,10 +713,10 @@ class MainTestCase(BaseTestCase):
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
         """
-
+        unpublish_reason = 'Revista removida da coleção'
         journal = utils.makeOneJournal({
             'is_public': False,
-            'unpublish_reason': 'Revista removida da coleção'})
+            'unpublish_reason': unpublish_reason})
 
         issue = utils.makeOneIssue({
             'is_public': True,
@@ -734,7 +733,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn('Revista removida da coleção', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_article_detail_with_issue_attrib_is_public_false(self):
         """
@@ -744,11 +743,11 @@ class MainTestCase(BaseTestCase):
         cadastrada no atributo ``reason`` do fascículo.
         """
 
+        unpublish_reason = 'Facículo rejeitado'
         journal = utils.makeOneJournal()
-
         issue = utils.makeOneIssue({
             'is_public': False,
-            'unpublish_reason': 'Facículo rejeitado',
+            'unpublish_reason': unpublish_reason,
             'journal': journal.id})
 
         article = utils.makeOneArticle({
@@ -762,7 +761,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn('Facículo rejeitado', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_article_detail_with_article_attrib_is_public_false(self):
         """
@@ -771,13 +770,13 @@ class MainTestCase(BaseTestCase):
          ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
         """
 
+        unpublish_reason = 'Artigo com problemas de licença'
         journal = utils.makeOneJournal()
-
         issue = utils.makeOneIssue({'journal': journal.id})
 
         article = utils.makeOneArticle({
             'is_public': False,
-            'unpublish_reason': 'Artigo com problemas de licença',
+            'unpublish_reason': unpublish_reason,
             'issue': issue,
             'journal': journal})
 
@@ -788,7 +787,7 @@ class MainTestCase(BaseTestCase):
                                            lang_code='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn('Artigo com problemas de licença', response.data.decode('utf-8'))
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     # HOMEPAGE
 

@@ -25,29 +25,47 @@
       </div>
       <div class="col-md-12 content journalHome">
 
-        {# mission #}
         <div class="block mission">
+          {# mission #}
           {% if journal.mission %}
             <div class="col-md-6 col-sm-6">
                 <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
                 {% if session.lang %}
-                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|default(_("Periódico sem missão cadastrada"), true) }}</p>
+                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|safe|default(_("Periódico sem missão cadastrada"), true) }}</p>
                 {% endif %}
             </div>
           {% endif %}
-        {# mission #}
+          {# mission #}
 
           {# analytics #}
           <div class="col-md-6 col-sm-6">
             <h3>{% trans %}Métricas deste periódico{% endtrans %}</h3>
             <ul>
-              <li><a target="_blank" href="//analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
+              <li><a target="_blank" href="http://analytics.scielo.org/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
               <li><a href="">Google Scholar</a>
                 <div>
-                  <small>{% trans %}Índice h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}</strong>
+                  <small>
+                    {% trans %}Índice h5{% endtrans %}:
+                    {% if journal.metrics.total_h5_index and total_h5_index_year %}
+                      {# o índice é obtido sempre para o ano atual #}
+                      ({% trans %}ano{% endtrans %}: {{ total_h5_index_year }})
+                    {% endif %}
+                  </small>
+                  <strong>
+                    {{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}
+                  </strong>
                 </div>
                 <div>
-                  <small>{% trans %}Mediana h5{% endtrans %}:</small> <strong>{{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}</strong>
+                  <small>
+                    {% trans %}Mediana h5{% endtrans %}:
+                    {% if journal.metrics.total_h5_median and total_h5_median_year %}
+                      {# a mediana é obtida sempre para o ano atual #}
+                      ({% trans %}ano{% endtrans %}: {{ total_h5_median_year }})
+                    {% endif %}
+                  </small>
+                  <strong>
+                    {{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}
+                  </strong>
                 </div>
               </li>
             </ul>

@@ -35,17 +35,17 @@ class MenuTestCase(BaseTestCase):
         expected_anchor = '<a href="/journals/#theme" class="tab_link">\n              Lista temática de periódicos\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
-    def test_institution_link_is_selected_for_list_institution(self):
-        """
-        Verficamos que o link do menú "Por instituição" tem o css:
-        "selected" quando acessamos a view "collection_list_institution"
-        """
-        response = self.client.get(url_for('main.collection_list'))
+    # def test_institution_link_is_selected_for_list_institution(self):
+    #     """
+    #     Verficamos que o link do menú "Por instituição" tem o css:
+    #     "selected" quando acessamos a view "collection_list_institution"
+    #     """
+    #     response = self.client.get(url_for('main.collection_list'))
 
-        self.assertStatus(response, 200)
-        self.assertTemplateUsed('collection/list_journal.html')
-        expected_anchor = '<a href="/journals/#publisher" class="tab_link">\n              Lista de periódicos por editoras\n            </a>'
-        self.assertIn(expected_anchor, response.data.decode('utf-8'))
+    #     self.assertStatus(response, 200)
+    #     self.assertTemplateUsed('collection/list_journal.html')
+    #     expected_anchor = '<a href="/journals/#publisher" class="tab_link">\n              Lista de periódicos por editoras\n            </a>'
+    #     self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
     def test_links_in_hamburger_menu(self):
@@ -66,11 +66,11 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor2, response_data)
                 expected_anchor3 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#theme', __('Lista temática de periódicos'))
                 self.assertIn(expected_anchor3, response_data)
-                expected_anchor4 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#publisher', __('Lista de periódicos por editoras'))
-                self.assertIn(expected_anchor4, response_data)
+                # expected_anchor4 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#publisher', __('Lista de periódicos por editoras'))
+                # self.assertIn(expected_anchor4, response_data)
                 expected_anchor5 = """<li>\n            <a href="%s">\n              %s\n            </a>\n          </li>""" % (current_app.config['URL_SEARCH'] + "?q=*&lang=pt&filter[in][]=" + current_app.config['OPAC_COLLECTION'], 'Busca')
                 self.assertIn(expected_anchor5, response_data)
-                expected_anchor6 = """<li>\n            <a target="_blank" href="//analytics.scielo.org/?collection=%s">\n              %s\n            </a>\n          </li>\n          <li>""" % (current_app.config['OPAC_COLLECTION'], __('M\xe9tricas'))
+                expected_anchor6 = """<li>\n            <a target="_blank" href="http://analytics.scielo.org/?collection=%s">\n              %s\n            </a>\n          </li>\n          <li>""" % (current_app.config['OPAC_COLLECTION'], __('M\xe9tricas'))
                 self.assertIn(expected_anchor6, response_data)
                 expected_anchor7 = """<a href="%s" class="onlineSubmission"><span class="glyphBtn infoMenu"></span>%s %s</a>""" % (url_for('.about_collection'), __('Sobre o SciELO'), collection.name)
                 self.assertIn(expected_anchor7, response_data)
@@ -79,19 +79,19 @@ class MenuTestCase(BaseTestCase):
                 expected_anchor9 = """<a href="#">\n        <strong>SciELO.org - %s</strong>\n      </a>""" % __('Rede SciELO')
                 self.assertIn(expected_anchor9, response_data)
                 # rede/scielo org
-                expected_anchor10 = """<li>\n          <a href="//www.scielo.org/php/index.php">\n            %s\n          </a>\n        </li>""" % __('Coleções nacionais e temáticas')
+                expected_anchor10 = """<li>\n          <a href="http://www.scielo.org/php/index.php">\n            %s\n          </a>\n        </li>""" % __('Coleções nacionais e temáticas')
                 self.assertIn(expected_anchor10, response_data)
-                expected_anchor11 = """<li>\n          <a href="//www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">\n            %s\n          </a>\n        </li>""" % __('Lista alfabética de periódicos')
+                expected_anchor11 = """<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">\n            %s\n          </a>\n        </li>""" % __('Lista alfabética de periódicos')
                 self.assertIn(expected_anchor11, response_data)
-                expected_anchor12 = """<li>\n          <a href="//www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">\n            %s\n          </a>\n        </li>""" % __('Lista de periódicos por assunto')
+                expected_anchor12 = """<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">\n            %s\n          </a>\n        </li>""" % __('Lista de periódicos por assunto')
                 self.assertIn(expected_anchor12, response_data)
-                expected_anchor13 = """<li>\n          <a href="//search.scielo.org/">\n            %s\n          </a>\n        </li>""" % ('Busca')
+                expected_anchor13 = """<li>\n          <a href="http://search.scielo.org/">\n            %s\n          </a>\n        </li>""" % ('Busca')
                 self.assertIn(expected_anchor13, response_data)
-                expected_anchor14 = """<li>\n          <a target="_blank" href="//analytics.scielo.org/">\n            %s\n          </a>\n        </li>""" % ('Métricas')
+                expected_anchor14 = """<li>\n          <a target="_blank" href="http://analytics.scielo.org/">\n            %s\n          </a>\n        </li>""" % ('Métricas')
                 self.assertIn(expected_anchor14, response_data)
-                expected_anchor15 = """<li>\n          <a href="//www.scielo.org/php/level.php?lang=pt&component=56&item=9">\n            %s\n          </a>\n        </li>""" % __('Acesso OAI e RSS')
+                expected_anchor15 = """<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">\n            %s\n          </a>\n        </li>""" % __('Acesso OAI e RSS')
                 self.assertIn(expected_anchor15, response_data)
-                expected_anchor16 = """<li>\n          <a href="//www.scielo.org/php/level.php?lang=pt&component=56&item=8">\n            %s\n          </a>\n        </li>""" % __('Sobre a Rede SciELO')
+                expected_anchor16 = """<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">\n            %s\n          </a>\n        </li>""" % __('Sobre a Rede SciELO')
                 self.assertIn(expected_anchor16, response_data)
                 expected_anchor17 = """<li>\n          <a href="#">\n            %s\n          </a>\n        </li>""" % __('Contatos')
                 self.assertIn(expected_anchor17, response_data)

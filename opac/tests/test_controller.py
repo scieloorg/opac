@@ -608,7 +608,7 @@ class IssueControllerTestCase(BaseTestCase):
         Testando alterar o valor de um conjunto de issues com o motivo, param
         ``reason``.
         """
-
+        unpublish_reason = 'plágio'
         self._make_one(attrib={'_id': '012ijs9y24', 'is_public': True})
         self._make_one(attrib={'_id': '2183ikos90', 'is_public': True})
         self._make_one(attrib={'_id': '9298wjso89', 'is_public': True})
@@ -621,7 +621,7 @@ class IssueControllerTestCase(BaseTestCase):
         issues = controllers.get_issues_by_iid(ids)
 
         for issue in issues.values():
-            self.assertEqual('plágio', issue.unpublish_reason)
+            self.assertEqual(unpublish_reason, issue.unpublish_reason)
 
     def test_set_issue_is_public_bulk_without_iids(self):
         """

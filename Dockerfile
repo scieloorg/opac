@@ -21,7 +21,7 @@ LABEL org.label-schema.build-date=$OPAC_BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 RUN apk --update add --no-cache \
-    git gcc build-base zlib-dev jpeg-dev
+    git gcc build-base zlib-dev jpeg-dev curl
 
 COPY . /app
 WORKDIR /app
@@ -34,5 +34,8 @@ RUN chown -R nobody:nogroup /app
 VOLUME /app/data
 USER nobody
 EXPOSE 8000
+
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost:8000/ || exit 1
 
 CMD gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --timeout 150 --log-level INFO

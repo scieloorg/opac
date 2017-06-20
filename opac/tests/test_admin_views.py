@@ -1870,9 +1870,7 @@ class JournalAdminViewTests(BaseTestCase):
         journal_index_url = url_for('journal.index_view')
         expected_actions = [
             'publish',
-            'unpublish_abuse',
-            'unpublish_by_copyright',
-            'unpublish_plagiarism',
+            'unpublish_default',
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -2011,7 +2009,7 @@ class JournalAdminViewTests(BaseTestCase):
                     journal.reload()
                     self.assertTrue(journal.is_public)
 
-    def test_admin_journal_action_unpublish_plagiarism_a_public_journal(self):
+    def test_admin_journal_action_unpublish_default_a_public_journal(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -2019,10 +2017,10 @@ class JournalAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
-            - realizamos a ação de despublicar por plagio
+            - realizamos a ação de despublicar (unpublish_default)
         Verificamos:
             - o periódico deve ficar despublicado
-            - o motivo de despublicação deve ser por: plagio
+            - o motivo de despublicação deve ser por: 'Conteúdo temporariamente indisponível'
             - o usuario é notificado do resultado da operação
         """
         # with
@@ -2035,8 +2033,8 @@ class JournalAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         journal_index_url = url_for('journal.index_view')
         action_url = '%saction/' % journal_index_url
-        expected_msg = u'Periódico(s) despublicado com sucesso!!'
-        expected_reason = u'Plágio'
+        expected_msg = 'Periódico(s) despublicado com sucesso!!'
+        expected_reason = 'Conteúdo temporariamente indisponível'
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -2059,127 +2057,7 @@ class JournalAdminViewTests(BaseTestCase):
                         action_url,
                         data={
                             'url': journal_index_url,
-                            'action': 'unpublish_plagiarism',
-                            'rowid': journal.id,
-                        },
-                        follow_redirects=True
-                    )
-                    self.assertStatus(action_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-                    journal.reload()
-                    self.assertFalse(journal.is_public)
-                    self.assertEqual(expected_reason, journal.unpublish_reason)
-
-    def test_admin_journal_action_unpublish_by_copyright_a_public_journal(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de periódicos: /admin/journal/
-            - realizamos a ação de despublicar por Problemas de Direitos Autorais
-        Verificamos:
-            - o periódico deve ficar despublicado
-            - o motivo de despublicação deve ser por: Problemas de Direitos Autorais
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        journal = makeOneJournal({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = u'Periódico(s) despublicado com sucesso!!'
-        expected_reason = u'Problema de Direito Autoral'
-        with current_app.app_context():
-            collection = makeOneCollection()
-            g.collection = collection
-            with current_app.test_request_context():
-                # when
-                with self.client as client:
-                    # login do usuario admin
-                    login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
-                    self.assertStatus(login_response, 200)
-                    # acessamos a listagem de periódicos
-                    journal_list_response = client.get(journal_index_url)
-                    self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    # then
-                    # executamos ação publicar:
-                    action_response = client.post(
-                        action_url,
-                        data={
-                            'url': journal_index_url,
-                            'action': 'unpublish_by_copyright',
-                            'rowid': journal.id,
-                        },
-                        follow_redirects=True
-                    )
-                    self.assertStatus(action_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-                    journal.reload()
-                    self.assertFalse(journal.is_public)
-                    self.assertEqual(expected_reason, journal.unpublish_reason)
-
-    def test_admin_journal_action_unpublish_by_abuse_a_public_journal(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Journal no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de periódicos: /admin/journal/
-            - realizamos a ação de despublicar por Abuso
-        Verificamos:
-            - o periódico deve ficar despublicado
-            - o motivo de despublicação deve ser por: Abuso
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        journal = makeOneJournal({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = u'Periódico(s) despublicado com sucesso!!'
-        expected_reason = u'Abuso ou Conteúdo Indevido'
-        with current_app.app_context():
-            collection = makeOneCollection()
-            g.collection = collection
-            with current_app.test_request_context():
-                # when
-                with self.client as client:
-                    # login do usuario admin
-                    login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
-                    self.assertStatus(login_response, 200)
-                    # acessamos a listagem de periódicos
-                    journal_list_response = client.get(journal_index_url)
-                    self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    # then
-                    # executamos ação publicar:
-                    action_response = client.post(
-                        action_url,
-                        data={
-                            'url': journal_index_url,
-                            'action': 'unpublish_abuse',
+                            'action': 'unpublish_default',
                             'rowid': journal.id,
                         },
                         follow_redirects=True
@@ -2249,7 +2127,7 @@ class JournalAdminViewTests(BaseTestCase):
                         journal.reload()
                         self.assertTrue(journal.is_public)
 
-    def test_admin_journal_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+    def test_admin_journal_action_unpublish_default_with_exception_raised_must_be_consistent(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -2257,7 +2135,7 @@ class JournalAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de periódicos: /admin/journal/
-            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+            - realizamos a ação de despublicacar (unpublish_default), mas é levantada uma exceção no processo
         Verificamos:
             - o periódico deve ficar como público (is_public=True)
             - o usuario é notificado que houve um erro na operação
@@ -2297,7 +2175,7 @@ class JournalAdminViewTests(BaseTestCase):
                             action_url,
                             data={
                                 'url': journal_index_url,
-                                'action': 'unpublish_plagiarism',
+                                'action': 'unpublish_default',
                                 'rowid': None,  # sem rowid deveria gerar uma exeção
                             },
                             follow_redirects=True
@@ -2882,9 +2760,7 @@ class IssueAdminViewTests(BaseTestCase):
         issue_index_url = url_for('issue.index_view')
         expected_actions = [
             'publish',
-            'unpublish_abuse',
-            'unpublish_by_copyright',
-            'unpublish_plagiarism',
+            'unpublish_default',
         ]
 
         # when
@@ -3013,7 +2889,7 @@ class IssueAdminViewTests(BaseTestCase):
             issue.reload()
             self.assertTrue(issue.is_public)
 
-    def test_admin_issue_action_unpublish_plagiarism_a_public_issue(self):
+    def test_admin_issue_action_unpublish_default_a_public_issue(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -3021,10 +2897,10 @@ class IssueAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de issues: /admin/issue/
-            - realizamos a ação de despublicar por plagio
+            - realizamos a ação de despublicar (unpublish_default)
         Verificamos:
             - o issue deve ficar despublicado
-            - o motivo de despublicação deve ser por: plagio
+            - o motivo de despublicação deve ser por: 'Conteúdo temporariamente indisponível'
             - o usuario é notificado do resultado da operação
         """
         # with
@@ -3037,8 +2913,8 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         action_url = '%saction/' % issue_index_url
-        expected_msg = u'Fascículo(s) despublicado(s) com sucesso!!'
-        expected_reason = u'Plágio'
+        expected_msg = 'Fascículo(s) despublicado(s) com sucesso!!'
+        expected_reason = 'Conteúdo temporariamente indisponível'
         # when
         with self.client as client:
             # login do usuario admin
@@ -3057,119 +2933,7 @@ class IssueAdminViewTests(BaseTestCase):
                 action_url,
                 data={
                     'url': issue_index_url,
-                    'action': 'unpublish_plagiarism',
-                    'rowid': issue.id,
-                },
-                follow_redirects=True
-            )
-            self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-            issue.reload()
-            self.assertFalse(issue.is_public)
-            self.assertEqual(expected_reason, issue.unpublish_reason)
-
-    def test_admin_issue_action_unpublish_by_copyright_a_public_issue(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de issues: /admin/issue/
-            - realizamos a ação de despublicar por Problemas de Direitos Autorais
-        Verificamos:
-            - o issue deve ficar despublicado
-            - o motivo de despublicação deve ser por: Problemas de Direitos Autorais
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        issue = makeOneIssue({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = u'Fascículo(s) despublicado(s) com sucesso!!'
-        expected_reason = u'Problema de Direito Autoral'
-        # when
-        with self.client as client:
-            # login do usuario admin
-            login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
-            self.assertStatus(login_response, 200)
-            # acessamos a listagem de periódicos
-            issue_list_response = client.get(issue_index_url)
-            self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            # then
-            # executamos ação publicar:
-            action_response = client.post(
-                action_url,
-                data={
-                    'url': issue_index_url,
-                    'action': 'unpublish_by_copyright',
-                    'rowid': issue.id,
-                },
-                follow_redirects=True
-            )
-            self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-            issue.reload()
-            self.assertFalse(issue.is_public)
-            self.assertEqual(expected_reason, issue.unpublish_reason)
-
-    def test_admin_issue_action_unpublish_by_abuse_a_public_issue(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Issue no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de issues: /admin/issue/
-            - realizamos a ação de despublicar por Abuso
-        Verificamos:
-            - o issue deve ficar despublicado
-            - o motivo de despublicação deve ser por: Abuso
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        issue = makeOneIssue({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = u'Fascículo(s) despublicado(s) com sucesso!!'
-        expected_reason = u'Abuso ou Conteúdo Indevido'
-        # when
-        with self.client as client:
-            # login do usuario admin
-            login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
-            self.assertStatus(login_response, 200)
-            # acessamos a listagem de periódicos
-            issue_list_response = client.get(issue_index_url)
-            self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            # then
-            # executamos ação publicar:
-            action_response = client.post(
-                action_url,
-                data={
-                    'url': issue_index_url,
-                    'action': 'unpublish_abuse',
+                    'action': 'unpublish_default',
                     'rowid': issue.id,
                 },
                 follow_redirects=True
@@ -3235,7 +2999,7 @@ class IssueAdminViewTests(BaseTestCase):
                 issue.reload()
                 self.assertTrue(issue.is_public)
 
-    def test_admin_issue_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+    def test_admin_issue_action_unpublish_default_with_exception_raised_must_be_consistent(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -3243,7 +3007,7 @@ class IssueAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de Issues: /admin/issue/
-            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+            - realizamos a ação de despublicacar (unpublish_default), mas é levantada uma exceção no processo
         Verificamos:
             - o issue deve ficar como público (is_public=True)
             - o usuario é notificado que houve um erro na operação
@@ -3278,7 +3042,7 @@ class IssueAdminViewTests(BaseTestCase):
                     action_url,
                     data={
                         'url': issue_index_url,
-                        'action': 'unpublish_plagiarism',
+                        'action': 'unpublish_default',
                         'rowid': None,  # sem rowid deveria gerar uma exeção
                     },
                     follow_redirects=True
@@ -3864,9 +3628,7 @@ class ArticleAdminViewTests(BaseTestCase):
         article_index_url = url_for('article.index_view')
         expected_actions = [
             'publish',
-            'unpublish_abuse',
-            'unpublish_by_copyright',
-            'unpublish_plagiarism',
+            'unpublish_default',
         ]
 
         # when
@@ -3993,7 +3755,7 @@ class ArticleAdminViewTests(BaseTestCase):
             article.reload()
             self.assertTrue(article.is_public)
 
-    def test_admin_article_action_unpublish_plagiarism_a_public_article(self):
+    def test_admin_article_action_unpublish_default_a_public_article(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -4001,10 +3763,10 @@ class ArticleAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de articles: /admin/article/
-            - realizamos a ação de despublicar por plagio
+            - realizamos a ação de despublicar (unpublis_default)
         Verificamos:
             - o article deve ficar despublicado
-            - o motivo de despublicação deve ser por: plagio
+            - o motivo de despublicação deve ser por: 'Conteúdo temporariamente indisponível'
             - o usuario é notificado do resultado da operação
         """
         # with
@@ -4017,8 +3779,8 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         action_url = '%saction/' % article_index_url
-        expected_msg = u'Artigo(s) despublicado com sucesso!!'
-        expected_reason = u'Plágio'
+        expected_msg = 'Artigo(s) despublicado com sucesso!!'
+        expected_reason = 'Conteúdo temporariamente indisponível'
         # when
         with self.client as client:
             # login do usuario admin
@@ -4037,119 +3799,7 @@ class ArticleAdminViewTests(BaseTestCase):
                 action_url,
                 data={
                     'url': article_index_url,
-                    'action': 'unpublish_plagiarism',
-                    'rowid': article.id,
-                },
-                follow_redirects=True
-            )
-            self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-            article.reload()
-            self.assertFalse(article.is_public)
-            self.assertEqual(expected_reason, article.unpublish_reason)
-
-    def test_admin_article_action_unpublish_by_copyright_a_public_article(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Article no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de articles: /admin/article/
-            - realizamos a ação de despublicar por Problemas de Direitos Autorais
-        Verificamos:
-            - o article deve ficar despublicado
-            - o motivo de despublicação deve ser por: Problemas de Direitos Autorais
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        article = makeOneArticle({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = u'Artigo(s) despublicado com sucesso!!'
-        expected_reason = u'Problema de Direito Autoral'
-        # when
-        with self.client as client:
-            # login do usuario admin
-            login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
-            self.assertStatus(login_response, 200)
-            # acessamos a listagem de periódicos
-            article_list_response = client.get(article_index_url)
-            self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            # then
-            # executamos ação publicar:
-            action_response = client.post(
-                action_url,
-                data={
-                    'url': article_index_url,
-                    'action': 'unpublish_by_copyright',
-                    'rowid': article.id,
-                },
-                follow_redirects=True
-            )
-            self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
-            article.reload()
-            self.assertFalse(article.is_public)
-            self.assertEqual(expected_reason, article.unpublish_reason)
-
-    def test_admin_article_action_unpublish_by_abuse_a_public_article(self):
-        """
-        Com:
-            - usuário administrador cadastrado (com email confirmado)
-            - um novo registro do tipo: Article no banco (is_public=True)
-        Quando:
-            - fazemos login e
-            - acessamos a pagina de listagem de articles: /admin/article/
-            - realizamos a ação de despublicar por Abuso
-        Verificamos:
-            - o article deve ficar despublicado
-            - o motivo de despublicação deve ser por: Abuso
-            - o usuario é notificado do resultado da operação
-        """
-        # with
-        article = makeOneArticle({'is_public': True})
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = u'Artigo(s) despublicado com sucesso!!'
-        expected_reason = u'Abuso ou Conteúdo Indevido'
-        # when
-        with self.client as client:
-            # login do usuario admin
-            login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
-            self.assertStatus(login_response, 200)
-            # acessamos a listagem de periódicos
-            article_list_response = client.get(article_index_url)
-            self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            # then
-            # executamos ação publicar:
-            action_response = client.post(
-                action_url,
-                data={
-                    'url': article_index_url,
-                    'action': 'unpublish_abuse',
+                    'action': 'unpublish_default',
                     'rowid': article.id,
                 },
                 follow_redirects=True
@@ -4215,7 +3865,7 @@ class ArticleAdminViewTests(BaseTestCase):
                 article.reload()
                 self.assertTrue(article.is_public)
 
-    def test_admin_article_action_unpublish_for_plagiarism_with_exception_raised_must_be_consistent(self):
+    def test_admin_article_action_unpublish_default_with_exception_raised_must_be_consistent(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -4223,7 +3873,7 @@ class ArticleAdminViewTests(BaseTestCase):
         Quando:
             - fazemos login e
             - acessamos a pagina de listagem de Articles: /admin/article/
-            - realizamos a ação de despublicacar (motivo plagio), mas é levantada uma exceção no processo
+            - realizamos a ação de despublicacar (unpublish_default), mas é levantada uma exceção no processo
         Verificamos:
             - o article deve ficar como público (is_public=True)
             - o usuario é notificado que houve um erro na operação
@@ -4258,7 +3908,7 @@ class ArticleAdminViewTests(BaseTestCase):
                     action_url,
                     data={
                         'url': article_index_url,
-                        'action': 'unpublish_plagiarism',
+                        'action': 'unpublish_default',
                         'rowid': None,  # sem rowid deveria gerar uma exeção
                     },
                     follow_redirects=True
