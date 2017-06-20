@@ -1,7 +1,6 @@
 # coding: utf-8
 import logging
 import socket
-from datetime import datetime
 from uuid import uuid4
 from jinja2 import Markup
 from flask_babelex import gettext as _
