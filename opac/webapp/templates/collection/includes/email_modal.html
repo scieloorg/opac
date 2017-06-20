@@ -11,7 +11,7 @@
         </h4>
       </div>
       <form name="sendViaEmail" id="sendViaEmail" action="{{ url_for('main.email_share') }}" method="get" class="validate">
-        <input type="hidden" name="share_url" id="share_url" value="" />
+        <input type="hidden" name="share_url" id="share_url" value="{{ request.url }}" />
         <div class="modal-body">
           <div class="form-group">
             <label>{% trans %}Seu e-mail{% endtrans %}*</label>

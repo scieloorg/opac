@@ -686,7 +686,6 @@ def metasearch():
 
 @main.route("/email_share/", methods=['GET'])
 def email_share():
-    print(vars(request))
     from_email = request.args.get('yourEmail', type=str)
     recipents = request.args.get('email', type=str)
     share_url = request.args.get('share_url', type=str)
@@ -700,8 +699,7 @@ def email_share():
         subject,
         comment
     )
-
-    return jsonify({'sent': sent, 'message': message.encode('utf-8')})
+    return jsonify({'sent': sent, 'message': str(message)})
 
 # ##################################Others#######################################
 
