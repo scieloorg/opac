@@ -89,8 +89,8 @@ import os
         - OPAC_WEBAPP_VERSION: 'versão do OPAC WEBAPP'. definida pelo travis em tempo de construção da imagem.
 
       - CSRF
-        - WTF_CSRF_ENABLED: ativa/desativa o recurso de CSRF (default: True)
-        - WTF_CSRF_SECRET_KEY: chave para segurança nos formulários WTF. (default: JGvNWiwBIq2Iig89LWbV)
+        - OPAC_WTF_CSRF_ENABLED: ativa/desativa o recurso de CSRF (default: True)
+        - OPAC_WTF_CSRF_SECRET_KEY: chave para segurança nos formulários WTF. (default: JGvNWiwBIq2Iig89LWbV)
 
 """
 
@@ -266,7 +266,7 @@ VCS_REF = os.environ.get('OPAC_VCS_REF', None)
 WEBAPP_VERSION = os.environ.get('OPAC_WEBAPP_VERSION', None)
 
 # CSRF
-WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True') == 'True'
+OPAC_WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True') == 'True'
 
 # CSRF secret
-WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'JGvNWiwBIq2Iig89LWbV')
+OPAC_WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'JGvNWiwBIq2Iig89LWbV')
