@@ -14,6 +14,7 @@ from . import main
 from webapp import babel
 from webapp import controllers
 from webapp import utils
+from webapp import forms
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,11 @@ def add_collection_to_g():
         except Exception:
             # discutir o que fazer aqui
             setattr(g, 'collection', {})
+
+
+@main.before_app_request
+def add_email_share_to_g():
+    setattr(g, 'email_share', forms.EmailShareForm())
 
 
 @babel.localeselector
@@ -684,22 +690,30 @@ def metasearch():
 # ###############################E-mail share####################################
 
 
-@main.route("/email_share/", methods=['GET'])
-def email_share():
-    from_email = request.args.get('yourEmail', type=str)
-    recipents = request.args.get('email', type=str)
-    share_url = request.args.get('share_url', type=str)
-    subject = request.args.get('subject', type=str)
-    comment = request.args.get('comment', type=str)
+@main.route("/email_share_ajax/", methods=['POST'])
+def email_share_ajax():
 
-    sent, message = controllers.send_email_share(
-        from_email,
-        recipents.split(";"),
-        share_url,
-        subject,
-        comment
-    )
-    return jsonify({'sent': sent, 'message': str(message)})
+    if not request.is_xhr:
+        abort(400, _('Requisição inválida.'))
+
+    form = forms.EmailShareForm(request.form)
+
+    if form.validate():
+        recipients = [email.strip() for email in form.data['recipients'].split(';') if email.strip() != '']
+
+        sent, message = controllers.send_email_share(form.data['your_email'],
+                                                     recipients,
+                                                     form.data['share_url'],
+                                                     form.data['subject'],
+                                                     form.data['comment'])
+
+        return jsonify({'sent': sent, 'message': str(message),
+                        'fields': [key for key in form.data.keys()]})
+
+    else:
+        return jsonify({'sent': False, 'message': form.errors,
+                        'fields': [key for key in form.data.keys()]})
+
 
 # ##################################Others#######################################
 

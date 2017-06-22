@@ -87,6 +87,11 @@ import os
         - OPAC_BUILD_DATE: data de build. definida em tempo de construção da imagem.
         - OPAC_VCS_REF: commit do código. definida pelo travis em tempo de construção da imagem.
         - OPAC_WEBAPP_VERSION: 'versão do OPAC WEBAPP'. definida pelo travis em tempo de construção da imagem.
+
+      - CSRF
+        - OPAC_WTF_CSRF_ENABLED: ativa/desativa o recurso de CSRF (default: True)
+        - OPAC_WTF_CSRF_SECRET_KEY: chave para segurança nos formulários WTF. (default: JGvNWiwBIq2Iig89LWbV)
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -259,3 +264,9 @@ SENTRY_DSN = os.environ.get('OPAC_SENTRY_DSN', '')
 BUILD_DATE = os.environ.get('OPAC_BUILD_DATE', None)
 VCS_REF = os.environ.get('OPAC_VCS_REF', None)
 WEBAPP_VERSION = os.environ.get('OPAC_WEBAPP_VERSION', None)
+
+# CSRF
+OPAC_WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True') == 'True'
+
+# CSRF secret
+OPAC_WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'JGvNWiwBIq2Iig89LWbV')
