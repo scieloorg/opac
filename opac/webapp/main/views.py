@@ -699,7 +699,7 @@ def email_share_ajax():
     form = forms.EmailShareForm(request.form)
 
     if form.validate():
-        recipients = [email for email in form.data['recipients'].split(';') if email.strip() != '']
+        recipients = [email.strip() for email in form.data['recipients'].split(';') if email.strip() != '']
 
         sent, message = controllers.send_email_share(form.data['your_email'],
                                                      recipients,
