@@ -145,7 +145,7 @@
               $('#' + name + '_error').html('');
             });
 
-            if (data.sent == 'false'){
+            if (data.sent == false){
               // Set error message
               $.each(data.message, function(key, val){
                 $('#' + key).parent().addClass("has-error");

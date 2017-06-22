@@ -711,7 +711,7 @@ def email_share_ajax():
                         'fields': [key for key in form.data.keys()]})
 
     else:
-        return jsonify({'sent': 'false', 'message': form.errors,
+        return jsonify({'sent': False, 'message': form.errors,
                         'fields': [key for key in form.data.keys()]})
 
 
