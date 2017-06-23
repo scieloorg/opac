@@ -84,13 +84,13 @@ def index():
 
     urls = {
         'downloads': '{0}/w/accesses?collection={1}'.format(
-            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['METRICS_URL'],
             current_app.config['OPAC_COLLECTION']),
         'references': '{0}/w/publication/size?collection={1}'.format(
-            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['METRICS_URL'],
             current_app.config['OPAC_COLLECTION']),
         'other': '{0}/?collection={1}'.format(
-            current_app.config['OPAC_METRICS_URL'],
+            current_app.config['METRICS_URL'],
             current_app.config['OPAC_COLLECTION'])
     }
 

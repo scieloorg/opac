@@ -21,7 +21,7 @@
             </a>
           </li>
           <li>
-            <a target="_blank" href="http://analytics.scielo.org/?collection={{ config.OPAC_COLLECTION }}">
+            <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}">
               {% trans %}Métricas{% endtrans %}
             </a>
           </li>
@@ -58,12 +58,12 @@
           </a>
         </li>
         <li>
-          <a href="http://search.scielo.org/">
+          <a href="{{ config.URL_SEARCH }}">
             {% trans %}Busca{% endtrans %}
           </a>
         </li>
         <li>
-          <a target="_blank" href="http://analytics.scielo.org/">
+          <a target="_blank" href="{{ config.METRICS_URL }}">
             {% trans %}Métricas{% endtrans %}
           </a>
         </li>
