@@ -222,10 +222,10 @@ THUMBNAIL_HEIGHT = 100
 THUMBNAIL_WIDTH = 100
 
 # search scielo
-URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', 'http://search.scielo.org/')
+URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
 
 # analytics scielo
-OPAC_METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
+METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
 
 NEWS_LIST_LIMIT = 10
 
