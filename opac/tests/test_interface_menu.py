@@ -87,7 +87,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor12, response_data)
                 expected_anchor13 = """<li>\n          <a href="%s">\n            %s\n          </a>\n        </li>""" % (current_app.config['URL_SEARCH'], 'Busca')
                 self.assertIn(expected_anchor13, response_data)
-                expected_anchor14 = """<li>\n          <a target="_blank" href="%s/">\n            %s\n          </a>\n        </li>""" % (current_app.config['METRICS_URL'], 'Métricas')
+                expected_anchor14 = """<li>\n          <a target="_blank" href="%s/?collection=%s">\n            %s\n          </a>\n        </li>""" % (current_app.config['METRICS_URL'], current_app.config['OPAC_COLLECTION'], 'Métricas')
                 self.assertIn(expected_anchor14, response_data)
                 expected_anchor15 = """<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">\n            %s\n          </a>\n        </li>""" % __('Acesso OAI e RSS')
                 self.assertIn(expected_anchor15, response_data)
