@@ -509,7 +509,7 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
+            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1supplX//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
@@ -573,7 +573,7 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
+            expect_btn_anterior = '<a href="/journal_acron/2016.v1n1supplX//" class="btn group  disabled ">\n                    &laquo; artigo anterior\n                </a>'
 
             expect_btn_atual = '<a href="" class="btn group disabled">\n                    artigo atual\n                </a>'
 
