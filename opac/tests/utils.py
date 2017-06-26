@@ -142,6 +142,7 @@ def makeOneIssue(attrib=None):  # noqa
     default_order = attrib.get('order', attrib.get('order', '1'))
     default_year = attrib.get('year', datetime.datetime.now().year)
     default_label = attrib.get('label', '%s (%s)' % (default_volume, default_number))
+    default_suppl_text = attrib.get('suppl_text', 'X')
     journal = attrib.get('journal', None)
 
     if not journal:
@@ -166,6 +167,7 @@ def makeOneIssue(attrib=None):  # noqa
         'order': default_order,
         'year': default_year,
         'label': default_label,
+        'suppl_text': default_suppl_text,
         'pid': default_pid,
         'is_public': attrib.get('is_public', True),
         'created': attrib.get('created', datetime.datetime.now()),
