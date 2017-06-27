@@ -62,7 +62,7 @@
                       {# Verificando se é um fascículo de volume #}
                       {% if volume in volume_issue %}
                         <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
-                                  url_seg_issue=volume_issue[volume].issue.url_segment) }}" class="btn ahead">{{ volume_issue[volume].art_count }}{% trans %} artigos{% endtrans %}</a>
+                                  url_seg_issue=volume_issue[volume].issue.url_segment) }}" class="btn ahead">{{ volume_issue[volume].art_count }} {% trans %}artigos{% endtrans %}</a>
                       {% endif %}
                       {% for issue in issue_list|sort(attribute='order') %}
                         {% if issue.type == 'special' %}
