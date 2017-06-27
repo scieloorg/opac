@@ -73,14 +73,14 @@
                         {% elif issue.type == 'supplement' %}
                           <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
                           url_seg_issue=issue.url_segment) }}" class="btn">
-                            suppl.{% if issue.suppl_text -%}{{issue.suppl_text}}{%- endif %}
+                            suppl.{% if issue.suppl_text and issue.suppl_text != '0' -%}{{issue.suppl_text}}{%- endif %}
                           </a>
                         {% else %}
                           {# Evitando o None na grade #}
                           {% if issue.number %}
                             <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
                                       url_seg_issue=issue.url_segment) }}" class="btn">
-                            {{issue.number}}
+                            {{ issue.number }}
                           {% endif %}
                           </a>
                         {% endif %}
