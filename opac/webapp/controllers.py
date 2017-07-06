@@ -184,6 +184,7 @@ def get_journal_json_data(journal):
         'title': journal.title,
         'links': {
             'detail': url_for('main.journal_detail', url_seg=journal.url_segment),
+            'issue_grid': url_for('main.issue_grid', url_seg=journal.url_segment),
             'submission': journal.online_submission_url or url_for('main.about_journal',
                                                                    url_seg=journal.url_segment) + '#submission',
             'instructions': url_for('main.about_journal', url_seg=journal.url_segment) + '#instructions',
@@ -196,6 +197,7 @@ def get_journal_json_data(journal):
 
     if journal.last_issue:
         j_data['last_issue'] = {
+            # add legnenda bibliograáfica
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
             'year': journal.last_issue.year,

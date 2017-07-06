@@ -3,39 +3,46 @@
     <a data-toggle="tooltip" href="<%- journal.links.detail %>" title="{% trans %}Homepage{% endtrans %}">
       <span class="glyphBtn home"></span>
     </a>
-    <a data-toggle="tooltip" href="<%- journal.links.submission %>" title="{% trans %}Submissão de manuscritos{% endtrans %}" target="_blank">
-      <span class="glyphBtn submission"></span>
-    </a>
-    <a data-toggle="tooltip" href="<%- journal.links.instructions %>" title="{% trans %}Instruções aos autores{% endtrans %}">
-      <span class="glyphBtn authorInstructions"></span>
-    </a>
-    <a data-toggle="tooltip" href="<%- journal.links.about %>" title="{% trans %}Sobre o periódico{% endtrans %}">
-      <span class="glyphBtn about"></span>
-    </a>
-    <a data-toggle="tooltip" href="<%- journal.links.contact %>" title="{% trans %}Contato{% endtrans %}">
-      <span class="glyphBtn contact"></span>
-    </a>
+    <% if (journal.is_active) { %>
+      <a data-toggle="tooltip" href="<%- journal.links.submission %>" title="{% trans %}Submissão de manuscritos{% endtrans %}" target="_blank">
+        <span class="glyphBtn submission"></span>
+      </a>
+      <a data-toggle="tooltip" href="<%- journal.links.instructions %>" title="{% trans %}Instruções aos autores{% endtrans %}">
+        <span class="glyphBtn authorInstructions"></span>
+      </a>
+      <a data-toggle="tooltip" href="<%- journal.links.about %>" title="{% trans %}Sobre o periódico{% endtrans %}">
+        <span class="glyphBtn about"></span>
+      </a>
+      <a data-toggle="tooltip" href="<%- journal.links.contact %>" title="{% trans %}Contato{% endtrans %}">
+        <span class="glyphBtn contact"></span>
+      </a>
+    <% } %>
   </td>
   <td>
-    <a class="collectionLink <% if (!journal.is_active) { %> disabled <% } %>" href="<%- journal.links.detail %>">
+    <a title="{% trans %}Título do periódico{% endtrans %}"
+       class="collectionLink <% if (!journal.is_active) { %> disabled <% } %>" href="<%- journal.links.detail %>">
       <strong class="journalTitle"><%- journal.title %></strong>,
     </a>
+    <a title="{% trans %}Grade de número{% endtrans %}"
+       href="<%- journal.links.issue_grid %>">
       <strong class="journalIssues"><%- journal.issues_count %> {% trans %}números{% endtrans %}</strong>,
+    </a>
 
-        <% if (journal.last_issue) { %>
-          <a href="/<%- journal.last_issue.url_segment %>">
-          {% trans %}Último{% endtrans %}:
-          <span class="journalLastVolume"><em>{% trans %}Volume{% endtrans %}</em> <%- journal.last_issue.volume %></span>
-          <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> -
-          <span class="journalLastPubDate"><%- journal.last_issue.year %></span>
-        <% } %>
-
-        <% if (!journal.is_active) { %>({% trans %}inativo{% endtrans %})<% } %>
-
-        <% if (journal.previous_journal_ref) { %>
-          <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>
-        <% } %>
-
+    <% if (journal.last_issue) { %>
+      <a href="/<%- journal.last_issue.url_segment %>"
+        title="{% trans %}Número mais recente{% endtrans %}">
+        {% trans %}Último{% endtrans %}:
+        <span class="journalLastVolume"><em>{% trans %}Volume{% endtrans %}</em> <%- journal.last_issue.volume %></span>
+        <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> -
+        <span class="journalLastPubDate"><%- journal.last_issue.year %></span>
       </a>
+    <% } %>
+
+    <% if (!journal.is_active) { %>({% trans %}inativo{% endtrans %})<% } %>
+
+    <% if (journal.previous_journal_ref) { %>
+      <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>
+    <% } %>
+
   </td>
 </tr>

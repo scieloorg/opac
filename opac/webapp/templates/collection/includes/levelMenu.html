@@ -16,9 +16,13 @@
 
       {% else %}
 
+        {#
         <ol class="breadcrumb">
-          <li><a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a></li>
+          <li>
+            <a href="{{ url_for('.index') }}">{% trans %}Home{% endtrans %}</a>
+          </li>
         </ol>
+        #}
 
         {% if pages %}
           <h1 class="breadTitle"> {% trans %}Sobre o SciELO{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</h1>
