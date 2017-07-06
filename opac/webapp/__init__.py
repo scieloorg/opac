@@ -76,6 +76,8 @@ def create_app():
     js = Bundle(
                 'js/scielo-bundle-min.js',
                 'js/common.js',
+                'js/moment.js',
+                'js/moment-with-locales.js',
                 filters='jsmin',
                 output='js/bundle.js',
                 remove_duplicates=True)
