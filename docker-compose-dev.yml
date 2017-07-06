@@ -46,8 +46,10 @@ services:
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_MONGODB_NAME=opac
-            - OPAC_MONGODB_HOST=opac_mongo
+            - OPAC_MONGODB_HOST=cluster-mongo-opac-qa.scielo.org
             - OPAC_MONGODB_PORT=27017
+            - OPAC_MONGODB_USER=opac.user
+            - OPAC_MONGODB_PASS=aeQuu8pi
             - OPAC_DATABASE_DIR=/app/data
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
