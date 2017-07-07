@@ -9,7 +9,16 @@
   <section class="collection collectionList">
     <div class="container">
       <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#alpha" data-toggle="tab">{% trans %}Alfabética{% endtrans %}</a></li>
+        <li class="home-tab">
+          <a href="{{ url_for('main.index') }}">
+            <span class="glyphBtn home" style="height: 20px;"></span> {% trans %}Home{% endtrans %}
+          </a>
+        </li>
+        <li role="presentation" class="active">
+          <a href="#alpha" data-toggle="tab">
+            {% trans %}Alfabética{% endtrans %}
+          </a>
+        </li>
         <li role="presentation"><a href="#theme" data-toggle="tab">{% trans %}Temática{% endtrans %}</a></li>
         {# <li role="presentation"><a href="#publisher" data-toggle="tab">Por instituição</a></li> #}
         {# <li role="presentation"><a href="#newIssue" data-toggle="tab">Novos números</a></li>
@@ -35,7 +44,7 @@
                         <th class="actions"></th>
                         <th>
                           <div class="col-xs-6">
-                            {% trans %}Título{% endtrans %} <small class="collectionListTotalInfo"></small>
+                            {% trans %}Periódico{% endtrans %} <small class="collectionListTotalInfo"></small>
                           </div>
                           <div class="col-xs-6 right download">
                             {% trans %}download da lista{% endtrans %}
@@ -207,7 +216,7 @@
         "{{ url_for('main.journals_search_by_theme_ajax') }}",
         "#template_error_msg",
         "#template_empty_msg",
-        "{% trans %}Título{% endtrans %}",
+        "{% trans %}Periódico{% endtrans %}",
         "{% trans %}grandes áreas{% endtrans %}"
     );
     /* Áreas temáticas do Web of Science */
@@ -221,7 +230,7 @@
         "{{ url_for('main.journals_search_by_theme_ajax') }}",
         "#template_error_msg",
         "#template_empty_msg",
-        "{% trans %}Título{% endtrans %}",
+        "{% trans %}Periódico{% endtrans %}",
         "{% trans %}áreas WOS{% endtrans %}"
     );
     var listPublisherInit = Object.create(JournalCategorizedList);
@@ -378,6 +387,9 @@
                 listAlpha()
         }
 
+      });
+      $('.home-tab').click(function(){
+        window.location.href = "{{ url_for('main.index') }}";
       });
 
     });

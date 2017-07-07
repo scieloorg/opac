@@ -1,14 +1,16 @@
 <div class="row collectionListSearch">
   <div class="col-md-6">
     <div class="btn-group" data-toggle="buttons">
+      <label class="btn">
+        <input type="radio" id="all_{{filter_id}}" autocomplete="off" name="{{ filter_id|default('query_filter') }}" value="">{% trans %}Todos{% endtrans %}
+      </label>
       <label class="btn active">
-        <input type="radio" id="all_{{filter_id}}" autocomplete="off" name="{{ filter_id|default('query_filter') }}" value="" checked="checked">{% trans %}Todos{% endtrans %}
+        <input type="radio" id="current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="current" checked="checked" autocomplete="off">
+          <span class="lbl-corrente">{% trans %}Periódicos ativos{% endtrans %}</span>
       </label>
       <label class="btn">
-        <input type="radio" id="current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="current" autocomplete="off"><span class="lbl-corrente">{% trans %}Títulos correntes{% endtrans %}</span>
-      </label>
-      <label class="btn">
-        <input type="radio" id="no_current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="no-current" autocomplete="off"><span class="lbl-nao-corrente">{% trans %}Títulos não-correntes{% endtrans %}</span>
+        <input type="radio" id="no_current_{{filter_id}}" name="{{ filter_id|default('query_filter') }}" value="no-current" autocomplete="off">
+          <span class="lbl-nao-corrente">{% trans %}Periódicos descontinuados{% endtrans %}</span>
       </label>
     </div>
   </div>

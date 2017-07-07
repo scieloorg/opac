@@ -160,7 +160,7 @@ var JournalCategorizedList = {
   error_template_compiled: null,
   empty_template_compiled: null,
 
-  main_label: 'Título',
+  main_label: 'Periódico',
   grouper_name_plural: 'temas',
 
   clear_list:function(){

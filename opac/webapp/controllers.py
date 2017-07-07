@@ -13,9 +13,8 @@ import xlsxwriter
 import tweepy
 
 from collections import OrderedDict
-
+from legendarium.formatter import descriptive_short_format
 from slugify import slugify
-
 from opac_schema.v1.models import (
     Journal,
     Issue,
@@ -152,7 +151,7 @@ def get_journals_paginated(title_query, is_public=True, query_filter="", order_b
     return Pagination(journals, page, per_page)
 
 
-def get_journal_json_data(journal):
+def get_journal_json_data(journal, language='pt'):
     """
     Para cada journal, retorna uma estrutura mais resumida para ser enviada como json
     para o frontend.
@@ -184,6 +183,7 @@ def get_journal_json_data(journal):
         'title': journal.title,
         'links': {
             'detail': url_for('main.journal_detail', url_seg=journal.url_segment),
+            'issue_grid': url_for('main.issue_grid', url_seg=journal.url_segment),
             'submission': journal.online_submission_url or url_for('main.about_journal',
                                                                    url_seg=journal.url_segment) + '#submission',
             'instructions': url_for('main.about_journal', url_seg=journal.url_segment) + '#instructions',
@@ -195,7 +195,20 @@ def get_journal_json_data(journal):
     }
 
     if journal.last_issue:
+        last_issue_legend = descriptive_short_format(
+            title='',           # não queremos o nome do periódico
+            short_title='',     # não queremos o nome do periódico
+            pubdate=str(journal.last_issue.year),
+            volume=journal.last_issue.volume,
+            number=journal.last_issue.number,
+            suppl=journal.last_issue.suppl_text,
+            language=language)
+
+        if last_issue_legend.startswith(', '):
+            last_issue_legend = last_issue_legend.replace(', ', '', 1)  # removemos a primeira vírgula
+
         j_data['last_issue'] = {
+            'legend': last_issue_legend,
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
             'year': journal.last_issue.year,
@@ -206,7 +219,7 @@ def get_journal_json_data(journal):
 
 
 def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_filter="", order_by="title_slug", page=1,
-                                           per_page=20):
+                                           per_page=20, lang='pt'):
     """
     Retorna a estrutura de dados com a lista alfabética de periódicas, e da paginação para montar a listagem alfabética.
     """
@@ -217,7 +230,7 @@ def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_fi
     journal_list = []
 
     for journal in journals.items:
-        j_data = get_journal_json_data(journal)
+        j_data = get_journal_json_data(journal, lang)
         journal_list.append(j_data)
 
     response_data = {
@@ -233,7 +246,7 @@ def get_alpha_list_from_paginated_journals(title_query, is_public=True, query_fi
     return response_data
 
 
-def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_public=True, order_by="title_slug"):
+def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_public=True, order_by="title_slug", lang='pt'):
     """
     Retorna dicionário com 2 chaves: ``meta`` e ``objects``.
 
@@ -265,7 +278,7 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
                 # se não achar o nome (KeyError), ficamos com o nome da sigla
                 grouper = INDEX_NAME.get(grouper, grouper)
 
-            j_data = get_journal_json_data(journal)
+            j_data = get_journal_json_data(journal, lang)
             groups_dict.setdefault(grouper, []).append(j_data)
 
     meta = {

@@ -58,3 +58,14 @@
 .alternativeHeader .mainNav .menu {
     top: 14px;
 }
+
+.collection .datetime {
+    color: #7f7a71;
+    font-size: .8em;
+    margin-top: 35px;
+}
+
+.journalContent .datetime {
+    color: #7f7a71;
+    font-size: .8em;
+}
