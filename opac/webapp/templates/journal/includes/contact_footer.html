@@ -23,7 +23,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="col-md-4 col-sm-4 journalLinks">
+    <div id="followus" class="col-md-4 col-sm-4 journalLinks">
       {% for sn in journal.social_networks %}
         <a href="{{sn.account}}" data-toggle="tooltip" title="{{sn.network|title}}">
           <span

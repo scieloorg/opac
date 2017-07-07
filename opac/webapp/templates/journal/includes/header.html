@@ -30,23 +30,38 @@
             </div>
           {% endif %}
           <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
-            <h1>{{ journal.title }}</h1>
-            <span class="publisher">{% trans %}Publicação de: {% endtrans %} <strong>{{ journal.publisher_name}}</strong></span></br>
+            <h1>
+              <img alt="Open Access" class="openAccessIcon" src="{{ url_for('static', filename='img/oa_logo_32.png') }}">
+              {{ journal.title }}
+            </h1>
+            <span class="publisher">
+              {% trans %}Publicação de: {% endtrans %} <strong>{{ journal.publisher_name}}</strong>
+            </span>
+            </br>
             <span class="theme">
+              <span class="area">
+                {% trans %}Área:{% endtrans %}
+              </span>
               {% if journal.subject_categories %}
-                {{ journal.subject_categories|join(', ')|title }}
+                {{ journal.subject_categories|join(', ')|title|truncate(60) }}
               {% endif %}
               {% if journal.study_areas %}
-                {{ journal.study_areas|join(', ')|title }}
+                {{ journal.study_areas|join(', ')|title|truncate(60) }}
               {% endif %}
             </span>
             <span class="issn">
               {% if journal.print_issn %}
-                {% trans %}versão impressa ISSN{% endtrans %} {{ journal.print_issn }}
+                <span class="issnLabel">
+                  {% trans %}Versão impressa ISSN:{% endtrans %}
+                </span>
+                {{ journal.print_issn }}
                 {% if journal.eletronic_issn %}<br/>{% endif %}
               {% endif %}
               {% if journal.eletronic_issn %}
-                {% trans %}versão on-line ISSN{% endtrans %} {{ journal.eletronic_issn }}
+                <span class="issnLabel">
+                  {% trans %}Versão on-line ISSN:{% endtrans %}
+                </span>
+                {{ journal.eletronic_issn }}
               {% endif %}
             </span>
           </div>
@@ -63,6 +78,14 @@
           <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
           <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
           <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
+          {% if journal.social_networks %}
+            <li>
+              <a href="#followus">
+                <span class="glyphBtn otherNetworks"></span>
+                {% trans %}Siga-nos{% endtrans %}
+              </a>
+            </li>
+          {% endif %}
         </ul>
       </div>
       <div class="clearfix"></div>
