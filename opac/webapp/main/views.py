@@ -297,10 +297,6 @@ def journal_detail(url_seg):
     else:
         sections = []
 
-    current_year = datetime.now().year
-    total_h5_index_year = current_year
-    total_h5_median_year = current_year
-
     context = {
         'next_issue': None,
         'previous_issue': previous_issue,
@@ -310,9 +306,7 @@ def journal_detail(url_seg):
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,
         'sections': sections if sections else None,
-        'news': news,
-        'total_h5_index_year': total_h5_index_year,
-        'total_h5_median_year': total_h5_median_year,
+        'news': news
     }
 
     return render_template("journal/detail.html", **context)
