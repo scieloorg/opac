@@ -69,3 +69,18 @@
     color: #7f7a71;
     font-size: .8em;
 }
+
+.journal .brandLogo .theme .area {
+    color: #00314c;
+}
+
+.journal .brandLogo .issn .issnLabel {
+    color: #00314c;
+}
+
+.journal img.openAccessIcon {
+    width: 13px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+    margin-top: 0;
+}
