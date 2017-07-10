@@ -1,0 +1,12 @@
+<div class="slide-item release">
+  <div class="col-md-12">
+    <a href="{{ url_for('.article_detail', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment) }}" target="_blank">
+      <h3 class="ellipsis">{{ article.title }}</h3>
+      <div class="info">
+        {{ article.issue.legend }}
+        <br>
+        <strong>{% trans%}continue lendo{% endtrans %} &raquo;</strong>
+      </div>
+    </a>
+  </div>
+</div>
