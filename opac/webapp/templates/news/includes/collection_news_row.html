@@ -2,10 +2,12 @@
   <div class="col-md-12">
     <a href="{{ item.url }}" target="_blank">
       <span>{{ item.publication_date|datetimefilter }}</span>
-      <h3>{{ item.title|truncate(60, True, '...', 0) }}</h3>
+      <h3 class="ellipsis">{{ item.title }}</h3>
       <div class="info">
-        {{ item.description|striptags|replace('Read More →', '')|truncate(120, True) }}
-        <br>
+        <div class="ellipsis">
+          {{ item.description|striptags|replace('Read More →', '') }}
+          <br>
+        </div>
         <strong>{% trans%}continue lendo{% endtrans %} &raquo;</strong>
       </div>
     </a>
