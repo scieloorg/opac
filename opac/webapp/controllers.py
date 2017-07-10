@@ -795,6 +795,16 @@ def get_article_by_pid(pid, **kwargs):
     return Article.objects(pid=pid, **kwargs).first()
 
 
+def get_recent_articles_of_issue(issue_iid, is_public=True):
+    """
+    Retorna a lista de artigos de um issue/
+    Ordenados como 'mais recentes' pelo campo order.
+    """
+    if not issue_iid:
+        raise ValueError(__('Parámetro obrigatório: issue_iid.'))
+
+    return Article.objects.filter(issue=issue_iid, is_public=is_public).order_by('-order')
+
 # -------- NEWS --------
 
 
