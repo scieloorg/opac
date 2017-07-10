@@ -294,14 +294,17 @@ def journal_detail(url_seg):
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
     if journal.last_issue:
         sections = [section for section in journal.last_issue.sections if section.language == 'en']
+        recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
     else:
         sections = []
+        recent_articles = []
 
     context = {
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
         'press_releases': press_releases,
+        'recent_articles': recent_articles,
         # o primiero item da lista é o último fascículo.
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,
