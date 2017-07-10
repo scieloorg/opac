@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <a href="{{ press_release.url }}" target="_blank">
       <span>{{ press_release.publication_date|datetimefilter }}</span>
-      <h3>{{ press_release.title|striptags|truncate(75, True)}}</h3>
+      <h3 class="ellipsis">{{ press_release.title|striptags}}</h3>
     </a>
   </div>
 </div>

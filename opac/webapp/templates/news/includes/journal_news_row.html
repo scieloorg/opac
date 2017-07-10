@@ -1,9 +1,9 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <span>{{ item.publication_date }}</span>
-    <h3>{{ item.title|truncate(55, True) }}</h3>
+    <h3 class="ellipsis">{{ item.title }}</h3>
     <div class="ellipsis">
-      {{ item.description|striptags|replace('Read More →', '')|truncate(180) }}
+      {{ item.description|striptags|replace('Read More →', '') }}
     </div>
     <a href="{{ item.url }}" target="_blank"><strong>{% trans%}Continue lendo{% endtrans %} &raquo;</strong></a>
   </div>
