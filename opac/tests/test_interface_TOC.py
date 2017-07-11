@@ -52,7 +52,7 @@ class TOCTestCase(BaseTestCase):
 
             self.assertIn("Artigo Com Título Em Português", response.data.decode('utf-8'))
 
-    def ttest_the_title_of_the_article_list_when_language_es(self):
+    def test_the_title_of_the_article_list_when_language_es(self):
         """
         Teste para verificar se a interface do TOC esta retornando o título no
         idioma Espanhol.
