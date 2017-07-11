@@ -1,44 +1,69 @@
 
-<meta name="citation_journal_title" content="{{ journal.title }}"></meta>
-<meta name="citation_journal_abbrev" content="{{ journal.short_title }}"></meta>
-<meta name="citation_journal_abbrev" content="{{ journal.title_iso }}"></meta>
-<meta name="citation_publisher" content="{{ journal.publisher_name }}"></meta>
+{% if journal.title -%}
+    <meta name="citation_journal_title" content="{{ journal.title }}"></meta>
+{% endif -%}
 
-{% for author in article.authors %}
+{% if journal.short_title -%}
+    <meta name="citation_journal_abbrev" content="{{ journal.short_title }}"></meta>
+{% endif -%}
+
+{% if journal.title_iso -%}
+    <meta name="citation_journal_abbrev" content="{{ journal.title_iso }}"></meta>
+{% endif -%}
+
+{% if journal.publisher_name -%}
+    <meta name="citation_publisher" content="{{ journal.publisher_name }}"></meta>
+{% endif -%}
+
+{% for author in article.authors -%}
   <meta name="citation_author" content="{{ author }}"></meta>
-{% endfor %}
+{% endfor -%}
 
-<meta name="citation_title" content="{{ journal.title|escape }}"></meta>
-<meta name="citation_volume" content="{{ issue.volume }}"></meta>
-<meta name="citation_number" content="{{ issue.number }}"></meta>
+{% if journal.title -%}
+    <meta name="citation_title" content="{{ journal.title|escape }}"></meta>
+{% endif -%}
 
-{% if article.elocation %}
+{% if issue.volume -%}
+    <meta name="citation_volume" content="{{ issue.volume }}"></meta>
+{% endif -%}
+
+{% if issue.number -%}
+    <meta name="citation_number" content="{{ issue.number }}"></meta>
+{% endif -%}
+
+{% if article.elocation -%}
    <meta name="citation_firstpage" content="{{ article.elocation }}"></meta>
-{% else %}
-    {% if article.fpage %}
+{% else -%}
+    {% if article.fpage -%}
        <meta name="citation_firstpage" content="{{ article.fpage }}"></meta>
-    {% endif %}
-    {% if article.lpage %}
+    {% endif -%}
+    {% if article.lpage -%}
        <meta name="citation_lastpage" content="{{ article.lpage }}"></meta>
-    {% endif %}
-{% endif %}
+    {% endif -%}
+{% endif -%}
 
-<meta name="citation_doi" content="{{ article.doi }}"></meta>
-<meta name="citation_fulltext_world_readble" content=""></meta>
+{% if article.doi -%}
+    <meta name="citation_doi" content="{{ article.doi }}"></meta>
+{% endif -%}
 
-{% if journal.scielo_issn %}
+<meta name="citation_fulltext_world_readable" content=""></meta>
+
+{% if journal.scielo_issn -%}
     <meta name="citation_issn" content="{{ journal.scielo_issn }}"></meta>
-{% endif %}
+{% endif -%}
 
-{% if journal.print_issn %}
+{% if journal.print_issn -%}
     <meta name="citation_issn" content="{{ journal.print_issn }}"></meta>
-{% endif %}
+{% endif -%}
 
-{% if journal.eletronic_issn %}
+{% if journal.eletronic_issn -%}
     <meta name="citation_issn" content="{{ journal.eletronic_issn }}"></meta>
-{% endif %}
+{% endif -%}
 
-<meta name="citation_language" content="{{ article.original_language }}"></meta>
+{% if article.original_language -%}
+    <meta name="citation_language" content="{{ article.original_language }}"></meta>
+{% endif -%}
 
-<meta name="citation_abstract" content="{{ article.abstract|escape }}"></meta>
-
+{% if article.abstract -%}
+    <meta name="citation_abstract" content="{{ article.abstract|escape }}"></meta>
+{% endif -%}
