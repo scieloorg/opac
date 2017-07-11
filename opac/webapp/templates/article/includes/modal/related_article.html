@@ -2,16 +2,15 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Artigos relacionados</h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans %}Fechar{% endtrans %}</span></button>
+        <h4 class="modal-title">{% trans %}Artigos relacionados{% endtrans %}</h4>
       </div>
       <div class="modal-body">
         <div class="modal-center">
           <ul class="md-list inline">
-            <li class="colspan3"><a href="">Similares <br/>na Rede SciELO</a></li>
-            <li class="colspan3"><a href="">Projetos FAPESP</a></li>
-            <li class="colspan3"><a href="">Similares<br/> no Google</a></li>
-            <li class="colspan3"><a href="">uBIO</a></li>
+            <li class="colspan3">
+              <a href="">{% trans %}Similares no{% endtrans %}<br/> Google</a>
+            </li>
           </ul>
           <div class="clearfix"></div>
         </div>
