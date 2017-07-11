@@ -2,6 +2,12 @@
 
 {% block body_class %}journal article{% endblock %}
 
+{% block title %}{{ super() }} - {{ article.title }}{% endblock %}
+
+{% block extra_meta %}
+  {% include "article/includes/meta.html" %}
+{% endblock %}
+
 {% block extra_css %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async/>
 {% endblock %}

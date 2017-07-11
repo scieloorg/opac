@@ -1,0 +1,44 @@
+
+<meta name="citation_journal_title" content="{{ journal.title }}"></meta>
+<meta name="citation_journal_abbrev" content="{{ journal.short_title }}"></meta>
+<meta name="citation_journal_abbrev" content="{{ journal.title_iso }}"></meta>
+<meta name="citation_publisher" content="{{ journal.publisher_name }}"></meta>
+
+{% for author in article.authors %}
+  <meta name="citation_author" content="{{ author }}"></meta>
+{% endfor %}
+
+<meta name="citation_title" content="{{ journal.title|escape }}"></meta>
+<meta name="citation_volume" content="{{ issue.volume }}"></meta>
+<meta name="citation_number" content="{{ issue.number }}"></meta>
+
+{% if article.elocation %}
+   <meta name="citation_firstpage" content="{{ article.elocation }}"></meta>
+{% else %}
+    {% if article.fpage %}
+       <meta name="citation_firstpage" content="{{ article.fpage }}"></meta>
+    {% endif %}
+    {% if article.lpage %}
+       <meta name="citation_lastpage" content="{{ article.lpage }}"></meta>
+    {% endif %}
+{% endif %}
+
+<meta name="citation_doi" content="{{ article.doi }}"></meta>
+<meta name="citation_fulltext_world_readble" content=""></meta>
+
+{% if journal.scielo_issn %}
+    <meta name="citation_issn" content="{{ journal.scielo_issn }}"></meta>
+{% endif %}
+
+{% if journal.print_issn %}
+    <meta name="citation_issn" content="{{ journal.print_issn }}"></meta>
+{% endif %}
+
+{% if journal.eletronic_issn %}
+    <meta name="citation_issn" content="{{ journal.eletronic_issn }}"></meta>
+{% endif %}
+
+<meta name="citation_language" content="{{ article.original_language }}"></meta>
+
+<meta name="citation_abstract" content="{{ article.abstract|escape }}"></meta>
+
