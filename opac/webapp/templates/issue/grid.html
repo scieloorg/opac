@@ -59,7 +59,7 @@
                       {{ volume }}
                     </th>
                     <td class="left">
-                      {# Verificando se é um fascículo de volume #}
+                      {# Verificando se é um número de volume #}
                       {% if volume in volume_issue %}
                         <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
                                   url_seg_issue=volume_issue[volume].issue.url_segment) }}" class="btn ahead">{{ volume_issue[volume].art_count }} {% trans %}artigos{% endtrans %}</a>
@@ -92,7 +92,7 @@
             </tbody>
           </table>
         {% else %}
-          {% trans %}Nenhum fascículo encontrado para esse periódico{% endtrans %}
+          {% trans %}Nenhum número encontrado para esse periódico{% endtrans %}
         {% endif%}
         <div class="col-md-12">
           <h2>{% trans %}Histórico deste periódico na coleção{% endtrans %}</h2>

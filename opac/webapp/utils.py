@@ -99,16 +99,16 @@ def get_next_article(articles, article):
 
 def get_prev_issue(issues, issue):
     """
-    A lista de fascículos é ordenada pelos fascículos mais recentes para o mais
-    antigos, portanto para retornarmos os fascículos mais antigos, devemos
+    A lista de números é ordenada pelos números mais recentes para o mais
+    antigos, portanto para retornarmos os números mais antigos, devemos
     caminhar pelo índice do valor menor para o maior, isso justifica
     no preview soma 1 ao índice.
 
-    param: issues é a lista de issue (deve ser ordenado do fascículo mais
+    param: issues é a lista de issue (deve ser ordenado do número mais
     recente para o mais antigo)
     param: issue é o issue corrente.
 
-    IMPORTANTE: A lista de fascículos deve ter mais do que 1 item para que
+    IMPORTANTE: A lista de números deve ter mais do que 1 item para que
     possa existir a ideia de anterior e próximo
     """
     if len(issues) >= 2:
@@ -122,22 +122,22 @@ def get_prev_issue(issues, issue):
 
 def get_next_issue(issues, issue):
     """
-    A lista de fascículos é ordenada pelos fascículos mais recentes para o mais
-    antigos, portanto para retornarmos os fascículos mais novos, devemos
+    A lista de números é ordenada pelos números mais recentes para o mais
+    antigos, portanto para retornarmos os números mais novos, devemos
     caminhar pelo índice do valor maior para o menor, isso justifica
     no preview subtrai 1 ao índice.
 
-    param: issues é a lista de issue (deve ser ordenado do fascículo mais
+    param: issues é a lista de issue (deve ser ordenado do número mais
     recente para o mais antigo)
     param: issue é o issue corrente.
 
-    IMPORTANTE: A lista de fascículos deve ter mais do que 1 item para que
+    IMPORTANTE: A lista de números deve ter mais do que 1 item para que
     possa existir a ideia de anterior e próximo
     """
 
     if len(issues) >= 2:
         try:
-            # Caso o fascículo seja o primeiro retorna None
+            # Caso o número seja o primeiro retorna None
             if issues.index(issue) == 0:
                 return None
             return issues[issues.index(issue) - 1]

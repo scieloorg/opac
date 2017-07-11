@@ -188,7 +188,7 @@ class MenuTestCase(BaseTestCase):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html`` quando o periódico
-        não tem fascículo.
+        não tem número.
         """
         journal = utils.makeOneJournal()
 
@@ -219,7 +219,7 @@ class MenuTestCase(BaseTestCase):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html`` quando o periódico
-        tem um fascículo o botão ``próximo`` e ``anterior`` deve vir desabilitados.
+        tem um número o botão ``próximo`` e ``anterior`` deve vir desabilitados.
         """
         journal = utils.makeOneJournal()
 
@@ -255,7 +255,7 @@ class MenuTestCase(BaseTestCase):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html``, quando acessamos
-        qualquer fascículo.
+        qualquer número.
         """
 
         with current_app.app_context():
@@ -301,7 +301,7 @@ class MenuTestCase(BaseTestCase):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html``, quando acessamos
-        o fascículo mais recente.
+        o número mais recente.
         """
         journal = utils.makeOneJournal()
 
@@ -352,7 +352,7 @@ class MenuTestCase(BaseTestCase):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``jorunal/detail.html``, quando acessamos
-        o fascículo mais antigo.
+        o número mais antigo.
         """
         journal = utils.makeOneJournal()
 

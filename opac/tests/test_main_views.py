@@ -256,7 +256,7 @@ class MainTestCase(BaseTestCase):
     def test_collection_list_feed_without_issues(self):
         """
         Teste para verificar a reposta da ``view funciton``collection_list_feed
-        Se cadastra 10 periódicos sem fascículo, deve retornar na interface do
+        Se cadastra 10 periódicos sem número, deve retornar na interface do
         rss, utilizando o template ``collection/list_feed_content.html```.
         """
 
@@ -394,9 +394,9 @@ class MainTestCase(BaseTestCase):
 
     def test_issue_grid(self):
         """
-        Teste da ``view function`` ``issue_grid`` acessando a grade de fascículos
-        de um periódico, nesse teste deve ser retornado todos os fascículos com
-        o atributo is_public=True de um fascículo, sendo que o template deve ser
+        Teste da ``view function`` ``issue_grid`` acessando a grade de números
+        de um periódico, nesse teste deve ser retornado todos os números com
+        o atributo is_public=True de um número, sendo que o template deve ser
         ``issue/grid.html``.
         """
 
@@ -419,8 +419,8 @@ class MainTestCase(BaseTestCase):
     def test_issue_grid_without_issues(self):
         """
         Teste para avaliar o retorno da ``view function`` ``issue_grid``
-        quando não existe fascículo cadastrado deve retornar ``status_code`` 200
-        e a msg ``Nenhum fascículo encontrado para esse perióico``
+        quando não existe número cadastrado deve retornar ``status_code`` 200
+        e a msg ``Nenhum número encontrado para esse perióico``
         """
 
         with current_app.app_context():
@@ -435,7 +435,7 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
 
-            self.assertIn('Nenhum fascículo encontrado para esse periódico',
+            self.assertIn('Nenhum número encontrado para esse periódico',
                           response.data.decode('utf-8'))
 
     def test_issue_grid_with_unknow_journal_id(self):
@@ -477,7 +477,7 @@ class MainTestCase(BaseTestCase):
 
     def test_issue_toc(self):
         """
-        Teste da ``view function`` ``issue_toc`` acessando a página do fascículo,
+        Teste da ``view function`` ``issue_toc`` acessando a página do número,
         deve retorna status_code 200 e o template ``issue/toc.html``.
         """
 
@@ -504,7 +504,7 @@ class MainTestCase(BaseTestCase):
         """
         Teste para avaliar o retorno da ``view function`` ``issue_toc``
         quando é acessado utilizando um identificador do issue desconhecido,
-        deve retorna status_code 404 com a msg ``Fascículo não encontrado``.
+        deve retorna status_code 404 com a msg ``Número não encontrado``.
         """
         journal = utils.makeOneJournal()
 
@@ -520,15 +520,15 @@ class MainTestCase(BaseTestCase):
         response = self.client.get(unknow_url)
 
         self.assertStatus(response, 404)
-        self.assertIn('Fascículo não encontrado', response.data.decode('utf-8'))
+        self.assertIn('Número não encontrado', response.data.decode('utf-8'))
 
     def test_issue_toc_with_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``issue_toc`` acessando um fascículo
+        Teste da ``view function`` ``issue_toc`` acessando um número
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
-        unpublish_reason = 'Fascículo incorreto'
+        unpublish_reason = 'Número incorreto'
         journal = utils.makeOneJournal()
         issue = utils.makeOneIssue({
             'is_public': False,
@@ -544,7 +544,7 @@ class MainTestCase(BaseTestCase):
 
     def test_issue_toc_with_journal_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``issue_toc`` acessando um fascículo
+        Teste da ``view function`` ``issue_toc`` acessando um número
         com atributo is_public=True, porém com um periódico com atributo
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
@@ -596,7 +596,7 @@ class MainTestCase(BaseTestCase):
         """
         Teste para avaliar o retorno da ``view function`` ``issue_feed``
         quando é acessado utilizando um identificador do issue desconhecido,
-        deve retorna status_code 404 com a msg ``Fascículo não encontrado``.
+        deve retorna status_code 404 com a msg ``Número não encontrado``.
         """
         journal = utils.makeOneJournal()
 
@@ -609,16 +609,16 @@ class MainTestCase(BaseTestCase):
                                    url_seg_issue=unknow_url_seg))
 
         self.assertStatus(response, 404)
-        self.assertIn('Fascículo não encontrado', response.data.decode('utf-8'))
+        self.assertIn('Número não encontrado', response.data.decode('utf-8'))
 
     def test_issue_feed_with_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``issue_feed`` acessando um fascículo
+        Teste da ``view function`` ``issue_feed`` acessando um número
         com atributo is_public=False, deve retorna uma página com ``status_code``
         404 e msg cadastrada no atributo ``reason``.
         """
 
-        unpublish_reason = 'Fascículo incorreto'
+        unpublish_reason = 'número incorreto'
         journal = utils.makeOneJournal()
         issue = utils.makeOneIssue({
             'is_public': False,
@@ -630,11 +630,11 @@ class MainTestCase(BaseTestCase):
                                            url_seg_issue=issue.url_segment))
 
         self.assertStatus(response, 404)
-        self.assertIn('Fascículo incorreto', response.data.decode('utf-8'))
+        self.assertIn('número incorreto', response.data.decode('utf-8'))
 
     def test_issue_feed_with_journal_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``issue_toc`` acessando um fascículo
+        Teste da ``view function`` ``issue_toc`` acessando um número
         com atributo is_public=True, porém com um periódico com atributo
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
@@ -740,7 +740,7 @@ class MainTestCase(BaseTestCase):
         Teste da ``view function`` ``article_detail`` acessando um artigo
         com atributo is_public=False, porém com um periódico com atributo
         is_public=True deve retorna uma página com ``status_code`` 404 e msg
-        cadastrada no atributo ``reason`` do fascículo.
+        cadastrada no atributo ``reason`` do número.
         """
 
         unpublish_reason = 'Facículo rejeitado'

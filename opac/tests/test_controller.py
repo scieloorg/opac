@@ -924,7 +924,7 @@ class FunctionsInControllerTestCase(BaseTestCase):
     def test_count_elements_by_type_and_visibility_type_issue(self):
         """
         Testando a função count_elements_by_type_and_visibility() com 20
-        fascículos cadastrados, deve retornar apenas 20 fascículos.
+        números cadastrados, deve retornar apenas 20 números.
         """
 
         utils.makeAnyIssue(items=20)
@@ -968,8 +968,8 @@ class FunctionsInControllerTestCase(BaseTestCase):
     def test_count_elements_by_type_and_visibility_issue_public_only(self):
         """
         Testando a função count_elements_by_type_and_visibility() com 50
-        fascículos cadastrados com atributo puclic=true e 6 public=false,
-        deve retornar apenas 20 fascículo(somente os fascículos marcados como
+        números cadastrados com atributo puclic=true e 6 public=false,
+        deve retornar apenas 20 números (somente os números marcados como
         publicos).
         """
 

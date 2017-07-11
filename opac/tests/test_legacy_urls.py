@@ -30,7 +30,7 @@ class LegacyURLTestCase(BaseTestCase):
 
     def test_issue_grid(self):
         """
-        Testa o acesso a grade de fascículos da revista pela URL antiga.
+        Testa o acesso a grade de números da revista pela URL antiga.
         URL testa: scielo.php?script=sci_issues&pid=ISSN
         """
 
@@ -52,8 +52,8 @@ class LegacyURLTestCase(BaseTestCase):
 
     def test_issue_toc(self):
         """
-        Testa o acesso ao toc de um fascículos pela URL antiga.
-        URL testa: scielo.php?script=sci_issuetoc&pid=ISSN + ID DO FASCÍCULO
+        Testa o acesso ao toc de um números pela URL antiga.
+        URL testa: scielo.php?script=sci_issuetoc&pid=ISSN + ID DO número
         """
 
         with current_app.app_context():
@@ -78,7 +78,7 @@ class LegacyURLTestCase(BaseTestCase):
     def test_article_text(self):
         """
         Testa o acesso ao artigo pela URL antiga.
-        URL testa: scielo.php?script=sci_serial&pid=ISSN + ID DO FASCÍCULO + ID DO ARTIGO
+        URL testa: scielo.php?script=sci_serial&pid=ISSN + ID DO número + ID DO ARTIGO
         """
 
         with current_app.app_context():
@@ -109,7 +109,7 @@ class LegacyURLTestCase(BaseTestCase):
     def test_article_abstract(self):
         """
         Testa o acesso ao abstract do artigo pela URL antiga.
-        URL testa: scielo.php?script=sci_abstract&pid=ISSN + ID DO FASCÍCULO + ID DO ARTIGO
+        URL testa: scielo.php?script=sci_abstract&pid=ISSN + ID DO número + ID DO ARTIGO
         """
 
         with current_app.app_context():

@@ -541,9 +541,9 @@ class IssueAdminView(OpacBaseAdminView):
         try:
             controllers.set_issue_is_public_bulk(ids, True)
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash(_('Fascículo(s) publicado(s) com sucesso!!'))
+            flash(_('Número(s) publicado(s) com sucesso!!'))
         except Exception as ex:
-            flash(_('Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
+            flash(_('Ocorreu um erro tentando publicar o(s) número(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
 
@@ -551,9 +551,9 @@ class IssueAdminView(OpacBaseAdminView):
         try:
             controllers.set_issue_is_public_bulk(ids, False, reason)
             # Adicionar mais contexto sobre as consequência dessa ação
-            flash(_('Fascículo(s) despublicado(s) com sucesso!!'))
+            flash(_('Número(s) despublicado(s) com sucesso!!'))
         except Exception as ex:
-            flash(_('Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
+            flash(_('Ocorreu um erro tentando despublicar o(s) número(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
 
@@ -623,7 +623,7 @@ class ArticleAdminView(OpacBaseAdminView):
             flash(_('Artigo(s) publicado com sucesso!!'))
 
         except Exception as ex:
-            flash(_('Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s',
+            flash(_('Ocorreu um erro tentando publicar o(s) número(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
 
@@ -633,7 +633,7 @@ class ArticleAdminView(OpacBaseAdminView):
             # Adicionar mais contexto sobre as consequência dessa ação
             flash(_('Artigo(s) despublicado com sucesso!!'))
         except Exception as ex:
-            flash(_('Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s',
+            flash(_('Ocorreu um erro tentando despublicar o(s) número(s)!!. Erro: %(ex)s',
                     ex=str(ex)),
                   'error')
 

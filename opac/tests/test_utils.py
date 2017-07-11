@@ -24,7 +24,7 @@ class UtilsTestCase(BaseTestCase):
         issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
                                      'number': '3', 'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3]
 
         prev_issue = wutils.get_prev_issue(issues, issue2)
@@ -45,7 +45,7 @@ class UtilsTestCase(BaseTestCase):
         issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
                                      'number': '3', 'order': '3', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3]
 
         next_issue = wutils.get_next_issue(issues, issue2)
@@ -62,7 +62,7 @@ class UtilsTestCase(BaseTestCase):
 
         issue = utils.makeOneIssue()
 
-        # criando uma lista de fascículos vazia
+        # criando uma lista de números vazia
         issues = [issue1]
 
         prev_issue = wutils.get_prev_issue(issues, issue)
@@ -79,7 +79,7 @@ class UtilsTestCase(BaseTestCase):
 
         issue = utils.makeOneIssue()
 
-        # criando uma lista de fascículos vazia
+        # criando uma lista de números vazia
         issues = [issue1]
 
         next_issue = wutils.get_next_issue(issues, issue)
@@ -93,7 +93,7 @@ class UtilsTestCase(BaseTestCase):
 
         Acessando o a um índice inexistente, o último item da lista irá retornar
         None pois não existe o índice [último] + 1 (Lembrando que a lista de
-        fascículo é invertida)
+        número é invertida)
 
         Portanto a função get_prev_issue soma 1.
 
@@ -109,7 +109,7 @@ class UtilsTestCase(BaseTestCase):
         issue4 = utils.makeOneIssue({'year': '2016', 'volume': '1',
                                      'number': '4', 'order': '4', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3, issue4]
 
         prev_issue = wutils.get_prev_issue(issues, issue4)
@@ -135,7 +135,7 @@ class UtilsTestCase(BaseTestCase):
         issue4 = utils.makeOneIssue({'year': '2016', 'volume': '1',
                                      'number': '4', 'order': '4', })
 
-        # criando uma lista de fascículos ordenada
+        # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3, issue4]
 
         next_issue = wutils.get_next_issue(issues, issue1)
