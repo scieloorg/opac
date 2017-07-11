@@ -2,43 +2,43 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Versão para download</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">{% trans %}Fechar{% endtrans %}</span>
+        </button>
+        <h4 class="modal-title">{% trans %}Versão para download de PDF{% endtrans%}</h4>
       </div>
       <div class="modal-body">
         <div class="row modal-center">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <span class="sci-ico-filePDF"></span>
             <br/>
             <strong>PDF</strong>
             <ul class="md-list">
-              <li><a href="">Inglês</a></li>
-              <li><a href="">Português</a></li>
+            {% if article and article.pdfs %}
+              {% for pdf in article.pdfs  %}
+                <li>
+                  <a href="{{ pdf.url }}">
+                    {% if pdf.lang == 'es' %}
+                      {% trans %}Espanhol{% endtrans %}
+                    {% elif pdf.lang == 'en' %}
+                      {% trans %}Inglês{% endtrans %}
+                    {% elif pdf.lang == 'pt' %}
+                      {% trans %}Português{% endtrans %}
+                    {% else %}
+                      {{ pdf.lang }}
+                    {% endif %}
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
             </ul>
           </div>
-          <div class="col-md-3">
-            <span class="sci-ico-fileEPUB"></span>
-            <br/>
-            <strong>ePUB</strong>
-            <ul class="md-list">
-              <li><a href="">Inglês</a></li>
-              <li><a href="">Português</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3">
+          <div class="col-md-6">
             <span class="glyphBtn readcubeViewMid"></span>
             <br/>
             <strong>ReadCube</strong>
             <ul class="md-list">
               <li class="colspan3"><a href="">Visualizar <br/>o texto</a></li>
-            </ul>
-          </div>
-          <div class="col-md-3">
-            <span class="sci-ico-fileXML"></span>
-            <br/>
-            <strong>XML</strong>
-            <ul class="md-list">
-              <li><a href="">Inglês</a></li>
             </ul>
           </div>
         </div>
