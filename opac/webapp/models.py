@@ -2,7 +2,7 @@
 
 """
     Conjunto de modelos relacionais para o controle da app (Usuarios, auditorias, logs, etc)
-    Os modelos do catálogo do OPAC (periódicos, fascículos, artigos) estão definidos na
+    Os modelos do catálogo do OPAC (periódicos, números, artigos) estão definidos na
     lib: opac_schema (ver requirements.txt)
 """
 

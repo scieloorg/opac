@@ -1164,8 +1164,8 @@ class AdminViewsTestCase(BaseTestCase):
             - fazemos login e
             - acessamos a pagina /admin
         Verificamos:
-            - que a contagem de documentos (periódicos, fascículos e artigos) totais esta certa.
-            - que a contagem de documentos (periódicos, fascículos e artigos) publicadas esta certa.
+            - que a contagem de documentos (periódicos, números e artigos) totais esta certa.
+            - que a contagem de documentos (periódicos, números e artigos) publicadas esta certa.
         """
         # with
         j_pub = makeOneJournal({'is_public': True})
@@ -1215,7 +1215,7 @@ class AdminViewsTestCase(BaseTestCase):
                     self.assertEqual(2, journals_total_count)
                     journals_public_count = counts['journals_public_count']
                     self.assertEqual(1, journals_public_count)
-                    # contagem de fascículos
+                    # contagem de números
                     issues_total_count = counts['issues_total_count']
                     self.assertEqual(2, issues_total_count)
                     issues_public_count = counts['issues_public_count']
@@ -2220,13 +2220,13 @@ class IssueAdminViewTests(BaseTestCase):
             self.assertStatus(login_response, 200)
             self.assertTemplateUsed('admin/index.html')
             self.assertTrue(current_user.is_authenticated)
-            # acesso a aba de fascículos
+            # acesso a aba de números
             issue_list_response = client.get(url_for('issue.index_view'))
             self.assertStatus(issue_list_response, 200)
             self.assertTemplateUsed('admin/model/list.html')
             # then
             # verificamos a resposta
-            # que tem a id para acessar ao fascículo
+            # que tem a id para acessar ao números
             self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
 
     def test_admin_issue_details(self):
@@ -2266,7 +2266,7 @@ class IssueAdminViewTests(BaseTestCase):
             self.assertTemplateUsed('admin/model/details.html')
             # then
             # verificamos a resposta
-            # que tem a id para acessar ao fascículo
+            # que tem a id para acessar ao números
             self.assertIn(issue.id, issue_detail_response.data.decode('utf-8'))
 
     def test_admin_issue_search_by_id(self):
@@ -2806,7 +2806,7 @@ class IssueAdminViewTests(BaseTestCase):
         issue_index_url = url_for('issue.index_view')
 
         publish_action_url = '%saction/' % issue_index_url
-        expected_msg = u'Fascículo(s) publicado(s) com sucesso!!'
+        expected_msg = u'Número(s) publicado(s) com sucesso!!'
         # when
         with self.client as client:
             # login do usuario admin
@@ -2859,7 +2859,7 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         action_url = '%saction/' % issue_index_url
-        expected_msg = u'Fascículo(s) publicado(s) com sucesso!!'
+        expected_msg = u'Número(s) publicado(s) com sucesso!!'
         # when
         with self.client as client:
             # login do usuario admin
@@ -2913,7 +2913,7 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         action_url = '%saction/' % issue_index_url
-        expected_msg = 'Fascículo(s) despublicado(s) com sucesso!!'
+        expected_msg = 'Número(s) despublicado(s) com sucesso!!'
         expected_reason = 'Conteúdo temporariamente indisponível'
         # when
         with self.client as client:
@@ -2968,7 +2968,7 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         action_url = '%saction/' % issue_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
         # when
         with self.client as client:
             # login do usuario admin
@@ -3022,7 +3022,7 @@ class IssueAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         issue_index_url = url_for('issue.index_view')
         action_url = '%saction/' % issue_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
         # when
         with self.client as client:
             # login do usuario admin
@@ -3087,13 +3087,13 @@ class ArticleAdminViewTests(BaseTestCase):
             self.assertStatus(login_response, 200)
             self.assertTemplateUsed('admin/index.html')
             self.assertTrue(current_user.is_authenticated)
-            # acesso a aba de fascículos
+            # acesso a aba de números
             article_list_response = client.get(url_for('article.index_view'))
             self.assertStatus(article_list_response, 200)
             self.assertTemplateUsed('admin/model/list.html')
             # then
             # verificamos a resposta
-            # que tem a id para acessar ao fascículo
+            # que tem a id para acessar ao número
             self.assertIn(article.id, article_list_response.data.decode('utf-8'))
 
     def test_admin_article_details(self):
@@ -3133,7 +3133,7 @@ class ArticleAdminViewTests(BaseTestCase):
             self.assertTemplateUsed('admin/model/details.html')
             # then
             # verificamos a resposta
-            # que tem a id para acessar ao fascículo
+            # que tem a id para acessar ao número
             self.assertIn(article.id, article_detail_response.data.decode('utf-8'))
 
     def test_admin_article_search_by_id(self):
@@ -3834,7 +3834,7 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         action_url = '%saction/' % article_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
         # when
         with self.client as client:
             # login do usuario admin
@@ -3888,7 +3888,7 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         action_url = '%saction/' % article_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) fascículo(s)!!.'
+        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
         # when
         with self.client as client:
             # login do usuario admin

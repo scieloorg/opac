@@ -19,7 +19,7 @@ from webapp import forms
 logger = logging.getLogger(__name__)
 
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
-ISSUE_UNPUBLISH = _("O fascículo está indisponível por motivo de: ")
+ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 
 
@@ -217,7 +217,7 @@ def router_legacy():
         issue = controllers.get_issue_by_pid(pid)
 
         if not issue:
-            abort(404, _('Fascículo não encontrado'))
+            abort(404, _('Número não encontrado'))
 
         if not issue.is_public:
             abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
@@ -278,7 +278,7 @@ def journal_detail(url_seg):
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
-    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
         previous_issue = issues[1]
@@ -305,7 +305,7 @@ def journal_detail(url_seg):
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
-        # o primiero item da lista é o último fascículo.
+        # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,
         'sections': sections if sections else None,
@@ -378,7 +378,7 @@ def about_journal(url_seg):
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
-    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
         previous_issue = issues[1]
@@ -391,7 +391,7 @@ def about_journal(url_seg):
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
-        # o primiero item da lista é o último fascículo.
+        # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': issues[0] if issues else None,
     }
@@ -501,7 +501,7 @@ def issue_toc(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
-        abort(404, _('Fascículo não encontrado'))
+        abort(404, _('Número não encontrado'))
 
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
@@ -543,7 +543,7 @@ def issue_toc(url_seg, url_seg_issue):
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
-        # o primiero item da lista é o último fascículo.
+        # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
     }
 
@@ -555,7 +555,7 @@ def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
-        abort(404, _('Fascículo não encontrado'))
+        abort(404, _('Número não encontrado'))
 
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))

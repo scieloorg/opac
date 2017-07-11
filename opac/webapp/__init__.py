@@ -121,7 +121,7 @@ def create_app():
 
     admin.add_view(views.CollectionAdminView(Collection, category=lazy_gettext('Catálogo'), name=lazy_gettext('Coleção')))
     admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext('Catálogo'), name=lazy_gettext('Periódico')))
-    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext('Catálogo'), name=lazy_gettext('Fascículo')))
+    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext('Catálogo'), name=lazy_gettext('Número')))
     admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext('Catálogo'), name=lazy_gettext('Artigo')))
     admin.add_view(views.SponsorAdminView(Sponsor, category=lazy_gettext('Catálogo'), name=lazy_gettext('Financiador')))
     admin.add_view(views.PressReleaseAdminView(PressRelease, category=lazy_gettext('Catálogo'), name=lazy_gettext('Press Release')))

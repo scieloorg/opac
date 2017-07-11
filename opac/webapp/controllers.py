@@ -493,7 +493,7 @@ def set_journal_is_public_bulk(jids, is_public=True, reason=''):
 
 def get_issues_by_jid(jid, **kwargs):
     """
-    Retorna uma lista de fascículos considerando os parâmetros ``jid`` e ``kwargs``,
+    Retorna uma lista de números considerando os parâmetros ``jid`` e ``kwargs``,
     e ordenado por parâmetro ``order_by``.
 
     - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
@@ -514,7 +514,7 @@ def get_issues_by_jid(jid, **kwargs):
 
 def get_issues_for_grid_by_jid(jid, **kwargs):
     """
-    Retorna uma lista de fascículos considerando os parâmetros ``jid`` e ``kwargs``,
+    Retorna uma lista de números considerando os parâmetros ``jid`` e ``kwargs``,
     e ordenado por parâmetro ``order_by``.
 
     - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
@@ -547,7 +547,7 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
 
         key_year = str(issue.year)
 
-        # Verificando se é um volume de fascículo e criando um dicionário auxiliar
+        # Verificando se é um volume de número e criando um dicionário auxiliar
         if issue.type == 'volume_issue':
             volume_issue.setdefault(issue.volume, {})
             volume_issue[issue.volume]['issue'] = issue
@@ -558,21 +558,21 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
         result_dict.setdefault(key_year, OrderedDict())
         result_dict[key_year].setdefault(key_volume, []).append(issue)
 
-    # A lista de fascículos deve ter mais do que 1 item para que possamos tem
+    # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
         previous_issue = issues[1]
     else:
         previous_issue = None
 
-    # o primiero item da lista é o último fascículo.
+    # o primiero item da lista é o último número.
     # condicional para verificar se issues contém itens
     last_issue = issues[0] if issues else None
 
     return {
         'ahead': issue_ahead,  # ahead of print
-        'ordered_for_grid': result_dict,  # lista de fascículos odenadas para a grade
-        'volume_issue': volume_issue,  # lista de volumes que são fascículos
+        'ordered_for_grid': result_dict,  # lista de números odenadas para a grade
+        'volume_issue': volume_issue,  # lista de volumes que são números
         'previous_issue': previous_issue,
         'last_issue': last_issue
     }
@@ -580,9 +580,9 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
 
 def get_issue_by_iid(iid, **kwargs):
     """
-    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
+    Retorna um número considerando os parâmetros ``iid`` e ``kwargs``.
 
-    - ``iid``: string, chave primaria do fascículo (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
+    - ``iid``: string, chave primaria do número (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
     - ``kwargs``: parâmetros de filtragem.
     """
 
@@ -594,10 +594,10 @@ def get_issue_by_iid(iid, **kwargs):
 
 def get_issues_by_iid(iids):
     """
-    Retorna um dicionário de fascículos aonde o atributo ``iid`` de cada um deles
+    Retorna um dicionário de números aonde o atributo ``iid`` de cada um deles
     pertence a lista do parâmetro: ``iids``
 
-    - ``iids``: lista de iids de fascículos a serem filtrados.
+    - ``iids``: lista de iids de números a serem filtrados.
 
     Em caso de não existir itens retorna {}.
 
@@ -616,9 +616,9 @@ def get_issues_by_iid(iids):
 
 def set_issue_is_public_bulk(iids, is_public=True, reason=''):
     """
-    Atualiza uma lista de fascículos como público ou não público.
+    Atualiza uma lista de números como público ou não público.
 
-    - ``iids``: lista de iids de fascículos a serem atualizados, caso seja,
+    - ``iids``: lista de iids de números a serem atualizados, caso seja,
     lista vazia retorna um ValueError.
     - ``is_public``: boolean, filtra por público e não público.
     - ``reason``: string, indica o motivo pelo qual o issue é despublicado.
@@ -635,7 +635,7 @@ def set_issue_is_public_bulk(iids, is_public=True, reason=''):
 
 def get_issue_by_acron_issue(jacron, year, issue_label):
     """
-    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
+    Retorna um número considerando os parâmetros ``iid`` e ``kwargs``.
 
     - ``jacron``: string, contendo o acrônimo do periódico;
     - ``issue``: string, label do issue.
@@ -651,9 +651,9 @@ def get_issue_by_acron_issue(jacron, year, issue_label):
 
 def get_issue_by_pid(pid):
     """
-    Retorna um fascículo considerando o parâmetro ``pid``.
+    Retorna um número considerando o parâmetro ``pid``.
 
-    - ``pid``: string, contendo o PID do fascículo.
+    - ``pid``: string, contendo o PID do número.
     """
 
     if not pid:
@@ -664,7 +664,7 @@ def get_issue_by_pid(pid):
 
 def get_issue_by_url_seg(url_seg, url_seg_issue):
     """
-    Retorna um fascículo considerando os parâmetros ``iid`` e ``kwargs``.
+    Retorna um número considerando os parâmetros ``iid`` e ``kwargs``.
 
     - ``url_seg``: string, contém o seguimento da URL do Journal;
     - ``url_seg_issue``: string, contém o seguimento da URL do Issue,.
@@ -713,7 +713,7 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     Retorna um artigo considerando os parâmetros ``iid``, ``url_seg_article`` e
     ``kwargs``.
 
-    - ``iid``: string, id do fascículo;
+    - ``iid``: string, id do número;
     - ``url_seg_article``: string, segmento do url do artigo;
     - ``kwargs``: parâmetros de filtragem.
     """
@@ -769,7 +769,7 @@ def get_articles_by_iid(iid, **kwargs):
     Retorna uma lista de artigos aonde o atributo ``iid`` de cada um deles
     é igual ao parâmetro: ``iid`` ordenado pelo atributo order.
 
-    - ``iid``: chave primaria de fascículo para escolher os artigos.
+    - ``iid``: chave primaria de número para escolher os artigos.
     - ``kwargs``: parâmetros de filtragem.
 
     Em caso de não existir itens retorna {}.
