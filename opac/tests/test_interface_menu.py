@@ -72,7 +72,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor5, response_data)
                 expected_anchor6 = """<li>\n            <a target="_blank" href="%s/?collection=%s">\n              %s\n            </a>\n          </li>\n          <li>""" % (current_app.config['METRICS_URL'], current_app.config['OPAC_COLLECTION'], __('M\xe9tricas'))
                 self.assertIn(expected_anchor6, response_data)
-                expected_anchor7 = """<a href="%s" class="onlineSubmission"><span class="glyphBtn infoMenu"></span>%s %s</a>""" % (url_for('.about_collection'), __('Sobre o SciELO'), collection.name)
+                expected_anchor7 = """<a href="%s" class="onlineSubmission">\n      <span class="glyphBtn infoMenu"></span>\n      %s %s\n    </a>""" % (url_for('.about_collection'), __('Sobre o SciELO'), collection.name)
                 self.assertIn(expected_anchor7, response_data)
                 expected_anchor8 = """<li>\n            <a href="/collection/about/">\n              %s\n            </a>\n          </li>""" % __('Contatos')
                 self.assertIn(expected_anchor8, response_data)
