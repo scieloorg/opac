@@ -12,7 +12,7 @@ Flask-Security==3.0.0
 Flask-Login==0.4.0
 Flask-Script==2.0.5
 Flask-Mail==0.9.1
-Pillow==4.2.0
+Pillow==4.2.1
 Flask-BabelEx==0.9.3
 Flask-Migrate==2.0.4
 unicodecsv==0.14.1
