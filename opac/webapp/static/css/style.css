@@ -84,3 +84,14 @@
     opacity: 0.5;
     margin-top: 0;
 }
+
+/* FIX BANDEIRAS DE IDIOMAS */
+.article .journalMenu .language a,
+.journal .journalMenu .language a {
+    margin-left: 15px;
+}
+.article .journalMenu .language a:last-child,
+.journal .journalMenu .language a:last-child {
+    position: relative;
+    top: 0;
+}
