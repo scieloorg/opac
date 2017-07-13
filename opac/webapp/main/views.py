@@ -528,10 +528,11 @@ def issue_toc(url_seg, url_seg_issue):
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
-    issue_legend = descriptive_short_format(
-        title=issue.journal.title, short_title=issue.journal.short_title,
-        pubdate=str(issue.year), volume=issue.volume, number=issue.number,
-        suppl=issue.suppl_text, language=language[:2].lower())
+    if issue and issue.journal:
+        issue_legend = descriptive_short_format(
+            title=issue.journal.title, short_title=issue.journal.short_title,
+            pubdate=str(issue.year), volume=issue.volume, number=issue.number,
+            suppl=issue.suppl_text, language=language[:2].lower())
 
     if not issue:
         abort(404, _('Número não encontrado'))
