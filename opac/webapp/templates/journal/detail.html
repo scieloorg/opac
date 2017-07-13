@@ -77,14 +77,14 @@
         {# last issue #}
         {% if journal.last_issue %}
           <div class="block lastIssue">
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-12 col-sm-12">
               <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
                 {% if journal.last_issue.cover_url %}
                   <img src="{{ latest_issue.cover_url }}" class="image" alt="{% trans %}Capa do número mais recente{% endtrans %}" /> <!-- a imagem é opcional -->
                 {% endif %}
                 <span class="text">
                   <small>{% trans %}Número mais recente{% endtrans %}</small>
-                    <h2>{{ journal.legend_last_issue }}</h2>
+                  <h2>{{ latest_issue_legend|default('--', True) }}</h2>
                 </span>
               </a>
             </div>

@@ -35,39 +35,50 @@
                         {% if content %}
                           {{ content|safe }}
                         {% else %}
-                          {% trans %} Conteúdo não cadastrado {% endtrans %}
+                          {% trans %}Conteúdo não cadastrado{% endtrans %}
                         {% endif %}
                     </div>
+
                     {% if journal.social_networks or journal.logo_url %}
-                    <div class="col-md-4 col-sm-4">
+                      <div class="col-md-4 col-sm-4">
+
                         {% if journal.logo_url %}
                           <a href="#" class="linkLogo">
-                              <img src="{{ journal.logo_url }}" alt="{% trans %}Logo {% endtrans %} {{ journal.title }}">
-                              {% trans %}Clique para ver a logo deste periódico {% endtrans %}
+                            <img src="{{ journal.logo_url }}" alt="{% trans %}Logo{% endtrans %} {{ journal.title }}">
+                            {% trans %}Clique para ver a logo deste periódico{% endtrans %}
                           </a>
                         {% endif %}
 
                         {% if journal.social_networks %}
                           <div class="linkSocial">
-                              <small>{% trans %}Siga este periódico nas redes sociais{% endtrans %}</small>
-                              <ul>
+                            <small>{% trans %}Siga este periódico nas redes sociais{% endtrans %}</small>
+                            <ul>
+                              {% for sn in journal.social_networks %}
+                                {% if sn.account %}
                                   <li>
-                                      <a href=""><span class="glyphBtn bigFacebook"></span> FACEBOOK</a>
+                                    <a href="{{ sn.account }}">
+                                      {% with network = sn.network|lower  %}
+                                        {% if network == 'twitter' %}
+                                           <span class="glyphBtn bigTwitter"></span> FACEBOOK
+                                        {% elif network == 'facebook' %}
+                                           <span class="glyphBtn bigFacebook"></span> TWITTER
+                                        {% elif network == 'google+' or network == 'google' %}
+                                           <span class="glyphBtn bigGooglePlus"></span> GOOGLE+
+                                        {% else %}
+                                           <span class="glyphBtn"></span> {{ network|upper }}
+                                        {% endif %}
+                                      {% endwith %}
+                                    </a>
                                   </li>
-                                  <li>
-                                      <a href=""><span class="glyphBtn bigTwitter"></span> TWITTER</a>
-                                  </li>
-                                  <li>
-                                      <a href=""><span class="glyphBtn bigGooglePlus"></span> GOOGLE+</a>
-                                  </li>
-                              </ul>
+                                {% endif %}
+                              {% endfor %}
+                            </ul>
                           </div>
                         {% endif %}
-                    </div>
+                      </div>
                     {% endif %}
                 </div>
             </div>
-
             <div class="clearfix"></div>
         </div>
     </section>

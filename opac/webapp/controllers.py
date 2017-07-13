@@ -13,7 +13,7 @@ import xlsxwriter
 import tweepy
 
 from collections import OrderedDict
-from legendarium.formatter import descriptive_short_format
+from legendarium.formatter import descriptive_very_short_format
 from slugify import slugify
 from opac_schema.v1.models import (
     Journal,
@@ -163,9 +163,11 @@ def get_journal_json_data(journal, language='pt'):
         "is_active": true,
         "issues_count": 64,
         "last_issue": {
+            "legend": "LEGENDA BIBLIOGRAFICA DO ISSUE",
             "number": "123",
             "volume": 456,
-            "year": 2016
+            "year": 2016,
+            "url_segment": "/foo"
         },
         "links": {
             "about": "#",
@@ -195,17 +197,12 @@ def get_journal_json_data(journal, language='pt'):
     }
 
     if journal.last_issue:
-        last_issue_legend = descriptive_short_format(
-            title='',           # não queremos o nome do periódico
-            short_title='',     # não queremos o nome do periódico
+        last_issue_legend = descriptive_very_short_format(
             pubdate=str(journal.last_issue.year),
             volume=journal.last_issue.volume,
             number=journal.last_issue.number,
             suppl=journal.last_issue.suppl_text,
             language=language)
-
-        if last_issue_legend.startswith(', '):
-            last_issue_legend = last_issue_legend.replace(', ', '', 1)  # removemos a primeira vírgula
 
         j_data['last_issue'] = {
             'legend': last_issue_legend,

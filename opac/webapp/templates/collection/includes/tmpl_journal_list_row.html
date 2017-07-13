@@ -32,15 +32,11 @@
       <a href="/<%- journal.last_issue.url_segment %>"
         title="{% trans %}Número mais recente{% endtrans %}">
         {% trans %}Último{% endtrans %}:
-
-        {# <span class="journalLastVolume"><em>{% trans %}Volume{% endtrans %}</em> <%- journal.last_issue.volume %></span> #}
-        {# <span class="journalLastSuppl"><em>{% trans %}Nº{% endtrans %} <%- journal.last_issue.number %></em></span> - #}
-        {# <span class="journalLastPubDate"><%- journal.last_issue.year %></span> #}
         <span class="last-issue-legend"><%- journal.last_issue.legend %></span>
       </a>
     <% } %>
 
-    <% if (!journal.is_active) { %>({% trans %}inativo{% endtrans %})<% } %>
+    <% if (!journal.is_active) { %>({% trans %}descontinuado{% endtrans %})<% } %>
 
     <% if (journal.previous_journal_ref) { %>
       <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>

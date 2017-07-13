@@ -33,7 +33,15 @@
               {% trans %}Número atual{% endtrans %}:
             </li>
             <li>
-                <strong><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">{{ last_issue.legend }}</a></strong>
+                <strong>
+                  <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
+                    {% if latest_issue_legend %}
+                      {{ latest_issue_legend|default('--', True) }}
+                    {% elif issue_legend %}
+                      {{ issue_legend|default('--', True) }}
+                    {% endif %}
+                  </a>
+                </strong>
             </li>
           </ul>
         </li>

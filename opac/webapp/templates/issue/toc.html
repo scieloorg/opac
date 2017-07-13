@@ -63,7 +63,7 @@
               <div class="block summary collapseContent">
                   <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
                   <div class="collapse-content issueIndent">
-                    <strong>{{ issue.legend }}</strong>
+                    <strong>{{ issue_legend|default('--', True) }}</strong>
                     <ul>
 
                       {% if sections %}

@@ -9,6 +9,7 @@ from flask_babelex import gettext as _
 from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response, send_from_directory, g
 from werkzeug.contrib.atom import AtomFeed
 from urllib.parse import urljoin
+from legendarium.formatter import descriptive_short_format
 
 from . import main
 from webapp import babel
@@ -299,6 +300,16 @@ def journal_detail(url_seg):
         sections = []
         recent_articles = []
 
+    if len(issues) > 0:
+        latest_issue = issues[0]
+        latest_issue_legend = descriptive_short_format(
+            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+            suppl=latest_issue.suppl_text, language=language[:2].lower())
+    else:
+        latest_issue = None
+        latest_issue_legend = ''
+
     context = {
         'next_issue': None,
         'previous_issue': previous_issue,
@@ -307,7 +318,8 @@ def journal_detail(url_seg):
         'recent_articles': recent_articles,
         # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None,
+        'last_issue': latest_issue,
+        'latest_issue_legend': latest_issue_legend,
         'sections': sections if sections else None,
         'news': news
     }
@@ -477,14 +489,27 @@ def issue_grid(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    # idioma da sessão
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang)
+
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
     issues_data = controllers.get_issues_for_grid_by_jid(journal.id, is_public=True)
+    latest_issue = issues_data['last_issue']
+    if latest_issue:
+        latest_issue_legend = descriptive_short_format(
+            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+            suppl=latest_issue.suppl_text, language=language[:2].lower())
+    else:
+        latest_issue_legend = None
 
     context = {
         'journal': journal,
         'next_issue': None,
         'previous_issue': issues_data['previous_issue'],
         'last_issue': issues_data['last_issue'],
+        'latest_issue_legend': latest_issue_legend,
         'volume_issue': issues_data['volume_issue'],
         'ahead': issues_data['ahead'],
         'result_dict': issues_data['ordered_for_grid'],
@@ -495,10 +520,18 @@ def issue_grid(url_seg):
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/')
 def issue_toc(url_seg, url_seg_issue):
-    # default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    # idioma da sessão
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang)
+
     section_filter = request.args.get('section', '', type=str)
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
+
+    issue_legend = descriptive_short_format(
+        title=issue.journal.title, short_title=issue.journal.short_title,
+        pubdate=str(issue.year), volume=issue.volume, number=issue.number,
+        suppl=issue.suppl_text, language=language[:2].lower())
 
     if not issue:
         abort(404, _('Número não encontrado'))
@@ -540,6 +573,7 @@ def issue_toc(url_seg, url_seg_issue):
         'previous_issue': previous_issue,
         'journal': journal,
         'issue': issue,
+        'issue_legend': issue_legend,
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
