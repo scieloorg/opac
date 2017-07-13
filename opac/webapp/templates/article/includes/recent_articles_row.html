@@ -8,7 +8,7 @@
       {% endif %}
 
       <div class="info">
-        {{ article.issue.legend }}
+        {{ latest_issue_legend|default('--', True) }}
         <br>
         <strong>{% trans%}continue lendo{% endtrans %} &raquo;</strong>
       </div>
