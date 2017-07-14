@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0;url={{ pdf_path }}"> {# path usando para obter o pdf TODO: ajustar #}
+    <meta name="DOI" content="{{ doi }}">
+    <meta name="PDF_URL" content="/pdf/{{ pdf_path }}">
+    <meta name="LANG" content="{{ lang }}">
+    <title>Scielo - EPDF: {{ doi }}</title>
+</head>
+<body>
+    <script src="http://content.readcube.com/scielo/epdf.js" type="text/javascript"></script>
+</body>
+</html>

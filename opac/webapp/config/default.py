@@ -92,6 +92,9 @@ import os
         - OPAC_WTF_CSRF_ENABLED: ativa/desativa o recurso de CSRF (default: True)
         - OPAC_WTF_CSRF_SECRET_KEY: chave para segurança nos formulários WTF. (default: JGvNWiwBIq2Iig89LWbV)
 
+      - ReadCube:
+        - READCUBE_ENABLED: ativa/desativa a exibição do link para o ReadCube, se sim definir como: 'True' (default: 'False')
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -270,3 +273,4 @@ OPAC_WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True') == 'True'
 
 # CSRF secret
 OPAC_WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'JGvNWiwBIq2Iig89LWbV')
+READCUBE_ENABLED = os.environ.get('OPAC_READCUBE_ENABLED', 'False') == 'True'
