@@ -14,7 +14,11 @@
                 </a>
 
                 {# Anterior #}
-                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
+                {% if is_pdf_page -%}
+                  <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
+                {%- else -%}
+                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
+                {%- endif %}
                     &laquo; {% trans %}artigo anterior{% endtrans %}
                 </a>
 
@@ -24,7 +28,11 @@
                 </a>
 
                 {# Próximo #}
-                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                {%- if is_pdf_page -%}
+                  <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                {%- else -%}
+                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                {%- endif %}
                     {% trans %}artigo seguinte{% endtrans %} &raquo;
                 </a>
 

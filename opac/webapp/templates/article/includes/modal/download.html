@@ -17,7 +17,7 @@
             {% if article and article.pdfs %}
               {% for pdf in article.pdfs  %}
                 <li>
-                  <a href="{{ pdf.url }}">
+                  <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment) }}">
                     {% if pdf.lang == 'es' %}
                       {% trans %}Espanhol{% endtrans %}
                     {% elif pdf.lang == 'en' %}

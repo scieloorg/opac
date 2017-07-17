@@ -52,5 +52,8 @@ services:
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
             - OPAC_SECRET_KEY=s3kr3tk3y
+            - OPAC_SSM_SCHEME=http
+            - OPAC_SSM_DOMAIN=172.19.0.1
+            - OPAC_SSM_PORT=8001
         stdin_open: True
         tty: true

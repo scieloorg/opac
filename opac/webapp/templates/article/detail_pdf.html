@@ -1,0 +1,29 @@
+{% extends "article/base.html" %}
+
+{% block main_content %}
+
+  {% with is_pdf_page=True  %}
+    {% include "article/includes/levelMenu.html" %}
+  {% endwith %}
+
+  <section class="articleCtt">
+    <div class="container">
+      <iframe id='pdf-iframe'
+          src="{{ url_for('main.article_ssm_content_raw') }}?resource_ssm_path={{ pdf_ssm_path }}"
+          width="100%"
+          height="1000px"
+          seamless="seamless"
+          border="0"
+          frameBorder="0"
+          scrolling="no"></iframe>
+    </div>
+  </section>
+
+  {% with is_pdf_page=True  %}
+    {% include "article/includes/floating_menu.html" %}
+  {% endwith %}
+
+  {% include "journal/includes/contact_footer.html" %}
+
+{% endblock %}
+
