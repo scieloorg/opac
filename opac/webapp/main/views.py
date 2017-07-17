@@ -3,6 +3,7 @@
 import logging
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
@@ -726,6 +727,88 @@ def article_epdf():
             'lang': lang,
         }
         return render_template("article/epdf.html", **context)
+
+
+@main.route('/article/ssm/content/raw/')
+def article_ssm_content_raw():
+    resource_ssm_path = request.args.get('resource_ssm_path', None)
+    if not resource_ssm_path:
+        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+    else:
+        resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_path
+        ssm_response = requests.get(resource_ssm_full_url.strip())
+        if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
+            return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
+        else:
+            abort(404, _('Recurso não encontrado'))
+
+
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/pdf/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(.*)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/pdf/')
+def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
+
+    if not issue:
+        abort(404, _('Issue não encontrado'))
+
+    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
+
+    if not article:
+        abort(404, _('Artigo não encontrado'))
+
+    if lang_code not in article.languages:
+        # Se não tem idioma na URL mostra o artigo no idioma original.
+        lang_code = article.original_language
+
+    if not article.is_public:
+        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+
+    if not article.issue.is_public:
+        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+    if not article.journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+    journal = article.journal
+    issue = article.issue
+
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
+
+    previous_article = utils.get_prev_article(article_list, article)
+    next_article = utils.get_next_article(article_list, article)
+
+    pdf_ssm_path = None
+
+    if article.pdfs:
+        try:
+            pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == lang_code]
+
+            if len(pdf_url) != 1:
+                abort(404, _('PDF do Artigo não encontrado'))
+            else:
+                pdf_url = pdf_url[0]['url']
+
+            pdf_url_parsed = urlparse(pdf_url)
+            pdf_ssm_path = pdf_url_parsed.path
+
+        except Exception:
+            abort(404, _('PDF do Artigo não encontrado'))
+
+    context = {
+        'next_article': next_article,
+        'previous_article': previous_article,
+        'article': article,
+        'journal': journal,
+        'issue': issue,
+        'pdf_ssm_path': pdf_ssm_path,
+        'pdfs': article.pdfs,
+        'article_lang': lang_code
+    }
+
+    return render_template("article/detail_pdf.html", **context)
+
 
 # ##################################Search#######################################
 

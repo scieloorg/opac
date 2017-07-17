@@ -95,6 +95,11 @@ import os
       - ReadCube:
         - READCUBE_ENABLED: ativa/desativa a exibição do link para o ReadCube, se sim definir como: 'True' (default: 'False')
 
+      - Conexão com SSM:
+        - OPAC_SSM_SCHEME: Protocolo de conexão com SSM. Opções: 'http' ou 'https' - (default: 'https')
+        - OPAC_SSM_DOMAIN: Dominio/FQDN do conexão com SSM. Ex: 'homolog.ssm.scielo.org - (default: 'ssm.scielo.org')
+        - OPAC_SSM_PORT: Porta de conexão com o SSM. Ex. '8000'. (default: '80')
+        - OPAC_SSM_MEDIA_PATH: Path da pasta media do assests no SSM. Ex. '/media/assets/' -  (default: '/media/assets/')
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -274,3 +279,22 @@ OPAC_WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True') == 'True'
 # CSRF secret
 OPAC_WTF_CSRF_SECRET_KEY = os.environ.get('WTF_CSRF_SECRET_KEY', 'JGvNWiwBIq2Iig89LWbV')
 READCUBE_ENABLED = os.environ.get('OPAC_READCUBE_ENABLED', 'False') == 'True'
+
+# Conf de conexão com o SSM (pdfs e imagens)
+SSM_SCHEME = os.environ.get('OPAC_SSM_SCHEME', 'https')
+SSM_DOMAIN = os.environ.get('OPAC_SSM_DOMAIN', 'ssm.sciel.org')
+SSM_PORT = os.environ.get('OPAC_SSM_PORT', '80')
+SSM_MEDIA_PATH = os.environ.get('OPAC_SSM_MEDIA_PATH', '/media/assets/')
+
+# SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/'
+SSM_BASE_URI = "{scheme}://{domain}:{port}".format(
+  scheme=SSM_SCHEME,
+  domain=SSM_DOMAIN,
+  port=SSM_PORT)
+
+# SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/media/assets/'
+SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
+  scheme=SSM_SCHEME,
+  domain=SSM_DOMAIN,
+  port=SSM_PORT,
+  path=SSM_MEDIA_PATH)

@@ -15,11 +15,14 @@
           <span class="sci-ico-download glyphFloatMenu"></span>
         </a>
       </li>
-      <li>
-        <a class="fm-button-child" data-fm-label="{% trans %}Figuras e tabelas{% endtrans %}" data-toggle="modal" data-target="#ModalTablesFigures">
-          <span class="sci-ico-figures glyphFloatMenu"></span>
-        </a>
-      </li>
+      {% if not is_pdf_page %}
+        {# excluimos este item se é a página do PDF #}
+        <li>
+          <a class="fm-button-child" data-fm-label="{% trans %}Figuras e tabelas{% endtrans %}" data-toggle="modal" data-target="#ModalTablesFigures">
+            <span class="sci-ico-figures glyphFloatMenu"></span>
+          </a>
+        </li>
+      {% endif %}
       <li>
         <a class="fm-button-child" data-fm-label="{% trans %}Versões e traduções{% endtrans %}" data-toggle="modal" data-target="#ModalVersionsTranslations">
           <span class="sci-ico-translation glyphFloatMenu"></span>
