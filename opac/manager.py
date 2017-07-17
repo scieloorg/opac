@@ -296,8 +296,12 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
             for file in files:
                 file_path = os.path.join(journal_dir, file)
 
-                fp = open_file(file_path, 'r', encoding='iso-8859-1')
-                content += fp.read()
+                try:
+                    fp = open_file(file_path, 'r', encoding='iso-8859-1')
+                except IOError as e:
+                    print(e)
+                else:
+                    content += fp.read()
 
                 images_list = extract_images(content)
 
@@ -308,7 +312,7 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
                     try:
                         # Verifica se a imagem existe
                         open_file(image_path, mode='r')
-                    except Exception as e:
+                    except IOError as e:
                         print(e)
                     else:
                         img = create_image(image_path, image_name, thumbnail=True)
