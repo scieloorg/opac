@@ -708,6 +708,25 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     return render_template("article/detail.html", **context)
 
 
+@main.route('/readcube/epdf/')
+@main.route('/readcube/epdf.php')
+def article_epdf():
+    doi = request.args.get('doi', None, type=str)
+    pid = request.args.get('pid', None, type=str)
+    pdf_path = request.args.get('pdf_path', None, type=str)
+    lang = request.args.get('lang', None, type=str)
+
+    if not all([doi, pid, pdf_path, lang]):
+        abort(400, _('Parâmetros insuficientes para obter o EPDF do artigo'))
+    else:
+        context = {
+            'doi': doi,
+            'pid': pid,
+            'pdf_path': pdf_path,
+            'lang': lang,
+        }
+        return render_template("article/epdf.html", **context)
+
 # ##################################Search#######################################
 
 
