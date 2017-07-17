@@ -30,7 +30,7 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image  # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file  # noqa
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
@@ -249,6 +249,75 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
 
     else:
         print("Nenhuma coleção encontrada!")
+
+
+@manager.command
+def populate_journal_pages(directory=app.config['PAGE_PATH']):
+    """
+    Esse comando cadastra as páginas secundárias dos periódicos localizado em
+    data/pages.
+
+    As páginas dos periódico SciELO contém a seguinte estrutura:
+
+    - einstruc.htm
+    - eaboutj.htm
+    - eedboard.htm
+    - esubscrp.htm
+
+    Sendo que o prefixo "e" indica Espanhol, prefixo "i" Inglês e o prefixo "p"
+    português.
+
+    OBS.: A extensão dos html é htm.
+
+    """
+    acron_list = [journal.acronym for journal in Journal.objects.all()]
+
+    file_names = {'en': ['iinstruc.htm',
+                         'iaboutj.htm',
+                         'iedboard.htm',
+                         'isubscrp.htm'],
+                  'pt_BR': ['pinstruc.htm',
+                            'paboutj.htm',
+                            'pedboard.htm',
+                            'psubscrp.htm'],
+                  'es': ['einstruc.htm',
+                         'eaboutj.htm',
+                         'eedboard.htm',
+                         'esubscrp.htm'],
+                  }
+
+    for acron in acron_list:
+        content = ''
+        journal_dir = os.path.join(directory, acron)
+
+        for lang, files in file_names.items():
+            print("Cadastrando as páginas do periódico com acrônimo: %s idioma: %s" % (acron, lang))
+
+            for file in files:
+                file_path = os.path.join(journal_dir, file)
+
+                fp = open_file(file_path, 'r', encoding='iso-8859-1')
+                content += fp.read()
+
+                images_list = extract_images(content)
+
+                for image in images_list:
+                    image_name = '%s_%s' % (acron, os.path.basename(image))
+                    image_path = os.path.join(journal_dir, os.path.basename(image))
+
+                    try:
+                        # Verifica se a imagem existe
+                        open_file(image_path, mode='r')
+                    except Exception as e:
+                        print(e)
+                    else:
+                        img = create_image(image_path, image_name, thumbnail=True)
+                        content = content.replace(image, img.get_absolute_url)
+
+            if content:
+                create_page('Página secundária %s (%s)' % (acron.upper(), lang),
+                            lang, content, acron, 'Página secundária do periódico %s' % acron)
+
 
 if __name__ == '__main__':
     manager.run()

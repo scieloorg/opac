@@ -213,6 +213,7 @@ MEDIA_ROOT = os.environ.get('OPAC_MEDIA_ROOT', DEFAULT_MEDIA_ROOT)
 IMAGE_ROOT = os.path.join(MEDIA_ROOT, 'images')
 FILE_ROOT = os.path.join(MEDIA_ROOT, 'files')
 MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')
+PAGE_PATH = os.path.abspath(os.path.join(PROJECT_PATH, '../../data/pages'))
 
 # extensions
 FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')
