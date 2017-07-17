@@ -42,12 +42,12 @@
                     {% if journal.social_networks or journal.logo_url %}
                       <div class="col-md-4 col-sm-4">
 
-                        {% if journal.logo_url %}
+                        {# {% if journal.logo_url %}
                           <a href="#" class="linkLogo">
                             <img src="{{ journal.logo_url }}" alt="{% trans %}Logo{% endtrans %} {{ journal.title }}">
                             {% trans %}Clique para ver a logo deste periódico{% endtrans %}
                           </a>
-                        {% endif %}
+                        {% endif %} #}
 
                         {% if journal.social_networks %}
                           <div class="linkSocial">
