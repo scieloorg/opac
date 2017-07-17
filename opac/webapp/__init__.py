@@ -1,7 +1,7 @@
 # coding: utf-8
 
-from raven.contrib.flask import Sentry
 import logging
+from raven.contrib.flask import Sentry
 
 from flask import Flask
 from flask_htmlmin import HTMLMIN

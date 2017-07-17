@@ -4,7 +4,7 @@ import os
 import re
 import pytz
 import shutil
-
+from uuid import uuid4
 
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
@@ -13,6 +13,8 @@ from flask import current_app
 from . import models
 import webapp
 import requests
+
+from opac_schema.v1.models import Pages
 
 try:
     from PIL import Image
@@ -37,6 +39,16 @@ def namegen_filename(obj, file_data=None):
     else:
         _, extension = os.path.splitext(file_data.filename)
         return secure_filename('%s%s' % (obj.name, extension))
+
+
+def open_file(file_path, mode='rb', encoding='iso-8859-1'):
+    """
+    Open file as like object(bytes)
+    """
+    try:
+        return open(file_path, mode=mode, encoding=encoding)
+    except IOError:
+        raise
 
 
 def thumbgen_filename(filename):
@@ -246,17 +258,25 @@ def generate_thumbnail(input_filename):
         return image_path
 
 
-def create_image(image_path, filename):
+def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
     """
     Função que cria uma imagem para o modelo Image.
 
     Parâmento image_path caminho absoluto para a imagem.
     Parâmento filename no para o arquivo com extensão.
+    Parâmento thumbnail liga/desliga criação de thumbnail.
+    Parâmento check_if_exists verifica se a image existe considera somente o
+    nome da imagem.
     """
 
     image_root = current_app.config['IMAGE_ROOT']
 
     image_destiation_path = os.path.join(image_root, filename)
+
+    if check_if_exists:
+        img = webapp.dbsql.session.query(models.Image).filter_by(name=filename).first()
+        if img:
+            return img
 
     try:
         shutil.copyfile(image_path, image_destiation_path)
@@ -264,14 +284,35 @@ def create_image(image_path, filename):
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
         print("ERROR: %s" % e)
 
-    generate_thumbnail(image_destiation_path)
+    if thumbnail:
+        generate_thumbnail(image_destiation_path)
 
-    img = models.Image(name=namegen_filename(filename), path='images/' + filename)
+    img = models.Image(name=namegen_filename(filename),
+                       path='images/' + filename)
 
     webapp.dbsql.session.add(img)
     webapp.dbsql.session.commit()
 
     return img
+
+
+def create_page(name, language, content, journal=None, description=None):
+
+    page = Pages(_id=str(uuid4().hex), name=name, language=language,
+                 content=content, journal=journal, description=description)
+
+    page.save()
+
+    return page
+
+
+def extract_images(content):
+    """
+    Return a list of images to be collect from content
+    Try get imgs by href e src tags.
+    """
+
+    return re.findall('src="([^"]+)"', content)
 
 
 def get_resource_url(resource, type, lang):
