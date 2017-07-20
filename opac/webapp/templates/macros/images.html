@@ -33,3 +33,10 @@
     {%- endif -%}
 {%- endmacro %}
 
+{% macro proxy_ssm_resource_url(ssm_url) -%}
+    {%- if ssm_url.startswith('http') and config['SSM_MEDIA_PATH'] in ssm_url -%}
+        {{ config['SSM_MEDIA_PATH'] }}{{ ssm_url.split(config['SSM_MEDIA_PATH'])[1] }}
+    {%- else -%}
+        {{ ssm_url }}
+    {%- endif -%}
+{%- endmacro %}

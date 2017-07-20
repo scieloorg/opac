@@ -27,7 +27,11 @@
           <ul class="dropdown-menu" role="menu">
             <div class="col-md-9 col-sm-8 brandLogo">
               <div class="row">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}"><img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" /></a>
+                <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}">
+                  {% if journal.logo_url %}
+                    <img src="{{ cimages.proxy_ssm_resource_url(journal.logo_url) }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
+                  {% endif %}
+                </a>
               </div>
             </div>
             <div class="col-md-3 col-sm-4 journalMenu">
