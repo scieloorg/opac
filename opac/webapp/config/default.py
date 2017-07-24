@@ -283,8 +283,8 @@ READCUBE_ENABLED = os.environ.get('OPAC_READCUBE_ENABLED', 'False') == 'True'
 
 # Conf de conexão com o SSM (pdfs e imagens)
 SSM_SCHEME = os.environ.get('OPAC_SSM_SCHEME', 'https')
-SSM_DOMAIN = os.environ.get('OPAC_SSM_DOMAIN', 'ssm.sciel.org')
-SSM_PORT = os.environ.get('OPAC_SSM_PORT', '80')
+SSM_DOMAIN = os.environ.get('OPAC_SSM_DOMAIN', 'homolog.ssm.scielo.org')
+SSM_PORT = os.environ.get('OPAC_SSM_PORT', '443')
 SSM_MEDIA_PATH = os.environ.get('OPAC_SSM_MEDIA_PATH', '/media/assets/')
 
 # SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/'

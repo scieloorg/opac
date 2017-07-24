@@ -638,12 +638,12 @@ def get_issue_by_acron_issue(jacron, year, issue_label):
     - ``issue``: string, label do issue.
     """
 
-    jiid = get_journal_by_acron(jacron)
+    journal = get_journal_by_acron(jacron)
 
     if not jacron and year and issue_label:
         raise ValueError(__('Obrigatório um jacron e issue_label.'))
 
-    return Issue.objects.filter(journal=jiid, year=int(year), label=issue_label).first()
+    return Issue.objects.filter(journal=journal, year=int(year), label=issue_label).first()
 
 
 def get_issue_by_pid(pid):
@@ -667,12 +667,12 @@ def get_issue_by_url_seg(url_seg, url_seg_issue):
     - ``url_seg_issue``: string, contém o seguimento da URL do Issue,.
     """
 
-    jiid = get_journal_by_url_seg(url_seg)
+    journal = get_journal_by_url_seg(url_seg)
 
     if not url_seg and url_seg_issue:
         raise ValueError(__('Obrigatório um url_seg e url_seg_issue.'))
 
-    return Issue.objects.filter(journal=jiid, url_segment=url_seg_issue).first()
+    return Issue.objects.filter(journal=journal, url_segment=url_seg_issue).first()
 
 
 # -------- ARTICLE --------
@@ -714,7 +714,6 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     - ``url_seg_article``: string, segmento do url do artigo;
     - ``kwargs``: parâmetros de filtragem.
     """
-
     if not iid and url_seg_article:
         raise ValueError(__('Obrigatório um iid and url_seg_article.'))
 
