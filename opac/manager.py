@@ -259,31 +259,31 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
 
     As páginas dos periódico SciELO contém a seguinte estrutura:
 
-    - einstruc.htm
     - eaboutj.htm
+    - einstruc.htm
     - eedboard.htm
-    - esubscrp.htm
+    - esubscrp.htm (Assinatura)
 
     Sendo que o prefixo "e" indica Espanhol, prefixo "i" Inglês e o prefixo "p"
     português.
 
     OBS.: A extensão dos html é htm.
 
+    Assinatura não esta sendo importada conforme mencionado no tk: https://github.com/scieloorg/opac/issues/630
+
+
     """
     acron_list = [journal.acronym for journal in Journal.objects.all()]
 
-    file_names = {'en': ['iinstruc.htm',
-                         'iaboutj.htm',
-                         'iedboard.htm',
-                         'isubscrp.htm'],
-                  'pt_BR': ['pinstruc.htm',
-                            'paboutj.htm',
-                            'pedboard.htm',
-                            'psubscrp.htm'],
-                  'es': ['einstruc.htm',
-                         'eaboutj.htm',
-                         'eedboard.htm',
-                         'esubscrp.htm'],
+    file_names = {'en': ['iaboutj.htm',
+                         'iinstruc.htm',
+                         'iedboard.htm'],
+                  'pt_BR': ['paboutj.htm',
+                            'pinstruc.htm',
+                            'pedboard.htm'],
+                  'es': ['eaboutj.htm',
+                         'einstruc.htm',
+                         'eedboard.htm'],
                   }
 
     for acron in acron_list:
