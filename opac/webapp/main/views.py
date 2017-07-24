@@ -347,11 +347,9 @@ def journal_feed(url_seg):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(last_issue))
 
-    # ######### TODO: Revisar/Melhorar/Consertar #########
-    try:
-        feed_language = session['lang'][:2].lower()
-    except Exception:
-        feed_language = 'pt'
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    feed_language = session.get('lang', default_lang)
+    feed_language = feed_language[:2].lower()
 
     for article in articles:
 
@@ -360,7 +358,7 @@ def journal_feed(url_seg):
         if feed_language not in article.languages:
             article_lang = article.original_language
 
-        feed.add(article.title or 'NO TITLE',
+        feed.add(article.title or _('Artigo sem título'),
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
@@ -680,8 +678,19 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         try:
             html_url = [html for html in article.htmls if html['lang'] == lang_code]
 
+            if len(html_url) != 1:
+                abort(404, _('HTML do Artigo não encontrado'))
+            else:
+                html_url = html_url[0]['url']
+
+            if html_url.startswith('http'):  # http:// ou https://
+                html_url_parsed = urlparse(html_url)
+                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url_parsed.path
+            else:
+                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url
+
             # Obtemos o html do SSM
-            result = requests.get(html_url[0]['url'])
+            result = requests.get(html_full_ssm_url)
 
             if result.status_code == 200 and len(result.content) > 0:
 
@@ -730,18 +739,30 @@ def article_epdf():
         return render_template("article/epdf.html", **context)
 
 
+def get_content_from_ssm(resource_ssm_media_path):
+    resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
+    ssm_response = requests.get(resource_ssm_full_url.strip())
+    if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
+        return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
+    else:
+        abort(404, _('Recurso não encontrado'))
+
+
+@main.route('/media/assets/<regex("(.*)"):relative_media_path>')
+def media_assets_proxy(relative_media_path):
+    resource_ssm_path = '{ssm_media_path}{resource_path}'.format(
+        ssm_media_path=current_app.config['SSM_MEDIA_PATH'],
+        resource_path=relative_media_path)
+    return get_content_from_ssm(resource_ssm_path)
+
+
 @main.route('/article/ssm/content/raw/')
 def article_ssm_content_raw():
     resource_ssm_path = request.args.get('resource_ssm_path', None)
     if not resource_ssm_path:
         raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
     else:
-        resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_path
-        ssm_response = requests.get(resource_ssm_full_url.strip())
-        if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
-            return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
-        else:
-            abort(404, _('Recurso não encontrado'))
+        return get_content_from_ssm(resource_ssm_path)
 
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<string:url_seg_article>/pdf/')

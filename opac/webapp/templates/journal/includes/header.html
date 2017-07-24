@@ -23,7 +23,10 @@
         <div class="row">
           {% if journal.logo_url %}
             <div class="col-md-3 hidden-sm">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}"><img src="{{ journal.logo_url or '' }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" /></a>
+              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}">
+                  <img src="{{ cimages.proxy_ssm_resource_url(journal.logo_url) }}"
+                       class="image" alt="Logomarca do periódico: {{ journal.title }}" />
+              </a>
             </div>
           {% else %}
             <div class="col-md-1 hidden-sm">
