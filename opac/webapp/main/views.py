@@ -833,6 +833,49 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     return render_template("article/detail_pdf.html", **context)
 
 
+@main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')
+def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang) or default_lang
+    pdf_filename = '%s.pdf' % pdf_filename
+
+    journal = controllers.get_journal_by_acron(journal_acron)
+
+    if not journal:
+        abort(404, _('Periódico não encontrado'))
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    # issue = Issues.objects.filter(label=issue_info, journal=journal).first()
+    issue = controllers.get_issue_by_journal_and_label(issue_label=issue_info, journal=journal)
+
+    if not issue:
+        abort(404, _('Número não encontrado'))
+
+    if not issue.is_public:
+        abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
+
+    pdf_lang = language
+
+    # procuramos entre os artigos, qual tem um pdf nesse idioma com esse filename
+    article_match = None
+    for article in controllers.get_articles_by_iid(iid=issue.iid):
+        if article.pdfs:
+            for pdf in article.pdfs:
+                if pdf['url'].endswith(pdf_filename):
+                    article_match = article
+                    pdf_lang = pdf['lang']
+                    break
+
+    if article_match is None:
+        abort(404, _('PDF do artigo não foi encontrado'))
+    else:
+        return article_detail_pdf(
+            url_seg=journal.url_segment,
+            url_seg_issue=issue.url_segment,
+            url_seg_article=article_match.url_segment, lang_code=pdf_lang)
+
 # ##################################Search#######################################
 
 
