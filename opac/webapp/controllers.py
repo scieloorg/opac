@@ -675,14 +675,14 @@ def get_issue_by_url_seg(url_seg, url_seg_issue):
     return Issue.objects.filter(journal=journal, url_segment=url_seg_issue).first()
 
 
-def get_issue_by_journal_and_label(issue_label, journal):
-    if not issue_label:
-        raise ValueError(__('Obrigatório um issue_label.'))
+def get_issue_by_journal_and_assets_code(assets_code, journal):
+    if not assets_code:
+        raise ValueError(__('Obrigatório um assets_code.'))
 
     if not journal:
         raise ValueError(__('Obrigatório um journal.'))
 
-    return Issue.objects.filter(label__icontains=issue_label, journal=journal).first()
+    return Issue.objects.filter(assets_code=assets_code, journal=journal).first()
 
 
 # -------- ARTICLE --------

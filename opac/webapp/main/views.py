@@ -848,7 +848,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # issue = Issues.objects.filter(label=issue_info, journal=journal).first()
-    issue = controllers.get_issue_by_journal_and_label(issue_label=issue_info, journal=journal)
+    issue = controllers.get_issue_by_journal_and_assets_code(assets_code=issue_info, journal=journal)
 
     if not issue:
         abort(404, _('Número não encontrado'))
