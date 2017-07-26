@@ -847,7 +847,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    # issue = Issues.objects.filter(label=issue_info, journal=journal).first()
+    # procuramos o issue filtrando pelo campo: assets_code e o journal
     issue = controllers.get_issue_by_journal_and_assets_code(assets_code=issue_info, journal=journal)
 
     if not issue:
