@@ -17,11 +17,11 @@ Flask-BabelEx==0.9.3
 Flask-Migrate==2.0.4
 unicodecsv==0.14.1
 feedparser==5.2.1
-legendarium==2.0.0
+legendarium==2.0.2
 -e git+https://git@github.com/scieloorg/opac_schema@v2.36#egg=opac_schema
 Flask-HTMLmin==1.2.1
 python-slugify==1.2.4
-requests==2.18.1
+requests==2.18.2
 gunicorn==19.7.1
 xlsxwriter==0.9.8
 tweepy==3.5.0
