@@ -276,21 +276,21 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
     acron_list = [journal.acronym for journal in Journal.objects.all()]
 
     file_names = {'en': ['iaboutj.htm',
-                         'iedboard.htm',
-                         'iinstruc.htm'],
+                         'iinstruc.htm',
+                         'iedboard.htm'],
                   'pt_BR': ['paboutj.htm',
-                            'pedboard.htm',
-                            'pinstruc.htm'],
+                            'pinstruc.htm',
+                            'pedboard.htm'],
                   'es': ['eaboutj.htm',
-                         'eedboard.htm',
-                         'einstruc.htm'],
+                         'einstruc.htm',
+                         'eedboard.htm'],
                   }
 
     for acron in acron_list:
+        content = ''
         journal_dir = os.path.join(directory, acron)
 
         for lang, files in file_names.items():
-            content = ''
             print("Cadastrando as páginas do periódico com acrônimo: %s idioma: %s" % (acron, lang))
 
             for file in files:

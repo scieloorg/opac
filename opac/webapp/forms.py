@@ -26,4 +26,4 @@ class EmailShareForm(FlaskForm):
                 match = regex.match(email or '')
 
                 if not match:
-                    raise ValidationError(_('Endereço de e-mail inválido.'))
+                    raise ValidationError(_('Invalid email address.'))

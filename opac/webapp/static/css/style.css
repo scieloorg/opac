@@ -78,6 +78,13 @@
     color: #00314c;
 }
 
+.journal img.openAccessIcon {
+    width: 13px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+    margin-top: 0;
+}
+
 /* FIX BANDEIRAS DE IDIOMAS */
 .article .journalMenu .language a,
 .journal .journalMenu .language a {
