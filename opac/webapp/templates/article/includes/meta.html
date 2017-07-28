@@ -67,3 +67,27 @@
 {% if article.abstract -%}
     <meta name="citation_abstract" content="{{ article.abstract|escape }}"></meta>
 {% endif -%}
+
+{% if article.type -%}
+    <meta name="citation_article_type" content="{{ article.type }}"></meta>
+{% endif -%}
+
+{% if article.publication_date -%}
+    <meta name="citation_publication_date" content="{{ article.publication_date }}"></meta>
+{% endif -%}
+
+{%- if article.keywords -%}
+    {%- for articlekeywords in article.keywords -%}
+        {%- if article_lang == articlekeywords.language -%}
+            {%- for key in articlekeywords.keywords -%}
+                <meta name="citation_keywords" content="{{ key }}"></meta>
+            {%- endfor -%}
+        {%- endif -%}
+    {%- endfor -%}
+{%- endif -%}
+
+
+
+
+
+
