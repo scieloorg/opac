@@ -1,11 +1,11 @@
 <section class="levelMenu">
     <div class="container">
-        <div class="col-md-2 col-sm-2">
+        <div class="col-lg-2 col-md-2 col-sm-2">
             <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
                 <span class="sci-ico-home"></span> {% trans %}home do periódico{% endtrans %}
             </a>
         </div>
-        <div class="col-md-7 col-sm-7">
+        <div class="col-lg-6 col-md-5 col-sm-5">
             <div class="btn-group">
 
                 {# Sumário #}
@@ -38,30 +38,29 @@
 
             </div>
         </div>
+        <div class="col-lg-1 col-md-2 col-sm-2">
+          <a class="btn hidden-sm hidden-xs" data-toggle="modal" data-target="#ModalDownloads">
+            <span class="sci-ico-download"></span> {% trans %}download PDF, ePDF...{% endtrans %}
+          </a>
+          <a class="btn hidden-xl hidden-lg hidden-md" data-toggle="modal" data-target="#ModalDownloads">
+            <span class="sci-ico-download"></span> {% trans %}download{% endtrans %}
+          </a>
+        </div>
+
         <!-- Está estatico  -->
-        <div class="col-md-3 col-sm-3 share">
-
-            <a data-toggle="tooltip" href="javascript:window.print();" class="sharePrint" title="Imprimir">
-              <span class="glyphBtn print"></span>
-            </a>
-            <a data-toggle="tooltip" href="{{ url_for('main.collection_list_feed')}}" title="Atom" target="_blank">
-              <span class="glyphBtn rssMini"></span>
-            </a>
-
-            <span class="divisor"></span>
+        <div class="col-lg-3 col-md-3 col-sm-3 share">
             {% trans %}Compartilhe{% endtrans %}
-
             <a data-toggle="tooltip" href="#" class="sendViaMail" title="{% trans %}Enviar link por e-mail{% endtrans %}">
-              <span class="glyphBtn sendMail"></span>
+              <span class="sci-ico-socialEmail"></span>
             </a>
             <a data-toggle="tooltip" href="#" class="shareFacebook" title="{% trans %}Compartilhar no Facebook{% endtrans %}">
-              <span class="glyphBtn facebook"></span>
+              <span class="sci-ico-socialFacebook"></span>
             </a>
             <a data-toggle="tooltip" href="#" class="shareTwitter" title="{% trans %}Compartilhar no Twitter{% endtrans %}">
-              <span class="glyphBtn twitter"></span>
+              <span class="sci-ico-socialTwitterSingle"></span>
             </a>
             <a data-toggle="dropdown" href="#" class="dropdown-toggle dropdown-tooltip" title="{% trans %}Outras redes sociais{% endtrans %}">
-              <span class="glyphBtn otherNetworks"></span>
+              <span class="sci-ico-socialOther"></span>
             </a>
             <ul class="dropdown-menu">
               <li class="dropdown-header">
