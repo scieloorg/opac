@@ -43,9 +43,26 @@
                     </a>
                   </li>
                 {% endif %}
-                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions"><span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}</a></li>
-                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about"><span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}</a></li>
-                <li><a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact"><span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}</a></li>
+                <li>
+                  <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about">
+                    <span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#editors">
+                    <span class="glyphBtn authorInstructions"></span> {% trans %}Corpo Editorial{% endtrans %}
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions">
+                    <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
+                  </a>
+                </li>
+                <li>
+                  <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact">
+                    <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
+                  </a>
+                </li>
               </ul>
             </div>
           </ul>
