@@ -636,6 +636,7 @@ def issue_feed(url_seg, url_seg_issue):
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<string:url_seg_article>/')
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
@@ -767,6 +768,7 @@ def article_ssm_content_raw():
 
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<string:url_seg_article>/pdf/')
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/pdf/')
+@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
 @main.route('/<string:url_seg>/<regex("\d{4}\.(\w+)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/pdf/')
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
