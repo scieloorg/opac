@@ -87,7 +87,7 @@
 
             {# Próximo #}
             <li class="{% if not next_issue %} disabled {% endif %}">
-              <a href="{% if next_issue %} {{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }} }}{% endif %}" >
+              <a href="{% if next_issue %} {{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }}{% endif %}" >
                 {% trans %}próximo{% endtrans %} &raquo;
               </a>
             </li>
