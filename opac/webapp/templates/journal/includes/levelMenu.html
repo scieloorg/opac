@@ -18,19 +18,37 @@
         </a>
 
         {# Anterior #}
-        <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=previous_issue.url_segment) }}" class="btn group {% if not previous_issue %} disabled {% endif %}">
+        {% if not previous_issue %}
+          <a href="#" class="btn group disabled">
           &laquo; {% trans %}número anterior{% endtrans %}
-        </a>
+          </a>
+        {% else %}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=previous_issue.url_segment) }}" class="btn group">
+            &laquo; {% trans %}número anterior{% endtrans %}
+          </a>
+        {% endif %}
 
         {# Atual #}
-        <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group {% if last_issue == issue %} selected {% endif %} {% if not last_issue %} disabled {% endif %}">
-          {% trans %}número atual{% endtrans %}
-        </a>
+        {% if not last_issue %}
+          <a href="#" class="btn group disabled">
+            {% trans %}número atual{% endtrans %}
+          </a>
+        {% else %}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group {% if last_issue == issue %} selected {% endif %}">
+            {% trans %}número atual{% endtrans %}
+          </a>
+        {% endif %}
 
         {# Próximo #}
-        <a href="{% if next_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }}{% endif %}" class="btn group {% if not next_issue %} disabled {% endif %}">
-          {% trans %}número seguinte{% endtrans %} &raquo;
-        </a>
+        {% if not next_issue %}
+          <a href="#" class="btn group disabled">
+            {% trans %}número seguinte{% endtrans %} &raquo;
+          </a>
+        {% else %}
+          <a href="{% if next_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }}{% endif %}" class="btn group">
+            {% trans %}número seguinte{% endtrans %} &raquo;
+          </a>
+        {% endif %}
 
       </div>
     </div>
