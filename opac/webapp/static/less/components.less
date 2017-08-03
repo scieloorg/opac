@@ -1,0 +1,111 @@
+.metrics {
+	.levelMenu {
+		background: #fafaf8;
+		.numbers {
+			font-size: 1.8em;
+			font-weight: bold;
+			text-align: center;
+			span {
+				display: block;
+				font-weight: normal;
+				font-size: .5em;
+			}
+		}
+	}
+	li {
+		&:before {
+			content: '\00bb';
+			display: inline-block;
+			color: @Gray;
+			width: 13px;
+			margin-left: -13px;
+		}
+		a {
+			font-weight: bold;
+			font-size: .9em;
+		}
+	}
+}
+
+.periodicals {
+	.levelMenu {
+		background: #fafaf8;
+		padding: 10px 15px;
+	}
+	li {
+		display: inline-block;
+		height: 58px;
+		text-align: center;
+		background: url(../img/dashline.v.png) top right repeat-y;
+		.border-box;
+
+		&:last-child {
+			background: none;
+		}
+
+		a {
+			padding: 0 12px;
+			font-size: 1.1em;
+			font-weight: bold;
+			line-height: 58px;
+		}
+	}
+	.search {
+		float: right;
+	}
+}
+
+.slide-item {
+	&.release {
+		display: inline-block;
+		vertical-align: top;
+		width: 160px;
+		padding: 0 10px 0 0;
+		.border-box;
+		color: #7b7469;
+		font-size: .8em;
+
+		.col-md-12 {
+			background: #f6f6f4;
+			.radius(4px);
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
+		h3 {
+			/*color: @DarkBlue;
+			font-size: 1.3em;
+			margin: 0;
+			height: 110px;*/
+			color: @Blue;
+		    margin: 0;
+		    font-size: 1em;
+
+		    &.ellipsis {
+				.multiLineEllipsis(@lineHeight: 1.4em, @lineToShow: 3, @font: 14px);
+			}
+		}
+		a {
+			color: @Blue;
+			font-weight: bold;
+		}
+		span {
+			display: block;
+			text-transform: uppercase;
+			color: #7b7469;
+			font-size: .7em;
+			font-weight: normal;
+		}
+		strong {
+				color: @Blue;
+		}
+		.info {
+			font-size: .9em;
+			color: #7b7469;
+			font-weight: normal;
+
+			.ellipsis {
+				.multiLineEllipsis(@lineHeight: 1.4em, @lineToShow: 3, @font: 12.6px);
+			}
+		}
+	}
+}

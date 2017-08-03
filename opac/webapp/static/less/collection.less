@@ -1,0 +1,365 @@
+.collection {
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	h2 {
+		font-size: 1.3em;
+		margin-bottom: 12px;
+		span {
+			font-weight: normal;
+		}
+	}
+	.sectionTitle {
+		padding: 10px 15px 10px;
+		background: url(../img/dashline.png) bottom left repeat-x; 
+
+		h1 {
+			margin: 0;
+			padding: 0;
+			font-size: 1.2em;
+		}
+	}
+	.share ul.dropdown-menu {
+		margin-top: 2px;
+	}
+	.levelMenu {
+		.container {
+			position: relative;
+		}
+
+		.onlineSubmission {
+			color: #7f7a71;
+			font-size: .8em;
+			position: absolute;
+			right: 20px;
+			top: -45px;
+		}
+	}
+	.periodicals {
+		li {
+			width: 16.3%;
+		}
+	}
+	.slide-item {
+		&.release,
+		&.perspective,
+		&.twitter {
+			width: 250px;
+			font-size: 1em;
+
+			.col-md-12 {
+				min-height: 95px;
+			}
+
+			a {
+				color: #6789d3;
+				font-weight: bold;
+			}
+		}
+	}
+
+	.perspective,
+	.twitter {
+		.slide-item {
+			.col-md-12 {
+				min-height: 160px;
+			}
+		}
+	}
+}
+.collectionNews {
+	font-size: .9em;
+	.newsContainer {
+		margin: 0 50px;
+
+		.row {
+			margin: 40px 0;
+		}
+		img {
+			width: 100%;
+			border-radius: 5px;
+		}
+	}
+	a {
+		color: @Gray;
+	}
+	h2 {
+		color: @DarkBlue;
+		margin: 0 0 5px 0;
+		font-size: 1.5em;
+	}
+	.newsHighlight h2 {
+		font-size: 2em;
+	}
+	p {
+		margin: 0;
+	}
+	.fakeLink {
+		color: @Blue;
+		white-space: nowrap;
+	}
+	.pubDate {
+		font-size: .8em;
+		color: #7f7a71;
+	}
+}
+.collectionSearch {
+	font-size: 1em;
+	margin-bottom: 50px;
+
+	.highlight {
+		background: none;
+		padding-top: 20px;
+		margin: 0 0 50px;
+	}
+	h2 {
+		color: @Gray;
+		font-size: 1.2em;
+	}
+}
+.collectionList {
+	.collectionListSearch {
+		padding: 15px 0;
+	}
+
+	input.collectionSearch {
+		border-color: #dae3f4;
+		margin: 0;
+		font-size: .9em;
+		padding-right: 40px;
+		background: url(../img/button.glyphs.png) 100% -1670px no-repeat;
+
+		&:focus {
+			border-color: lighten(@Blue,20%);
+		}
+	}
+
+	.collectionListTable {
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+		th,td {
+			background: url(../img/dashline.png) top left repeat-x; 
+			border-spacing: 0;
+			font-size: .9em;
+			padding: 5px 15px;
+			line-height: 24px;
+
+			.col-xs-6 {
+				padding: 0;
+			}
+		}
+		th {
+			background-color: #f8f8f8;
+			text-align: left;
+
+			small {
+				font-weight: normal;
+			}
+			.download {
+				font-weight: normal;
+				font-size: .8em;
+				color: #b6b3af;
+			}
+		}
+		a {
+			color: #7f7a71;
+
+			.glyphBtn {
+				opacity: .4;
+			}
+
+			&:hover .glyphBtn {
+				opacity: 1;
+			}
+		}
+		td.actions,
+		td.flags {
+			width: 160px;
+			text-align: center;
+			white-space: nowrap;
+
+			a {
+				padding: 1px;
+			}
+		}
+		td.flags {
+			text-align: left;
+		}
+		tr:hover > td {
+			background-color: #f7f9fd;
+
+			&.collapseContainer {
+				background-color: transparent;
+			}
+		}
+		td.collapseContainer {
+			padding: 15px 0;
+			background: none;
+
+			.collapseTitle, .collapseTitleBlock  {
+				display: block;
+				margin-bottom: 5px;
+				padding-top: 5px;
+				padding-left: 25px;
+				font-size: 1.3em;
+				font-weight: bold;
+				background: url(../img/button.glyphs.png) -10px -2525px no-repeat;
+				border-top: 1px solid #f0f0f0;
+				
+
+				strong {
+					font-weight: normal;
+					color: @Gray;
+				}
+
+				&.closed {
+					background-position: -10px -2481px;
+				}
+
+				&:active, &:focus, &:visited {
+					text-decoration: none;
+				}
+			}
+			.collectionBold {
+				.collapseTitle {
+					border: none;
+					strong {
+						font-weight: bold;
+						color: #00314c;
+					}
+				}
+			}
+			.collapseContent {
+				position: relative;
+				overflow: hidden;
+				.radius(2px);
+				padding: 10px 10px 20px 25px;
+
+				.collapseTitle {
+					padding-top: 0;
+					border: none;
+					background: url(../img/button.glyphs.png) -10px -2529px no-repeat;
+
+					strong {
+						font-weight: bold;
+						color: @DarkBlue;
+					}
+
+					&.closed {
+						background-position: -10px -2486px;
+					}
+				}
+
+				.collapseContent {
+					padding: 0;
+					margin-left: 25px;
+					background: none;
+				}
+
+				table {
+					margin-bottom: 20px;
+				}
+			}
+
+			th,td {
+				font-size: 1em;
+			}
+		}
+		
+		.collectionLink {
+			padding-left: 20px;
+
+			&:before {
+				position: absolute;
+				font-family: 'Trebuchet MS', Arial;
+				content: '\2219';
+				font-size: 4.5em;
+				margin: -2px 0 0 -20px;
+				color: #569162;
+			}
+
+			&.disabled:before {
+				color: #d92929;
+			}
+			.journalTitle {
+				font-size: 1.1em;
+				color: @Blue;
+			}
+			span {
+				white-space: nowrap;
+			}
+		}
+	}
+	.collectionListLoading {
+		background: url(../img/list.loading.gif) center center no-repeat !important;
+		height: 80px;
+	}
+}
+.collectionAbout {
+	
+	p {
+		margin: 15px 0;
+	}
+	
+	h2 {
+		font-size: 1.3em;
+		color: @Gray;
+		padding-bottom: 10px;
+		background: url(../img/dashline.png) bottom left repeat-x; 
+	}
+
+	.row {
+		margin-bottom: 20px;
+	}
+	.listMenu {
+		margin: 0;
+		padding: 0;
+
+		li {
+			margin: 10px 0;
+			padding-left: 30px;
+			position: relative;
+			list-style: none;
+			font-weight: bold;
+
+			&:before {
+				position: absolute;
+				content: '\00bb';
+				color: @Blue;
+				margin-left: -20px;
+			}
+		}
+		a {
+			color: @DarkBlue;
+
+			&:hover {
+				color: @Blue;
+			}
+		}
+
+		ul {
+			margin: 0 0 0 20px;
+			padding: 0;
+
+			li {
+				padding: 0;
+
+				&:before {
+					display: none;
+				}
+
+				a {
+					color: @Blue;
+				}
+			}
+		}
+	}
+
+	.about {
+		margin-bottom: 40px;
+	}
+}
