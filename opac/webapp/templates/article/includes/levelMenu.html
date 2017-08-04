@@ -14,24 +14,32 @@
                 </a>
 
                 {# Anterior #}
-                {% if is_pdf_page -%}
-                  <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
-                {%- else -%}
-                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group {% if not previous_article %} disabled {% endif %}">
-                {%- endif %}
+                  {% if not previous_article %}
+                      <a href="#" class="btn group disabled">
+                  {% else %}
+                    {% if is_pdf_page -%}
+                      <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+                    {%- else -%}
+                      <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+                    {% endif %}
+                  {%- endif %}
                     &laquo; {% trans %}artigo anterior{% endtrans %}
-                </a>
+                  </a>
 
                 {# Atual #}
-                <a href="" class="btn group disabled">
+                <a href="#" class="btn group disabled">
                     {% trans %}artigo atual{% endtrans %}
                 </a>
 
                 {# Próximo #}
-                {%- if is_pdf_page -%}
-                  <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group {% if not next_article %} disabled {% endif %}">
-                {%- else -%}
-                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group {% if not next_article %} disabled {% endif %}">
+                {% if not next_article %}
+                    <a href="#" class="btn group disabled">
+                {% else %}
+                  {%- if is_pdf_page -%}
+                    <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                  {%- else -%}
+                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                  {%- endif %}
                 {%- endif %}
                     {% trans %}artigo seguinte{% endtrans %} &raquo;
                 </a>
