@@ -1,11 +1,11 @@
 {% if session.lang == 'pt_BR' %}
-  <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">English</a>
   <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">Español</a>
+  <a href="{{ url_for('.set_locale', lang_code='en') }}" class="lang-en" lang="en">English</a>
 {% endif %}
 
 {% if session.lang == 'en' %}
-  <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">Português</a>
   <a href="{{ url_for('.set_locale', lang_code='es') }}" class="lang-es" lang="es">Español</a>
+  <a href="{{ url_for('.set_locale', lang_code='pt_BR') }}" class="lang-pt" lang="pt_BR">Português</a>
 {% endif %}
 
 {% if session.lang == 'es' %}
