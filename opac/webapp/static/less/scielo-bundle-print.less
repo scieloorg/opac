@@ -1,0 +1,123 @@
+a:link:after, a:visited:after {
+	display: none;
+    content: "" !important;
+}
+
+.mainNav, .language, .newSearchField, .searchFilters, .searchOptions, .searchActions, .highlight, .articleAction, .shLink,
+.journalMenu, .levelMenu, .share, .issueNav, .journalLinks, .collectionListSearch {
+	display: none !important;
+}
+.searchForm .resultBlock {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px dotted #ccc;
+}
+.searchForm {
+	.results {
+		.item {
+			padding: 20px;
+			border-bottom: 1px dotted #ccc;
+			page-break-inside: avoid;
+
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+		input.checkbox + label.checkbox {
+			background: none;
+		}
+		.versions {
+			padding: 7px 0 !important;
+			background: none;
+		}
+		.metadata {
+			padding: 7px 0 !important;
+
+			.col-md-9 {
+				padding: 0;
+			}
+		}
+	}
+	.searchExpression {
+		border-bottom: 1px dotted #ccc;
+		margin: -20px -15px 0;
+		padding: 10px 20px;
+		background: #fff;
+		font-family: Arial;
+		color: #333;
+
+		span {
+			display: block;
+			font-size: .8em;
+		}
+	}
+}
+.colophon {
+	.container {
+		border-top: 1px dotted #ccc;
+		background: none;
+	}
+	a {
+		display: none;
+	}
+}
+.journalContent {
+	.issueData {
+		display: none;
+	}
+	.issueData {
+		margin-top: 20px;
+	}
+	.issueIndex {
+		width: 100%;
+	}
+}
+.brandLogo {
+	padding: 0 0 20px 0;
+	border-bottom: 1px solid #ddd;
+
+	.col-md-offset-1 {
+		margin: 0;
+	}
+}
+.journalAddress {
+	.col-md-10 {
+		width: 100%;
+	}
+}
+.journalContent {
+	padding: 0;
+	margin-top: 30px;
+
+	.issueList {
+		padding: 0;
+
+		table th, table td {
+			border-bottom: 1px solid #ddd;
+
+			a {
+				border: 1px solid #d0d0d0;
+			}
+		}
+	}
+}
+.collectionListTable {
+	table th, table td {
+		border-bottom: 1px solid #ddd;
+	}
+	.actions, .download {
+		display: none;
+	}
+}
+.collectionLicense span {
+	width: 80%;
+}
+.brandLogo {
+	width: 100%;
+}
+
+.article {
+	.copyLink, .outlineFadeLink, .glyphFloatMenu, .fig, .table {
+		display: none;
+	}
+}

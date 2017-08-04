@@ -5,7 +5,6 @@ from raven.contrib.flask import Sentry
 
 from flask import Flask
 from flask_htmlmin import HTMLMIN
-from flask_assets import Environment, Bundle
 from flask_mongoengine import MongoEngine
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -71,27 +70,6 @@ def create_app():
     # Registrando os filtros
     app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
     app.jinja_env.filters['datetimefilter'] = custom_filters.datetimefilter
-
-    # Assets
-    js = Bundle(
-                'js/scielo-bundle-min.js',
-                'js/common.js',
-                'js/moment-with-locales.js',
-                filters='jsmin',
-                output='js/bundle.js',
-                remove_duplicates=True)
-
-    css = Bundle('css/scielo-bundle.css',
-                 'css/style.css',
-                 filters='cssmin',
-                 output='css/bundle.css',
-                 remove_duplicates=True)
-
-    assets = Environment(app)
-    assets.register('js_all', js)
-    assets.register('css_all', css)
-    assets.debug = app.config['DEBUG']
-    assets.init_app(app)
 
     # i18n
     babel.init_app(app)

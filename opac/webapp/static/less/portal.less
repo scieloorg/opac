@@ -1,0 +1,204 @@
+.portal {
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	h2 {
+		font-size: 1.3em;
+		margin-bottom: 12px;
+		span {
+			font-weight: normal;
+		}
+	}
+	.pdRight {
+		margin-right: -6px
+	}
+	.collapseBlock {
+		font-size: .9em;
+		.collapse-title {
+			position: relative;
+			display: block;
+			color: #00314c;
+			font-weight: bold;
+			font-size: 1em;
+			padding: 7px 2px;
+			.glyphBtn {
+				background-position: center -2532px;
+			}
+			&:active,
+			&:visited,
+			&:focus {
+				text-decoration: none
+			}
+		}
+		.collapse-title.closed {
+			.glyphBtn {
+				background-position: center -2487px;
+			}
+		}
+		.collapse-content {
+			padding: 10px 6px;
+			background: #fafaf8;
+			font-size: .9em;
+		}
+	}
+	.collectionList .collectionListTable th.flags {
+		width: 190px;
+	}
+	.collectionList .collectionListTable th.download {
+		width: 200px;
+	}
+	.themesTab {
+		margin-top: 20px;
+	}
+	.portalMenu {
+		h2 {
+			padding-bottom: 12px;
+			background: url(../img/dashline.png) bottom left repeat-x;
+		}
+		li {
+			padding: 6px 0;
+			&:after {
+				content: '\00bb';
+				display: inline-block;
+				color: @Blue;
+				width: 13px;
+				margin-left: 5px;
+			}
+			a {
+				font-weight: bold;
+			}
+		}
+		.collapseBlock {
+			li {
+				font-size: 1.1em;
+				&:after {
+					content: "";
+				}
+			}
+		}
+	}
+	.periodicals {
+		li {
+			display: inline;
+			padding: 15px 4px;
+		}
+	}
+	.release {
+		padding: 0 10px 0 0;
+		.border-box;
+		color: #7b7469;
+		font-size: 1em;
+
+		.col-md-12 {
+			background: #fafaf8;
+			.radius(4px);
+			padding: 0;
+			min-height: 500px;
+
+			&.twitter-timeline-container {
+				padding: 10px;
+			}
+		}
+		a {
+			color: @Blue;
+			font-weight: bold;
+		}
+		h3 {
+			color: @Blue;
+			margin: 0;
+			font-size: 1em;
+		}
+		span {
+			display: block;
+			text-transform: uppercase;
+			color: #7b7469;
+			font-size: .7em;
+			font-weight: normal;
+		}
+		strong {
+				color: @Blue;
+		}
+		.info {
+			font-size: .9em;
+			color: #7b7469;
+			font-weight: normal;
+
+		}
+		.block {
+			background: url(../img/dashline.png) bottom left repeat-x;
+			padding: 20px 15px;
+			&:last-child {
+				background: none;
+			}
+		}
+		.sciELO {
+		}
+		.twitter {
+			a {
+				font-weight: normal;
+			}
+			.tSahre {
+				position: relative;
+			}
+			span {
+				display: inline-block;
+			}
+		}
+	}
+	.bread {
+		padding: 10px 0 15px;
+		margin: 10px 0;
+		background: #f7f6f4;
+		.breadTitle {
+			padding: 0;
+			margin: 0;
+			font-size: 2.4em;
+			color: @Blue;
+		}
+		.breadcrumb {
+			padding: 0;
+			margin: 0;
+			li {
+				a {
+					color: @Gray;
+					font-size: .8em;
+				}
+				&:before {
+					content: '\00bb';
+					display: inline-block;
+					width: 13px;
+					color: @Gray;
+					margin-left: 0px;
+					margin-right: 7px;
+
+				}
+				&:first-child {
+					&:before {
+						display: none;
+					}
+				}
+			}
+		}
+		.share {
+			top: 25px
+		}
+	}
+	.articleCtt {
+		.ref-list {
+			.refList {
+				a {
+					display: inline-block;
+					margin-right: 0;
+				}
+				
+			}
+			.col-md-1.col-sm-1 {
+				margin: 0;
+				width: auto;
+			}
+		}
+	}
+	
+}

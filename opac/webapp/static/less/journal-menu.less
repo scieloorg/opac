@@ -1,0 +1,219 @@
+.article, .journal {
+	.mainNav {
+		margin-top: 7px;
+		padding: 0;
+		height: 110px;
+
+		&.collab {
+			background: none;
+		}
+
+		h2 {
+			margin: 10px 0 0;
+			display: block;
+			margin-left: 45px;
+			text-align: center;
+		}
+
+		.menu {
+			top: 7px;
+		}
+	}
+
+	.journalMenu {
+		padding: 0;
+
+		.language {
+			text-align: left;
+			position: relative;
+			margin-top: 3px;
+
+			a {
+				margin-left: 0;
+
+				/* altera bandeiras dos artigos */
+
+				&.lang-es {
+					margin-top: 0;
+				}
+				&.lang-en {
+					margin-left: 36px;
+				}
+				&:last-child {
+					position: absolute;
+					top: 6px; 
+					right: 0;
+				}
+			}
+		}
+		ul {
+			margin: 5px 0 0;
+			padding: 0;
+		}
+		li {
+			list-style: none;
+			margin: -1px 0;
+
+			a {
+				color: @DarkBlue;
+				font-size: .75em;
+
+				&:hover .glyphBtn {
+					opacity: 1;
+				}
+			}
+		}
+		.glyphBtn {
+			width: 22px;
+			height: 22px;
+			opacity: .5;
+		}
+	}
+
+	.journalInfo {
+		padding-left: 36px;
+
+		.dropdown-menu {
+			padding-bottom: 10px;
+		}
+
+		.author {
+			font-size: .9em;
+			padding: 10px 20px;
+		}
+
+		.listLink a {
+			display: block;
+			font-weight: normal;
+			color: #00e;
+		}
+		
+		.truncate {
+			width: 450px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			@media @onlyTablet {
+				display: inline-block;
+				width: 250px;
+			}
+		}
+
+		@media @onlyTablet {
+			.grayArrowDown {
+				margin-top: -8px;
+			}
+		}
+	}
+
+	.alternativeHeader {
+		.mainNav {
+			height: 55px;
+
+			h2 {
+				margin: 0 0 0 45px;
+			}
+		}
+		.logo-scielo {
+			height: 50px;
+		}
+		.logo-collection {
+			color: @Gray;
+			font-size: 13px;
+			font-weight: normal;
+			display: inline-block;
+			line-height: 50px;
+			height: 50px;
+			box-sizing: border-box;
+			vertical-align: bottom;
+			width: 50px;
+			text-align: left;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
+			@media @onlyHighDef {
+				width: 84px;
+			}
+
+			strong {
+				display: inline-block;
+				line-height: 18px;
+				vertical-align: middle;
+				padding-top: 10px;
+				font-weight: normal;
+			}
+		}
+		.journalInfo {
+			padding-top: 22px;
+			font-size: .9em;
+
+			ul {
+				margin: 0;
+				padding: 0;
+			}
+			li {
+				list-style: none;
+				position: relative;
+
+				&:hover .dropdown-menu {
+					display: block;
+				}
+			}
+			a {
+				color: @DarkBlue;
+				font-weight: bold;
+			}
+
+			.dropdown-menu {
+				width: 750px;
+				padding-left: 10px;
+				padding-right: 10px;
+				padding-bottom: 20px;
+
+				@media @onlyTablet {
+					width: 530px;
+				}
+
+				strong {
+					display: block;
+					padding: 10px 20px;
+				}
+
+				&:before {
+					left: 4%;
+				}
+			}
+
+			.brandLogo {
+				margin-top: 10px;
+
+				h1 {
+					text-align: left; 
+					font-size: 21px;
+					color: @Blue;
+					margin: 10px 0;
+				}
+			}
+
+			.journalMenu {
+				padding-top: 20px;
+
+				a {
+					font-weight: normal;
+				}
+
+				[class^="sci-ico-"] {
+					color: @Blue;
+					font-size: 20px;
+					opacity: .5;
+					.cssAnimations .animated(.3s, all);
+				}
+
+				a:hover [class^="sci-ico-"] {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

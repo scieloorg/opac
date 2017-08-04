@@ -1,0 +1,46 @@
+.lt-ie9 {
+	input[type=checkbox].checkbox,
+	input[type=radio].radio {
+		display: inline-block;
+	}
+
+	label.checkbox,
+	label.radio {
+		padding-left: 0 !important;
+		height: 25px; 
+		display: inline !important;
+		line-height: 25px;
+		background-repeat: no-repeat;
+		vertical-align: bottom;
+		cursor: pointer;
+		font-weight: normal;
+	}
+
+	input[type=checkbox].checkbox + label.checkbox,
+	input[type=radio].radio + label.radio {
+		background: none;
+	}
+
+	.results .item .col-xs-1 {
+		padding-right: 0;
+	}
+
+	.alternativeHeader {
+		border-bottom: 1px solid #eae9e5;
+	}
+
+	.articleTxt {
+		.fig .thumb {
+			background: #fff url(../img/fig-thumb.png) center center no-repeat !important;
+		}
+		.table .thumb {
+			background: #fff url(../img/table-thumb.png) center center no-repeat !important;
+		}
+		.refList.outer {
+			border-bottom: 5px solid @LightGray;
+		}
+		.refList.full {
+			border-bottom: 0;
+		}
+	}
+}

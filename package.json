@@ -1,0 +1,32 @@
+{
+  "name": "opac",
+  "version": "1.0.0",
+  "description": "SciELO OPAC website",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scieloorg/opac.git"
+  },
+  "keywords": [
+    "SciELO",
+    "OPAC"
+  ],
+  "author": "Juan Funez <juan.funez@scielo.org>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/scieloorg/opac/issues"
+  },
+  "homepage": "https://github.com/scieloorg/opac#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^3.3.2",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-strip-debug": "^1.1.0",
+    "gulp-uglify": "^3.0.0"
+  },
+  "dependencies": {}
+}

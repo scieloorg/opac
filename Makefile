@@ -7,6 +7,12 @@ export OPAC_BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 export OPAC_VCS_REF=$(strip $(shell git rev-parse --short HEAD))
 export OPAC_WEBAPP_VERSION=$(strip $(shell cat VERSION))
 
+ifndef OPAC_STATIC_REPO_PATH
+    OPAC_STATIC_REPO_PATH=$(abspath $(dir $CURDIR/../../../bitbucket.org/portal-scielo/))
+else
+    @echo "$$OPAC_STATIC_REPO_PATH já foi definida previamente: $(OPAC_STATIC_REPO_PATH)"
+endif
+
 opac_version:
 	@echo "Version file: " $(OPAC_WEBAPP_VERSION)
 
@@ -130,3 +136,51 @@ test:
 
 test_coverage:
 	export OPAC_CONFIG="config/templates/testing.template" && export FLASK_COVERAGE="1" && python opac/manager.py test
+
+#####################################
+## OPAC_STATIC_REPO_PATH - frontend #
+#####################################
+
+static_show_repo_dir:
+	@echo "using: OPAC_STATIC_REPO_PATH="$(OPAC_STATIC_REPO_PATH)
+
+static_copy_less: static_show_repo_dir
+	cp -R $(OPAC_STATIC_REPO_PATH)/static/less ./opac/webapp/static/less
+
+static_copy_fonts: static_show_repo_dir
+	cp -R $(OPAC_STATIC_REPO_PATH)/static/fonts-new ./opac/webapp/static/fonts-new
+
+static_copy_js_vendor: static_show_repo_dir
+	cp -R $(OPAC_STATIC_REPO_PATH)/static/js/vendor ./opac/webapp/static/js/
+
+static_copy_js: static_show_repo_dir
+	cp $(OPAC_STATIC_REPO_PATH)/static/js/*.js ./opac/webapp/static/js/
+
+static_copy_all: static_show_repo_dir static_copy_less static_copy_fonts static_copy_js_vendor static_copy_js
+	@echo "[COPIADO static/less, static/fonts-new, static/js/vendor e static/js/*.js]"
+
+static_clean_css_bundles:
+	@rm -f ./opac/webapp/static/css/bundle.css \
+	   	  ./opac/webapp/static/css/scielo-article.css \
+	      ./opac/webapp/static/css/scielo-bundle-print.css \
+	      ./opac/webapp/static/css/scielo-bundle.css
+	@echo 'arquivo CSS removidos com sucesso!'
+
+static_clean_js_bundles:
+	@rm -f ./opac/webapp/static/js/bundle.js \
+	   	  ./opac/webapp/static/js/scielo-article.js \
+	      ./opac/webapp/static/js/scielo-bundle-print.js \
+	      ./opac/webapp/static/js/scielo-bundle.js
+	@echo 'arquivo JS removidos com sucesso!'
+
+static_clean_all_bundles: static_clean_js_bundles static_clean_css_bundles
+	@echo 'arquivo JS e CSS removidos com sucesso!'
+
+static_check_deps:
+	@echo 'NodeJs version:' $(shell node -v)
+	@echo 'npm version:' $(shell npm -v)
+	@echo 'Gulp.js version:' $(shell gulp -v)
+
+static_install_deps:
+	@echo 'instalando as dependência (package.json):'
+	@npm install

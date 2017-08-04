@@ -1,0 +1,43 @@
+@media all and (max-width: 991px) {
+	.notTablet {
+		display: none !important;
+	}
+	.searchForm {
+		.selectBox {
+			&.index {
+				width: 40%;
+			}
+			&.connector {
+				width: 25%;
+			}
+		}
+		.btn.glyph {
+			background-image: none;
+		}
+		.searchActions {
+			padding-top: 25px;
+		}
+		.results {
+			.item {
+				span {
+					white-space: nowrap;
+				}
+			}
+		}
+		.searchActions.fixed {
+			position: static;
+			top: 0;
+			padding: 18px 0 10px 0;
+			width: auto;
+			background: none;
+			.shadow(0 0 0 transparent);
+			.radius(0);
+		}
+	}
+}
+ 
+@media all and (min-width: 1200px) {
+	.searchForm .searchActions.fixed {
+		width: 825px;
+	}
+}
