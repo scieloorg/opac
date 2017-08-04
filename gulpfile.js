@@ -60,7 +60,9 @@ var target_src = {
             path.join(paths['static_js'], 'main.js'),
             // nossos JS:
             path.join(paths['static_js'], 'common.js'),
-            path.join(paths['static_js'], 'moment-with-locales.js'),
+            path.join(paths['static_js'], 'moment.js'),
+            path.join(paths['static_js'], 'moment_locale_pt_br.js'),
+            path.join(paths['static_js'], 'moment_locale_es.js'),
         ],
         'scielo-article': [
             path.join(paths['static_js'], 'scielo-article.js'),
