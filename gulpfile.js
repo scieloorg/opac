@@ -83,7 +83,8 @@ var target_src = {
     },
     'less': {
         'scielo-bundle': [
-            path.join(paths['static_less'], 'scielo-bundle.less')
+            path.join(paths['static_less'], 'scielo-bundle.less'),
+            path.join(paths['static_less'], 'style.less')
         ],
         'scielo-article': [
             path.join(paths['static_less'], 'scielo-article.less')
@@ -182,6 +183,7 @@ gulp.task('process-scielo-bundle-less', function(){
     console.info('[INFO] [task: process-scielo-bundle-less] - output folder:\t', output_folder);
 
     gulp.src(source_file)
+        .pipe(concat(output_file))
         .pipe(less(output_file))
         .pipe(minifyCSS())
         .pipe(gulp.dest(output_folder)
@@ -198,6 +200,7 @@ gulp.task('process-scielo-article-less', function(){
     console.info('[INFO] [task: process-scielo-article-less] - output folder:\t', output_folder);
 
     gulp.src(source_file)
+        .pipe(concat(output_file))
         .pipe(less(output_file))
         .pipe(minifyCSS())
         .pipe(gulp.dest(output_folder)
@@ -214,6 +217,7 @@ gulp.task('process-scielo-article-standalone-less', function(){
     console.info('[INFO] [task: process-scielo-article-standalone-less] - output folder:\t', output_folder);
 
     gulp.src(source_file)
+        .pipe(concat(output_file))
         .pipe(less(output_file))
         .pipe(minifyCSS())
         .pipe(gulp.dest(output_folder)
@@ -230,6 +234,7 @@ gulp.task('process-scielo-bundle-print-less', function(){
     console.info('[INFO] [task: process-scielo-bundle-print-less] - output folder:\t', output_folder);
 
     gulp.src(source_file)
+        .pipe(concat(output_file))
         .pipe(less(output_file))
         .pipe(minifyCSS())
         .pipe(gulp.dest(output_folder)

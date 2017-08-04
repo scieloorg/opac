@@ -145,10 +145,10 @@ static_show_repo_dir:
 	@echo "using: OPAC_STATIC_REPO_PATH="$(OPAC_STATIC_REPO_PATH)
 
 static_copy_less: static_show_repo_dir
-	cp -R $(OPAC_STATIC_REPO_PATH)/static/less ./opac/webapp/static/less
+	cp -R $(OPAC_STATIC_REPO_PATH)/static/less ./opac/webapp/static
 
 static_copy_fonts: static_show_repo_dir
-	cp -R $(OPAC_STATIC_REPO_PATH)/static/fonts-new ./opac/webapp/static/fonts-new
+	cp -R $(OPAC_STATIC_REPO_PATH)/static/fonts-new ./opac/webapp/static/
 
 static_copy_js_vendor: static_show_repo_dir
 	cp -R $(OPAC_STATIC_REPO_PATH)/static/js/vendor ./opac/webapp/static/js/
@@ -159,21 +159,12 @@ static_copy_js: static_show_repo_dir
 static_copy_all: static_show_repo_dir static_copy_less static_copy_fonts static_copy_js_vendor static_copy_js
 	@echo "[COPIADO static/less, static/fonts-new, static/js/vendor e static/js/*.js]"
 
-static_clean_css_bundles:
-	@rm -f ./opac/webapp/static/css/bundle.css \
-	   	  ./opac/webapp/static/css/scielo-article.css \
-	      ./opac/webapp/static/css/scielo-bundle-print.css \
-	      ./opac/webapp/static/css/scielo-bundle.css
-	@echo 'arquivo CSS removidos com sucesso!'
-
 static_clean_js_bundles:
-	@rm -f ./opac/webapp/static/js/bundle.js \
-	   	  ./opac/webapp/static/js/scielo-article.js \
-	      ./opac/webapp/static/js/scielo-bundle-print.js \
+	@rm -f ./opac/webapp/static/js/scielo-article-standalone.js \
 	      ./opac/webapp/static/js/scielo-bundle.js
 	@echo 'arquivo JS removidos com sucesso!'
 
-static_clean_all_bundles: static_clean_js_bundles static_clean_css_bundles
+static_clean_all_bundles: static_clean_js_bundles
 	@echo 'arquivo JS e CSS removidos com sucesso!'
 
 static_check_deps:

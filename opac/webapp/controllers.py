@@ -191,6 +191,7 @@ def get_journal_json_data(journal, language='pt'):
             'instructions': url_for('main.about_journal', url_seg=journal.url_segment) + '#instructions',
             'about': url_for('main.about_journal', url_seg=journal.url_segment),
             'contact': url_for('main.about_journal', url_seg=journal.url_segment) + '#contact',
+            'editors': url_for('main.about_journal', url_seg=journal.url_segment) + '#editors',
         },
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,

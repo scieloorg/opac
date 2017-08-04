@@ -734,7 +734,7 @@ var Portal = {
 			for(var i=0,l=list.journalList.length;i<l;i++) {
 				var c = list.journalList[i];
 				c.Last = c.Last.split(";");
-				c.Publisher = c.Publisher.split(";");
+				c.Publisher = c.Publisher.split(";"); 
 
 				ctt += 	'\
 						<tr>\
@@ -742,6 +742,7 @@ var Portal = {
 								<a href="'+c.Links[0]+'" class="showTooltip" title="'+labels[5]+'"><span class="glyphBtn home"></span></a> \
 								<a href="'+c.Links[1]+'" class="showTooltip" title="'+labels[6]+'"><span class="glyphBtn submission"></span></a> \
 								<a href="'+c.Links[2]+'" class="showTooltip" title="'+labels[7]+'"><span class="glyphBtn authorInstructions"></span></a> \
+								<a href="'+c.Links[5]+'" class="showTooltip" title="'+labels[12]+'"><span class="glyphBtn editorial"></span></a> \
 								<a href="'+c.Links[3]+'" class="showTooltip" title="'+labels[8]+'"><span class="glyphBtn about"></span></a> \
 								<a href="'+c.Links[4]+'" class="showTooltip" title="'+labels[9]+'"><span class="glyphBtn contact"></span></a> \
 							</td>\
