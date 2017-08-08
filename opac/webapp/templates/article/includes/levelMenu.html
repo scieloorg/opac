@@ -1,8 +1,8 @@
 <section class="levelMenu">
     <div class="container">
-        <div class="col-lg-2 col-md-2 col-sm-2">
+        <div class="col-lg-1 col-md-2 col-sm-1">
             <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
-                <span class="sci-ico-home"></span> {% trans %}home do periódico{% endtrans %}
+                <span class="sci-ico-home"></span> {% trans %}Home{% endtrans %}
             </a>
         </div>
         <div class="col-lg-6 col-md-5 col-sm-5">
@@ -46,17 +46,78 @@
 
             </div>
         </div>
-        <div class="col-lg-1 col-md-2 col-sm-2">
-          <a class="btn hidden-sm hidden-xs" data-toggle="modal" data-target="#ModalDownloads">
-            <span class="sci-ico-download"></span> {% trans %}download PDF, ePDF...{% endtrans %}
-          </a>
-          <a class="btn hidden-xl hidden-lg hidden-md" data-toggle="modal" data-target="#ModalDownloads">
-            <span class="sci-ico-download"></span> {% trans %}download{% endtrans %}
-          </a>
+
+        <div class="col-lg-3 col-md-3 col-sm-3">
+
+          {% if article and article.pdfs|length == 1 %}
+            <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn"><span class="sci-ico-filePDF"></span> PDF</a>
+          {% endif%}
+
+          {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
+            {% if article and article.pdfs|length == 1 %}
+              <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=article.pdfs[0].url, lang=article.pdfs[0].lang) }}"" class="btn"> <span class="sci-ico-filePDF"></span> ePDF</a>
+            {% endif %}
+          {% endif %}
+
+          {% if article and article.pdfs|length > 1 %}
+
+            {# PDF #}
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+              <span class="sci-ico-filePDF"></span>
+              <span class="hidden-sm">PDF</span>
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                {% for pdf in article.pdfs  %}
+                  <li>
+                    <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=pdf.lang) }}">
+                      {% if pdf.lang == 'es' %}
+                        {% trans %}Download PDF (Espanhol){% endtrans %}
+                      {% elif pdf.lang == 'en' %}
+                        {% trans %}Download PDF (Inglês){% endtrans %}
+                      {% elif pdf.lang == 'pt' %}
+                        {% trans %}Download PDF (Português){% endtrans %}
+                      {% else %}
+                        {{ pdf.lang }}
+                      {% endif %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            {# ePDF #}
+            {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
+              <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="sci-ico-filePDF"></span>
+                <span class="hidden-sm">PDF</span>
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  {% for pdf in article.pdfs  %}
+                    <li>
+                      <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=pdf.url, lang=pdf.lang) }}">
+                        {% if pdf.lang == 'es' %}
+                          {% trans %}Download PDF (Espanhol){% endtrans %}
+                        {% elif pdf.lang == 'en' %}
+                          {% trans %}Download PDF (Inglês){% endtrans %}
+                        {% elif pdf.lang == 'pt' %}
+                          {% trans %}Download PDF (Português){% endtrans %}
+                        {% else %}
+                          {{ pdf.lang }}
+                        {% endif %}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+          {% endif %}
         </div>
 
         <!-- Está estatico  -->
-        <div class="col-lg-3 col-md-3 col-sm-3 share">
+        <div class="col-lg-2 col-md-2 col-sm-3 share">
             {% trans %}Compartilhe{% endtrans %}
             <a data-toggle="tooltip" href="#" class="sendViaMail" title="{% trans %}Enviar link por e-mail{% endtrans %}">
               <span class="sci-ico-socialEmail"></span>
