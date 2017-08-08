@@ -282,7 +282,7 @@ var Article = {
 			idx++;
 		});
 
-		ctt+='<li class="link-to-top"><a href="#top"><span class="circle"><span class="sci-ico-top"></span></span> Ir para o topo</a></li>'; 
+		//ctt+='<li class="link-to-top"><a href="#top"><span class="circle"><span class="sci-ico-top"></span></span> Ir para o topo</a></li>'; 
 
 		structure.html(ctt);
 
