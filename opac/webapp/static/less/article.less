@@ -609,7 +609,7 @@
 	}
 
 	.copyLink {
-		padding: 8px;
+		padding: 5px 10px 5px 5px;
 		color: #1b92e4;
 		font-weight: normal;
 		text-transform: uppercase;
@@ -786,13 +786,13 @@
 
 	.articleTxt {
 		position: relative;
-		padding: 50px 50px 100px;
+		padding: 0px 50px 100px;
 		margin-top: -30px;
 		margin-bottom: 60px;
 		background: #fff;
 		.radius(4px);
 		.shadow();
-		overflow-x: hidden;
+		overflow-x: hidden; 
 
 		.articleSectionTitle,
 		.article-title {
@@ -800,6 +800,34 @@
 			color: @DarkBlue;
 			font-size: 1.5em;
 		}
+
+
+		.articleBadge-editionMeta-doi-copyLink{
+		    font-size: .85em;
+		    margin: 0;
+		    font-weight: normal;
+		    color: #a7a49e;
+		    padding: 10px 0 0px;
+		    text-align: center;
+		    min-height: 35px;
+		    line-height: 110%;
+
+			._articleBadge{
+				font-weight: bold;
+				opacity: .88;
+			}
+			.group-doi{
+				white-space: nowrap;
+				display:inline-block;
+			}
+			._doi{
+				color: #6789d3;
+			}
+			.copyLink{
+				white-space:nowrap;
+			}
+		}
+
 
 		.article-title {
 			font-size: 2.571em; //36px (body 14px)
@@ -1481,7 +1509,7 @@
 
 	.outlineFadeLink {
 		display: inline-block;
-		padding: 7px;
+		padding: 5px 10px;
 		margin-left: 8px;
 		min-width: 10%;
 		color: #1b92e4;
