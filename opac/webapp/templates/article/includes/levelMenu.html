@@ -1,11 +1,12 @@
 <section class="levelMenu">
     <div class="container">
-        <div class="col-lg-1 col-md-2 col-sm-1">
+        <div class="col-lg-2 col-md-2 col-sm-1">
             <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
-                <span class="sci-ico-home"></span> {% trans %}Home{% endtrans %}
+                <span class="sci-ico-home"></span> {% trans %}home do periódico{% endtrans %}
             </a>
         </div>
-        <div class="col-lg-6 col-md-5 col-sm-5">
+
+        <div class="col-lg-5 col-md-4 col-sm-4">
             <div class="btn-group">
 
                 {# Sumário #}
@@ -166,7 +167,6 @@
                 </a>
               </li>
             </ul>
-
         </div>
         <!-- Está estatico  -->
     </div>
