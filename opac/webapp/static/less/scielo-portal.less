@@ -696,8 +696,23 @@ button.btn:active {
 		display: inline-block;
 		vertical-align: middle;
 	}
+	button.btn {  
+		line-height: 22px;
+		border: 1px solid #dedddb;
+		background: #fff !important;
+		text-align: left;
+		color: @DarkBlue;
+		font-size: .9em;
 
-	a.btn {
+		&.disabled {
+			background: #eeedea !important;
+			color: #beb8b0;
+		}
+	}
+	.dropdown{
+		display: inline-block;
+	}
+	a.btn{ 
 		line-height: 22px;
 		border: 1px solid #dedddb;
 		background: #fff !important;
@@ -1500,4 +1515,9 @@ button.btn:active {
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+
+.bordaTeste{
+	outline: 1px solid red; 
 }
