@@ -609,7 +609,7 @@
 	}
 
 	.copyLink {
-		padding: 8px;
+		padding: 5px 10px 5px 5px;
 		color: #1b92e4;
 		font-weight: normal;
 		text-transform: uppercase;
@@ -786,20 +786,48 @@
 
 	.articleTxt {
 		position: relative;
-		padding: 50px 50px 100px;
+		padding: 0px 50px 100px;
 		margin-top: -30px;
 		margin-bottom: 60px;
 		background: #fff;
 		.radius(4px);
 		.shadow();
-		overflow-x: hidden;
+		overflow-x: hidden; 
 
 		.articleSectionTitle,
 		.article-title {
 			margin: 25px 0 12px;
-			color: @DarkBlue;
+			color: @DarkBlue; 
 			font-size: 1.5em;
 		}
+
+
+		.articleBadge-editionMeta-doi-copyLink{
+		    font-size: .85em;
+		    margin: 0;
+		    font-weight: normal;
+		    color: #a7a49e;
+		    padding: 10px 0 0px;
+		    text-align: center;
+		    min-height: 35px;
+		    line-height: 110%;
+
+			._articleBadge{
+				font-weight: bold;
+				opacity: .88;
+			}
+			.group-doi{
+				white-space: nowrap;
+				display:inline-block;
+			}
+			._doi{
+				color: #6789d3;
+			}
+			.copyLink{
+				white-space:nowrap;
+			}
+		}
+
 
 		.article-title {
 			font-size: 2.571em; //36px (body 14px)
@@ -809,9 +837,26 @@
 			
 			.sci-ico-openAccess{
 				margin-bottom: 7px; 
+<<<<<<< HEAD
+			} 
+  
+			.ref { 
+=======
 			}
 
+			.short-link{
+				visibility: hidden;
+			}
+			&:hover{
+				.short-link{
+					visibility: visible;
+					cursor:pointer;
+				}
+			}
+			
+
 			.ref {
+>>>>>>> feature/tk626
 				.opened {
 					margin-top: 2.4em;
 				}
@@ -1481,7 +1526,7 @@
 
 	.outlineFadeLink {
 		display: inline-block;
-		padding: 7px;
+		padding: 5px 10px;
 		margin-left: 8px;
 		min-width: 10%;
 		color: #1b92e4;
