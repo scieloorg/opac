@@ -242,7 +242,8 @@ input[type=radio].radio:checked + label.radio {
 		display: inline-block;
 		padding-left: 20px;
 		background: url(../img/flags.png) top left no-repeat;
-		
+		position: absolute;
+		top: 6px; 
 		opacity: .6;
 
 		.cssAnimations .animated(.3s, opacity);
@@ -250,39 +251,21 @@ input[type=radio].radio:checked + label.radio {
 		&:hover {
 			opacity: 1;
 		}
-
 		&.lang-es {
 			background-position: 0 -2px;
-			margin: 1px 0 0 64px;
 			margin-left: 0;
-    		margin-right: 15px;
+			right: 80px;
 		}
 		&.lang-pt {
 			background-position: 0 -17px;
 		}
 		&.lang-en {
 			background-position: 1px -32px;
-			margin-right: 7px;
+			right:0;
 		}
 	}
 }
 
-/* periodico */
-.journalMenu{
-	.language{
-		a{
-			&.lang-es{
-				margin-left: 41px !important;
-    			margin-right: 0;
-			}
-			&.lang-en{
-				right: 7px !important;
-				padding-left: 22px;
-				margin-right: 0;
-			}
-		}
-	}
-}
 
 .brandLogo {
 
