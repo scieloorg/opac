@@ -568,7 +568,7 @@ var Portal = {
 					rp = t.data("perpage"),
 					labels = t.data("labels"),
 					search = $(".collectionSearch",t),
-					download = $(".collectionListDownloadXLS,.collectionListDownloadCSV",t),
+					//download = $(".collectionListDownloadXLS,.collectionListDownloadCSV",t),
 					loading = $(".collectionListLoading",t),
 					scroll = false,
 					param = "";
@@ -613,6 +613,7 @@ var Portal = {
 					},300);
 				});
 
+				/*
 				download.on("click",function(e) {
 					e.preventDefault();
 
@@ -622,6 +623,7 @@ var Portal = {
 
 					window.open(action+param);
 				});
+				*/
 			});	
 		},
 		JournalListFinder: function(param,loading,container,labels,empty,scroll,callback,htmlFill) {

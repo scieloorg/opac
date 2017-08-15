@@ -8,11 +8,11 @@
 		[class^="sci-ico-"] {
 			font-size: 24px;
 			color: @Blue;
-		}
+		} 
 
 		&:after {
 			position: absolute;
-			background: #34ad65; 
+			background: #34ad65;   
 			top: 100%;
 			left: 0;
 			right: 0;
@@ -779,8 +779,8 @@
 				background: none;
 			}
 		}
-		h3 {
-			margin: 0 0 10px;
+		h3 { 
+			margin: 0 0 10px; 
 		}
 	}
 
@@ -1195,21 +1195,32 @@
 	.documentLicense {
 		margin: 20px 0;
 
-		.container {
+		.container-license {
 			background: #f2f1ee;
 			font-size: .8em;
 			color: #6d6d6b;
 			padding: 25px;
-			width:100%;
+			width:100%; 
 
+			.row{
+				div{
+					&:first-child{
+						text-align: center;
+					}
+					&:last-child{
+						padding-left: 0;
+					}
+				}
+			}
 			a{
 				color: @Gray;
 				cursor: pointer;
+				display: inline-block;
 			}
-
 		}
 		img {
-			margin-right: 15px;
+			margin: 0 auto;
+			width:100%;
 		}
 	}
 

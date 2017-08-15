@@ -262,7 +262,7 @@ def router_legacy():
         return issue_grid(journal.url_segment)
 
 
-@main.route('/<string:url_seg>/')
+@main.route('/journal/<string:url_seg>/')
 def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -328,7 +328,7 @@ def journal_detail(url_seg):
     return render_template("journal/detail.html", **context)
 
 
-@main.route('/<string:url_seg>/feed/')
+@main.route('/journal/<string:url_seg>/feed/')
 def journal_feed(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -373,7 +373,7 @@ def journal_feed(url_seg):
     return feed.get_response()
 
 
-@main.route("/<string:url_seg>/about/", methods=['GET'])
+@main.route("/journal/<string:url_seg>/about/", methods=['GET'])
 def about_journal(url_seg):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -478,7 +478,7 @@ def download_journal_list(list_type, extension):
 # ###################################Issue#######################################
 
 
-@main.route('/<string:url_seg>/issues/')
+@main.route('/grid/<string:url_seg>')
 def issue_grid(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -517,7 +517,7 @@ def issue_grid(url_seg):
     return render_template("issue/grid.html", **context)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route('/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
@@ -584,7 +584,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/feed/')
+@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>')
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -634,10 +634,10 @@ def issue_feed(url_seg, url_seg_issue):
 # ##################################Article######################################
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -766,10 +766,10 @@ def article_ssm_content_raw():
         return get_content_from_ssm(resource_ssm_path)
 
 
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/pdf/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/pdf/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/pdf/')
-@main.route('/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/pdf/')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
