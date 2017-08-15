@@ -210,7 +210,8 @@ def get_journal_json_data(journal, language='pt'):
             'volume': journal.last_issue.volume,
             'number': journal.last_issue.number,
             'year': journal.last_issue.year,
-            'url_segment': journal.url_last_issue
+            # verificar uma forma mais legal de gerar essa URL o ideal é fazer isso com url_for
+            'url_segment': '%s/%s' % ('toc', journal.url_last_issue)
         }
 
     return j_data

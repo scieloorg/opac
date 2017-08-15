@@ -231,9 +231,9 @@ input[type=radio].radio:checked + label.radio {
 }
 
 .language {
-	text-align: right;
-	margin-top: 3px;
-	padding: 0; 
+	//text-align: right;
+	//margin-top: 3px;
+	//padding: 0; 
 
 	a {
 		text-transform: uppercase;
@@ -253,14 +253,21 @@ input[type=radio].radio:checked + label.radio {
 		}
 		&.lang-es {
 			background-position: 0 -2px;
-			margin-left: 0;
-			right: 80px;
 		}
 		&.lang-pt {
-			background-position: 0 -17px;
+			background-position: 0 -18px;
 		}
 		&.lang-en {
 			background-position: 1px -32px;
+		}
+		&:first-child{
+			margin-left: 0;
+			right: 80px;
+		}
+		&:last-child{
+			position: absolute;
+			top: 6px; 
+			right: 0;
 		}
 	}
 }
