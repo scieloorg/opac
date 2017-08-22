@@ -1,5 +1,7 @@
 {% extends "article/base.html" %}
 
+{% block title %} {{ super() }} {{ article.title }} {% endblock %}
+
 {% block main_content %}
 
     {% include "article/includes/levelMenu.html" %}

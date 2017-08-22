@@ -56,7 +56,7 @@
 
           {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
             {% if article and article.pdfs|length == 1 %}
-              <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=article.pdfs[0].url, lang=article.pdfs[0].lang) }}"" class="btn"> <span class="sci-ico-filePDF"></span> ePDF</a>
+              <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=article.pdfs[0].url, lang=article.pdfs[0].lang) }}" class="btn"> <span class="sci-ico-filePDF"></span> ePDF</a>
             {% endif %}
           {% endif %}
 
@@ -92,7 +92,7 @@
               <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
                 <span class="sci-ico-filePDF"></span>
-                <span class="hidden-sm">PDF</span>
+                <span class="hidden-sm">ePDF</span>
                 <span class="caret"></span></button>
                 <ul class="dropdown-menu">
                   {% for pdf in article.pdfs  %}

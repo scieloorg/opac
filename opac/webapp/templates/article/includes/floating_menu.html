@@ -17,7 +17,7 @@
       <span class="sci-ico-floatingMenuClose glyphFloatMenu"></span>
     </a>
     <ul class="fm-list">
-      {% if not is_pdf_page %}
+      {% if not is_pdf_page and article.xml %}
         {# excluimos este item se é a página do PDF #}
         <li>
           <a class="fm-button-child" data-fm-label="{% trans %}Figuras e tabelas{% endtrans %}" data-toggle="modal" data-target="#ModalTablesFigures">

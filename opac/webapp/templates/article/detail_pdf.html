@@ -1,5 +1,7 @@
 {% extends "article/base.html" %}
 
+{% block title %} {{ article.title }} {% endblock %}
+
 {% block main_content %}
 
   {% with is_pdf_page=True  %}
@@ -26,4 +28,3 @@
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}
-

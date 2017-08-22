@@ -610,7 +610,7 @@ var Portal = {
 						duringKeyChange = false;
 						
 					},300);
-				});
+				}); 
 
 				/*
 				download.on("click",function(e) {
