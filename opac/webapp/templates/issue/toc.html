@@ -61,9 +61,32 @@
                 <a href="" class="expandCollapseContent showTooltip" title="{% trans %}Expandir/recolher conteúdo{% endtrans %}"><span class="glyphBtn opened"></span></a>
               {% endif %}
               <div class="block summary collapseContent">
-                  <a href="javascript:;" class="collapse-title"><h1>{% trans %}Sumário{% endtrans %}</h1></a>
-                  <div class="collapse-content issueIndent">
+                <div class="row">
+    							<div class="col-sm-12 col-md-12">
+
+    								<div class="row row-filtro-ordena">
+    									<div class="col-md-6 col-sm-6">
+    										<a href="javascript:;" class="collapse-title">
+    											<h1>{% trans %}Sumário{% endtrans %}</h1>
+    										</a>
+    									</div>
+    									<div class="col-sm-6 col-md-6">
+    										<div class="box-filtro pull-right">
+    											{% trans %}Ordenar publicações por{% endtrans %}
+    											<div class="selectBox inline">
+    												<select name="sortBy" id="sortBy">
+    													<option value="0" selected="selected">{% trans %}Ordenação{% endtrans %}</option>
+    													<option value="YEAR_ASC">{% trans %}Mais novos primeiro{% endtrans %}</option>
+    													<option value="YEAR_DESC">{% trans %}Mais antigos primeiro{% endtrans %}</option>
+    												</select>
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+
+                    <div class="collapse-content issueIndent">
                     <strong>{{ issue_legend|default('--', True) }}</strong>
+                    <!-- Cabeçalho do Issue Toc -->
                     <ul>
 
                       {% if sections %}
@@ -93,10 +116,13 @@
                       {% endfor %}
 
                     </ul>
+                    <!-- Cabeçalho do Issue Toc -->
                   </div>
+                </div>
               </div>
 
               <div class="issueIndent">
+                <!-- Corpo com artigos -->
                 <ul class="articles">
                   {% for article in articles %}
 
@@ -110,7 +136,7 @@
                       </h1>
                     {% endif %}
                     #}
-                      <li>
+                      <li data-date="{{ article.publication_date }}">
 
                         {% if session.lang %}
                           <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true)|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
@@ -168,7 +194,9 @@
                       </li>
                   {% endfor %}
                 </ul>
+                <!-- Corpo com artigos -->
               </div>
+
           </div>
           <div class="clearfix"></div>
       </div>

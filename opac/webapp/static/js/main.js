@@ -12,7 +12,7 @@ var Portal = {
 					placement: pPlacement
 				});
 			}); 
-
+ 
 			$(".mainNav .menu").on("click",function(e) {
 				e.preventDefault();
 
@@ -176,9 +176,10 @@ var Portal = {
 			});
 
 			$(".collapse-title").on("click",function() {
-				var t = $(this),
-					ctt = t.next(".collapse-content");
 
+ 				var t = $(this),
+					ctt = $(".collapse-content");
+ 
 				if(ctt.is(":visible")) {
 					ctt.slideUp("fast");
 					t.addClass("closed");
@@ -610,7 +611,7 @@ var Portal = {
 						duringKeyChange = false;
 						
 					},300);
-				}); 
+				});
 
 				/*
 				download.on("click",function(e) {
@@ -940,6 +941,51 @@ var Portal = {
 		}
 	}
 
+	Journal = {
+		Init: function() {
+			
+			$("#sortBy").change(function(){
+				$("#sortBy option:selected" ).each(function() {
+      				var str = "";
+      				str += $(this).val() + " ";
+      				Journal.publicationSort(str);
+    			});
+			})
+			
+		},
+		Bindings: function(ctn) {
+			if(typeof ctn == "undefined") ctn = ".journal";
+		},
+		publicationSort: function(el){
+
+			var elemento = el;
+			var valor = $("#"+ elemento +" option:selected").val();
+
+			var listas = $(".issueIndent>ul.articles");
+			var qtdlista = listas.length;
+			
+			for(var t=0; t<=qtdlista; t++){
+				
+				var ul = listas[t];
+				var li = $(ul).children();
+
+				if(valor == "YEAR_ASC"){
+					$(li).sort(function(a,b){
+		    			return new Date($(a).attr("data-date")) < new Date($(b).attr("data-date"));
+					}).each(function(){
+						$(ul).prepend(this);
+					})
+				}else{
+					$(li).sort(function(a,b){
+		    			return new Date($(a).attr("data-date")) > new Date($(b).attr("data-date"));
+					}).each(function(){
+						$(ul).prepend(this);
+					})					
+				}
+			}
+		}
+	};
+
 var Validator = {
 	MultipleEmails: function(val,delimiter) {
 		var delimiter = delimiter || ';';
@@ -1000,7 +1046,9 @@ $(function() {
 	if($(".searchForm").length)
 		SearchForm.Init();
 
-	
+	if($("body.journal").length)
+		Journal.Init();
+
 	if($("body.collection, body.portal").length)
 		Collection.Init();
 
@@ -1011,11 +1059,11 @@ $(function() {
 			count: 3,
 			loadingText: 'Carregando...',
 			dateFormat: '%d de %B',
-		});
+		}); 
 
 	if($(".portal .collectionList").length)
 		var hash = window.location.hash;
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
 
-});
+}); 
 
