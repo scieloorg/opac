@@ -2,7 +2,7 @@
 	.zindexFix {
 		z-index: 98 !important;	
 	}
-	.copyLink {
+	.copyLink{
 		position: relative;
 
 		[class^="sci-ico-"] {
@@ -857,16 +857,44 @@
 				margin-bottom: 7px; 
 			}
 
-			.short-link{
+			
+			.short-link {
+				position: relative;
 				visibility: hidden;
-			}
-			&:hover{
-				.short-link{
+				cursor: pointer;
+
+				[class^="sci-ico-"] {
+					//font-size: 24px;
+					color: @Blue;
+				} 
+
+				&:after {
+					position: absolute;
+					background: #34ad65;   
+					top: 100%;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					z-index: 2;
+					text-align: center;
+					font-family: 'scielo-glyphs' !important;
+					content: "\e924";
+					color: #fff;
+					font-size: 20px;
+					visibility: hidden;
+					vertical-align: middle;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					border-radius: 4px;
+					.cssAnimations .animated(.3s,all);
+				}
+
+				&.copyFeedback:after {
+					top: 0;
 					visibility: visible;
-					cursor:pointer;
 				}
 			}
-			
 
 			.ref {
 				.opened {
@@ -886,6 +914,12 @@
 							letter-spacing: inherit;
 						}
 					}
+				}
+			}
+
+			&:hover{
+				.short-link{
+					visibility: visible;
 				}
 			}
 		}

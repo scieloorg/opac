@@ -946,9 +946,7 @@ var Portal = {
 			
 			$("#sortBy").change(function(){
 				$("#sortBy option:selected" ).each(function() {
-      				var str = "";
-      				str += $(this).val() + " ";
-      				Journal.publicationSort(str);
+      				Journal.publicationSort($(this).val());
     			});
 			})
 			
@@ -956,10 +954,7 @@ var Portal = {
 		Bindings: function(ctn) {
 			if(typeof ctn == "undefined") ctn = ".journal";
 		},
-		publicationSort: function(el){
-
-			var elemento = el;
-			var valor = $("#"+ elemento +" option:selected").val();
+		publicationSort: function(valor) {
 
 			var listas = $(".issueIndent>ul.articles");
 			var qtdlista = listas.length;
@@ -969,21 +964,24 @@ var Portal = {
 				var ul = listas[t];
 				var li = $(ul).children();
 
-				if(valor == "YEAR_ASC"){
+				if(valor === 'YEAR_DESC'){
+					
 					$(li).sort(function(a,b){
-		    			return new Date($(a).attr("data-date")) < new Date($(b).attr("data-date"));
+		    			return $(a).data("date") < $(b).data("date");
+					}).each(function(){
+						$(ul).prepend(this);  
+					});		
+
+				}else {
+
+					$(li).sort(function(a,b){
+		    			return $(a).data("date") > $(b).data("date");
 					}).each(function(){
 						$(ul).prepend(this);
-					})
-				}else{
-					$(li).sort(function(a,b){
-		    			return new Date($(a).attr("data-date")) > new Date($(b).attr("data-date"));
-					}).each(function(){
-						$(ul).prepend(this);
-					})					
+					});								
 				}
-			}
-		}
+			} 
+		} 
 	};
 
 var Validator = {

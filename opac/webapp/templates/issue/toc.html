@@ -75,7 +75,7 @@
     											{% trans %}Ordenar publicações por{% endtrans %}
     											<div class="selectBox inline">
     												<select name="sortBy" id="sortBy">
-    													<option value="0" selected="selected">{% trans %}Ordenação{% endtrans %}</option>
+    													<option value="0" selected="selected">{% trans %}Ordem do fascículo{% endtrans %}</option>
     													<option value="YEAR_ASC">{% trans %}Mais novos primeiro{% endtrans %}</option>
     													<option value="YEAR_DESC">{% trans %}Mais antigos primeiro{% endtrans %}</option>
     												</select>
@@ -136,7 +136,8 @@
                       </h1>
                     {% endif %}
                     #}
-                      <li data-date="{{ article.publication_date }}">
+                      <li data-date="{{ article.publication_date.replace('-', "") }}">
+                        {{ article.publication_date }}
 
                         {% if session.lang %}
                           <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true)|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>

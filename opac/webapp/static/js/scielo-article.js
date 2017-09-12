@@ -231,7 +231,63 @@ var Article = {
 
 		Article.fechaAutores();
 
+		// Global variable shared on mouseenter event and clipboard
+		var result = false;
+		
+		$('.short-link').mouseenter(function(event) {
+
+			// Verify if the ajax request has already been made
+			if(!result) {
+
+				var urlAtual = window.location.href; 
+				//var urlAtual = "http://www.scielo.br"; 
+	        	$.ajax({
+		            type: "GET",
+		            async: false,
+		            url: 'http://ref.scielo.org/api/v1/shorten',
+		            data: 'url=' + encodeURI(urlAtual), //escape(document.URL)
+		            dataType: "jsonp",
+		            success: function(data) {
+		            	result = data;
+	            	}
+	            	//error:
+	        	});
+			}
+			
+	    });
+
+		var clipboard = new Clipboard('.short-link', {
+        text: function(trigger) {
+            	return result;
+            }
+        });
+
+	    clipboard.on('success', function(e) {
+	        
+	        console.log('Sucess: ' + e);
+
+        	var t = $(e.trigger);
+			t.addClass("copyFeedback");
+			
+			setTimeout(function() {
+				t.removeClass("copyFeedback");
+			},2000);
+	    });
+
+	    clipboard.on('error', function(e) {  
+	    	console.log('Error: ' + e);
+
+	    	var t = $(e.trigger);
+			t.addClass("copyFeedbackError");
+			
+			setTimeout(function() {
+				t.removeClass("copyFeedbackError");
+			},2000);
+	    });
+
 	},
+	
+
 	ArticleStructureBuilder: function() {
 		var structure = $(".articleMenu"),
 			content = $("#articleText .articleSection"),
@@ -327,60 +383,60 @@ var Article = {
 
 	fechaAutores: function(){
 			
-		var autoresGrupo = document.querySelector(".contribGroup");
-		var autoresMix = autoresGrupo;
-		var autores = autoresMix.querySelectorAll(".dropdown");
+		var autoresGrupo = $(".contribGroup");
+		var autores = $(".contribGroup .dropdown");
 		var qtdAutores = autores.length;
 
-
 		if(qtdAutores >= 10) {	
-
-			var btnSobre = autoresMix.querySelector(".outlineFadeLink");
+			var btnSobre = $(".outlineFadeLink");
 			var primeiro = autores[0];
 			var ultimo = autores[qtdAutores -1];
 			
-			var linkToggleOn = document.createElement("a");
-			linkToggleOn.textContent = "[...]";
+			var linkToggleOn = $('<a></a>');
+			
+			var qtdAutoresToShowInsideBracktes = qtdAutores - 2;
+
+			linkToggleOn.text("[...+"+qtdAutoresToShowInsideBracktes+" autores...]");
 			//style
-			linkToggleOn.style.padding = "10px";
-			linkToggleOn.style.cursor = "pointer";
+			linkToggleOn.css("padding","10px").css("cursor","pointer");
 
-			var boxToggleOff = document.createElement("div");
-			var linkToggleOff = document.createElement("a");
-			linkToggleOff.classList.add("btn-fechar");
+			var boxToggleOff = $('<div></div>');
+			var linkToggleOff = $('<a></a>');
 
-			var spanOff = document.createElement("span");
-			spanOff.classList.add("sci-ico-floatingMenuClose");
+			linkToggleOff.addClass("btn-fechar");
+
+			var spanOff = $('<span></span>');
+			spanOff.addClass("sci-ico-floatingMenuClose");
+
+			linkToggleOff.append(spanOff);
+			boxToggleOff.append(linkToggleOff);
+
+			var autoresResumo = $('<div></div>');
+			autoresResumo.append(primeiro);
+			autoresResumo.append(linkToggleOn);
+			autoresResumo.append(ultimo);
+			autoresResumo.append(btnSobre);
+
+			//substitui o conteudo pelo resumo	
+			autoresGrupo.text("");			
+			autoresGrupo.append(autoresResumo);	
 			
-			linkToggleOff.appendChild(spanOff);
-			boxToggleOff.appendChild(linkToggleOff);
+			linkToggleOn.on("click",function() {
 
-			var autoresResumo = document.createElement("div");
-			autoresResumo.appendChild(primeiro);
-			autoresResumo.appendChild(linkToggleOn);
-			autoresResumo.appendChild(ultimo);
-			autoresResumo.appendChild(btnSobre);
-
-			//substitui o conteudo pelo resumo
-			autoresGrupo.textContent = "";				
-			autoresGrupo.appendChild(autoresResumo);	
-			
-			linkToggleOn.addEventListener("click", function(){
 				autoresGrupo.textContent = "";	
 				for (var i = 0; i < qtdAutores; i++){
-					autoresGrupo.appendChild(autores[i]);	
+					autoresGrupo.append(autores[i]);	
 				}
-				autoresGrupo.appendChild(btnSobre);
-				autoresGrupo.appendChild(boxToggleOff);
+				
+				autoresGrupo.append(btnSobre);
+				autoresGrupo.append(boxToggleOff);
 			});
-
-			linkToggleOff.addEventListener("click", function(){
+			linkToggleOff.on("click",function() {
 				Article.fechaAutores();
 			});
 		}
-		autoresGrupo.style.opacity = "1";
-
-
+		autoresGrupo.css("opacity","1");
+		
 	}
 };
 
