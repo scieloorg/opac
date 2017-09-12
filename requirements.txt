@@ -3,14 +3,14 @@ mongoengine==0.13.0
 flask-mongoengine==0.9.3
 Flask-Admin==1.5.0
 Flask-SQLAlchemy==2.2
-SQLAlchemy-Utils==0.32.14
+SQLAlchemy-Utils==0.32.16
 Flask-Security==3.0.0
 Flask-Login==0.4.0
-Flask-Script==2.0.5
+Flask-Script==2.0.6
 Flask-Mail==0.9.1
 Pillow==4.2.1
 Flask-BabelEx==0.9.3
-Flask-Migrate==2.1.0
+Flask-Migrate==2.1.1
 unicodecsv==0.14.1
 feedparser==5.2.1
 legendarium==2.0.2
@@ -19,7 +19,7 @@ Flask-HTMLmin==1.2.1
 python-slugify==1.2.4
 requests==2.18.4
 gunicorn==19.7.1
-xlsxwriter==0.9.8
+xlsxwriter==0.9.9
 tweepy==3.5.0
 raven[flask]==6.1.0
 beautifulsoup4==4.6.0
