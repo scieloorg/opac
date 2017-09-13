@@ -5,12 +5,12 @@ var Article = {
 			articleTextP = articleText.offset(),
 			articleMenuW = $(".articleMenu").width(),
 			p = $(".articleSection",articleText);
-		
+
 		/*for(var i = 0, l = p.length; i<l; i++) {
 			var c = $("p",p[i]).outerHeight(), r = $(".refList",p[i]), rh = r.outerHeight();
 			if(rh > c) {
 				r.addClass("outer").css("height",c);
-			} 
+			}
 		}*/
 
 		$(".ModalTables").on("shown.bs.modal",function() {
@@ -20,7 +20,7 @@ var Article = {
 				tableWidth = table.outerWidth();
 
 			if(!modalBody.is("cached")) {
-				table.addClass("table"); 
+				table.addClass("table");
 
 				if(tableWidth > modalBodyWidth) {
 					table.addClass("autoWidth");
@@ -46,7 +46,7 @@ var Article = {
 				c = "div." + c.join(",div.");
 				b = $(c);
 				p = b.parent().find("sup");
-			}*/ 
+			}*/
 			if(e.type === "mouseenter") {
 				if(li.length > 0)
 					li.addClass("zindexFix");
@@ -78,7 +78,7 @@ var Article = {
 				p.fadeIn("fast");
 			} else if(e.type == "mouseleave") {
 				p.fadeOut("fast");
-			} 
+			}
 		});
 
 		$(".ModalTables").on("shown.bs.modal",function() {
@@ -107,13 +107,13 @@ var Article = {
 				s = $(this).data("expandreducetext"),
 				tw = $(this).data("defaultwidth");
 
-			if(typeof tw == "undefined") 
+			if(typeof tw == "undefined")
 				$(this).data("defaultwidth",txt.outerWidth());
 
 			if(s == true) {
 				ref.hide();
 				txt.outerWidth("100%");
-				
+
 				/*
 				ref.stop(true,true).fadeOut(100,function() {
 					txt.animate({
@@ -127,7 +127,7 @@ var Article = {
 			} else {
 				txt.width("");
 				ref.show();
-				
+
 				/*
 				txt.stop(true,true).animate({
 					width: tw
@@ -142,10 +142,10 @@ var Article = {
 			var t = $(window).scrollTop();
 			setTimeout(function() {
 				Article.ArticleStructureBuilder();
-				Article.ArticleStructureSelect(t);	
+				Article.ArticleStructureSelect(t);
 			},100);
-			
-		
+
+
 		});
 
 		$(".articleTxt .xref:not(.big)").on("click",function() {
@@ -180,13 +180,13 @@ var Article = {
 			if(
 				t > articleTextP.top
 			) {
-				$(".articleMenu").addClass("fixed").width(articleMenuW);	
+				$(".articleMenu").addClass("fixed").width(articleMenuW);
 				if(t > (articleTextH + articleTextP.top - articleMenuH - 46)) {
 					$(".articleMenu").addClass("fixedBottom");
 				} else {
 					$(".articleMenu").removeClass("fixedBottom");
 				}
-			} else 
+			} else
 				$(".articleMenu").removeClass("fixed");
 
 			Article.ArticleStructureSelect(t);
@@ -201,10 +201,10 @@ var Article = {
 		if(window.location.hash != "") {
 			var hash = window.location.hash,
 				scrollY = window.scrollY;
-			
+
 			$(hash).modal("toggle").on("hidden.bs.modal",function() {
     			window.location.hash = '';
-    			
+
     			$("body,html").scrollTop(scrollY);
 			});
 		}
@@ -219,41 +219,42 @@ var Article = {
 
 			$(target).on("hidden.bs.modal",function () {
         		window.location.hash = '';
-        		
+
         		$("body,html").scrollTop(scrollY);
     		});
 		});
 
 		var downloadOpt = $(".downloadOptions li.group"),
 			downloadOptW = 100/downloadOpt.length;
-	
+
 		downloadOpt.css("width",downloadOptW+"%");
 
 		Article.fechaAutores();
 
 		// Global variable shared on mouseenter event and clipboard
-		var result = false;
-		
+		var hasEncodedTheURL = false;
+
 		$('.short-link').mouseenter(function(event) {
 
 			// Verify if the ajax request has already been made
-			if(!result) {
+			if(!hasEncodedTheURL) {
 
-				var urlAtual = window.location.href; 
-				//var urlAtual = "http://www.scielo.br"; 
+				var urlAtual = window.location.href;
+				// var urlAtual = "http://www.scielo.br";
 	        	$.ajax({
 		            type: "GET",
 		            async: false,
 		            url: 'http://ref.scielo.org/api/v1/shorten',
-		            data: 'url=' + encodeURI(urlAtual), //escape(document.URL)
+		            data: 'url=' + encodeURI(urlAtual),
 		            dataType: "jsonp",
 		            success: function(data) {
 		            	result = data;
+		            	hasEncodedTheURL = true;
 	            	}
 	            	//error:
 	        	});
 			}
-			
+
 	    });
 
 		var clipboard = new Clipboard('.short-link', {
@@ -263,30 +264,30 @@ var Article = {
         });
 
 	    clipboard.on('success', function(e) {
-	        
+
 	        console.log('Sucess: ' + e);
 
         	var t = $(e.trigger);
 			t.addClass("copyFeedback");
-			
+
 			setTimeout(function() {
 				t.removeClass("copyFeedback");
 			},2000);
 	    });
 
-	    clipboard.on('error', function(e) {  
+	    clipboard.on('error', function(e) {
 	    	console.log('Error: ' + e);
 
 	    	var t = $(e.trigger);
 			t.addClass("copyFeedbackError");
-			
+
 			setTimeout(function() {
 				t.removeClass("copyFeedbackError");
 			},2000);
 	    });
 
 	},
-	
+
 
 	ArticleStructureBuilder: function() {
 		var structure = $(".articleMenu"),
@@ -339,7 +340,7 @@ var Article = {
 			idx++;
 		});
 
-		//ctt+='<li class="link-to-top"><a href="#top"><span class="circle"><span class="sci-ico-top"></span></span> Ir para o topo</a></li>'; 
+		//ctt+='<li class="link-to-top"><a href="#top"><span class="circle"><span class="sci-ico-top"></span></span> Ir para o topo</a></li>';
 
 		structure.html(ctt);
 
@@ -369,9 +370,9 @@ var Article = {
 					structure.find("li").removeClass("selected");
 					structure.find("li:eq("+(i-1)+")").addClass("selected");
 					break;
-				} 	
+				}
 			}
-			
+
 		}
 
 	},
@@ -382,23 +383,27 @@ var Article = {
 	},
 
 	fechaAutores: function(){
-			
+
 		var autoresGrupo = $(".contribGroup");
 		var autores = $(".contribGroup .dropdown");
 		var qtdAutores = autores.length;
 
-		if(qtdAutores >= 10) {	
+		if(qtdAutores >= 10) {
+
+			var AuthorsQTDTooltip = null;
+
 			var btnSobre = $(".outlineFadeLink");
 			var primeiro = autores[0];
 			var ultimo = autores[qtdAutores -1];
-			
-			var linkToggleOn = $('<a></a>');
-			
-			var qtdAutoresToShowInsideBracktes = qtdAutores - 2;
 
-			linkToggleOn.text("[...+"+qtdAutoresToShowInsideBracktes+" autores...]");
+			// Code added to control authors quantity tooltip
+			var authorsQTDToShowInsideBracktes = qtdAutores - 2;
+
+			var linkToggleOn = $('<a data-toggle="tooltip" data-placement="top" title="+'+authorsQTDToShowInsideBracktes+'"></a>');
+
+			linkToggleOn.text("[...]");
 			//style
-			linkToggleOn.css("padding","10px").css("cursor","pointer");
+			linkToggleOn.css({ padding : "10px" , cursor : "pointer" });
 
 			var boxToggleOff = $('<div></div>');
 			var linkToggleOff = $('<a></a>');
@@ -417,32 +422,38 @@ var Article = {
 			autoresResumo.append(ultimo);
 			autoresResumo.append(btnSobre);
 
-			//substitui o conteudo pelo resumo	
-			autoresGrupo.text("");			
-			autoresGrupo.append(autoresResumo);	
-			
-			linkToggleOn.on("click",function() {
+			//substitui o conteudo pelo resumo
+			autoresGrupo.text("");
+			autoresGrupo.append(autoresResumo);
 
-				autoresGrupo.textContent = "";	
+			linkToggleOn.on("click",function() {
+				AuthorsQTDTooltip.tooltip('disable')
+
+				autoresGrupo.textContent = "";
 				for (var i = 0; i < qtdAutores; i++){
-					autoresGrupo.append(autores[i]);	
+					autoresGrupo.append(autores[i]);
 				}
-				
+
 				autoresGrupo.append(btnSobre);
 				autoresGrupo.append(boxToggleOff);
 			});
+
 			linkToggleOff.on("click",function() {
+				AuthorsQTDTooltip.tooltip('enable');
+
 				Article.fechaAutores();
 			});
+
+			// Initialize tooltip
+			AuthorsQTDTooltip = $('[data-toggle="tooltip"]').tooltip();
 		}
 		autoresGrupo.css("opacity","1");
-		
+
 	}
 };
 
 $(function() {
-	
+
 	if($("body.article").length)
 		Article.Init();
-
-}); 
+});

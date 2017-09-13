@@ -966,18 +966,28 @@ var Portal = {
 
 				if(valor === 'YEAR_DESC'){
 					
-					$(li).sort(function(a,b){
-		    			return $(a).data("date") < $(b).data("date");
+					$(li).sort(function(a,b) {
+
+						var dateA = parseInt($(a).data("date")),
+							dateB = parseInt($(b).data("date"));
+
+		    			return  (dateA > dateB) ? 1 : -1;
+
 					}).each(function(){
-						$(ul).prepend(this);  
+						$(ul).append(this);  
 					});		
 
 				}else {
+					
+					$(li).sort(function(a,b) {
 
-					$(li).sort(function(a,b){
-		    			return $(a).data("date") > $(b).data("date");
+						var dateA = parseInt($(a).data("date")),
+							dateB = parseInt($(b).data("date"));
+
+		    			return (dateA < dateB) ? 1 : -1;
+
 					}).each(function(){
-						$(ul).prepend(this);
+						$(ul).append(this);
 					});								
 				}
 			} 
