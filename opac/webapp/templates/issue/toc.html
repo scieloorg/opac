@@ -136,7 +136,7 @@
                       </h1>
                     {% endif %}
                     #}
-                      <li data-date="{{ article.publication_date.replace('-', "") }}">
+                      <li data-date="{% if article.publication_date %}{{ article.publication_date.replace('-', "") }}{% endif %}">
                         {{ article.publication_date }}
 
                         {% if session.lang %}
