@@ -31,7 +31,7 @@ from flask_mongoengine import Pagination
 from webapp import dbsql
 from .models import User
 from .choices import INDEX_NAME
-from . import utils
+from .utils import utils
 from uuid import uuid4
 
 from mongoengine import Q
