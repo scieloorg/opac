@@ -6,15 +6,19 @@
 
     {% include "article/includes/levelMenu.html" %}
 
+    <!-- PID: {{article.pid}} -->
+
     <section class="articleCtt">
+
       <div class="container">
       {% if html %}
         {{ html|safe }}
       {% endif %}
       </div>
-    </section>
 
-  {% include "article/includes/floating_menu.html" %}
+      {% include "article/includes/floating_menu.html" %}
+
+    </section>
 
   {% include "journal/includes/contact_footer.html" %}
 

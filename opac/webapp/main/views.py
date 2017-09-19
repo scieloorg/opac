@@ -922,6 +922,7 @@ def email_share_ajax():
 # ##################################Others#######################################
 
 
+@main.route("/media/<path:filename>", methods=['GET'])
 @main.route("/media/<path:filename>/", methods=['GET'])
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']

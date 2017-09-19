@@ -125,7 +125,7 @@ gulp.task('process-scielo-bundle-js', function() {
     console.info('[INFO] [task: process-scielo-bundle-js] - output folder:\t', output_folder);
     gulp.src(source_file)
         .pipe(concat(output_file))
-        // .pipe(stripDebug())
+        .pipe(stripDebug())
         .pipe(uglify())
         .pipe(gulp.dest(output_folder)
     );
@@ -141,7 +141,7 @@ gulp.task('process-scielo-article-js', function() {
     console.info('[INFO] [task: process-scielo-article-js] - output folder\t:', output_folder);
     gulp.src(source_file)
         .pipe(concat(output_file))
-        // .pipe(stripDebug())
+        .pipe(stripDebug())
         .pipe(uglify())
         .pipe(gulp.dest(output_folder)
     );
@@ -157,7 +157,7 @@ gulp.task('process-scielo-article-standalone-js', function() {
     console.info('[INFO] [task: process-scielo-article-standalone-js] - output folder:\t', output_folder);
     gulp.src(source_file)
         .pipe(concat(output_file))
-        // .pipe(stripDebug())
+        .pipe(stripDebug())
         .pipe(uglify())
         .pipe(gulp.dest(output_folder)
     );

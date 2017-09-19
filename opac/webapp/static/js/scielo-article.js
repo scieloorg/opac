@@ -176,13 +176,26 @@ var Article = {
 
 		$(window).scroll(function() {
 			var t = $(window).scrollTop();
+			//var w = $(window).width();
 
-			if(
-				t > articleTextP.top
-			) {
+			if(Article.isScrolledIntoView('.floatingMenuCtt')){
+
+				$('.floatingMenuItem').css({position: 'absolute'});
+				$('.floatingMenu').css({position: 'absolute'});
+
+			}else{
+
+				$('.floatingMenuItem').css({position: 'fixed'});
+				$('.floatingMenu').css({position: 'fixed'});
+			}
+
+			if(t > articleTextP.top) {
+
 				$(".articleMenu").addClass("fixed").width(articleMenuW);
+
 				if(t > (articleTextH + articleTextP.top - articleMenuH - 46)) {
 					$(".articleMenu").addClass("fixedBottom");
+
 				} else {
 					$(".articleMenu").removeClass("fixedBottom");
 				}
@@ -241,6 +254,11 @@ var Article = {
 
 				var urlAtual = window.location.href;
 				// var urlAtual = "http://www.scielo.br";
+
+				if(urlAtual.indexOf('localhost') !== -1) { // Localhost
+					var urlAtual = "http://www.scielo.br";
+				}
+
 	        	$.ajax({
 		            type: "GET",
 		            async: false,
@@ -288,6 +306,13 @@ var Article = {
 
 	},
 
+	isScrolledIntoView: function(elem){
+	    var docViewTop = $(window).scrollTop();
+	    var docViewBottom = docViewTop + $(window).height();
+	    var elemTop = $(elem).offset().top;
+	    var elemBottom = elemTop + $(elem).height();
+	    return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+	},
 
 	ArticleStructureBuilder: function() {
 		var structure = $(".articleMenu"),
@@ -340,7 +365,7 @@ var Article = {
 			idx++;
 		});
 
-		//ctt+='<li class="link-to-top"><a href="#top"><span class="circle"><span class="sci-ico-top"></span></span> Ir para o topo</a></li>';
+		// ctt+='<li class="floatingMenuCtt">colocar botao aqui</li>';
 
 		structure.html(ctt);
 
