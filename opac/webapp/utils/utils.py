@@ -10,7 +10,8 @@ from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app
-from . import models
+from ... import models
+from journal_static_page import JournalStaticPage
 import webapp
 import requests
 
@@ -304,6 +305,14 @@ def create_page(name, language, content, journal=None, description=None):
     page.save()
 
     return page
+
+
+def fix_page_content(filename, content):
+    """
+    Extract the header and the footer of the page
+    Insert the anchor based on filename
+    """
+    return JournalStaticPage(filename, content).body
 
 
 def extract_images(content):
