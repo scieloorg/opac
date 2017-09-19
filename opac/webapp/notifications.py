@@ -6,7 +6,7 @@
 """
 
 from flask import url_for, render_template
-from . import utils
+from .utils import utils
 import six
 
 

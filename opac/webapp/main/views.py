@@ -15,7 +15,7 @@ from legendarium.formatter import descriptive_short_format
 from . import main
 from webapp import babel
 from webapp import controllers
-from webapp import utils
+from webapp.utils import utils
 from webapp import forms
 
 logger = logging.getLogger(__name__)

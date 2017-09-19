@@ -30,7 +30,7 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file  # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content  # noqa
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
@@ -291,6 +291,7 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
 
         for lang, files in file_names.items():
             content = ''
+
             print("Cadastrando as páginas do periódico com acrônimo: %s idioma: %s" % (acron, lang))
 
             for file in files:
@@ -301,22 +302,22 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
                 except IOError as e:
                     print(e)
                 else:
-                    content += fp.read()
+                    content += fix_page_content(file, fp.read())
 
-                images_list = extract_images(content)
+            images_list = extract_images(content)
 
-                for image in images_list:
-                    image_name = '%s_%s' % (acron, os.path.basename(image))
-                    image_path = os.path.join(journal_dir, os.path.basename(image))
+            for image in images_list:
+                image_name = '%s_%s' % (acron, os.path.basename(image))
+                image_path = os.path.join(journal_dir, os.path.basename(image))
 
-                    try:
-                        # Verifica se a imagem existe
-                        open_file(image_path, mode='r')
-                    except IOError as e:
-                        print(e)
-                    else:
-                        img = create_image(image_path, image_name, thumbnail=True)
-                        content = content.replace(image, img.get_absolute_url)
+                try:
+                    # Verifica se a imagem existe
+                    open_file(image_path, mode='r')
+                except IOError as e:
+                    print(e)
+                else:
+                    img = create_image(image_path, image_name, thumbnail=True)
+                    content = content.replace(image, img.get_absolute_url)
 
             if content:
                 create_page('Página secundária %s (%s)' % (acron.upper(), lang),

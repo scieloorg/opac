@@ -9,15 +9,11 @@
     <!-- PID: {{article.pid}} -->
 
     <section class="articleCtt">
-
-      <div class="container">
       {% if html %}
         {{ html|safe }}
       {% endif %}
-      </div>
 
       {% include "article/includes/floating_menu.html" %}
-
     </section>
 
   {% include "journal/includes/contact_footer.html" %}
