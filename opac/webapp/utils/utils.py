@@ -10,10 +10,11 @@ from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app
-from ... import models
-from journal_static_page import JournalStaticPage
+
 import webapp
 import requests
+from utils.journal_static_page import JournalStaticPage
+from webapp import models
 
 from opac_schema.v1.models import Pages
 

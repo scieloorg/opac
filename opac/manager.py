@@ -291,6 +291,7 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
 
         for lang, files in file_names.items():
             content = ''
+
             print("Cadastrando as páginas do periódico com acrônimo: %s idioma: %s" % (acron, lang))
 
             for file in files:
