@@ -2,7 +2,7 @@
 
 from flask import url_for, render_template
 from webapp.notifications import send_confirmation_email, send_reset_password_email
-from webapp import utils
+from webapp.utils import get_timed_serializer
 from .base import BaseTestCase
 from mock import patch
 from itsdangerous import URLSafeTimedSerializer
@@ -75,23 +75,19 @@ class NotificationsTestCase(BaseTestCase):
         Quando:
             - current_app.config["SECRET_KEY"] não tem valor
         Verifcamos:
-            - Que ocorra uma exeção qunado é criado um token com
+            - Que ocorra uma exeção quando é criado um token com
               get_timed_serializer ao enviar a notificação de confirmação de email.
         """
 
         recipient_email = 'foo@bar.baz'
 
-        with patch('webapp.utils.get_timed_serializer') as mock:
-            mock.return_value = URLSafeTimedSerializer(None)
+        with patch('webapp.notifications.utils') as mock:
+            mock.get_timed_serializer.return_value = URLSafeTimedSerializer(None)
 
-            expected = None
-            try:
-                ts = utils.get_timed_serializer()
-                ts.dumps(recipient_email)
-            except Exception as e:
-                expected = (False, 'Token inválido: %s' % str(e))
+            expected = (False, "Token inválido: can't concat bytes to NoneType")
 
             result = send_confirmation_email(recipient_email)
+
             self.assertEqual(expected, result)
 
     def test_invalid_token_reset_password(self):
@@ -105,15 +101,10 @@ class NotificationsTestCase(BaseTestCase):
 
         recipient_email = 'foo@bar.baz'
 
-        with patch('webapp.utils.get_timed_serializer') as mock:
-            mock.return_value = URLSafeTimedSerializer(None)
+        with patch('webapp.notifications.utils') as mock:
+            mock.get_timed_serializer.return_value = URLSafeTimedSerializer(None)
 
-            expected = None
-            try:
-                ts = utils.get_timed_serializer()
-                ts.dumps(recipient_email)
-            except Exception as e:
-                expected = (False, 'Token inválido: %s' % str(e))
+            expected = (False, "Token inválido: can't concat bytes to NoneType")
 
             result = send_reset_password_email(recipient_email)
             self.assertEqual(expected, result)
@@ -133,12 +124,12 @@ class NotificationsTestCase(BaseTestCase):
         """
 
         recipient_email = 'foo@bar.baz'
-        ts = utils.get_timed_serializer()
+        ts = get_timed_serializer()
         token = ts.dumps(recipient_email, salt='email-confirm-key')
         confirm_url = url_for('admin.confirm_email', token=token, _external=True)
         result_expected = (True, '')
 
-        with patch('webapp.utils.send_email', return_value=result_expected) as mock:
+        with patch('webapp.utils.utils.send_email', return_value=result_expected) as mock:
 
             result = send_confirmation_email(recipient_email)
             mock.assert_called_with(
@@ -164,12 +155,12 @@ class NotificationsTestCase(BaseTestCase):
         """
 
         recipient_email = 'foo@bar.baz'
-        ts = utils.get_timed_serializer()
+        ts = get_timed_serializer()
         token = ts.dumps(recipient_email, salt='recover-key')
         recover_url = url_for('admin.reset_with_token', token=token, _external=True)
         result_expected = (True, '')
 
-        with patch('webapp.utils.send_email', return_value=result_expected) as mock:
+        with patch('webapp.utils.utils.send_email', return_value=result_expected) as mock:
 
             result = send_reset_password_email(recipient_email)
 
