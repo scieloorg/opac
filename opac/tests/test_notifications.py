@@ -84,11 +84,11 @@ class NotificationsTestCase(BaseTestCase):
         with patch('webapp.notifications.utils') as mock:
             mock.get_timed_serializer.return_value = URLSafeTimedSerializer(None)
 
-            expected = (False, "Token inválido: can't concat bytes to NoneType")
+            expected = "Token inválido"
 
             result = send_confirmation_email(recipient_email)
 
-            self.assertEqual(expected, result)
+            self.assertIn(expected, str(result))
 
     def test_invalid_token_reset_password(self):
         """
@@ -104,10 +104,10 @@ class NotificationsTestCase(BaseTestCase):
         with patch('webapp.notifications.utils') as mock:
             mock.get_timed_serializer.return_value = URLSafeTimedSerializer(None)
 
-            expected = (False, "Token inválido: can't concat bytes to NoneType")
+            expected = "Token inválido"
 
             result = send_reset_password_email(recipient_email)
-            self.assertEqual(expected, result)
+            self.assertIn(expected, str(result))
 
     def test_send_confirmation_email(self):
         """
