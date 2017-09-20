@@ -9,8 +9,16 @@
     <!-- PID: {{article.pid}} -->
 
     <section class="articleCtt">
+
+      <!-- Verificando se é versão HTML ou XML -->
       {% if html %}
-        {{ html|safe }}
+        {% if not article.xml %}
+          <div class="container">
+              {{ html|safe }}
+          </div>
+        {% else %}
+          {{ html|safe }}
+        {% endif %}
       {% endif %}
 
       {% include "article/includes/floating_menu.html" %}
