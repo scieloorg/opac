@@ -478,7 +478,7 @@ def download_journal_list(list_type, extension):
 # ###################################Issue#######################################
 
 
-@main.route('/grid/<string:url_seg>')
+@main.route('/grid/<string:url_seg>/')
 def issue_grid(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -584,7 +584,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>')
+@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -922,7 +922,6 @@ def email_share_ajax():
 # ##################################Others#######################################
 
 
-@main.route("/media/<path:filename>", methods=['GET'])
 @main.route("/media/<path:filename>/", methods=['GET'])
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']

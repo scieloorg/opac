@@ -49,6 +49,9 @@ def create_app():
 
     app.url_map.converters['regex'] = RegexConverter
 
+    # Remove strict slash from Werkzeug
+    app.url_map.strict_slashes = False
+
     # Configurações
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
