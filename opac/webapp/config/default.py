@@ -197,8 +197,8 @@ LANGUAGES = {
     'pt_BR': 'Português',
     'en': 'English',
     'es': 'Español',
-    'es_ES': 'Español (España)',
-    'es_MX': 'Español (México)',
+    # 'es_ES': 'Español (España)',
+    # 'es_MX': 'Español (México)',
 }
 
 # linguagem padrão:

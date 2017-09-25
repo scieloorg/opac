@@ -55,9 +55,9 @@ class MainTestCase(BaseTestCase):
         """
 
         with self.client as c:
-            response = c.get(url_for('main.set_locale', lang_code='es_ES'))
+            response = c.get(url_for('main.set_locale', lang_code='es'))
             self.assertEqual(302, response.status_code)
-            self.assertEqual(flask.session['lang'], 'es_ES')
+            self.assertEqual(flask.session['lang'], 'es')
 
     def test_redirect_when_change_set_locale(self):
         """
@@ -66,7 +66,7 @@ class MainTestCase(BaseTestCase):
         """
 
         with self.client as c:
-            response = c.get(url_for('main.set_locale', lang_code='es_ES'),
+            response = c.get(url_for('main.set_locale', lang_code='es'),
                              headers={'Referer': '/journals'},
                              follow_redirects=True)
             self.assertStatus(response, 200)

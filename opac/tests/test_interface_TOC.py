@@ -199,12 +199,12 @@ class TOCTestCase(BaseTestCase):
                     url_seg_issue=issue.url_segment)
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='es_MX')
+            set_locale_url = url_for('main.set_locale', lang_code='es')
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'es_MX')
+            self.assertEqual(flask.session['lang'], 'es')
 
             self.assertIn("Article Y", response.data.decode('utf-8'))
 
