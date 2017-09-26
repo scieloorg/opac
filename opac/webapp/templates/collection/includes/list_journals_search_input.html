@@ -1,5 +1,5 @@
 <div class="row collectionListSearch">
-  <div class="col-md-6">
+  <div class="col-md-5 col-sm-12">
     <div class="btn-group" data-toggle="buttons">
       <label class="btn">
         <input type="radio" autocomplete="off" name="{{ filter_id|default('query_filter') }}" value="">{% trans %}Todos{% endtrans %}
@@ -14,12 +14,15 @@
       </label>
     </div>
   </div>
-  <div class="col-md-6 col-sm-12">
 
-      <input type="text" name="{{ input_id|default('query') }}"
-             id="{{ input_id|default('query') }}"
-             value=""
-             class="form-control collectionSearch"
-             placeholder="{% trans %}Digite uma ou mais palavras para filtrar a lista{% endtrans %}"/>
+  <div class="col-md-5 col-md-offset-2 col-sm-12 col-sm-offset-0 col-sm-mt-15">
+
+    <input type="text" name="{{ input_id|default('query') }}"
+           id="{{ input_id|default('query') }}"
+           value=""
+           class="form-control collectionSearch"
+           placeholder="{% trans %}Digite uma ou mais palavras para filtrar a lista{% endtrans %}"/>
+
   </div>
+
 </div>

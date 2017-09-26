@@ -75,6 +75,16 @@ def set_locale(lang_code):
     return redirect(request.referrer)
 
 
+def get_lang_from_session():
+    """
+    Tenta retornar o idioma da seção, caso não consiga retorna
+    BABEL_DEFAULT_LOCALE.
+    """
+    try:
+        return session['lang']
+    except KeyError:
+        return current_app.config.get('BABEL_DEFAULT_LOCALE')
+
 @main.route('/')
 def index():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
@@ -422,7 +432,7 @@ def journals_search_alpha_ajax():
     query = request.args.get('query', '', type=str)
     query_filter = request.args.get('query_filter', '', type=str)
     page = request.args.get('page', 1, type=int)
-    lang = session['lang'][:2].lower()
+    lang = get_lang_from_session()[:2].lower()
     response_data = controllers.get_alpha_list_from_paginated_journals(
         title_query=query, query_filter=query_filter, page=page, lang=lang)
 
@@ -438,7 +448,7 @@ def journals_search_by_theme_ajax():
     query = request.args.get('query', '', type=str)
     query_filter = request.args.get('query_filter', '', type=str)
     filter = request.args.get('filter', 'areas', type=str)
-    lang = session['lang'][:2].lower()
+    lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
         objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)

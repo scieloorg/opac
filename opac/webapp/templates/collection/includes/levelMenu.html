@@ -2,7 +2,7 @@
 
 <section class="bread">
   <div class="container">
-    <div class="col-md-9 col-sm-9">
+    <div class="col-md-9 col-sm-6">
 
       {% if page %}
 
@@ -33,7 +33,7 @@
       {% endif %}
 
     </div>
-    <div class="col-md-3 col-sm-3 share">
+    <div class="col-md-3 col-sm-6 share">
       {% trans %}Compartilhe{% endtrans %}
       <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="Imprimir"><span class="glyphBtn print"></span></a>
       <a data-toggle="tooltip" href="{{ url_for('main.collection_list_feed')}}" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>

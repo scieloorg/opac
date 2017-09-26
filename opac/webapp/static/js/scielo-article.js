@@ -5,12 +5,12 @@ var Article = {
 			articleTextP = articleText.offset(),
 			articleMenuW = $(".articleMenu").width(),
 			p = $(".articleSection",articleText);
-
+		
 		/*for(var i = 0, l = p.length; i<l; i++) {
 			var c = $("p",p[i]).outerHeight(), r = $(".refList",p[i]), rh = r.outerHeight();
 			if(rh > c) {
 				r.addClass("outer").css("height",c);
-			}
+			} 
 		}*/
 
 		$(".ModalTables").on("shown.bs.modal",function() {
@@ -20,7 +20,7 @@ var Article = {
 				tableWidth = table.outerWidth();
 
 			if(!modalBody.is("cached")) {
-				table.addClass("table");
+				table.addClass("table"); 
 
 				if(tableWidth > modalBodyWidth) {
 					table.addClass("autoWidth");
@@ -46,7 +46,7 @@ var Article = {
 				c = "div." + c.join(",div.");
 				b = $(c);
 				p = b.parent().find("sup");
-			}*/
+			}*/ 
 			if(e.type === "mouseenter") {
 				if(li.length > 0)
 					li.addClass("zindexFix");
@@ -78,7 +78,7 @@ var Article = {
 				p.fadeIn("fast");
 			} else if(e.type == "mouseleave") {
 				p.fadeOut("fast");
-			}
+			} 
 		});
 
 		$(".ModalTables").on("shown.bs.modal",function() {
@@ -107,13 +107,13 @@ var Article = {
 				s = $(this).data("expandreducetext"),
 				tw = $(this).data("defaultwidth");
 
-			if(typeof tw == "undefined")
+			if(typeof tw == "undefined") 
 				$(this).data("defaultwidth",txt.outerWidth());
 
 			if(s == true) {
 				ref.hide();
 				txt.outerWidth("100%");
-
+				
 				/*
 				ref.stop(true,true).fadeOut(100,function() {
 					txt.animate({
@@ -127,7 +127,7 @@ var Article = {
 			} else {
 				txt.width("");
 				ref.show();
-
+				
 				/*
 				txt.stop(true,true).animate({
 					width: tw
@@ -142,10 +142,10 @@ var Article = {
 			var t = $(window).scrollTop();
 			setTimeout(function() {
 				Article.ArticleStructureBuilder();
-				Article.ArticleStructureSelect(t);
+				Article.ArticleStructureSelect(t);	
 			},100);
-
-
+			
+		
 		});
 
 		$(".articleTxt .xref:not(.big)").on("click",function() {
@@ -176,15 +176,14 @@ var Article = {
 
 		$(window).scroll(function() {
 			var t = $(window).scrollTop();
-			//var w = $(window).width();
-
+						
 			if(Article.isScrolledIntoView('.floatingMenuCtt')){
-
+		
 				$('.floatingMenuItem').css({position: 'absolute'});
 				$('.floatingMenu').css({position: 'absolute'});
 
 			}else{
-
+		
 				$('.floatingMenuItem').css({position: 'fixed'});
 				$('.floatingMenu').css({position: 'fixed'});
 			}
@@ -199,7 +198,7 @@ var Article = {
 				} else {
 					$(".articleMenu").removeClass("fixedBottom");
 				}
-			} else
+			} else 
 				$(".articleMenu").removeClass("fixed");
 
 			Article.ArticleStructureSelect(t);
@@ -214,10 +213,10 @@ var Article = {
 		if(window.location.hash != "") {
 			var hash = window.location.hash,
 				scrollY = window.scrollY;
-
+			
 			$(hash).modal("toggle").on("hidden.bs.modal",function() {
     			window.location.hash = '';
-
+    			
     			$("body,html").scrollTop(scrollY);
 			});
 		}
@@ -232,33 +231,33 @@ var Article = {
 
 			$(target).on("hidden.bs.modal",function () {
         		window.location.hash = '';
-
+        		
         		$("body,html").scrollTop(scrollY);
     		});
 		});
 
 		var downloadOpt = $(".downloadOptions li.group"),
 			downloadOptW = 100/downloadOpt.length;
-
+	
 		downloadOpt.css("width",downloadOptW+"%");
 
 		Article.fechaAutores();
 
 		// Global variable shared on mouseenter event and clipboard
 		var hasEncodedTheURL = false;
-
+		
 		$('.short-link').mouseenter(function(event) {
 
 			// Verify if the ajax request has already been made
 			if(!hasEncodedTheURL) {
 
-				var urlAtual = window.location.href;
-				// var urlAtual = "http://www.scielo.br";
+				var urlAtual = window.location.href; 
+				// var urlAtual = "http://www.scielo.br"; 
 
 				if(urlAtual.indexOf('localhost') !== -1) { // Localhost
 					var urlAtual = "http://www.scielo.br";
-				}
-
+				} 
+				
 	        	$.ajax({
 		            type: "GET",
 		            async: false,
@@ -272,7 +271,7 @@ var Article = {
 	            	//error:
 	        	});
 			}
-
+			
 	    });
 
 		var clipboard = new Clipboard('.short-link', {
@@ -282,30 +281,38 @@ var Article = {
         });
 
 	    clipboard.on('success', function(e) {
-
+	        
 	        console.log('Sucess: ' + e);
 
         	var t = $(e.trigger);
 			t.addClass("copyFeedback");
-
+			
 			setTimeout(function() {
 				t.removeClass("copyFeedback");
 			},2000);
 	    });
 
-	    clipboard.on('error', function(e) {
+	    clipboard.on('error', function(e) {  
 	    	console.log('Error: ' + e);
 
 	    	var t = $(e.trigger);
 			t.addClass("copyFeedbackError");
-
+			
 			setTimeout(function() {
 				t.removeClass("copyFeedbackError");
 			},2000);
 	    });
 
-	},
+	    $("ul.floatingMenuMobile").on('click', function() {
 
+	    	$(this).find('.fm-button-child').each(function() {
+	    		$(this).addClass('tooltip-mobile-on');
+	    	});
+	    	
+	    });
+
+	},
+	
 	isScrolledIntoView: function(elem){
 	    var docViewTop = $(window).scrollTop();
 	    var docViewBottom = docViewTop + $(window).height();
@@ -365,7 +372,7 @@ var Article = {
 			idx++;
 		});
 
-		// ctt+='<li class="floatingMenuCtt">colocar botao aqui</li>';
+		// ctt+='<li class="floatingMenuCtt">colocar botao aqui</li>'; 
 
 		structure.html(ctt);
 
@@ -395,9 +402,9 @@ var Article = {
 					structure.find("li").removeClass("selected");
 					structure.find("li:eq("+(i-1)+")").addClass("selected");
 					break;
-				}
+				} 	
 			}
-
+			
 		}
 
 	},
@@ -408,12 +415,12 @@ var Article = {
 	},
 
 	fechaAutores: function(){
-
+			
 		var autoresGrupo = $(".contribGroup");
 		var autores = $(".contribGroup .dropdown");
 		var qtdAutores = autores.length;
 
-		if(qtdAutores >= 10) {
+		if(qtdAutores >= 10) {	
 
 			var AuthorsQTDTooltip = null;
 
@@ -447,38 +454,38 @@ var Article = {
 			autoresResumo.append(ultimo);
 			autoresResumo.append(btnSobre);
 
-			//substitui o conteudo pelo resumo
-			autoresGrupo.text("");
-			autoresGrupo.append(autoresResumo);
-
+			//substitui o conteudo pelo resumo	
+			autoresGrupo.text("");			
+			autoresGrupo.append(autoresResumo);	
+			
 			linkToggleOn.on("click",function() {
 				AuthorsQTDTooltip.tooltip('disable')
 
-				autoresGrupo.textContent = "";
+				autoresGrupo.textContent = "";	
 				for (var i = 0; i < qtdAutores; i++){
-					autoresGrupo.append(autores[i]);
+					autoresGrupo.append(autores[i]);	
 				}
-
+				
 				autoresGrupo.append(btnSobre);
-				autoresGrupo.append(boxToggleOff);
+				autoresGrupo.append(boxToggleOff);				
 			});
 
 			linkToggleOff.on("click",function() {
 				AuthorsQTDTooltip.tooltip('enable');
 
-				Article.fechaAutores();
+				Article.fechaAutores();				
 			});
 
 			// Initialize tooltip
 			AuthorsQTDTooltip = $('[data-toggle="tooltip"]').tooltip();
 		}
 		autoresGrupo.css("opacity","1");
-
+		
 	}
 };
 
 $(function() {
-
+	
 	if($("body.article").length)
-		Article.Init();
-});
+		Article.Init();	
+}); 
