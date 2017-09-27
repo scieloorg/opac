@@ -100,6 +100,16 @@ import os
         - OPAC_SSM_DOMAIN: Dominio/FQDN do conexão com SSM. Ex: 'homolog.ssm.scielo.org - (default: 'ssm.scielo.org')
         - OPAC_SSM_PORT: Porta de conexão com o SSM. Ex. '8000'. (default: '80')
         - OPAC_SSM_MEDIA_PATH: Path da pasta media do assests no SSM. Ex. '/media/assets/' -  (default: '/media/assets/')
+
+      - Cookie de Sessão: (http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values)
+        - OPAC_SERVER_NAME: Nome:IP do servidor - (default: None)
+        - OPAC_SESSION_COOKIE_DOMAIN: o dominio para a cookie da sessão (default: OPAC_SERVER_NAME)
+        - OPAC_SESSION_COOKIE_HTTPONLY: Seta a flag: httponly da cookie. (defaults to True)
+        - OPAC_SESSION_COOKIE_NAME: nome da cookie de sessão (default: 'opac_session')
+        - OPAC_SESSION_COOKIE_PATH: path para a cookie de sessão: (default: None -> ou seja a raiz /)
+        - OPAC_SESSION_COOKIE_SECURE: define se a cookie de sessão deve ser marcada como segura - (default: False)
+        - OPAC_SESSION_REFRESH_EACH_REQUEST: Fazer refresh da cookie em cada request? (Default: 'False')
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -299,3 +309,13 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
   domain=SSM_DOMAIN,
   port=SSM_PORT,
   path=SSM_MEDIA_PATH)
+
+# session cookie settings:
+
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
+SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
+SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
+SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
+SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
+SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
+SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
