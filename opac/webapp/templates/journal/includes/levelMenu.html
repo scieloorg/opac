@@ -86,7 +86,7 @@
       <div class="btn-group">
 
         {# Todos #}
-        <a href="{{ url_for('.issue_grid', url_seg=journal.url_segment) }}" class="btn group single{{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
+        <a href="{{ url_for('.issue_grid', url_seg=journal.url_segment) }}" class="btn group no-ico-util {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
           {% trans %}todos{% endtrans %}
         </a>
 
@@ -97,17 +97,17 @@
           </a>
         {% else %}
           <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=previous_issue.url_segment) }}" class="btn group">
-            <span class="sci-ico-arrowRight">
+            <span class="sci-ico-arrowLeft">
           </a>
         {% endif %}
 
         {# Atual #}
         {% if not last_issue %}
-          <a href="#" class="btn single group disabled">
+          <a href="#" class="btn no-ico-util group disabled">
             {% trans %}número atual{% endtrans %}
           </a>
         {% else %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group single {% if last_issue == issue %} selected {% endif %}">
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group no-ico-util {% if last_issue == issue %} selected {% endif %}">
             {% trans %}número atual{% endtrans %}
           </a>
         {% endif %}
@@ -115,7 +115,7 @@
         {# Próximo #}
         {% if not next_issue %}
           <a href="#" class="btn single group disabled">
-            <span class="sci-ico-arrowLeft">
+            <span class="sci-ico-arrowRight">
           </a>
         {% else %}
           <a href="{% if next_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }}{% endif %}" class="btn group single">
