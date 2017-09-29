@@ -1,11 +1,12 @@
 <section class="levelMenu">
     <div class="container">
 
-        <div class="cttMenuNavigation hidden-sm">
+        <!-- exibe somente no lg -->
+        <div class="cttMenuNavigation hidden-sm hidden-md">
 
-          <div class="col-lg-1 col-md-2 col-sm-2">
+          <div class="col-lg-2 col-md-2 col-sm-1">
               <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
-                  <span class="sci-ico-home"></span>
+                  <span class="sci-ico-home"></span>{% trans %}home do periodico{% endtrans %}
               </a>
           </div>
 
@@ -51,11 +52,13 @@
           </div>
 
         </div>
+        <!-- exibe somente no lg -->
 
-        <div class="cttMenuNavigationMobile hidden-ld hidden-lg">
+        <!-- exibe somente no md -->
+        <div class="cttMenuNavigationMobile hidden-sm hidden-lg">
 
-          <div class="col-lg-1 col-md-2 col-sm-1">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
+          <div class="col-lg-1 col-md-1 col-sm-1">
+              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single" style="text-align:center">
                   <span class="sci-ico-home"></span>
               </a>
           </div>
@@ -102,8 +105,63 @@
           </div>
 
         </div>
+        <!-- exibe somente no md -->
 
-        <div class="col-lg-3 col-md-2 col-sm-4">
+        <!-- exibe somente no sm -->
+        <div class="cttMenuNavigationMobile hidden-lg hidden-md">
+
+          <div class="col-lg-1 col-md-2 col-sm-1">
+              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
+                  <span class="sci-ico-home"></span>
+              </a>
+          </div>
+
+          <div class="col-lg-6 col-md-5 col-sm-5">
+            <div class="btn-group">
+              {# Sumário #}
+              <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group no-ico-util">
+                  {% trans %}sumário{% endtrans %}
+              </a>
+
+              {# Anterior #}
+                {% if not previous_article %}
+                    <a href="#" class="btn group disabled">
+                {% else %}
+                  {% if is_pdf_page -%}
+                    <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group ">
+                  {%- else -%}
+                    <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+                  {% endif %}
+                {%- endif %}
+                  <span class="sci-ico-arrowLeft">
+                </a>
+
+              {# Atual #}
+              <a href="#" class="btn group no-ico-util disabled">
+                  {% trans %}atual{% endtrans %}
+              </a>
+
+              {# Próximo #}
+              {% if not next_article %}
+                  <a href="#" class="btn group disabled">
+              {% else %}
+                {%- if is_pdf_page -%}
+                  <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                {%- else -%}
+                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                {%- endif %}
+              {%- endif %}
+                  <span class="sci-ico-arrowRight">
+              </a>
+
+            </div>
+          </div>
+
+        </div>
+        <!-- exibe somente no sm -->
+
+        <!-- exibe somente no sm e lg PDF-->
+        <div class="col-lg-2 col-md-2 col-sm-4 hidden-md">
 
           {% if article and article.pdfs|length == 1 %}
             <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn"><span class="sci-ico-filePDF"></span> PDF</a>
@@ -171,6 +229,78 @@
 
           {% endif %}
         </div>
+        <!-- exibe somente no sm e lg PDF-->
+
+        <!-- exibe somente no md PDF-->
+        <div class="col-lg-3 col-md-3 col-sm-4 hidden-sm hidden-lg">
+
+          {% if article and article.pdfs|length == 1 %}
+            <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn"><span class="sci-ico-filePDF"></span> PDF</a>
+          {% endif%}
+
+          {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
+            {% if article and article.pdfs|length == 1 %}
+              <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=article.pdfs[0].url, lang=article.pdfs[0].lang) }}" class="btn"> <span class="sci-ico-filePDF"></span> ePDF</a>
+            {% endif %}
+          {% endif %}
+
+          {% if article and article.pdfs|length > 1 %}
+
+            {# PDF #}
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+              <span class="sci-ico-filePDF"></span>
+              <span class="hidden-sm">PDF</span>
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                {% for pdf in article.pdfs  %}
+                  <li>
+                    <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=pdf.lang) }}">
+                      {% if pdf.lang == 'es' %}
+                        {% trans %}Download PDF (Espanhol){% endtrans %}
+                      {% elif pdf.lang == 'en' %}
+                        {% trans %}Download PDF (Inglês){% endtrans %}
+                      {% elif pdf.lang == 'pt' %}
+                        {% trans %}Download PDF (Português){% endtrans %}
+                      {% else %}
+                        {{ pdf.lang }}
+                      {% endif %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+            {# ePDF #}
+            {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
+              <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="sci-ico-filePDF"></span>
+                <span class="hidden-sm">ePDF</span>
+                <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  {% for pdf in article.pdfs  %}
+                    <li>
+                      <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=pdf.url, lang=pdf.lang) }}">
+                        {% if pdf.lang == 'es' %}
+                          {% trans %}Download PDF (Espanhol){% endtrans %}
+                        {% elif pdf.lang == 'en' %}
+                          {% trans %}Download PDF (Inglês){% endtrans %}
+                        {% elif pdf.lang == 'pt' %}
+                          {% trans %}Download PDF (Português){% endtrans %}
+                        {% else %}
+                          {{ pdf.lang }}
+                        {% endif %}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+
+          {% endif %}
+        </div>
+        <!-- exibe somente no md PDF-->
 
         <div class="col-lg-2 col-md-3 col-sm-2 share">
             <span class="hidden-sm">{% trans %}Compartilhe{% endtrans %}</span>
