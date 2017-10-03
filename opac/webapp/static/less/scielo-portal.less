@@ -1483,167 +1483,192 @@ button.btn:active {
 		display: none;
 	}
 	
-.floatingMenuMobile {
-	
-	display: block;
-	position: fixed;
-	bottom: 10px;
-	left: -25px;
-	margin: 40px 40px 28px 40px;
-	// outline: 1px solid red;
+	.floatingMenuMobile {
+		
+		display: block;
+		position: fixed;
+		bottom: 10px;
+		left: -25px;
+		margin: 40px 40px 28px 40px;
 
-	padding-left: 0;
-	white-space: nowrap;
-	list-style: none;
-	.border-box;
-	z-index: 1001;
-
-	.fm-wrap {
-		padding: 34px 25px 25px 0;
-		margin: -25px -25px -25px 0;
-	}
-
-	.fm-button-main,
-	.fm-button-child {
-		display: inline-block;
-		position: relative;
-		padding: 0;
-		color: #fff;
-		cursor: pointer;
-		outline: none;
-		background-color: #6786d0;
-		border: none;
-		.radius(50%);
-		box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-		-webkit-user-drag: none;
-
-	}
-
-	.fm-button-main {
-		width: 56px;
-		height: 56px;
-		z-index: 20;
-
-		.glyphFloatMenu {
-			position: absolute;
-			width: 53px;
-			height: 56px;
-			font-size: 32px;
-			line-height: 56px;
-			text-align: center;
-		}
-
-		.sci-ico-floatingMenuDefault{
-			-webkit-transform: rotate(180deg);
-			transform: rotate(180deg);
-		}
-		.sci-ico-floatingMenuClose {
-			opacity: 0;
-			color: @Blue;
-			font-size: 28px;
-		}
-	}
-
-	.fm-button-child {
-		width: 40px;
-		height: 40px;
-		line-height: 40px;
-		text-align: center;
-		.cssAnimations .animated (.3s,all);
-
-		.glyphFloatMenu {
-			font-size: 24px;
-		}
-
-		&:hover {
-			background-color: lighten(#6786d0,5%);
-		}
-	}
-
-	.fm-list {
-		padding: 0;
-		margin: 0;
-		margin-left: 10px;
+		padding-left: 0;
+		white-space: nowrap;
 		list-style: none;
+		.border-box;
+		z-index: 1001;
 
-		li {
-			display: block;
-			position: absolute;
-			padding: 2px 0;
-			margin: 0;
-			top: 0;
-			left: 7.5px;
-			height: auto;
-
-			width: 50px;
-			padding-top: 9px;
-			.border-box;
+		.fm-wrap {
+			padding: 34px 25px 25px 0;
+			margin: -25px -25px -25px 0;
 		}
 
-		//tooltip interno
-		[data-fm-label]:before { 
-			
-			// width: 100px !important;
-			top: auto !important;
+		.fm-button-main,
+		.fm-button-child {
+			display: inline-block;
+			position: relative;
+			padding: 0;
+			color: #fff;
+			cursor: pointer;
+			outline: none;
+			background-color: #6786d0;
+			border: none;
+			.radius(50%);
+			box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
+			-webkit-user-drag: none;
 
-		    right: auto;
-		    left: 0;
-		    bottom: 6px;
-		    
-		    // margin-bottom: 49px;
-		    margin-left: 47px;
-		    
-		    // min-width: 100px;
-		    white-space: nowrap;		
-		}
-		[data-fm-label]:after{
-			border-top: 6px solid transparent;
-	    	border-right: 6px solid rgba(1, 48, 75, 0.9);
-	    	border-left: 6px solid transparent;
-	    	margin-left: 35px;    		
 		}
 
-		&.fm-article {
-  
-		}
-	}
-
-	&:hover {
 		.fm-button-main {
+			width: 56px;
+			height: 56px;
+			z-index: 20;
+
+			.glyphFloatMenu {
+				position: absolute;
+				width: 53px;
+				height: 56px;
+				font-size: 32px;
+				line-height: 56px;
+				text-align: center;
+			}
+
+			.sci-ico-floatingMenuDefault{
+				-webkit-transform: rotate(180deg);
+				transform: rotate(180deg);
+			}
+			.sci-ico-floatingMenuClose {
+				opacity: 0;
+				color: @Blue;
+				font-size: 28px;
+			}
+		}
+
+		.fm-button-child {
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			text-align: center;
+			.cssAnimations .animated (.3s,all);
+
+			.glyphFloatMenu {
+				font-size: 24px;
+			}
+
+			&:hover {
+				background-color: lighten(#6786d0,5%);
+			}
+		}
+
+		.fm-list {
+			padding: 0;
+			margin: 0;
+			margin-left: 10px;
+			list-style: none;
+
+			li {
+				display: block;
+				position: absolute;
+				padding: 2px 0;
+				margin: 0;
+				top: 0;
+				left: 7.5px;
+				height: auto;
+
+				width: 50px;
+				padding-top: 9px;
+				.border-box;
+			}
+
+			//tooltip interno
+			[data-fm-label]:before { 
+				
+				// width: 100px !important;
+				top: auto !important;
+
+			    right: auto;
+			    left: 0;
+			    bottom: 6px;
+			    
+			    // margin-bottom: 49px;
+			    margin-left: 47px;
+			    
+			    // min-width: 100px;
+			    white-space: nowrap;		
+			}
+			[data-fm-label]:after{
+				border-top: 6px solid transparent;
+		    	border-right: 6px solid rgba(1, 48, 75, 0.9);
+		    	border-left: 6px solid transparent;
+		    	margin-left: 35px;    		
+			}
+
+			&.fm-article {
+	  
+			}
+		}
+
+		.fm-button-main-mobile-open {
+
 			background-color: #fff;
+		
+			.sci-ico-floatingMenuDefault {			
+				opacity: 0;
+			}
+
+			.sci-ico-floatingMenuClose {
+				opacity: 1;
+			}
 		}
 
-		.sci-ico-floatingMenuDefault {
+		// &:hover {
+		// 	.fm-button-main {
+		// 		background-color: #fff;
+		// 	}
+
+		// 	.sci-ico-floatingMenuDefault {
+		// 		opacity: 0;
+		// 	}
+
+		// 	.sci-ico-floatingMenuClose {
+		// 		opacity: 1;
+		// 	}
+		// }
+
+		//animation
+		&.fm-slidein .fm-list li {
+			display: block;
 			opacity: 0;
+			transition: all 0.5s; 
 		}
-
-		.sci-ico-floatingMenuClose {
+		&.fm-slidein[data-fm-toogle="hover"]:hover .fm-list li {
 			opacity: 1;
 		}
+
+		//FOR LOOP LESS
+		.generate-li-child-mobile(7);
+
+		.generate-li-child-mobile(@n, @i: 1) when (@i =< @n) {
+			
+			&.fm-slidein[data-fm-toogle="hover"]:hover .fm-list li:nth-child(@{i}) {
+				-webkit-transform: translateY((@i * -50px));
+				transform: translateY((@i * -50px)); 
+			 }
+			.generate-li-child-mobile(@n, (@i + 1));
+		}
 	}
 
-	//animation
-	&.fm-slidein .fm-list li {
-		display: block;
-		opacity: 0;
-		transition: all 0.5s; 
-	}
-	&.fm-slidein[data-fm-toogle="hover"]:hover .fm-list li {
-		opacity: 1;
-	}
+	// .fm-button-main-mobile-close {
+			
+	//     // background-color: #6786d0;
 
-	//FOR LOOP LESS
-	.generate-li-child-mobile(7);
-
-	.generate-li-child-mobile(@n, @i: 1) when (@i =< @n) {
-		
-		&.fm-slidein[data-fm-toogle="hover"]:hover .fm-list li:nth-child(@{i}) {
-			-webkit-transform: translateY((@i * -50px));
-			transform: translateY((@i * -50px)); 
-		 }
-		.generate-li-child-mobile(@n, (@i + 1));
-	}
-}
+	// 	.sci-ico-floatingMenuDefault{
+	// 		opacity: 1;			
+	// 		outline: 1px solid blue;
+	// 	}
+	// 	.sci-ico-floatingMenuClose {
+	// 		opacity: 0;			
+	// 	}
+	// }
 
 }
 
