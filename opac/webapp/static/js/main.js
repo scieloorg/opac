@@ -1,9 +1,10 @@
 var isOldIE = $("html").is(".lt-ie9");
 var Portal = {
 		MenuOpened: false,
-		TabletVerifier : {
+		MobileVerifier : {
 			IsMobile: false,
 			IsTablet: false,
+			IsDesktop: false,
 			DetectMobile: function(userAgent) {
 				var mobile = {};
 
@@ -28,16 +29,23 @@ var Portal = {
 			},
 			Detect : function () {
 
-				if(TabletVerifier.DetectMobile(navigator.userAgent))
-					TabletVerifier.IsMobile = true;
+				if(Portal.MobileVerifier.DetectMobile(navigator.userAgent))
+					Portal.MobileVerifier.IsMobile = true;
 
-				if(TabletVerifier.DetectTablet(navigator.userAgent)) 
-					TabletVerifier.IsTablet = true;				
+				if(Portal.MobileVerifier.DetectTablet(navigator.userAgent)) 
+					Portal.MobileVerifier.IsTablet = true;		
+					
+				var w = $(window).innerWidth();
+
+				if(w > 990) 
+					Portal.MobileVerifier.IsDesktop = true;
 			}
 		},
 		Init: function() {
 
-			if(!Portal.TabletVerifier.IsMobile && !Portal.TabletVerifier.IsTablet) { 
+			Portal.MobileVerifier.Detect();
+
+			if(Portal.MobileVerifier.IsDesktop && (!Portal.MobileVerifier.IsMobile && !Portal.MobileVerifier.IsTablet)) { 
 				
 				$(".showTooltip").each(function() {
 					var data = $(this).data(),
