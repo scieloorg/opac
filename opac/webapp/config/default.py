@@ -110,6 +110,16 @@ import os
         - OPAC_SESSION_COOKIE_SECURE: define se a cookie de sessão deve ser marcada como segura - (default: False)
         - OPAC_SESSION_REFRESH_EACH_REQUEST: Fazer refresh da cookie em cada request? (Default: 'False')
 
+      - Cache da app: https://pythonhosted.org/Flask-Caching/
+        CACHE_ENABLED: ativa/desativa o cache com redis (default: True)
+        CACHE_TYPE: o tipo de backend do cache: 'null', 'redis', outros (default: 'redis')
+        CACHE_NO_NULL_WARNING: ativa/desativa exibição de warnings quando o CACHE_TYPE é 'null' (default: True)
+        CACHE_DEFAULT_TIMEOUT: tempo de vida dos objetos no cache. Tempo medido em segundos (default: 3600)
+        CACHE_KEY_PREFIX: prefixo da chave de cache. (default: 'opac_cache')
+        CACHE_REDIS_HOST: host do servidor redis que vai ser usado no cache. (default: 'redis-cache')
+        CACHE_REDIS_PORT: porta do servidor redis que vai ser usado no cache. (default: 6379)
+        CACHE_REDIS_DB: nome de db do servidor redis que vai ser usado no cache (inteiro >= 0). (default: 0)
+        CACHE_REDIS_PASSWORD: senha do servidor redis que vai ser usado no cache. (default = '')
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -319,3 +329,16 @@ SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
 SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
 SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
 SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
+
+
+# Flask Caching:
+
+CACHE_ENABLED = os.environ.get('OPAC_CACHE_ENABLED', 'False') == 'True'
+CACHE_TYPE = os.environ.get('OPAC_CACHE_TYPE', 'redis')
+CACHE_NO_NULL_WARNING = os.environ.get('OPAC_CACHE_NO_NULL_WARNING', 'True') == 'True'
+CACHE_DEFAULT_TIMEOUT = os.environ.get('OPAC_CACHE_DEFAULT_TIMEOUT', 3600)  # segundos
+CACHE_KEY_PREFIX = os.environ.get('OPAC_CACHE_KEY_PREFIX', 'opac_cache')
+CACHE_REDIS_HOST = os.environ.get('OPAC_CACHE_REDIS_HOST', 'redis-cache')
+CACHE_REDIS_PORT = os.environ.get('OPAC_CACHE_REDIS_PORT', 6379)
+CACHE_REDIS_DB = os.environ.get('OPAC_CACHE_REDIS_DB', '0')
+CACHE_REDIS_PASSWORD = os.environ.get('OPAC_CACHE_REDIS_PASSWORD', None)
