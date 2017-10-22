@@ -2,6 +2,14 @@ version: '2'
 
 services:
 
+    redis-cache:
+        image: redis:alpine
+        user: redis
+        restart: always
+        volumes:
+          - ./data/redis-cache-data-dev:/data
+          - /etc/localtime:/etc/localtime:ro
+
     opac_mongo:
         image: mongo:latest
         restart: always
@@ -24,11 +32,13 @@ services:
         hostname: opac_webapp
         depends_on:
             - opac_mongo
+            - redis-cache
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ./data:/app/data
         links:
             - opac_mongo:opac-mongo
+            - redis-cache:redis-cache
         ports:
             - "8000:8000"
         environment:

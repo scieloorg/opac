@@ -1,6 +1,13 @@
 version: '2'
 
 services:
+    redis-cache:
+        image: redis:alpine
+        user: redis
+        restart: always
+        volumes:
+          - ./data/redis-cache-data-dev:/data
+          - /etc/localtime:/etc/localtime:ro
 
     mailhog:
         image: mailhog/mailhog:latest
@@ -35,12 +42,14 @@ services:
         depends_on:
             - opac_mongo
             - mailhog
+            - redis-cache
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - .:/app
         links:
             - opac_mongo:opac-mongo
             - mailhog:mailhog
+            - redis-cache:redis-cache
         ports:
             - "8000:8000"
         environment:
@@ -55,5 +64,8 @@ services:
             - OPAC_SSM_SCHEME=http
             - OPAC_SSM_DOMAIN=172.19.0.1
             - OPAC_SSM_PORT=8001
+            # - OPAC_CACHE_ENABLED=True
+            # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
+            # - OPAC_CACHE_REDIS_HOST=redis-cache
         stdin_open: True
         tty: true

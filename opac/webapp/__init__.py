@@ -14,6 +14,7 @@ from flask_babelex import Babel
 from flask_babelex import lazy_gettext
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.routing import BaseConverter
+from flask_caching import Cache
 
 from opac_schema.v1.models import (
     Collection,
@@ -31,6 +32,8 @@ dbsql = SQLAlchemy()
 mail = Mail()
 babel = Babel()
 sentry = Sentry()
+cache = Cache()
+
 
 from .main import custom_filters  # noqa
 
@@ -88,6 +91,12 @@ def create_app():
     dbsql.init_app(app)
     # Emails
     mail.init_app(app)
+    # Cache:
+    if app.config['CACHE_ENABLED']:
+        cache.init_app(app, config=app.config)
+    else:
+        app.config['CACHE_TYPE'] = 'null'
+        cache.init_app(app, config=app.config)
 
     # Interface do admin
     from .models import User, File, Image
