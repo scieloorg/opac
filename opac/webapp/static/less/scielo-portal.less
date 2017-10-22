@@ -921,6 +921,10 @@ button.btn:active {
 			.border-box;
 			width: 50%;
 		}	
+
+		.errorReport {
+			padding-left: 10px; 
+		}
 	}
 
 	.journalAddress, .journalLinks {
@@ -1197,7 +1201,7 @@ button.btn:active {
 	position: absolute;
 }
 
-.floatingMenuItem{
+.floatingMenuItem {
 	position: fixed;
 	bottom: 0;
 	//left: 0;
@@ -1215,10 +1219,8 @@ button.btn:active {
 	height: 40px;
 	line-height: 40px;
 	text-align: center;
-	.cssAnimations .animated (.3s,all);
-	box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-	
-	
+	.cssAnimations .animated(.3s,all);
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);	
 
 	.glyphFloatMenu {
 		font-size: 24px;
@@ -1295,9 +1297,7 @@ button.btn:active {
 	    border-top: 6px solid rgba(1, 48, 75, 0.9);
 	    border-right: 6px solid transparent;
 	    border-left: 6px solid transparent;
-	}
-
-	
+	}	
 }
 
 .floatingMenu {
@@ -1372,7 +1372,7 @@ button.btn:active {
 		height: 40px;
 		line-height: 40px;
 		text-align: center;
-		.cssAnimations .animated (.3s,all);
+		.cssAnimations .animated(.3s,all);
 
 		.glyphFloatMenu {
 			font-size: 24px;
@@ -1515,7 +1515,6 @@ button.btn:active {
 			.radius(50%);
 			box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
 			-webkit-user-drag: none;
-
 		}
 
 		.fm-button-main {
@@ -1620,20 +1619,6 @@ button.btn:active {
 			}
 		}
 
-		// &:hover {
-		// 	.fm-button-main {
-		// 		background-color: #fff;
-		// 	}
-
-		// 	.sci-ico-floatingMenuDefault {
-		// 		opacity: 0;
-		// 	}
-
-		// 	.sci-ico-floatingMenuClose {
-		// 		opacity: 1;
-		// 	}
-		// }
-
 		//animation
 		&.fm-slidein .fm-list li {
 			display: block;
@@ -1657,19 +1642,13 @@ button.btn:active {
 		}
 	}
 
-	// .fm-button-main-mobile-close {
-			
-	//     // background-color: #6786d0;
-
-	// 	.sci-ico-floatingMenuDefault{
-	// 		opacity: 1;			
-	// 		outline: 1px solid blue;
-	// 	}
-	// 	.sci-ico-floatingMenuClose {
-	// 		opacity: 0;			
-	// 	}
-	// }
-
+	.journalContacts {
+		.journalLinks {		
+			.errorReport {
+				padding-left: 0; 
+			}
+		}	
+	}
 }
 
 [data-fm-toggle="hover"]:hover .fm-icon, 

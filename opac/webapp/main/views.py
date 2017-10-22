@@ -14,6 +14,7 @@ from legendarium.formatter import descriptive_short_format
 
 from . import main
 from webapp import babel
+from webapp import cache
 from webapp import controllers
 from webapp.utils import utils
 from webapp import forms
@@ -28,6 +29,12 @@ ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
+
+
+def cache_key_with_lang():
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    language = session.get('lang', default_lang)
+    return "lang/%s/path/%s" % (language, request.path)
 
 
 @main.before_app_request
@@ -85,7 +92,9 @@ def get_lang_from_session():
     except KeyError:
         return current_app.config.get('BABEL_DEFAULT_LOCALE')
 
+
 @main.route('/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def index():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang)
@@ -121,11 +130,13 @@ def index():
 
 
 @main.route('/journals/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def collection_list():
     return render_template("collection/list_journal.html")
 
 
 @main.route('/journals/feed/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def collection_list_feed():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -180,6 +191,7 @@ def collection_list_feed():
 
 
 @main.route("/collection/about/", methods=['GET'])
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def about_collection():
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -203,6 +215,7 @@ def about_collection():
 
 
 @main.route('/scielo.php/')
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def router_legacy():
 
     script_php = request.args.get('script')
@@ -273,6 +286,7 @@ def router_legacy():
 
 
 @main.route('/journal/<string:url_seg>/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -339,6 +353,7 @@ def journal_detail(url_seg):
 
 
 @main.route('/journal/<string:url_seg>/feed/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def journal_feed(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -384,6 +399,7 @@ def journal_feed(url_seg):
 
 
 @main.route("/journal/<string:url_seg>/about/", methods=['GET'])
+@cache.cached(key_prefix=cache_key_with_lang)
 def about_journal(url_seg):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -424,6 +440,7 @@ def about_journal(url_seg):
 
 
 @main.route("/journals/search/alpha/ajax/", methods=['GET', ])
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def journals_search_alpha_ajax():
 
     if not request.is_xhr:
@@ -440,6 +457,7 @@ def journals_search_alpha_ajax():
 
 
 @main.route("/journals/search/group/by/filter/ajax/", methods=['GET'])
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def journals_search_by_theme_ajax():
 
     if not request.is_xhr:
@@ -465,6 +483,7 @@ def journals_search_by_theme_ajax():
 
 
 @main.route("/journals/download/<string:list_type>/<string:extension>/", methods=['GET', ])
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def download_journal_list(list_type, extension):
     if extension.lower() not in ['csv', 'xls']:
         abort(401, _('Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
@@ -489,6 +508,7 @@ def download_journal_list(list_type, extension):
 
 
 @main.route('/grid/<string:url_seg>/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def issue_grid(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -528,6 +548,7 @@ def issue_grid(url_seg):
 
 
 @main.route('/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
@@ -595,6 +616,7 @@ def issue_toc(url_seg, url_seg_issue):
 
 
 @main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -615,11 +637,8 @@ def issue_feed(url_seg, url_seg_issue):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(issue))
 
-    # ######### TODO: Revisar/Melhorar/Consertar #########
-    try:
-        feed_language = session['lang'][:2].lower()
-    except Exception:
-        feed_language = 'pt'
+    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
+    feed_language = session.get('lang', default_lang)
 
     for article in articles:
         # ######### TODO: Revisar #########
@@ -648,6 +667,7 @@ def issue_feed(url_seg, url_seg_issue):
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -701,17 +721,20 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
                 html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url
 
             # Obtemos o html do SSM
-            result = requests.get(html_full_ssm_url)
-
-            if result.status_code == 200 and len(result.content) > 0:
-
-                # Criamos um objeto do tip soup
-                soup = BeautifulSoup(result.content.decode('utf-8'), 'html.parser')
-
-                # Fatiamos o HTML pelo div com class: articleTxt
-                html_article = soup.find('div', {'id': 'standalonearticle'})
+            try:
+                result = requests.get(html_full_ssm_url)
+            except requests.exceptions.RequestException:
+                abort(404, _('HTML do Artigo não encontrado ou indisponível'))
             else:
-                abort(404, _('Artigo não encontrado'))
+                if result.status_code == 200 and len(result.content) > 0:
+
+                    # Criamos um objeto do tip soup
+                    soup = BeautifulSoup(result.content.decode('utf-8'), 'html.parser')
+
+                    # Fatiamos o HTML pelo div com class: articleTxt
+                    html_article = soup.find('div', {'id': 'standalonearticle'})
+                else:
+                    abort(404, _('Artigo não encontrado'))
 
         except IndexError:
             abort(404, _('Artigo não encontrado'))
@@ -732,6 +755,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 @main.route('/readcube/epdf/')
 @main.route('/readcube/epdf.php')
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def article_epdf():
     doi = request.args.get('doi', None, type=str)
     pid = request.args.get('pid', None, type=str)
@@ -750,16 +774,22 @@ def article_epdf():
         return render_template("article/epdf.html", **context)
 
 
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def get_content_from_ssm(resource_ssm_media_path):
     resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
-    ssm_response = requests.get(resource_ssm_full_url.strip())
-    if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
-        return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
+    try:
+        ssm_response = requests.get(resource_ssm_full_url.strip())
+    except Exception:
+        abort(404, _('Recruso não encontrado'))
     else:
-        abort(404, _('Recurso não encontrado'))
+        if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
+            return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
+        else:
+            abort(404, _('Recurso não encontrado'))
 
 
 @main.route('/media/assets/<regex("(.*)"):relative_media_path>')
+@cache.cached(key_prefix=cache_key_with_lang)
 def media_assets_proxy(relative_media_path):
     resource_ssm_path = '{ssm_media_path}{resource_path}'.format(
         ssm_media_path=current_app.config['SSM_MEDIA_PATH'],
@@ -768,6 +798,7 @@ def media_assets_proxy(relative_media_path):
 
 
 @main.route('/article/ssm/content/raw/')
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def article_ssm_content_raw():
     resource_ssm_path = request.args.get('resource_ssm_path', None)
     if not resource_ssm_path:
@@ -780,6 +811,7 @@ def article_ssm_content_raw():
 @main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
 @main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -846,6 +878,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 
 @main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
     language = session.get('lang', default_lang) or default_lang
@@ -892,6 +925,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
 
 
 @main.route("/metasearch/", methods=['GET'])
+@cache.cached(key_prefix=cache_key_with_lang, query_string=True)
 def metasearch():
     url = request.args.get('url', current_app.config['URL_SEARCH'], type=str)
     params = {}
@@ -933,6 +967,7 @@ def email_share_ajax():
 
 
 @main.route("/media/<path:filename>/", methods=['GET'])
+@cache.cached(key_prefix=cache_key_with_lang)
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
