@@ -8,6 +8,8 @@
         {{ collection.home_logo_es|default("", true) }}
     {%- elif lang == 'pt_BR' -%}
         {{ collection.home_logo_pt|default("", true) }}
+    {%- else -%}
+        #
     {%- endif -%}
 {%- endmacro %}
 
