@@ -3,31 +3,31 @@ SciELO - On-line Public Access Catalog
 ======================================
 
 .. image:: https://travis-ci.org/scieloorg/opac.svg?branch=master
-    :target: https://travis-ci.org/scieloorg/opac
+        :target: https://travis-ci.org/scieloorg/opac
 
 .. image:: https://landscape.io/github/scieloorg/opac/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/scieloorg/opac/master
-   :alt: Code Health
+        :target: https://landscape.io/github/scieloorg/opac/master
+        :alt: Code Health
 
 .. image:: https://pyup.io/repos/github/scieloorg/opac/shield.svg
-     :target: https://pyup.io/repos/github/scieloorg/opac/
-     :alt: Updates
+        :target: https://pyup.io/repos/github/scieloorg/opac/
+        :alt: Updates
 
 .. image:: https://pyup.io/repos/github/scieloorg/opac/python-3-shield.svg
-     :target: https://pyup.io/repos/github/scieloorg/opac/
-     :alt: Python 3
+        :target: https://pyup.io/repos/github/scieloorg/opac/
+        :alt: Python 3
 
 .. image:: https://images.microbadger.com/badges/image/scieloorg/opac.svg
-     :target: https://microbadger.com/images/scieloorg/opac
-     :alt: Image info from microbadger.com
+        :target: https://microbadger.com/images/scieloorg/opac
+        :alt: Image info from microbadger.com
 
 .. image:: https://images.microbadger.com/badges/version/scieloorg/opac.svg
-     :target: https://microbadger.com/images/scieloorg/opac
-     :alt: Image latest version
+        :target: https://microbadger.com/images/scieloorg/opac
+        :alt: Image latest version
 
 .. image:: https://images.microbadger.com/badges/commit/scieloorg/opac.svg
-     :target: https://microbadger.com/images/scieloorg/opac
-     :alt: Image latest commit
+        :target: https://microbadger.com/images/scieloorg/opac
+        :alt: Image latest commit
 
 
 =========================
@@ -64,7 +64,7 @@ Arquivos: Dockerfile* e docker-compose*.yml
 
 - **docker-compose.yml**: contém as definições para iniciar todos os containers necessários para rodar em **produção**
 - **docker-compose-build.yml**: contém as definições para construir as imagems e iniciar todos os containers necessários para rodar no **Travis/CI**
-- **docker-compose.yml**: contém as definições para iniciar todos os containers necessários para rodar em **desenvolvimento**
+- **docker-compose-dev.yml**: contém as definições para iniciar todos os containers necessários para rodar em **desenvolvimento**
 
 =================================================
 Instalação utilizando Docker para desenvolvimento
@@ -90,8 +90,6 @@ Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalid
 Equipe responsável por instalação, desenvolvimento e manutenção
 =========================================
 
-- Jamil Atta Junior (Desenvolvimento) <jamil.atta@scielo.org> 
+- Jamil Atta Junior (Desenvolvimento) <jamil.atta@scielo.org>
 - Juan Funez (Desenvolvimento) <juan.funez@scielo.org>
 - Rondineli Gama Saad (Infraestrutura) <rondineli.saad@scielo.org>
-
-
