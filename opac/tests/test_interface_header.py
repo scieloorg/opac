@@ -85,7 +85,7 @@ class HeaderTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('collection/index.html')
-                self.assertIn(b'data-lang="pt_BR"', response.data)
+                self.assertIn(b'data-lang="pt-BR"', response.data)
 
     def test_current_header_logo_when_set_en(self):
         """

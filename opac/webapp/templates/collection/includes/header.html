@@ -4,7 +4,7 @@
   <div class="container">
     <div class="topFunction">
       <div class="col-md-3 col-sm-4 mainNav">
-          <a href="" class="menu" data-rel=".mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
+          <a href="#" class="menu" data-rel=".mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
           <div class="mainMenu">
           {% include "collection/includes/nav.html" %}
         </div>
@@ -12,7 +12,8 @@
       <div class="col-md-6 col-sm-4 brandLogo">
         <h1>
           <a href="{{ url_for('.index') }}">
-            <img src="{{ cimages.get_home_logo(g.collection, session.lang) }}" class="image" data-lang="{{ session.lang }}">
+            <img src="{{ cimages.get_home_logo(g.collection, session.lang) }}" alt="{% trans %}Logo da coleção{% endtrans %} {{ g.collection.name }}"
+                 class="image" data-lang="{{ session.get('lang', config.get('BABEL_DEFAULT_LOCALE')).replace('_', '-') }}">
           </a>
         </h1>
       </div>
