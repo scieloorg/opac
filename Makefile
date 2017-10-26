@@ -50,6 +50,12 @@ dev_compose_exec_shell_webapp:
 dev_compose_make_test:
 	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp make test
 
+dev_compose_invalidate_cache:
+	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp make invalidate_cache
+
+dev_compose_invalidate_cache_forced:
+	@docker-compose -f $(COMPOSE_FILE_DEV) exec opac_webapp make invalidate_cache_forced
+
 
 #####################################################
 ## atalhos docker-compose build e testes no traivs ##
@@ -137,6 +143,17 @@ test:
 test_coverage:
 	export OPAC_CONFIG="config/templates/testing.template" && export FLASK_COVERAGE="1" && python opac/manager.py test
 
+#########
+## cache #
+#########
+
+invalidate_cache:
+	python opac/manager.py invalidate_cache
+
+invalidate_cache_forced:
+	python opac/manager.py invalidate_cache	--force_clear
+
+
 #####################################
 ## OPAC_STATIC_REPO_PATH - frontend #
 #####################################
@@ -175,3 +192,4 @@ static_check_deps:
 static_install_deps:
 	@echo 'instalando as dependência (package.json):'
 	@npm install
+
