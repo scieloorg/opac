@@ -27,7 +27,7 @@ if FLASK_COVERAGE:
 else:
     COV = None
 
-from webapp import create_app, dbsql, dbmongo, mail  # noqa
+from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
 from webapp import controllers  # noqa
 from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content  # noqa
@@ -49,8 +49,39 @@ def make_shell_context():
         'Issue': Issue,
         'Article': Article,
     }
-    return dict(app=app, dbsql=dbsql, dbmongo=dbmongo, mail=mail, **app_models)
+    return dict(
+        app=app,
+        dbsql=dbsql,
+        dbmongo=dbmongo,
+        mail=mail,
+        cache=cache,
+        **app_models)
 manager.add_command("shell", Shell(make_context=make_shell_context))
+
+
+@manager.command
+@manager.option('-f', '--force', dest='force_clear', default=False)
+def invalidate_cache(force_clear=False):
+
+    def clear_cache():
+        keys_invalidated = cache.clear()
+        print('Chaves invalidadas: %s' % keys_invalidated)
+        print('Cache zerado com sucesso!')
+
+    if force_clear:
+        clear_cache()
+    else:
+        # pedimos confirmação
+        user_confirmation = None
+        while user_confirmation is None:
+            user_confirmation = input('Tem certeza que deseja limpar todo o cache? [y/N]: ').strip()
+            if user_confirmation.lower() == 'y':
+                clear_cache()
+            elif user_confirmation.lower() == 'n':
+                print('O cache permance sem mudanças!')
+            else:
+                user_confirmation = None
+                print('Resposta inválida. Responda "y" ou "n" (sem aspas)')
 
 
 @manager.command
