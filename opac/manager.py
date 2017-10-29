@@ -85,6 +85,50 @@ def invalidate_cache(force_clear=False):
 
 
 @manager.command
+@manager.option('-p', '--pattern', dest='pattern')
+@manager.option('-f', '--force', dest='force_clear', default=False)
+def invalidate_cache_pattern(pattern, force_clear=False):
+    _redis_cli = cache.cache._client
+
+    def count_key_pattern(pattern):
+        keys_found = _redis_cli.scan_iter(match=pattern)
+        return len([k for k in keys_found])
+
+    def delete_cache_pattern(pattern):
+        print('Removendo do cache as chaves com pattern: %s' % pattern)
+        keys_found = _redis_cli.scan_iter(match=pattern)
+        deleted_keys_count = _redis_cli.delete(*keys_found)
+        print('%s chaves removidas do cache' % deleted_keys_count)
+
+    if not pattern:
+        print('Não é possível buscar chaves se o pattern é vazio!')
+        print('O cache permance sem mudanças!')
+    else:
+        if force_clear:
+            keys_found_count = count_key_pattern(pattern)
+            if keys_found_count > 0:
+                delete_cache_pattern(pattern)
+            else:
+                print('Não foi encontrada nenhuma chave pelo pattern: %s' % pattern)
+        else:
+            # pedimos confirmação
+            user_confirmation = None
+            while user_confirmation is None:
+                user_confirmation = input('Tem certeza que deseja limpar o cache filtrando pelo pattern: %s? [y/N]: ' % pattern).strip()
+                if user_confirmation.lower() == 'y':
+                    keys_found_count = count_key_pattern(pattern)
+                    if keys_found_count > 0:
+                        delete_cache_pattern(pattern)
+                    else:
+                        print('Não foi encontrada nenhuma chave pelo pattern: %s' % pattern)
+                elif user_confirmation.lower() == 'n':
+                    print('O cache permance sem mudanças!')
+                else:
+                    user_confirmation = None
+                    print('Resposta inválida. Responda "y" ou "n" (sem aspas)')
+
+
+@manager.command
 @manager.option('-f', '--force', dest='force_delete', default=False)
 def reset_dbsql(force_delete=False):
     """
