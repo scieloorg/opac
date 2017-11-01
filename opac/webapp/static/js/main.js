@@ -338,6 +338,13 @@ var Portal = {
 				$(".results .item:nth-child("+b+") div .line.articleResult").append(html);
 
 			}
+
+			$('#contactModal').on('show.bs.modal', function (event) {
+				var triggerElement = $(event.relatedTarget) ;// Button that triggered the modal
+				  var title = triggerElement.data('modal-title'); // Extract info from data-* attributes
+				var modal = $(this);
+				modal.find('.modal-title').text(title);
+			});
 		},
 		Slider: function() {
 			var id = $(this).attr("id"),
