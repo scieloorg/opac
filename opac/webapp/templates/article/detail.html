@@ -7,23 +7,19 @@
     {% include "article/includes/levelMenu.html" %}
 
     <!-- PID: {{article.pid}} -->
-
-    <section class="articleCtt">
-
       <!-- Verificando se é versão HTML ou XML -->
       {% if html %}
         {% if not article.xml %}
-          <div class="container">
-              {{ html|safe }}
-          </div>
+          <section class="articleCtt">
+            <div class="container">
+                {{ html|safe }}
+            </div>
+          </section>
         {% else %}
           {{ html|safe }}
         {% endif %}
       {% endif %}
-
       {% include "article/includes/floating_menu.html" %}
-    </section>
-
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}
