@@ -3,7 +3,7 @@ version: '2'
 services:
 
     redis-cache:
-        image: redis:alpine
+        image: scieloorg/redis
         user: redis
         restart: always
         volumes:
