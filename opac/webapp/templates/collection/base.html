@@ -1,6 +1,17 @@
 {% extends "base.html" %}
 {% block body_class %}portal collection{% endblock %}
 {% block content %}
+  <div class="alert-warning" style="padding: 0 5px; text-align: center">
+    {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')) %}
+      {% if html_lang == 'pt_BR' %}
+        <strong>Novo portal</strong> - pode conter incorreções
+      {% elif html_lang == 'en' %}
+        <strong>New portal</strong> - may contain inaccuracies
+      {% elif html_lang == 'es' %}
+        <strong>Nuevo portal</strong> - puede contener incorrecciones
+      {% endif %}
+    {% endwith %}
+  </div>
   {% include "collection/includes/header.html" %}
   {% block level_menu %}{% endblock %}
 
