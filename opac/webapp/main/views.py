@@ -213,11 +213,11 @@ def about_collection():
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def router_legacy():
 
-    script_php = request.args.get('script')
-    pid = request.args.get('pid')
+    script_php = request.args.get('script', None)
+    pid = request.args.get('pid', None)
 
-    if not script_php or not pid:
-        abort(404, _('Página não encontrado'))
+    if script_php is None and pid is None:
+        return redirect('/')
 
     if script_php == 'sci_serial':
 
@@ -278,6 +278,9 @@ def router_legacy():
             abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
         return issue_grid(journal.url_segment)
+
+    else:
+        return redirect('/')
 
 
 @main.route('/journal/<string:url_seg>/')
