@@ -698,6 +698,19 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
 
+    if article.pdfs:
+        try:
+            pdf_urls = [pdf['url'] for pdf in article.pdfs]
+
+            if not pdf_urls:
+                abort(404, _('PDF do Artigo não encontrado'))
+            else:
+                pdf_urls_parsed = list(map(urlparse, pdf_urls))
+                pdf_urls_path = [pdf.path for pdf in pdf_urls_parsed]
+
+        except Exception:
+            abort(404, _('PDF do Artigo não encontrado'))
+
     html_article = None
 
     if article.htmls:
@@ -742,6 +755,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'issue': issue,
         'html': html_article,
         'pdfs': article.pdfs,
+        'pdf_urls_path': pdf_urls_path,
         'article_lang': lang_code
     }
 

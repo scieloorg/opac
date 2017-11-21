@@ -3,6 +3,7 @@
     <meta name="citation_journal_title" content="{{ journal.title }}"></meta>
 {% endif -%}
 
+
 {% if journal.short_title -%}
     <meta name="citation_journal_abbrev" content="{{ journal.short_title }}"></meta>
 {% endif -%}
@@ -19,16 +20,18 @@
   <meta name="citation_author" content="{{ author }}"></meta>
 {% endfor -%}
 
-{% if journal.title -%}
-    <meta name="citation_title" content="{{ journal.title|escape }}"></meta>
-{% endif -%}
-
 {% if issue.volume -%}
     <meta name="citation_volume" content="{{ issue.volume }}"></meta>
 {% endif -%}
 
 {% if issue.number -%}
     <meta name="citation_number" content="{{ issue.number }}"></meta>
+{% endif -%}
+
+{% if article.pdfs -%}
+    {% for path in pdf_urls_path %}
+        <meta name="citation_pdf_url" content="{{ url_for('main.article_ssm_content_raw', _external=True) }}?resource_ssm_path={{ path }}"></meta>
+    {% endfor %}
 {% endif -%}
 
 {% if article.elocation -%}
@@ -58,6 +61,10 @@
 
 {% if journal.eletronic_issn -%}
     <meta name="citation_issn" content="{{ journal.eletronic_issn }}"></meta>
+{% endif -%}
+
+{% if article.title -%}
+    <meta name="citation_title" content="{{ article.title|escape }}"></meta>
 {% endif -%}
 
 {% if article.original_language -%}
