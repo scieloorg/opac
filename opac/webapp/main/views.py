@@ -698,6 +698,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
 
+    pdf_urls_path = []
+
     if article.pdfs:
         try:
             pdf_urls = [pdf['url'] for pdf in article.pdfs]
