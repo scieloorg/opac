@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from flask import current_app
+from flask import current_app, url_for
 from .base import BaseTestCase
 
 from . import utils
@@ -135,3 +135,125 @@ class LegacyURLTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('article/detail.html')
+
+    def test_scielo_php_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php (sem querystring) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # collection = utils.makeOneCollection()
+            # when
+            response_no_follow = self.client.get(url_for('main.router_legacy'), follow_redirects=False)
+            response_following = self.client.get(url_for('main.router_legacy'), follow_redirects=True)
+            # then
+            self.assertStatus(response_no_follow, 302)
+            self.assertStatus(response_following, 200)
+            self.assertEqual('text/html; charset=utf-8', response_following.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_unexpected_qs_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?foo=bar vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # collection = utils.makeOneCollection()
+            # when
+            qs = '?foo=bar'
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_invalid_script_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=foo (foo é valor incorreto, sem pid) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=foo'
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_sci_serial_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_serial&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_sci_issuetoc_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_issuetoc&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_sci_arttext_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_arttext&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_sci_abstract_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_arttext&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
+
+    def test_scielo_php_with_sci_issues_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_issues&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 200)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("collection/index.html")
