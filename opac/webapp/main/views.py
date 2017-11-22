@@ -216,69 +216,66 @@ def router_legacy():
     script_php = request.args.get('script', None)
     pid = request.args.get('pid', None)
 
-    if script_php is None and pid is None:
-        return redirect('/')
+    if script_php and pid:
 
-    if script_php == 'sci_serial':
+        if script_php == 'sci_serial':
+            # pid = issn
+            journal = controllers.get_journal_by_issn(pid)
 
-        # pid = issn
-        journal = controllers.get_journal_by_issn(pid)
+            if not journal:
+                abort(404, _('Periódico não encontrada'))
 
-        if not journal:
-            abort(404, _('Periódico não encontrada'))
+            if not journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-        if not journal.is_public:
-            abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+            return journal_detail(journal.url_segment)
 
-        return journal_detail(journal.url_segment)
+        elif script_php == 'sci_issuetoc':
 
-    elif script_php == 'sci_issuetoc':
+            issue = controllers.get_issue_by_pid(pid)
 
-        issue = controllers.get_issue_by_pid(pid)
+            if not issue:
+                abort(404, _('Número não encontrado'))
 
-        if not issue:
-            abort(404, _('Número não encontrado'))
+            if not issue.is_public:
+                abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
-        if not issue.is_public:
-            abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
+            if not issue.journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
-        if not issue.journal.is_public:
-            abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
+            return issue_toc(issue.journal.url_segment, issue.url_segment)
 
-        return issue_toc(issue.journal.url_segment, issue.url_segment)
+        elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
 
-    elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
+            article = controllers.get_article_by_pid(pid)
 
-        article = controllers.get_article_by_pid(pid)
+            if not article:
+                abort(404, _('Artigo não encontrado'))
 
-        if not article:
-            abort(404, _('Artigo não encontrado'))
+            if not article.is_public:
+                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
 
-        if not article.is_public:
-            abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+            if not article.issue.is_public:
+                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
 
-        if not article.issue.is_public:
-            abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+            if not article.journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-        if not article.journal.is_public:
-            abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+            return article_detail(article.journal.url_segment,
+                                  article.issue.url_segment,
+                                  article.url_segment)
 
-        return article_detail(article.journal.url_segment,
-                              article.issue.url_segment,
-                              article.url_segment)
+        elif script_php == 'sci_issues':
 
-    elif script_php == 'sci_issues':
+            journal = controllers.get_journal_by_issn(pid)
 
-        journal = controllers.get_journal_by_issn(pid)
+            if not journal:
+                abort(404, _('Periódico não encontrado'))
 
-        if not journal:
-            abort(404, _('Periódico não encontrado'))
+            if not journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-        if not journal.is_public:
-            abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
-
-        return issue_grid(journal.url_segment)
-
+            return issue_grid(journal.url_segment)
     else:
         return redirect('/')
 
