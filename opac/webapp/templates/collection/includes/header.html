@@ -10,10 +10,10 @@
         </div>
       </div>
       <div class="col-md-6 col-sm-4 brandLogo">
-        <h1 class="noMarginBrandLogo">
-          <a href="{{ url_for('.index') }}">
-            <img src="{{ cimages.get_home_logo(g.collection, session.lang) }}" alt="{% trans %}Logo da coleção{% endtrans %} {{ g.collection.name }}"
-                 class="image" data-lang="{{ session.get('lang', config.get('BABEL_DEFAULT_LOCALE')).replace('_', '-') }}">
+        <h1 class="logo-svg-legenda">
+          <a href="/">
+            <small>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</small>
+            <span>Scientific Electronic Library Online</span>
           </a>
         </h1>
       </div>

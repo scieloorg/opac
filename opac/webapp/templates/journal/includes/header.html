@@ -5,16 +5,13 @@
     <div class="topFunction">
       <div class="col-md-2 col-sm-3 mainNav">
         <a href="" class="menu" data-rel="#mainMenu" title="Abrir menu">{% trans %}Abrir menu{% endtrans %}</a>
-        <h2>
-          <a href="{{ url_for('.index') }}" title="{% trans %} Ir para a homepage da coleção {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-            <img src="{{ cimages.get_header_logo(g.collection, session.lang) }}" class="image" alt="{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}" data-lang="{{ session.lang }}">
-          </a>
-        </h2>
+          <h2 class="logo-svg">
+            <a href="/" title="{% trans %}Ir para a homepage da coleção: {% endtrans %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
+            </a>
+          </h2>
         <div class="mainMenu" id="mainMenu">
           <div class="row">
-            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo">
-              <img src="{{ cimages.get_menu_logo(g.collection, session.lang) }}" class="image" alt="logomarca da coleção {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}">
-            </div>
+            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo logo-svg"></div>
           </div>
           {% include "collection/includes/nav.html" %}
         </div>
