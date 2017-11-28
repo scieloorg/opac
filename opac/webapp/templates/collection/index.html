@@ -1,4 +1,6 @@
 {% extends "collection/base.html" %}
+{% import 'macros/collection.html' as coll_macro %}
+
 {% block body_class %}collection{% endblock %}
 {% block level_menu %}
     {% include "collection/includes/levelMenu_search.html" %}
@@ -12,7 +14,7 @@
           <div class="col-md-12 col-sm-12 metrics">
             <div class="row">
               <div class="col-md-6">
-                <h2>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }} <span >{% trans %}em números | Métricas{% endtrans %}</span></h2>
+                <h2>{{ coll_macro.get_collection_name() }} <span >{% trans %}em números | Métricas{% endtrans %}</span></h2>
               </div>
               <div class="col-md-6 right">
                 <div class="datetime"><span id="date"></span></div>

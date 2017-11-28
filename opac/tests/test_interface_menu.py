@@ -83,8 +83,6 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor16, response_data)
                 expected_anchor17 = """<li>\n          <a href="#">\n            %s\n          </a>\n        </li>""" % __('Contatos')
                 self.assertIn(expected_anchor17, response_data)
-                # expected_anchor18 = u"""<li>\n      <a href="#"><strong>%s</strong></a>\n    </li>""" % __(u'Portal do Autor')
-                # self.assertIn(expected_anchor18, response_data)
 
     def test_blog_link_in_hamburger_menu(self):
         """
@@ -93,7 +91,11 @@ class MenuTestCase(BaseTestCase):
         """
 
         with current_app.app_context():
-            utils.makeOneCollection({'name': 'dummy collection'})
+
+            utils.makeOneCollection({'name_pt': 'coleção falsa',
+                                     'name_es': 'coleccion falsa',
+                                     'name_en': 'dummy collection'})
+
             with self.client as c:
                 # idioma em 'pt_br'
                 response = c.get(
