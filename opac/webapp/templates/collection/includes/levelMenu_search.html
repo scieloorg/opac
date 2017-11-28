@@ -1,8 +1,10 @@
+{% import 'macros/collection.html' as coll_macro %}
+
 <section class="levelMenu">
   <div class="container">
     <a href="{{ url_for('.about_collection') }}" class="onlineSubmission">
       <span class="glyphBtn infoMenu"></span>
-      {% trans %}Sobre o{% endtrans %} SciELO {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}
+      {% trans %}Sobre o{% endtrans %} SciELO {{ coll_macro.get_collection_name() }}
     </a>
     <form method="get" action="{{ config.URL_SEARCH }}" id="searchForm" name="searchForm">
       <input type="hidden" name="q" id="q" value="">

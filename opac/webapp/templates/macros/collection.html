@@ -1,0 +1,12 @@
+
+{% macro get_collection_name() -%}
+    {%- if session.lang == 'pt_BR' and g.collection.name_pt -%}
+      {{ g.collection.name_pt }}
+    {%- elif session.lang == 'en' and g.collection.name_en-%}
+      {{ g.collection.name_en }}
+    {%- elif session.lang == 'es' and g.collection.name_es-%}
+      {{ g.collection.name_es }}
+    {%- else -%}
+      {{ g.collection.name }}
+    {%- endif -%}
+{%- endmacro %}

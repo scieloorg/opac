@@ -1,8 +1,10 @@
+{% import 'macros/collection.html' as coll_macro %}
+
 <nav>
   <ul>
     <li>
       <a href="{{ url_for('.index') }}">
-        <strong>{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}</strong>
+        <strong>{{ coll_macro.get_collection_name() }}</strong>
       </a>
       <ul>
           <li>
@@ -27,7 +29,7 @@
           </li>
           <li>
             <a href="{{ url_for('.about_collection') }}">
-              {% trans %}Sobre:{% endtrans %} {{ g.collection.name or _('NOME DA COLEÇÃO!!') }}
+              {% trans %}Sobre:{% endtrans %} {{ coll_macro.get_collection_name() }}
             </a>
           </li>
           <li>

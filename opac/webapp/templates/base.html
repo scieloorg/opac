@@ -1,3 +1,4 @@
+{% import 'macros/collection.html' as coll_macro %}
 <!DOCTYPE html>
 {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')).replace('_', '-')  %}
   <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ html_lang }}"> <![endif]-->
@@ -12,7 +13,7 @@
 
     {% block extra_meta %}{% endblock %}
 
-    <title>{% block title %}{{ g.collection.name or _('NOME DA COLEÇÃO!!') }}{% endblock %}</title>
+    <title>{% block title %}{{ coll_macro.get_collection_name() }}{% endblock %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-bundle.css') }}?v={{ config.VCS_REF }}">
