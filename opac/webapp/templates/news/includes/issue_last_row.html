@@ -2,7 +2,9 @@
   <div class="col-md-12">
     <span><b>{{ journal }}</b></span>
       <strong>{% trans%}Ano{% endtrans %}: </strong><b>{{ journal.last_issue.year }}</b></br>
-      <strong>{% trans%}Volume{% endtrans %}: </strong><b>{{ journal.last_issue.volume }}</b></br>
+      {% if journal.last_issue.volume %}
+        <strong>{% trans%}Volume{% endtrans %}: </strong><b>{{ journal.last_issue.volume }}</b></br>
+      {% endif %}
       <strong>{% trans%}Número{% endtrans %}: </strong><b>{{ journal.last_issue.number }}</b>
       <div class="pull-right">
         <!-- toc/ deve ser alterado -->
