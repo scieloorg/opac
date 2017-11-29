@@ -111,15 +111,18 @@ import os
         - OPAC_SESSION_REFRESH_EACH_REQUEST: Fazer refresh da cookie em cada request? (Default: 'False')
 
       - Cache da app: https://pythonhosted.org/Flask-Caching/
-        CACHE_ENABLED: ativa/desativa o cache com redis (default: True)
-        CACHE_TYPE: o tipo de backend do cache: 'null', 'redis', outros (default: 'redis')
-        CACHE_NO_NULL_WARNING: ativa/desativa exibição de warnings quando o CACHE_TYPE é 'null' (default: True)
-        CACHE_DEFAULT_TIMEOUT: tempo de vida dos objetos no cache. Tempo medido em segundos (default: 3600)
-        CACHE_KEY_PREFIX: prefixo da chave de cache. (default: 'opac_cache')
-        CACHE_REDIS_HOST: host do servidor redis que vai ser usado no cache. (default: 'redis-cache')
-        CACHE_REDIS_PORT: porta do servidor redis que vai ser usado no cache. (default: 6379)
-        CACHE_REDIS_DB: nome de db do servidor redis que vai ser usado no cache (inteiro >= 0). (default: 0)
-        CACHE_REDIS_PASSWORD: senha do servidor redis que vai ser usado no cache. (default = '')
+        - OPAC_CACHE_ENABLED: ativa/desativa o cache com redis (default: True)
+        - OPAC_CACHE_TYPE: o tipo de backend do cache: 'null', 'redis', outros (default: 'redis')
+        - OPAC_CACHE_NO_NULL_WARNING: ativa/desativa exibição de warnings quando o CACHE_TYPE é 'null' (default: True)
+        - OPAC_CACHE_DEFAULT_TIMEOUT: tempo de vida dos objetos no cache. Tempo medido em segundos (default: 3600)
+        - OPAC_CACHE_KEY_PREFIX: prefixo da chave de cache. (default: 'opac_cache')
+        - OPAC_CACHE_REDIS_HOST: host do servidor redis que vai ser usado no cache. (default: 'redis-cache')
+        - OPAC_CACHE_REDIS_PORT: porta do servidor redis que vai ser usado no cache. (default: 6379)
+        - OPAC_CACHE_REDIS_DB: nome de db do servidor redis que vai ser usado no cache (inteiro >= 0). (default: 0)
+        - OPAC_CACHE_REDIS_PASSWORD: senha do servidor redis que vai ser usado no cache. (default = '')
+
+      - Pindom visitor insights:
+        - OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC: URL do JS para utilizar o Pingdom visitor insights (ex: `//rum-static.pingdom.net/pa-XXXXXXXXX.js`) (default: None)
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -342,3 +345,7 @@ CACHE_REDIS_HOST = os.environ.get('OPAC_CACHE_REDIS_HOST', 'redis-cache')
 CACHE_REDIS_PORT = os.environ.get('OPAC_CACHE_REDIS_PORT', 6379)
 CACHE_REDIS_DB = os.environ.get('OPAC_CACHE_REDIS_DB', '0')
 CACHE_REDIS_PASSWORD = os.environ.get('OPAC_CACHE_REDIS_PASSWORD', None)
+
+# Pingdom Visitor Insights:
+PINGDOM_VISITOR_INSIGHTS_JS_SRC = os.environ.get('OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC', None)
+
