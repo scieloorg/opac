@@ -217,6 +217,8 @@
       </div>
 
     {% endif %}
-
+    {% if config.PINGDOM_VISITOR_INSIGHTS_JS_SRC %}
+      <script src="{{ config.PINGDOM_VISITOR_INSIGHTS_JS_SRC }}" async></script>
+    {% endif %}
   </body>
 </html>
