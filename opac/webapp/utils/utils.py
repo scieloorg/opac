@@ -227,8 +227,9 @@ def create_user(user_email, user_password, user_email_confirmed):
 
     new_user = models.User(
         email=user_email,
-        password=user_password,
+        _password=user_password,
         email_confirmed=user_email_confirmed)
+    new_user.define_password(user_password)
     webapp.dbsql.session.add(new_user)
     webapp.dbsql.session.commit()
 

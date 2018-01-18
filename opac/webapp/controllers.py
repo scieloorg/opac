@@ -894,7 +894,7 @@ def set_user_password(user, password):
     if not isinstance(user, User):
         raise ValueError(__('Usuário deve ser do tipo %s' % User))
 
-    user.password = password
+    user.define_password(password)  # hotfix/workaround
     dbsql.session.add(user)
     dbsql.session.commit()
 

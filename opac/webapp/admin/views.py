@@ -681,6 +681,13 @@ class PagesAdminView(OpacBaseAdminView):
                      [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
     )
 
+    def _content_formatter(self, context, model, name):
+        return Markup(model.content)
+
+    column_formatters = {
+        'content': _content_formatter,
+    }
+
     def on_model_change(self, form, model, is_created):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
