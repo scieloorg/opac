@@ -586,11 +586,11 @@ class AdminViewsTestCase(BaseTestCase):
                     reset_pwd_url = url_for('admin.reset')
                     credentials = {
                         'email': 'foo@bar.com',
-                        'password': '123'
+                        '_password': '123'
                     }
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials['email'], credentials['_password'], True)
                     with mail.record_messages() as outbox:
                         response = c.post(
                             reset_pwd_url,

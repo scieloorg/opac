@@ -39,6 +39,9 @@ class User(UserMixin, db.Model):
     def _set_password(self, plaintext):
         self._password = generate_password_hash(plaintext)
 
+    def define_password(self, plaintext):
+        self._password = generate_password_hash(plaintext)
+
     def is_correct_password(self, plaintext):
         """
         Compara a string ``plaintext`` com a senha "hasheada" armazenada para este usuário.
