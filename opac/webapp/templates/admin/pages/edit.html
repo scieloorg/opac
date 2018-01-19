@@ -11,4 +11,25 @@
 {% block tail %}
     {{ super() }}
     <script src="/static/js/ckeditor/ckeditor.js"></script>
+    <script>
+        var editor_content = CKEDITOR.replace( 'content', {} );
+        editor_content.on('instanceReady', function() {
+            // Use line breaks for block elements, tables, and lists.
+            var dtd = CKEDITOR.dtd;
+            var extended_tools = CKEDITOR.tools.extend(
+                {},
+                dtd.$nonBodyContent, dtd.$block, dtd.$listItem, dtd.$tableContent
+            );
+
+            for ( var e in extended_tools ) {
+                this.dataProcessor.writer.setRules( e, {
+                    indent: true,
+                    breakBeforeOpen: true,
+                    breakAfterOpen: true,
+                    breakBeforeClose: true,
+                    breakAfterClose: true
+                });
+            }
+        });
+    </script>
 {% endblock %}

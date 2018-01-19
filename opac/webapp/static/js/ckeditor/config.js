@@ -4,38 +4,63 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here.
-	// For complete reference see:
-	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+    // Define changes to default configuration here.
+    // For complete reference see:
+    // http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-	// The toolbar groups arrangement, optimized for a single toolbar row.
-	config.toolbarGroups = [
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-		{ name: 'forms' },
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'links' },
-		{ name: 'insert' },
-		{ name: 'styles' },
-		{ name: 'colors' },
-		{ name: 'tools' },
-		{ name: 'others' },
-		{ name: 'about' }
-	];
+    // The toolbar groups arrangement, optimized for a single toolbar row.
+    config.toolbarGroups = [
+        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+        { name: 'forms', groups: [ 'forms' ] },
+        '/',
+        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+        { name: 'links', groups: [ 'links' ] },
+        { name: 'insert', groups: [ 'insert' ] },
+        '/',
+        { name: 'styles', groups: [ 'styles' ] },
+        { name: 'colors', groups: [ 'colors' ] },
+        { name: 'tools', groups: [ 'tools' ] },
+        { name: 'others', groups: [ 'others' ] },
+        { name: 'about', groups: [ 'about' ] }
+    ];
 
-	// The default plugins included in the basic setup define some buttons that
-	// are not needed in a basic editor. They are removed here.
-	// config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
-	config.removeButtons = '';
+    // The default plugins included in the basic setup define some buttons that
+    // are not needed in a basic editor. They are removed here.
+    // config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+    config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Image,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
 
-	config.height = 500;
+    config.height = 500;
 
-	config.extraPlugins = 'justify,sourcedialog';
+    config.extraPlugins = 'justify';
 
-	config.allowedContent = true;
+    config.allowedContent = true;
 
-	// Dialog windows are also simplified.
-	config.removeDialogTabs = 'link:advanced';
+    // Dialog windows are also simplified.
+    config.removeDialogTabs = 'link:advanced';
 };
+
+
+// CKEDITOR.editorConfig = function( config ) {
+//     config.toolbarGroups = [
+//         { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+//         { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+//         { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+//         { name: 'forms', groups: [ 'forms' ] },
+//         '/',
+//         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+//         { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+//         { name: 'links', groups: [ 'links' ] },
+//         { name: 'insert', groups: [ 'insert' ] },
+//         '/',
+//         { name: 'styles', groups: [ 'styles' ] },
+//         { name: 'colors', groups: [ 'colors' ] },
+//         { name: 'tools', groups: [ 'tools' ] },
+//         { name: 'others', groups: [ 'others' ] },
+//         { name: 'about', groups: [ 'about' ] }
+//     ];
+
+//     config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Image,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
+// };
