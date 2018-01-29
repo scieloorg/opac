@@ -27,9 +27,6 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'about', groups: [ 'about' ] }
     ];
 
-    // The default plugins included in the basic setup define some buttons that
-    // are not needed in a basic editor. They are removed here.
-    // config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
     config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
 
     config.height = 500;
@@ -41,26 +38,3 @@ CKEDITOR.editorConfig = function( config ) {
     // Dialog windows are also simplified.
     config.removeDialogTabs = 'link:advanced';
 };
-
-
-// CKEDITOR.editorConfig = function( config ) {
-//     config.toolbarGroups = [
-//         { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-//         { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-//         { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-//         { name: 'forms', groups: [ 'forms' ] },
-//         '/',
-//         { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-//         { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-//         { name: 'links', groups: [ 'links' ] },
-//         { name: 'insert', groups: [ 'insert' ] },
-//         '/',
-//         { name: 'styles', groups: [ 'styles' ] },
-//         { name: 'colors', groups: [ 'colors' ] },
-//         { name: 'tools', groups: [ 'tools' ] },
-//         { name: 'others', groups: [ 'others' ] },
-//         { name: 'about', groups: [ 'about' ] }
-//     ];
-
-//     config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Image,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
-// };
