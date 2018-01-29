@@ -30,7 +30,7 @@ CKEDITOR.editorConfig = function( config ) {
     // The default plugins included in the basic setup define some buttons that
     // are not needed in a basic editor. They are removed here.
     // config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
-    config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Image,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
+    config.removeButtons = 'NewPage,Preview,Scayt,HiddenField,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,CreateDiv,Flash,Smiley,SpecialChar,PageBreak,Iframe,About,Templates,Save,Print';
 
     config.height = 500;
 
