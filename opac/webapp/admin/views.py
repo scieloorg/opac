@@ -693,10 +693,25 @@ class PagesAdminView(OpacBaseAdminView):
 
     form_excluded_columns = ('created_at', 'updated_at')
 
+    def _content_formatter(self, context, model, name):
+        return Markup(model.content)
+
+    def _created_at_formatter(self, context, model, name):
+        if model.created_at:
+            return model.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return ''
+
+    def _updated_at_formatter(self, context, model, name):
+        if model.updated_at:
+            return model.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return ''
+
     column_formatters = dict(
-        content=lambda v, c, m, p: Markup(m.content),
-        created_at=lambda v, c, m, p: m.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-        updated_at=lambda v, c, m, p: m.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+        content=_content_formatter,
+        created_at=_created_at_formatter,
+        updated_at=_updated_at_formatter,
     )
 
     def on_model_change(self, form, model, is_created):
