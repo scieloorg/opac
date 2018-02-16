@@ -1,0 +1,21 @@
+<style type="text/css">
+  .page-updated-at {
+    float:right;
+    font-size: .75em;
+    color: #7f7a71;
+  }
+</style>
+
+{% if page_updated_at %}
+  <span class="page-updated-at">
+    {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')) %}
+      {% if html_lang == 'pt_BR' %}
+        (Atualizado: {{ page_updated_at.strftime('%d/%m/%Y %H:%M:%S') }})
+      {% elif html_lang == 'en' %}
+        (Updated: {{ page_updated_at.strftime('%m/%d/%Y %H:%M:%S') }})
+      {% elif html_lang == 'es' %}
+        (Actualizado: {{ page_updated_at.strftime('%d/%m/%Y %H:%M:%S') }})
+      {% endif %}
+    {% endwith %}
+  </span>
+{% endif %}

@@ -14,9 +14,9 @@ LANGUAGES_CHOICES = [
 ]
 
 INDEX_NAME = {
-    'SCIE':  'Science Citation Index',
-    'SSCI':  'Social Science Citation',
-    'A&HCI':  'Arts & Humanities Citation',
+    'SCIE': 'Science Citation Index',
+    'SSCI': 'Social Science Citation',
+    'A&HCI': 'Arts & Humanities Citation',
 }
 
 ISO3166_ALPHA2 = {
