@@ -6,6 +6,11 @@
 
 <section class="collection collectionAbout">
     <div class="container">
+        {% if page %}
+            {% with page_updated_at=page.updated_at  %}
+                {% include "includes/page_updated_at_info.html" %}
+            {% endwith %}
+        {% endif %}
 
         {% if pages %}
 

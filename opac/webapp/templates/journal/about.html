@@ -30,6 +30,7 @@
             </div>
 
             <div class="col-md-12 content journalSecundary">
+                {% include "includes/page_updated_at_info.html" %}
                 <div class="row">
                     <div class="{% if journal.social_networks %}col-md-8 col-sm-8{% else %}col-md-12 col-sm-12{%endif%}">
                         {% if content %}
