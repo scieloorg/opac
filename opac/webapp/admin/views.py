@@ -664,7 +664,17 @@ class PagesAdminView(OpacBaseAdminView):
         content=__('Conteúdo'),
         journal=__('Periódico'),
         description=__('Descrição'),
+        created_at=__('Data de Criação'),
+        updated_at=__('Data de Atualização'),
     )
+
+    column_filters = [
+        'name', 'language', 'journal', 'created_at', 'updated_at',
+    ]
+
+    column_searchable_list = [
+        'name', 'description', 'content',
+    ]
 
     create_template = 'admin/pages/edit.html'
     edit_template = 'admin/pages/edit.html'
@@ -679,6 +689,14 @@ class PagesAdminView(OpacBaseAdminView):
         language=dict(choices=choices.LANGUAGES_CHOICES),
         journal=dict(choices=[('', '------')] +
                      [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
+    )
+
+    form_excluded_columns = ('created_at', 'updated_at')
+
+    column_formatters = dict(
+        content=lambda v, c, m, p: Markup(m.content),
+        created_at=lambda v, c, m, p: m.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        updated_at=lambda v, c, m, p: m.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
     )
 
     def on_model_change(self, form, model, is_created):

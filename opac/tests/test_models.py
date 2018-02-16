@@ -21,7 +21,7 @@ class UserModelTestCase(BaseTestCase):
         # with
         data = {
             'email': 'foo@bar.com',
-            'password': '12345',
+            '_password': '12345',
         }
         # when
         new_user = models.User(**data)
@@ -50,7 +50,7 @@ class UserModelTestCase(BaseTestCase):
         # with
         data = {
             'email': 'foo@bar.com',
-            'password': '12345',
+            '_password': '12345',
         }
         # when
         new_user = models.User(**data)
@@ -71,7 +71,7 @@ class UserModelTestCase(BaseTestCase):
         # with
         data = {
             'email': 'foo@bar.com',
-            'password': '12345',
+            '_password': '12345',
             'email_confirmed': True,
         }
         # when
@@ -128,7 +128,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'password': '12345',
+            '_password': '12345',
         }
         # when
         new_user = models.User(**data)
@@ -172,12 +172,13 @@ class UserModelTestCase(BaseTestCase):
         # with
         data = {
             'email': 'foo@bar.com',
-            'password': '12345',
+            '_password': '12345',
         }
         # when
         new_user = models.User(**data)
+        new_user.define_password(data['_password'])
         # then
-        self.assertTrue(new_user.is_correct_password(data['password']))
+        self.assertTrue(new_user.is_correct_password(data['_password']))
 
     def test_is_correct_password_using_different_password_return_false(self):
         """
@@ -193,7 +194,7 @@ class UserModelTestCase(BaseTestCase):
         # with
         data = {
             'email': 'foo@bar.com',
-            'password': '12345',
+            '_password': '12345',
         }
         # when
         new_user = models.User(**data)

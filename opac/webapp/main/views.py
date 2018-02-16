@@ -430,6 +430,8 @@ def about_journal(url_seg):
 
     if page:
         context['content'] = page.content
+        if page.updated_at:
+            context['page_updated_at'] = page.updated_at
 
     return render_template("journal/about.html", **context)
 
