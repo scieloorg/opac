@@ -10,11 +10,11 @@
   <span class="page-updated-at">
     {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')) %}
       {% if html_lang == 'pt_BR' %}
-        (Atualizado: {{ page_updated_at.strftime('%d/%m/%Y %H:%M:%S') }})
+        (Atualizado: {{ page_updated_at.strftime('%d/%m/%Y') }})
       {% elif html_lang == 'en' %}
-        (Updated: {{ page_updated_at.strftime('%m/%d/%Y %H:%M:%S') }})
+        (Updated: {{ page_updated_at.strftime('%m/%d/%Y') }})
       {% elif html_lang == 'es' %}
-        (Actualizado: {{ page_updated_at.strftime('%d/%m/%Y %H:%M:%S') }})
+        (Actualizado: {{ page_updated_at.strftime('%d/%m/%Y') }})
       {% endif %}
     {% endwith %}
   </span>
