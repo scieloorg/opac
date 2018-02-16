@@ -674,7 +674,7 @@ def get_issue_by_url_seg(url_seg, url_seg_issue):
     if not url_seg and url_seg_issue:
         raise ValueError(__('Obrigatório um url_seg e url_seg_issue.'))
 
-    return Issue.objects.filter(journal=journal, url_segment=url_seg_issue).first()
+    return Issue.objects.filter(journal=journal, url_segment=url_seg_issue, type__ne='pressrelease').first()
 
 
 def get_issue_by_journal_and_assets_code(assets_code, journal):
