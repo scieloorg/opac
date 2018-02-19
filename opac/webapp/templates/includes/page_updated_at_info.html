@@ -12,7 +12,7 @@
       {% if html_lang == 'pt_BR' %}
         (Atualizado: {{ page_updated_at.strftime('%d/%m/%Y') }})
       {% elif html_lang == 'en' %}
-        (Updated: {{ page_updated_at.strftime('%m/%d/%Y') }})
+        (Updated: {{ page_updated_at.strftime('%Y/%m/%d') }})
       {% elif html_lang == 'es' %}
         (Actualizado: {{ page_updated_at.strftime('%d/%m/%Y') }})
       {% endif %}
