@@ -11,7 +11,7 @@ from flask_admin.form import Select2Field
 from wtforms.fields import SelectField
 from flask_admin.model.form import InlineFormAdmin
 import flask_login as login
-from flask import url_for, redirect, request, flash, abort, current_app
+from flask import url_for, redirect, request, flash, abort, current_app, render_template
 from flask_admin.contrib import sqla, mongoengine
 from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
@@ -21,7 +21,7 @@ from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
 from webapp.utils import get_timed_serializer
-from opac_schema.v1.models import Sponsor, Journal, Issue, Article
+from opac_schema.v1.models import Sponsor, Journal, Issue, Article, AuditLogEntry, Pages
 from webapp.admin.custom_widget import CKEditorField
 
 ACTION_PUBLISH_CONFIRMATION_MSG = _('Tem certeza que quer publicar os itens selecionados?')
@@ -714,10 +714,67 @@ class PagesAdminView(OpacBaseAdminView):
         updated_at=_updated_at_formatter,
     )
 
+    def on_model_delete(self, model):
+        # AUDITORIA: daqui para baixo tem que modularizar para que fique generico:
+        audit_payload = {
+            '_id': str(uuid4().hex),
+            'object_class_name': 'Page',
+            'object_pk': model._id,
+            'action': 'DEL',
+            'description': u"Foi apagado o registro do modelo: Page: (id: %s)" % model._id,
+        }
+
+        if login.current_user.is_authenticated:
+            audit_payload['user'] = login.current_user.email
+
+        audit_doc = AuditLogEntry(**audit_payload)
+        audit_doc.save()
+
     def on_model_change(self, form, model, is_created):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
             model._id = str(uuid4().hex)
+
+        # AUDITORIA: daqui para baixo tem que modularizar para que fique generico:
+        audit_payload = {
+            '_id': str(uuid4().hex),
+            'object_class_name': 'Page',
+            'object_pk': model._id,
+        }
+
+        if login.current_user.is_authenticated:
+            audit_payload['user'] = login.current_user.email
+
+        if is_created:
+            audit_payload['action'] = 'ADD'
+            audit_payload['description'] = u'Foi criado um novo registro de Page: (id: %s)' % model._id
+        else:
+            audit_payload['action'] = 'UPD'
+            audit_payload['description'] = u'Foi atualizado o registro de Page: (id: %s)' % model._id
+
+        # get fields data:
+        fields_to_audit = ['name', 'language', 'content', 'journal', 'description']
+        fields_data = {field: {'new_value': None, 'old_value': None} for field in fields_to_audit}
+
+        # percorremos os campos do MODELO (no banco) e do FORMULARIO e coletamos seus valores
+        for field_name in fields_to_audit:
+            if field_name in fields_to_audit:
+                form_field_value = form._fields.get(field_name, None)
+                # pegamos o novo valor do campo que vem no FORMULARIO
+                form_field_value_data = form_field_value.data if form_field_value else '[NO DATA]'
+                fields_data[field_name]['new_value'] = form_field_value_data
+
+                # pegamos o antigo valor do campo que vem do MODELO no banco
+                if is_created:
+                    fields_data[field_name]['old_value'] = '[NO DATA]'
+                else:
+                    old_model = Pages.objects.get(pk=model._id)
+                    model_field_value_data = getattr(old_model, field_name, '[no data]')
+                    fields_data[field_name]['old_value'] = model_field_value_data
+
+        audit_payload['fields_data'] = fields_data
+        audit_doc = AuditLogEntry(**audit_payload)
+        audit_doc.save()
 
 
 class PressReleaseAdminView(OpacBaseAdminView):
@@ -761,4 +818,66 @@ class PressReleaseAdminView(OpacBaseAdminView):
 
     form_args = dict(
         language=dict(choices=choices.LANGUAGES_CHOICES),
+    )
+
+
+class AuditLogEntryAdminView(OpacBaseAdminView):
+    can_create = False
+    can_edit = False
+    can_delete = True
+    column_searchable_list = ('description', 'user', )
+
+    column_filters = [
+        'user', 'action', 'created_at', 'object_class_name', 'object_pk',
+    ]
+    column_exclude_list = [
+        '_id', 'content', 'fields_data',
+    ]
+
+    def _created_at_formatter(self, context, model, name):
+        if model.created_at:
+            return model.created_at.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return ''
+
+    def _action_formatter(self, context, model, name):
+        label = {
+            'ADD': 'label label-success',
+            'UPD': 'label label-info',
+            'DEL': 'label label-danger'
+        }
+        if model.action:
+            return Markup('<span class="%s">%s</span>' % (label[model.action], model.get_action_value))
+        else:
+            return '?'
+
+    def _object_pk_formatter(self, context, model, name):
+        if model.object_pk and model.object_class_name in ['Page']:
+            object_url = url_for('pages.details_view') + "?id=%s" % model.object_pk
+            return Markup('<a href="%s">%s</a>' % (object_url, model.object_pk))
+        else:
+            return model.object_pk
+
+    def _fields_data_formatter(self, context, model, name):
+        if model.fields_data:
+            result_html = render_template("admin/audit_log/fields_data_table.html", **{'row_data': model.fields_data})
+            return Markup(result_html)
+        else:
+            return ''
+
+    column_formatters = dict(
+        action=_action_formatter,
+        created_at=_created_at_formatter,
+        object_pk=_object_pk_formatter,
+        fields_data=_fields_data_formatter,
+    )
+
+    column_labels = dict(
+        user=__('Usuário'),
+        action=__('Ação'),
+        created_at=__('Data de Criação'),
+        object_class_name=__('Modelo Auditado'),
+        object_pk=__('Id Auditado'),
+        description=__('Descrição'),
+        fields_data=__('Dados dos campos'),
     )
