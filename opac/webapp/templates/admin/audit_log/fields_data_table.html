@@ -1,0 +1,40 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>{% trans %}Campo: {% endtrans %}</th>
+            <th class="col-md-5">{% trans %}Valor anterior: {% endtrans %}</th>
+            <th class="col-md-5">{% trans %}Valor novo: {% endtrans %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for field_name, field_data in row_data.items() %}
+            <tr>
+                <td class="span2">{{ field_name }}</td>
+                {% if field_data %}
+                    {% with %}
+                        {% set has_changed = field_data['old_value'] != field_data['new_value'] %}
+                        {% if has_changed %}
+                            <td class="warning">
+                        {% else %}
+                            <td>
+                        {% endif %}
+                            {% if 'old_value' in field_data and field_data['old_value'] %}
+                                {{ field_data['old_value'] }}</td>
+                            {% endif %}
+                        </td>
+
+                        {% if has_changed %}
+                            <td class="warning">
+                        {% else %}
+                            <td>
+                        {% endif %}
+                        {% if 'new_value' in field_data and field_data['new_value'] %}
+                            {{ field_data['new_value'] }}
+                        {% endif %}
+                        </td>
+                    {% endwith %}
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
