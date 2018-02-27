@@ -826,6 +826,7 @@ class AuditLogEntryAdminView(OpacBaseAdminView):
     can_edit = False
     can_delete = True
     column_searchable_list = ('description', 'user', )
+    column_default_sort = ('created_at', True)
 
     column_filters = [
         'user', 'action', 'created_at', 'object_class_name', 'object_pk',
