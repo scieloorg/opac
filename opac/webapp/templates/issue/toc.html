@@ -136,6 +136,7 @@
                       </h1>
                     {% endif %}
                     #}
+
                       <li data-date="{% if article.publication_date %}{{ article.publication_date.replace('-', "") }}{% endif %}">
 
                         {% if session.lang %}
@@ -164,9 +165,11 @@
                               {{ lang|trans_alpha2 }}:
 
                               {% if lang in article.abstract_languages or lang in article.article_text_languages %}
-                                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=article.original_language) }}?abstract_lang={{lang}}">
-                                  {% trans %}Resumo{% endtrans %}
-                                </a>
+                                <span class="abstract">
+                                  <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}">
+                                    {% trans %}Resumo{% endtrans %}
+                                  </a>
+                                </span>
                               {% endif %}
 
                               {% if lang in article.article_text_languages %}
@@ -194,7 +197,19 @@
                           {% endfor %}
                         </ul>
                       </li>
+
+                    {# Adicionar divs com os resumos #}
+                    {% for lang in article.languages %}
+                      <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}">
+                        {% if article.get_abstract_by_lang(lang) %}
+                          <p><strong>{% trans %}Resumo em {% endtrans %}{{ lang|trans_alpha2 }}:</strong></p>
+                          {{ article.get_abstract_by_lang(lang) }}
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+
                   {% endfor %}
+
                 </ul>
                 <!-- Corpo com artigos -->
               </div>

@@ -32,12 +32,12 @@ var Portal = {
 				if(Portal.MobileVerifier.DetectMobile(navigator.userAgent))
 					Portal.MobileVerifier.IsMobile = true;
 
-				if(Portal.MobileVerifier.DetectTablet(navigator.userAgent)) 
-					Portal.MobileVerifier.IsTablet = true;		
-					
+				if(Portal.MobileVerifier.DetectTablet(navigator.userAgent))
+					Portal.MobileVerifier.IsTablet = true;
+
 				var w = $(window).innerWidth();
 
-				if(w > 990) 
+				if(w > 990)
 					Portal.MobileVerifier.IsDesktop = true;
 			}
 		},
@@ -45,8 +45,8 @@ var Portal = {
 
 			Portal.MobileVerifier.Detect();
 
-			if(Portal.MobileVerifier.IsDesktop && (!Portal.MobileVerifier.IsMobile && !Portal.MobileVerifier.IsTablet)) { 
-				
+			if(Portal.MobileVerifier.IsDesktop && (!Portal.MobileVerifier.IsMobile && !Portal.MobileVerifier.IsTablet)) {
+
 				$(".showTooltip").each(function() {
 					var data = $(this).data(),
 						pContainer = typeof data.container != "undefined" ? data.container : 'body',
@@ -56,9 +56,9 @@ var Portal = {
 						container: pContainer,
 						placement: pPlacement
 					});
-				}); 
-			}			
- 
+				});
+			}
+
 			$(".mainNav .menu").on("click",function(e) {
 				e.preventDefault();
 
@@ -66,17 +66,17 @@ var Portal = {
 					d = t.data("rel");
 
 				d = $(d,".mainNav");
-				
+
 				if(d.is(":visible")) {
 					t.removeClass("opened");
 					d.slideUp("fast",function() {
-						Portal.MenuOpened = false;		
+						Portal.MenuOpened = false;
 					});
-					
+
 				} else {
 					t.addClass("opened");
 					d.slideDown("fast",function() {
-						Portal.MenuOpened = true;	
+						Portal.MenuOpened = true;
 					});
 				}
 			});
@@ -146,7 +146,7 @@ var Portal = {
 				if(cmd[1] != "null") {
 					$(this).addClass("selected");
 					$(cmd[1]).fadeIn("fast");
-				}			
+				}
 			});
 
 			$(".alternativeHeader").each(function() {
@@ -187,7 +187,7 @@ var Portal = {
 
 					t.removeClass("opened");
 					$(d).slideUp("fast",function() {
-						Portal.MenuOpened = false;		
+						Portal.MenuOpened = false;
 					});
 				}
 			});
@@ -216,7 +216,7 @@ var Portal = {
 						$(t).find(".glyphBtn").removeClass("closed").addClass("opened");
 					});
 				}
-				
+
 				$(t).tooltip("hide");
 
 			});
@@ -225,7 +225,7 @@ var Portal = {
 
  				var t = $(this),
 					ctt = $(".collapse-content");
- 
+
 				if(ctt.is(":visible")) {
 					ctt.slideUp("fast");
 					t.addClass("closed");
@@ -248,7 +248,7 @@ var Portal = {
 				},500);
 			});
 
-			
+
 			$(".trigger").on("click",function(e) {
 				e.preventDefault();
 				var obj = $(this).data("rel");
@@ -260,7 +260,7 @@ var Portal = {
 				$(this).select();
 				if (window.clipboardData && clipboardData.setData) {
 					clipboardData.setData('text', $(this).text());
-				} 
+				}
 			}).mouseup(function(e) {
 				e.preventDefault();
 			});
@@ -285,7 +285,7 @@ var Portal = {
 
 			$(".translateAction").on("click",function(e) {
 				e.preventDefault();
-				$("#translateArticleModal").modal("show");			
+				$("#translateArticleModal").modal("show");
 			});
 
 			if(typeof Clipboard != "undefined") {
@@ -295,7 +295,7 @@ var Portal = {
 					var t = $(e.trigger);
 
 					t.addClass("copyFeedback");
-					
+
 					setTimeout(function() {
 						t.removeClass("copyFeedback");
 					},2000);
@@ -311,11 +311,11 @@ var Portal = {
 			var linkArticle = "",
 				html 		= "",
 				results 	= $(".results .item");
-			
-			for (var i = 0; i < results.length; i++) { 
+
+			for (var i = 0; i < results.length; i++) {
 				var article = $(results[i]).parent();
 				linkArticle = article[0].children[i].children[1].children[0].children[0].href;
-				
+
 				html = '<br class="visible-xs visible-sm"/><span class="socialLinks articleShareLink">\
 					<a href="" class="articleAction sendViaMail" data-toggle="tooltip" data-placement="top" title="Enviar link por e-mail">Enviar por e-mail</a>\
 					<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='+linkArticle+'" class="articleAction shareFacebook" data-toggle="tooltip" data-placement="top" title="Compartilhar no Facebook">Facebook</a>\
@@ -363,7 +363,7 @@ var Portal = {
 
 			wrapper.width(wrapperWidth);
 			$(".slide-container", container).height(itemProps.h);
-			
+
 			prev.css("top",(itemProps.h/2)+"px");
 			next.css("top",(itemProps.h/2)+"px");
 
@@ -382,11 +382,11 @@ var Portal = {
 					left: "+="+itemProps.w
 				},100,function() {
 					var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-					if(nLeft == 0) 
+					if(nLeft == 0)
 						prev.hide();
 				});
 				next.show();
-			
+
 			});
 
 			next.off().on("click",function(e) {
@@ -397,7 +397,7 @@ var Portal = {
 					left: "-="+itemProps.w
 				},100,function() {
 					var nLeft = wrapper.css("left") == "auto" ? 0 : parseInt(wrapper.css("left"));
-					if(nLeft <= -(wrapperWidth-containerWidth)) 
+					if(nLeft <= -(wrapperWidth-containerWidth))
 						next.hide();
 				});
 				prev.show();
@@ -491,18 +491,18 @@ var Portal = {
 				var t = $(this),
 					v = this.value;
 
-				if(v != "") 
+				if(v != "")
 					t.next().fadeIn("fast");
-				else 
+				else
 					t.next().fadeOut("fast");
-				
+
 				if(e.which == 13 && ! e.shiftKey) {
 					$(p).submit();
 				}
 			});
 
 			$("a.clearIptText",p).on("click",SearchForm.ClearPrevInput);
-			
+
 			$(".newSearchField",p).on("click",function(e) {
 				e.preventDefault();
 				SearchForm.InsertNewFieldRow(this,"#searchRow-matriz .searchRow",".searchForm .searchRow-container");
@@ -595,7 +595,7 @@ var Portal = {
 				var range = document.createRange();
 				range.selectNodeContents(el);
 				range.collapse(false);
-				
+
 				var sel = window.getSelection();
 				sel.removeAllRanges();
 				sel.addRange(range);
@@ -625,7 +625,7 @@ var Portal = {
 					loading = $(".collectionListLoading",t),
 					scroll = false,
 					param = "";
-			
+
 				window.timer;
 
 				if(typeof t.data("action") !== "undefined") {
@@ -644,7 +644,7 @@ var Portal = {
 					} else if(method == "collection") {
 						var param = "method=collection";
 					}
-					
+
 					Collection.JournalListFinder(param,loading,t,labels,true,scroll);
 
 				}
@@ -662,7 +662,7 @@ var Portal = {
 
 						Collection.JournalListFinder(param,loading,t,labels,true,true);
 						duringKeyChange = false;
-						
+
 					},300);
 				});
 
@@ -677,7 +677,7 @@ var Portal = {
 					window.open(action+param);
 				});
 				*/
-			});	
+			});
 		},
 		JournalListFinder: function(param,loading,container,labels,empty,scroll,callback,htmlFill) {
 			var currentPage = $(".collectionCurrentPage",container),
@@ -789,7 +789,7 @@ var Portal = {
 			for(var i=0,l=list.journalList.length;i<l;i++) {
 				var c = list.journalList[i];
 				c.Last = c.Last.split(";");
-				c.Publisher = c.Publisher.split(";"); 
+				c.Publisher = c.Publisher.split(";");
 
 				ctt += 	'\
 						<tr>\
@@ -948,7 +948,7 @@ var Portal = {
 						Collection.JournalListFinder(param,loading,container,labels,false,false);
 					}
 				} else {
-					$("footer").show();		
+					$("footer").show();
 				}
 			});
 		},
@@ -982,9 +982,9 @@ var Portal = {
 							content.slideDown("fast");
 							loading.hide();
 							$(this).removeClass("closed");
-						}	
+						}
 					}
-					
+
 				}
 			});
 		},
@@ -996,13 +996,13 @@ var Portal = {
 
 	Journal = {
 		Init: function() {
-			
+
 			$("#sortBy").change(function(){
 				$("#sortBy option:selected" ).each(function() {
       				Journal.publicationSort($(this).val());
     			});
 			})
-			
+
 		},
 		Bindings: function(ctn) {
 			if(typeof ctn == "undefined") ctn = ".journal";
@@ -1011,14 +1011,14 @@ var Portal = {
 
 			var listas = $(".issueIndent>ul.articles");
 			var qtdlista = listas.length;
-			
+
 			for(var t=0; t<=qtdlista; t++){
-				
+
 				var ul = listas[t];
 				var li = $(ul).children();
 
 				if(valor === 'YEAR_DESC'){
-					
+
 					$(li).sort(function(a,b) {
 
 						var dateA = parseInt($(a).data("date")),
@@ -1027,11 +1027,11 @@ var Portal = {
 		    			return  (dateA > dateB) ? 1 : -1;
 
 					}).each(function(){
-						$(ul).append(this);  
-					});		
+						$(ul).append(this);
+					});
 
 				}else {
-					
+
 					$(li).sort(function(a,b) {
 
 						var dateA = parseInt($(a).data("date")),
@@ -1041,10 +1041,10 @@ var Portal = {
 
 					}).each(function(){
 						$(ul).append(this);
-					});								
+					});
 				}
-			} 
-		} 
+			}
+		}
 	};
 
 var Validator = {
@@ -1054,7 +1054,7 @@ var Validator = {
 		var error = true;
 
 		var aEmails = val.split(delimiter);
-		
+
 		for(var i = 0; i < aEmails.length; i++) {
 			aEmails[i] = aEmails[i].trim();
 			if(aEmails[i] == '' || filter.test(aEmails[i]) == false)
@@ -1093,7 +1093,7 @@ var Cookie = {
 	    	expires = "";
 	    if(typeof path === "undefined") path = "";
 	    else path = path + "/";
-	    
+
 	    if(Cookie.Get(cookieName) != "") {
 	    	document.cookie = path+cookieName + "=" + value + "expires=Thu, 01 Jan 1970 00:00:01 GMT" + "; path=/";
 	    }
@@ -1103,7 +1103,7 @@ var Cookie = {
 
 $(function() {
 	Portal.Init();
-	
+
 	if($(".searchForm").length)
 		SearchForm.Init();
 
@@ -1120,11 +1120,11 @@ $(function() {
 			count: 3,
 			loadingText: 'Carregando...',
 			dateFormat: '%d de %B',
-		}); 
+		});
 
 	if($(".portal .collectionList").length)
 		var hash = window.location.hash;
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
 
-}); 
+});
 
