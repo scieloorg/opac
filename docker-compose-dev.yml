@@ -7,15 +7,12 @@ services:
         restart: always
         volumes:
           - ./data/redis-cache-data-dev:/data
-          - /etc/localtime:/etc/localtime:ro
 
     mailhog:
         image: mailhog/mailhog:latest
         hostname: mailhog
         ports:
             - "8025:8025"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
 
     opac_mongo:
         image: mongo:latest
@@ -24,8 +21,6 @@ services:
         hostname: opac-mongo
         ports:
             - "27017:27017"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
 
     opac_webapp:
         build:
@@ -44,7 +39,6 @@ services:
             - mailhog
             - redis-cache
         volumes:
-            - /etc/localtime:/etc/localtime:ro
             - .:/app
         links:
             - opac_mongo:opac-mongo
