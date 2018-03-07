@@ -1,120 +1,106 @@
-# Translations template for PROJECT.
-# Copyright (C) 2017 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# 
+# English translations for .
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the  project.
+#
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2016
-# jamil Atta <atta.jamil@gmail.com>, 2016
+# jamil Atta <atta.jamil@gmail.com>, 2016,2018
 # Juan Funez <juan.funez@gmail.com>, 2016-2017
 # Nicholas C <copn@nicholascopconsulting.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: OPAC\n"
+"Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-07-26 15:18-0300\n"
-"PO-Revision-Date: 2017-07-26 19:02+0000\n"
-"Last-Translator: Juan Funez <juan.funez@gmail.com>\n"
-"Language-Team: English (http://www.transifex.com/scielo/opac/language/en/)\n"
+"POT-Creation-Date: 2018-03-06 15:59-0300\n"
+"PO-Revision-Date: 2018-03-06 19:50+0000\n"
+"Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
+"Language: en\n"
+"Language-Team: English "
+"(http://www.transifex.com/scielo/opac/language/en/)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.3.4\n"
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: opac/tests/test_admin_custom_filters.py:100
 #: opac/tests/test_admin_custom_filters.py:114
 #: opac/tests/test_admin_custom_filters.py:129
 #: opac/tests/test_admin_custom_filters.py:144
-#: opac/tests/test_admin_custom_filters.py:158 opac/webapp/__init__.py:123
+#: opac/tests/test_admin_custom_filters.py:158 opac/webapp/__init__.py:114
 #: opac/webapp/admin/views.py:518 opac/webapp/admin/views.py:595
 #: opac/webapp/admin/views.py:665
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:26
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:69
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:28
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:71
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_grouper_table_row.html:15
 #: opac/webapp/templates/collection/list_journal.html:47
 #: opac/webapp/templates/collection/list_journal.html:219
 #: opac/webapp/templates/collection/list_journal.html:233
-#: opac/webapp/templates/issue/includes/alternative_header.html:118
-#: opac/webapp/templates/journal/includes/alternative_header.html:114
+#: opac/webapp/templates/issue/includes/alternative_header.html:116
+#: opac/webapp/templates/journal/includes/alternative_header.html:112
 msgid "Periódico"
 msgstr "Journal"
 
-#: opac/tests/test_interface_menu.py:63
-#: opac/webapp/templates/article/includes/alternative_header.html:8
-#: opac/webapp/templates/article/includes/alternative_header.html:9
-#: opac/webapp/templates/article/includes/alternative_header.html:14
-#: opac/webapp/templates/collection/includes/levelMenu.html:11
-#: opac/webapp/templates/collection/includes/levelMenu.html:28
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:5
-#: opac/webapp/templates/collection/includes/nav.html:5
-#: opac/webapp/templates/collection/includes/nav.html:30
-#: opac/webapp/templates/collection/index.html:15
-#: opac/webapp/templates/issue/includes/alternative_header.html:8
-#: opac/webapp/templates/issue/includes/alternative_header.html:16
-#: opac/webapp/templates/journal/includes/alternative_header.html:8
-#: opac/webapp/templates/journal/includes/alternative_header.html:16
-#: opac/webapp/templates/journal/includes/header.html:9
-#: opac/webapp/templates/journal/includes/header.html:10
-#: opac/webapp/templates/journal/includes/header.html:16
+#: opac/tests/test_interface_menu.py:51
 msgid "NOME DA COLEÇÃO!!"
 msgstr "COLLECTION NAME!!"
 
-#: opac/tests/test_interface_menu.py:65 opac/tests/test_interface_menu.py:84
-#: opac/webapp/templates/collection/includes/nav.html:10
-#: opac/webapp/templates/collection/includes/nav.html:52
+#: opac/tests/test_interface_menu.py:53 opac/tests/test_interface_menu.py:72
+#: opac/webapp/templates/collection/includes/nav.html:12
+#: opac/webapp/templates/collection/includes/nav.html:54
 msgid "Lista alfabética de periódicos"
 msgstr "Journal list by title"
 
-#: opac/tests/test_interface_menu.py:67
-#: opac/webapp/templates/collection/includes/nav.html:15
+#: opac/tests/test_interface_menu.py:55
+#: opac/webapp/templates/collection/includes/nav.html:17
 msgid "Lista temática de periódicos"
 msgstr "Journal list by subject area"
 
-#: opac/tests/test_interface_menu.py:73
-#: opac/webapp/templates/article/includes/floating_menu.html:37
-#: opac/webapp/templates/collection/includes/nav.html:25
-#: opac/webapp/templates/collection/includes/nav.html:67
-#: opac/webapp/templates/issue/includes/alternative_header.html:103
-#: opac/webapp/templates/issue/includes/alternative_header.html:107
-#: opac/webapp/templates/journal/includes/alternative_header.html:99
-#: opac/webapp/templates/journal/includes/alternative_header.html:103
+#: opac/tests/test_interface_menu.py:61
+#: opac/webapp/templates/article/includes/floating_menu.html:10
+#: opac/webapp/templates/article/includes/floating_menu.html:68
+#: opac/webapp/templates/collection/includes/nav.html:27
+#: opac/webapp/templates/collection/includes/nav.html:69
+#: opac/webapp/templates/issue/includes/alternative_header.html:101
+#: opac/webapp/templates/issue/includes/alternative_header.html:105
+#: opac/webapp/templates/journal/includes/alternative_header.html:97
+#: opac/webapp/templates/journal/includes/alternative_header.html:101
 msgid "Métricas"
 msgstr "Metrics"
 
-#: opac/tests/test_interface_menu.py:75
-#: opac/webapp/templates/collection/includes/levelMenu.html:11
-#: opac/webapp/templates/collection/includes/levelMenu.html:28
+#: opac/tests/test_interface_menu.py:63
+#: opac/webapp/templates/collection/includes/levelMenu.html:12
+#: opac/webapp/templates/collection/includes/levelMenu.html:29
 msgid "Sobre o SciELO"
 msgstr "About SciELO"
 
-#: opac/tests/test_interface_menu.py:77 opac/tests/test_interface_menu.py:96
-#: opac/webapp/templates/collection/includes/nav.html:35
-#: opac/webapp/templates/collection/includes/nav.html:82
+#: opac/tests/test_interface_menu.py:65 opac/tests/test_interface_menu.py:84
+#: opac/webapp/templates/collection/includes/nav.html:37
+#: opac/webapp/templates/collection/includes/nav.html:84
 msgid "Contatos"
 msgstr "Contacts"
 
-#: opac/tests/test_interface_menu.py:79
+#: opac/tests/test_interface_menu.py:67
 msgid "Rede SciELO"
 msgstr "The SciELO Network"
 
-#: opac/tests/test_interface_menu.py:82
-#: opac/webapp/templates/collection/includes/nav.html:47
+#: opac/tests/test_interface_menu.py:70
+#: opac/webapp/templates/collection/includes/nav.html:49
 msgid "Coleções nacionais e temáticas"
 msgstr "National and thematic collections"
 
-#: opac/tests/test_interface_menu.py:86
-#: opac/webapp/templates/collection/includes/nav.html:57
+#: opac/tests/test_interface_menu.py:74
+#: opac/webapp/templates/collection/includes/nav.html:59
 msgid "Lista de periódicos por assunto"
 msgstr "Journal list by subject"
 
-#: opac/tests/test_interface_menu.py:92
-#: opac/webapp/templates/collection/includes/nav.html:72
+#: opac/tests/test_interface_menu.py:80
+#: opac/webapp/templates/collection/includes/nav.html:74
 msgid "Acesso OAI e RSS"
 msgstr "OAI and RSS"
 
-#: opac/tests/test_interface_menu.py:94
-#: opac/webapp/templates/collection/includes/nav.html:77
+#: opac/tests/test_interface_menu.py:82
+#: opac/webapp/templates/collection/includes/nav.html:79
 msgid "Sobre a Rede SciELO"
 msgstr "About the SciELO Network"
 
@@ -122,53 +108,57 @@ msgstr "About the SciELO Network"
 msgid "Mensagem de erro explicativo para o usuário"
 msgstr "Explanatory user error message"
 
-#: opac/webapp/__init__.py:122 opac/webapp/__init__.py:123
-#: opac/webapp/__init__.py:124 opac/webapp/__init__.py:125
-#: opac/webapp/__init__.py:126 opac/webapp/__init__.py:127
+#: opac/webapp/__init__.py:113 opac/webapp/__init__.py:114
+#: opac/webapp/__init__.py:115 opac/webapp/__init__.py:116
+#: opac/webapp/__init__.py:117 opac/webapp/__init__.py:118
 msgid "Catálogo"
 msgstr "Catalog"
 
-#: opac/webapp/__init__.py:122 opac/webapp/admin/views.py:437
+#: opac/webapp/__init__.py:113 opac/webapp/admin/views.py:437
 msgid "Coleção"
 msgstr "Collection"
 
-#: opac/webapp/__init__.py:124 opac/webapp/admin/views.py:522
+#: opac/webapp/__init__.py:115 opac/webapp/admin/views.py:522
 #: opac/webapp/admin/views.py:594 opac/webapp/templates/issue/grid.html:38
-#: opac/webapp/templates/news/includes/issue_last_row.html:6
+#: opac/webapp/templates/news/includes/issue_last_row.html:8
 msgid "Número"
 msgstr "Number"
 
-#: opac/webapp/__init__.py:125
+#: opac/webapp/__init__.py:116
 msgid "Artigo"
 msgstr "Article"
 
-#: opac/webapp/__init__.py:126
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:25
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:68
+#: opac/webapp/__init__.py:117
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:27
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:70
 msgid "Financiador"
 msgstr "Funder"
 
-#: opac/webapp/__init__.py:127
+#: opac/webapp/__init__.py:118
 msgid "Press Release"
 msgstr "Press release"
 
-#: opac/webapp/__init__.py:128 opac/webapp/templates/journal/detail.html:157
+#: opac/webapp/__init__.py:119 opac/webapp/templates/journal/detail.html:157
 msgid "Notícias"
 msgstr "News"
 
-#: opac/webapp/__init__.py:129 opac/webapp/__init__.py:130
+#: opac/webapp/__init__.py:120 opac/webapp/__init__.py:121
 msgid "Ativos"
 msgstr "Static files"
 
-#: opac/webapp/__init__.py:131
+#: opac/webapp/__init__.py:122
 msgid "Páginas"
 msgstr "Pages"
 
-#: opac/webapp/__init__.py:132
+#: opac/webapp/__init__.py:123 opac/webapp/__init__.py:124
 msgid "Gestão"
 msgstr "Management"
 
-#: opac/webapp/__init__.py:132
+#: opac/webapp/__init__.py:123
+msgid "Auditoria: Páginas"
+msgstr "Auditoria: Pages"
+
+#: opac/webapp/__init__.py:124 opac/webapp/admin/views.py:877
 msgid "Usuário"
 msgstr "User"
 
@@ -219,110 +209,110 @@ msgstr "Russian"
 msgid "Árabe"
 msgstr "Arabic"
 
-#: opac/webapp/controllers.py:324
+#: opac/webapp/controllers.py:326
 msgid "Lista Alfabética"
 msgstr "Alphabetic List"
 
-#: opac/webapp/controllers.py:328
+#: opac/webapp/controllers.py:330
 msgid "Lista Temática"
 msgstr "Thematic List"
 
-#: opac/webapp/controllers.py:332
+#: opac/webapp/controllers.py:334
 msgid "Lista Web of Science"
 msgstr "Web of Science List"
 
-#: opac/webapp/controllers.py:336
+#: opac/webapp/controllers.py:338
 msgid "Lista by Institution"
 msgstr "List by Institution"
 
-#: opac/webapp/controllers.py:395
+#: opac/webapp/controllers.py:397
 msgid "Obrigatório um jid."
 msgstr "A jid is required."
 
-#: opac/webapp/controllers.py:411
+#: opac/webapp/controllers.py:413
 msgid "Obrigatório um acronym."
 msgstr "An acronym is required."
 
-#: opac/webapp/controllers.py:427
+#: opac/webapp/controllers.py:429
 msgid "Obrigatório um url_seg."
 msgstr "A url_seg is required."
 
-#: opac/webapp/controllers.py:443
+#: opac/webapp/controllers.py:445
 msgid "Obrigatório um issn."
 msgstr "ISSN is required."
 
-#: opac/webapp/controllers.py:481 opac/webapp/controllers.py:625
-#: opac/webapp/controllers.py:765
+#: opac/webapp/controllers.py:483 opac/webapp/controllers.py:627
+#: opac/webapp/controllers.py:767
 msgid "Obrigatório uma lista de ids."
 msgstr "A list of id's is required."
 
-#: opac/webapp/controllers.py:587 opac/webapp/controllers.py:786
+#: opac/webapp/controllers.py:589 opac/webapp/controllers.py:788
 msgid "Obrigatório um iid."
 msgstr "A iid is required."
 
-#: opac/webapp/controllers.py:644
+#: opac/webapp/controllers.py:646
 msgid "Obrigatório um jacron e issue_label."
 msgstr "A jacron and issue_label are required."
 
-#: opac/webapp/controllers.py:657
+#: opac/webapp/controllers.py:659
 msgid "Obrigatório um PID."
 msgstr "PID is required."
 
-#: opac/webapp/controllers.py:673
+#: opac/webapp/controllers.py:675
 msgid "Obrigatório um url_seg e url_seg_issue."
 msgstr "A url_seg and url_seg_issue are required."
 
-#: opac/webapp/controllers.py:680
+#: opac/webapp/controllers.py:682
 msgid "Obrigatório um assets_code."
 msgstr " assets_code is mandatory."
 
-#: opac/webapp/controllers.py:683
+#: opac/webapp/controllers.py:685
 msgid "Obrigatório um journal."
 msgstr "Journal is mandatory."
 
-#: opac/webapp/controllers.py:699
+#: opac/webapp/controllers.py:701
 msgid "Obrigatório um aid."
 msgstr "A aid is required."
 
-#: opac/webapp/controllers.py:713
+#: opac/webapp/controllers.py:715
 msgid "Obrigatório um url_seg_article."
 msgstr "A url_seg_article is required."
 
-#: opac/webapp/controllers.py:728
+#: opac/webapp/controllers.py:730
 msgid "Obrigatório um iid and url_seg_article."
 msgstr "A iid and url_seg_article are required."
 
-#: opac/webapp/controllers.py:799
+#: opac/webapp/controllers.py:801
 msgid "Obrigatório um pid."
 msgstr "pid is required."
 
-#: opac/webapp/controllers.py:810
+#: opac/webapp/controllers.py:812
 msgid "Parámetro obrigatório: issue_iid."
 msgstr "issue_iid is mandatory."
 
-#: opac/webapp/controllers.py:856
+#: opac/webapp/controllers.py:858
 msgid "Parâmetro email deve ser uma string"
 msgstr "The parameter \"email\" must be a string."
 
-#: opac/webapp/controllers.py:867
+#: opac/webapp/controllers.py:869
 msgid "Parâmetro email deve ser uma inteiro"
 msgstr "The parameter \"email\" must be an integer."
 
-#: opac/webapp/controllers.py:879 opac/webapp/controllers.py:893
+#: opac/webapp/controllers.py:881 opac/webapp/controllers.py:895
 #, python-format
 msgid "Usuário deve ser do tipo %s"
 msgstr "User must be of type %s"
 
-#: opac/webapp/controllers.py:949
+#: opac/webapp/controllers.py:951
 msgid "Compartilhamento de link SciELO"
 msgstr "SciELO link sharing"
 
-#: opac/webapp/controllers.py:950
+#: opac/webapp/controllers.py:952
 #, python-format
 msgid "O usuário %s compartilha este link: %s, da SciELO"
 msgstr "The user %s share link: %s, of SciELO"
 
-#: opac/webapp/controllers.py:958
+#: opac/webapp/controllers.py:960
 msgid "Mensagem enviada!"
 msgstr "Message sent!"
 
@@ -360,7 +350,8 @@ msgstr "Are you sure you want to rebuild the selected articles?"
 
 #: opac/webapp/admin/views.py:30
 msgid ""
-"Tem certeza que quer enviar email de confirmação aos usuários selecionados?"
+"Tem certeza que quer enviar email de confirmação aos usuários "
+"selecionados?"
 msgstr "Are you sure you want to send a confirmation email to the selected users?"
 
 #: opac/webapp/admin/views.py:90 opac/webapp/admin/views.py:103
@@ -382,7 +373,9 @@ msgstr "The instructions to reset the password have been sent to: %(email)s "
 msgid ""
 "Ocorreu um erro no envio das instruções por email para: %(email)s. Erro: "
 "%(error)s"
-msgstr "Error in sending the instructions via email to: %(email)s. Error: %(error)s"
+msgstr ""
+"Error in sending the instructions via email to: %(email)s. Error: "
+"%(error)s"
 
 #: opac/webapp/admin/views.py:138
 msgid "Nova senha salva com sucesso!!"
@@ -523,6 +516,8 @@ msgid "Redes sociais"
 msgstr "Social networks"
 
 #: opac/webapp/admin/views.py:442 opac/webapp/admin/views.py:596
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:30
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:73
 msgid "Título"
 msgstr "Title"
 
@@ -659,7 +654,9 @@ msgstr "Journal(s) successfully unpublished!!"
 #: opac/webapp/admin/views.py:489
 #, python-format
 msgid "Ocorreu um erro tentando despublicar o(s) periódico(s)!!. Erro: %(ex)s"
-msgstr "An error occurred while attempting to unpublish the journal(s)!!. Error: %(ex)s"
+msgstr ""
+"An error occurred while attempting to unpublish the journal(s)!!. Error: "
+"%(ex)s"
 
 #: opac/webapp/admin/views.py:493 opac/webapp/admin/views.py:561
 #: opac/webapp/admin/views.py:641
@@ -682,7 +679,7 @@ msgstr "Cover's URL"
 #: opac/webapp/admin/views.py:521
 #: opac/webapp/templates/collection/list_feed_content.html:3
 #: opac/webapp/templates/issue/grid.html:37
-#: opac/webapp/templates/news/includes/issue_last_row.html:5
+#: opac/webapp/templates/news/includes/issue_last_row.html:6
 msgid "Volume"
 msgstr "Volume"
 
@@ -707,8 +704,8 @@ msgid "Mês final"
 msgstr "End month"
 
 #: opac/webapp/admin/views.py:530
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:23
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:66
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:25
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:68
 #: opac/webapp/templates/issue/grid.html:36
 #: opac/webapp/templates/news/includes/issue_last_row.html:4
 msgid "Ano"
@@ -777,9 +774,9 @@ msgid "Autores"
 msgstr "Authors"
 
 #: opac/webapp/admin/views.py:611
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:27
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:70
-#: opac/webapp/templates/issue/toc.html:140
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:29
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:72
+#: opac/webapp/templates/issue/toc.html:170
 msgid "Resumo"
 msgstr "Abstract"
 
@@ -807,120 +804,201 @@ msgstr "Article(s) successfully unpublished!!"
 msgid "Conteúdo"
 msgstr "Content"
 
-#: opac/webapp/admin/views.py:666
+#: opac/webapp/admin/views.py:666 opac/webapp/admin/views.py:882
 msgid "Descrição"
 msgstr "Description"
 
-#: opac/webapp/main/views.py:23
+#: opac/webapp/admin/views.py:667 opac/webapp/admin/views.py:879
+msgid "Data de Criação"
+msgstr "Creation Date"
+
+#: opac/webapp/admin/views.py:668
+msgid "Data de Atualização"
+msgstr "Update Date"
+
+#: opac/webapp/admin/views.py:878
+msgid "Ação"
+msgstr "Action"
+
+#: opac/webapp/admin/views.py:880
+msgid "Modelo Auditado"
+msgstr "Audited Module"
+
+#: opac/webapp/admin/views.py:881
+msgid "Id Auditado"
+msgstr "Audited Id"
+
+#: opac/webapp/admin/views.py:883
+msgid "Dados dos campos"
+msgstr "Field data"
+
+#: opac/webapp/main/views.py:25
 msgid "O periódico está indisponível por motivo de: "
 msgstr "The journal is unavailable because:"
 
-#: opac/webapp/main/views.py:24
+#: opac/webapp/main/views.py:26
 msgid "O número está indisponível por motivo de: "
 msgstr "The Issue is unavailable because of:"
 
-#: opac/webapp/main/views.py:25
+#: opac/webapp/main/views.py:27
 msgid "O artigo está indisponível por motivo de: "
 msgstr "The article is unavailable because:"
 
-#: opac/webapp/main/views.py:70
+#: opac/webapp/main/views.py:72
 msgid "Código de idioma inválido"
 msgstr "Invalid language code"
 
-#: opac/webapp/main/views.py:124
+#: opac/webapp/main/views.py:140
 msgid "Últimos periódicos inseridos na coleção"
 msgstr "Latest journals added to the collection"
 
-#: opac/webapp/main/views.py:125
+#: opac/webapp/main/views.py:141
 #, python-format
 msgid "10 últimos periódicos inseridos na coleção %s"
 msgstr "10 latest journals added to the collection %s"
 
-#: opac/webapp/main/views.py:202
-msgid "Página não encontrado"
-msgstr "Page not found"
-
-#: opac/webapp/main/views.py:210
+#: opac/webapp/main/views.py:226
 msgid "Periódico não encontrada"
 msgstr "Journal not found"
 
-#: opac/webapp/main/views.py:222 opac/webapp/main/views.py:537
-#: opac/webapp/main/views.py:592 opac/webapp/main/views.py:854
+#: opac/webapp/main/views.py:238 opac/webapp/main/views.py:565
+#: opac/webapp/main/views.py:621 opac/webapp/main/views.py:912
 msgid "Número não encontrado"
 msgstr "Issue not found"
 
-#: opac/webapp/main/views.py:237 opac/webapp/main/views.py:650
-#: opac/webapp/main/views.py:703 opac/webapp/main/views.py:706
-#: opac/webapp/main/views.py:780
+#: opac/webapp/main/views.py:253 opac/webapp/main/views.py:678
+#: opac/webapp/main/views.py:749 opac/webapp/main/views.py:752
+#: opac/webapp/main/views.py:837
 msgid "Artigo não encontrado"
 msgstr "Article not found"
 
-#: opac/webapp/main/views.py:257 opac/webapp/main/views.py:270
-#: opac/webapp/main/views.py:336 opac/webapp/main/views.py:384
-#: opac/webapp/main/views.py:486 opac/webapp/main/views.py:845
+#: opac/webapp/main/views.py:273 opac/webapp/main/views.py:289
+#: opac/webapp/main/views.py:356 opac/webapp/main/views.py:405
+#: opac/webapp/main/views.py:513 opac/webapp/main/views.py:903
 msgid "Periódico não encontrado"
 msgstr "Journal not found"
 
-#: opac/webapp/main/views.py:361
+#: opac/webapp/main/views.py:381
 msgid "Artigo sem título"
 msgstr "Article not found"
 
-#: opac/webapp/main/views.py:420 opac/webapp/main/views.py:436
+#: opac/webapp/main/views.py:444 opac/webapp/main/views.py:461
 msgid "Requisição inválida. Deve ser por ajax"
 msgstr "Invalid request. Must be made via ajax"
 
-#: opac/webapp/main/views.py:452
-msgid "Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou \"publisher\"."
-msgstr "Invalid parameter \"filter\". Should be \"areas\", \"wos\" or \"publisher\"."
+#: opac/webapp/main/views.py:477
+msgid ""
+"Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou "
+"\"publisher\"."
+msgstr ""
+"Invalid parameter \"filter\". Should be \"areas\", \"wos\" or "
+"\"publisher\"."
 
-#: opac/webapp/main/views.py:460
+#: opac/webapp/main/views.py:486
 msgid "Parámetro \"extension\" é inválido, deve ser \"csv\" ou \"xls\"."
 msgstr "Invalid parameter \"extension\". Should be \"csv\" or \"xls\"."
 
-#: opac/webapp/main/views.py:462
+#: opac/webapp/main/views.py:488
 msgid ""
-"Parámetro \"list_type\" é inválido, deve ser: \"alpha\", \"areas\", \"wos\" "
-"ou \"publisher\"."
-msgstr "Invalid parameter \"list_type\". Should be: \"alpha\", \"areas\", \"wos\" or \"publisher\"."
+"Parámetro \"list_type\" é inválido, deve ser: \"alpha\", \"areas\", "
+"\"wos\" ou \"publisher\"."
+msgstr ""
+"Invalid parameter \"list_type\". Should be: \"alpha\", \"areas\", \"wos\""
+" or \"publisher\"."
 
-#: opac/webapp/main/views.py:645 opac/webapp/main/views.py:775
+#: opac/webapp/main/views.py:673 opac/webapp/main/views.py:832
 msgid "Issue não encontrado"
 msgstr "Issue not found"
 
-#: opac/webapp/main/views.py:682
-msgid "HTML do Artigo não encontrado"
-msgstr "HTML of the Article not found"
-
-#: opac/webapp/main/views.py:731
-msgid "Parâmetros insuficientes para obter o EPDF do artigo"
-msgstr "Insufficient parameters to obtain article's EPDF"
-
-#: opac/webapp/main/views.py:748
-msgid "Recurso não encontrado"
-msgstr "Resource not found"
-
-#: opac/webapp/main/views.py:763
-msgid "Recurso do Artigo não encontrado. Caminho inválido!"
-msgstr "Article resource not found. Invalid path!"
-
-#: opac/webapp/main/views.py:812 opac/webapp/main/views.py:820
+#: opac/webapp/main/views.py:710 opac/webapp/main/views.py:716
+#: opac/webapp/main/views.py:869 opac/webapp/main/views.py:877
 msgid "PDF do Artigo não encontrado"
 msgstr "Article's PDF not found"
 
-#: opac/webapp/main/views.py:872
+#: opac/webapp/main/views.py:725
+msgid "HTML do Artigo não encontrado"
+msgstr "HTML of the Article not found"
+
+#: opac/webapp/main/views.py:739
+msgid "HTML do Artigo não encontrado ou indisponível"
+msgstr "HTML of article not found or unavailable"
+
+#: opac/webapp/main/views.py:779
+msgid "Parâmetros insuficientes para obter o EPDF do artigo"
+msgstr "Insufficient parameters to obtain article's EPDF"
+
+#: opac/webapp/main/views.py:796
+msgid "Recruso não encontrado"
+msgstr "Resource not found"
+
+#: opac/webapp/main/views.py:801
+msgid "Recurso não encontrado"
+msgstr "Resource not found"
+
+#: opac/webapp/main/views.py:818
+msgid "Recurso do Artigo não encontrado. Caminho inválido!"
+msgstr "Article resource not found. Invalid path!"
+
+#: opac/webapp/main/views.py:930
 msgid "PDF do artigo não foi encontrado"
 msgstr "Article's PDF not found"
 
-#: opac/webapp/main/views.py:899
+#: opac/webapp/main/views.py:958
 msgid "Requisição inválida."
 msgstr "Invalid request"
+
+#: opac/webapp/templates/article/includes/modal/download.html:6
+#: opac/webapp/templates/article/includes/modal/related_article.html:7
+#: opac/webapp/templates/base.html:55
+msgid "Fechar"
+msgstr "Close"
+
+#: opac/webapp/templates/base.html:58
+msgid "Enviar página por e-mail"
+msgstr "Send page by e-mail "
+
+#: opac/webapp/templates/base.html:66
+msgid "Seu e-mail"
+msgstr "Your e-mail"
+
+#: opac/webapp/templates/base.html:71
+msgid "Para"
+msgstr "For"
+
+#: opac/webapp/templates/base.html:75
+msgid "Utilize ; (ponto e vírgula) para inserir mais emails."
+msgstr "Use ; (point and comma)  for insert more emails"
+
+#: opac/webapp/templates/base.html:80
+msgid "Alterar assunto e comentários"
+msgstr "Change subject e comments"
+
+#: opac/webapp/templates/base.html:85
+msgid "Assunto"
+msgstr "Subject"
+
+#: opac/webapp/templates/base.html:89
+msgid "Comentário"
+msgstr "Comments"
+
+#: opac/webapp/templates/base.html:93
+msgid "Remover remetente, assunto e comentários"
+msgstr "Remove sender, subject and comments"
+
+#: opac/webapp/templates/base.html:154
+msgid "Email enviado com sucesso."
+msgstr "Email sent with success."
+
+#: opac/webapp/templates/base.html:161
+msgid "Erro ao tentar enviar e-mail, por favor tente mais tarde."
+msgstr "Error trying send e-mail, please, try again later."
 
 #: opac/webapp/templates/admin/index.html:7
 msgid "da coleção"
 msgstr "of collection"
 
 #: opac/webapp/templates/admin/index.html:12
-#: opac/webapp/templates/collection/includes/levelMenu.html:30
+#: opac/webapp/templates/collection/includes/levelMenu.html:31
 msgid "Periódicos"
 msgstr "Journals"
 
@@ -978,6 +1056,18 @@ msgstr "Logout"
 msgid "Iniciar sessão"
 msgstr "Login"
 
+#: opac/webapp/templates/admin/audit_log/fields_data_table.html:4
+msgid "Campo: "
+msgstr "Field:"
+
+#: opac/webapp/templates/admin/audit_log/fields_data_table.html:5
+msgid "Valor anterior: "
+msgstr "Previous value:"
+
+#: opac/webapp/templates/admin/audit_log/fields_data_table.html:6
+msgid "Valor novo: "
+msgstr "New value:"
+
 #: opac/webapp/templates/admin/auth/login.html:13
 msgid "Você já iniciou sessão!"
 msgstr "You’re already logged in!"
@@ -999,108 +1089,160 @@ msgstr "Email not confirmed!"
 #: opac/webapp/templates/admin/auth/unconfirm_email.html:9
 msgid ""
 "Você <strong>deve</strong> confirmar seu email.<br>\n"
-"            <strong>Por favor entre em contato com o administrador.</strong>"
-msgstr "You <strong>should</strong> confirm your email.<br>\n<strong>Please contact your administrator.</strong>"
+"            <strong>Por favor entre em contato com o "
+"administrador.</strong>"
+msgstr ""
+"You <strong>should</strong> confirm your email.<br>\n"
+"<strong>Please contact your administrator.</strong>"
 
 #: opac/webapp/templates/admin/pages/edit.html:7
 msgid ""
-"<strong>Atenção:</strong> ao selecionar um <strong>periódico</strong> esta "
-"página será a página \"secundária\" do periódico selecionado, caso contrário"
-" será uma página da coleção, verificar páginas da coleção em <em>Sobre o "
-"SciELO</em>. "
-msgstr "<strong>Warning:</strong> when a <strong>journal</strong> is selected, the page will be set as a \"secondary\" page of the selected journal, otherwise the page will be a collection page, check the collection pages at <em>About SciELO</em>"
+"<strong>Atenção:</strong> ao selecionar um <strong>periódico</strong> "
+"esta página será a página \"secundária\" do periódico selecionado, caso "
+"contrário será uma página da coleção, verificar páginas da coleção em "
+"<em>Sobre o SciELO</em>. "
+msgstr ""
+"<strong>Warning:</strong> when a <strong>journal</strong> is selected, "
+"the page will be set as a \"secondary\" page of the selected journal, "
+"otherwise the page will be a collection page, check the collection pages "
+"at <em>About SciELO</em>"
 
-#: opac/webapp/templates/article/includes/alternative_header.html:6
+#: opac/webapp/templates/article/includes/alternative_header.html:7
 #: opac/webapp/templates/collection/includes/header.html:7
-#: opac/webapp/templates/issue/includes/alternative_header.html:6
-#: opac/webapp/templates/journal/includes/alternative_header.html:6
-#: opac/webapp/templates/journal/includes/header.html:7
+#: opac/webapp/templates/issue/includes/alternative_header.html:7
+#: opac/webapp/templates/journal/includes/alternative_header.html:7
+#: opac/webapp/templates/journal/includes/header.html:8
 msgid "Abrir menu"
 msgstr "Open menu"
 
-#: opac/webapp/templates/article/includes/alternative_header.html:8
-msgid "Ir para a homepage da coleção:"
-msgstr "Go to the home page of collection:"
+#: opac/webapp/templates/article/includes/alternative_header.html:9
+#: opac/webapp/templates/issue/includes/alternative_header.html:9
+#: opac/webapp/templates/journal/includes/alternative_header.html:9
+#: opac/webapp/templates/journal/includes/header.html:10
+msgid "Ir para a homepage da coleção: "
+msgstr "Go to the home page of the collection:"
 
 #: opac/webapp/templates/article/includes/alternative_header.html:42
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:7
-#: opac/webapp/templates/issue/includes/alternative_header.html:123
-#: opac/webapp/templates/journal/includes/alternative_header.html:119
-#: opac/webapp/templates/journal/includes/header.html:81
+#: opac/webapp/templates/issue/includes/alternative_header.html:121
+#: opac/webapp/templates/journal/includes/alternative_header.html:117
+#: opac/webapp/templates/journal/includes/header.html:82
 msgid "Submissão de manuscritos"
 msgstr "Submission of manuscripts"
 
-#: opac/webapp/templates/article/includes/alternative_header.html:46
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:10
-#: opac/webapp/templates/issue/includes/alternative_header.html:129
-#: opac/webapp/templates/journal/includes/alternative_header.html:125
-#: opac/webapp/templates/journal/includes/header.html:97
-msgid "Instruções aos autores"
-msgstr "Instructions to authors"
-
-#: opac/webapp/templates/article/includes/alternative_header.html:47
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:13
-#: opac/webapp/templates/issue/includes/alternative_header.html:134
-#: opac/webapp/templates/journal/includes/alternative_header.html:130
-#: opac/webapp/templates/journal/includes/header.html:87
+#: opac/webapp/templates/article/includes/alternative_header.html:48
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:16
+#: opac/webapp/templates/issue/includes/alternative_header.html:127
+#: opac/webapp/templates/journal/includes/alternative_header.html:123
+#: opac/webapp/templates/journal/includes/header.html:88
 msgid "Sobre o periódico"
 msgstr "About the journal"
 
-#: opac/webapp/templates/article/includes/alternative_header.html:48
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:16
-#: opac/webapp/templates/issue/includes/alternative_header.html:139
-#: opac/webapp/templates/journal/includes/alternative_header.html:135
-#: opac/webapp/templates/journal/includes/header.html:102
+#: opac/webapp/templates/article/includes/alternative_header.html:53
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:10
+#: opac/webapp/templates/issue/includes/alternative_header.html:132
+#: opac/webapp/templates/journal/includes/alternative_header.html:128
+#: opac/webapp/templates/journal/includes/header.html:93
+msgid "Corpo Editorial"
+msgstr "Editorial Board"
+
+#: opac/webapp/templates/article/includes/alternative_header.html:58
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:13
+#: opac/webapp/templates/issue/includes/alternative_header.html:137
+#: opac/webapp/templates/journal/includes/alternative_header.html:133
+#: opac/webapp/templates/journal/includes/header.html:98
+msgid "Instruções aos autores"
+msgstr "Instructions to authors"
+
+#: opac/webapp/templates/article/includes/alternative_header.html:63
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:19
+#: opac/webapp/templates/issue/includes/alternative_header.html:142
+#: opac/webapp/templates/journal/includes/alternative_header.html:138
+#: opac/webapp/templates/journal/includes/header.html:103
 msgid "Contato"
 msgstr "Contact"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:9
+#: opac/webapp/templates/article/includes/floating_menu.html:2
+#: opac/webapp/templates/article/includes/floating_menu.html:58
 msgid "Ir para o topo"
 msgstr "Go to top"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:14
+#: opac/webapp/templates/article/includes/floating_menu.html:6
+#: opac/webapp/templates/article/includes/floating_menu.html:63
 msgid "PDFs"
 msgstr "PDFs"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:21
+#: opac/webapp/templates/article/includes/floating_menu.html:24
+#: opac/webapp/templates/article/includes/floating_menu.html:75
 msgid "Figuras e tabelas"
 msgstr "Figures and tables"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:27
+#: opac/webapp/templates/article/includes/floating_menu.html:30
+#: opac/webapp/templates/article/includes/floating_menu.html:81
 msgid "Versões e traduções"
 msgstr "Versions and translations"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:32
+#: opac/webapp/templates/article/includes/floating_menu.html:35
+#: opac/webapp/templates/article/includes/floating_menu.html:86
 msgid "Como citar este artigo"
 msgstr "How to cite this article"
 
-#: opac/webapp/templates/article/includes/floating_menu.html:42
+#: opac/webapp/templates/article/includes/floating_menu.html:40
+#: opac/webapp/templates/article/includes/floating_menu.html:91
 msgid "Artigos e similares"
 msgstr "Articles and alike"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:5
-#: opac/webapp/templates/journal/includes/levelMenu.html:8
-msgid "home do periódico"
-msgstr "Journal homepage"
+#: opac/webapp/templates/article/includes/levelMenu.html:9
+msgid "home do periodico"
+msgstr "Home of journal"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:13
+#: opac/webapp/templates/article/includes/levelMenu.html:17
+#: opac/webapp/templates/article/includes/levelMenu.html:70
+#: opac/webapp/templates/article/includes/levelMenu.html:123
 msgid "sumário"
 msgstr "summary"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:22
-msgid "artigo anterior"
-msgstr "previous article"
+#: opac/webapp/templates/article/includes/levelMenu.html:30
+#: opac/webapp/templates/issue/includes/alternative_header.html:75
+#: opac/webapp/templates/journal/includes/alternative_header.html:71
+msgid "anterior"
+msgstr "previous"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:27
-msgid "artigo atual"
-msgstr "current article"
+#: opac/webapp/templates/article/includes/levelMenu.html:35
+#: opac/webapp/templates/article/includes/levelMenu.html:88
+#: opac/webapp/templates/article/includes/levelMenu.html:141
+#: opac/webapp/templates/issue/includes/alternative_header.html:82
+#: opac/webapp/templates/journal/includes/alternative_header.html:78
+msgid "atual"
+msgstr "current"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:36
-msgid "artigo seguinte"
-msgstr "next article"
+#: opac/webapp/templates/article/includes/levelMenu.html:48
+msgid "seguinte"
+msgstr "next"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:52
-#: opac/webapp/templates/collection/includes/levelMenu.html:37
+#: opac/webapp/templates/article/includes/levelMenu.html:193
+#: opac/webapp/templates/article/includes/levelMenu.html:219
+#: opac/webapp/templates/article/includes/levelMenu.html:264
+#: opac/webapp/templates/article/includes/levelMenu.html:290
+msgid "Download PDF (Espanhol)"
+msgstr "Download PDF (Spanish)"
+
+#: opac/webapp/templates/article/includes/levelMenu.html:195
+#: opac/webapp/templates/article/includes/levelMenu.html:221
+#: opac/webapp/templates/article/includes/levelMenu.html:266
+#: opac/webapp/templates/article/includes/levelMenu.html:292
+msgid "Download PDF (Inglês)"
+msgstr "Download PDF (English)"
+
+#: opac/webapp/templates/article/includes/levelMenu.html:197
+#: opac/webapp/templates/article/includes/levelMenu.html:223
+#: opac/webapp/templates/article/includes/levelMenu.html:268
+#: opac/webapp/templates/article/includes/levelMenu.html:294
+msgid "Download PDF (Português)"
+msgstr "Download PDF (Portuguese)"
+
+#: opac/webapp/templates/article/includes/levelMenu.html:310
+#: opac/webapp/templates/collection/includes/levelMenu.html:38
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:14
 #: opac/webapp/templates/issue/grid.html:11
 #: opac/webapp/templates/issue/toc.html:11
@@ -1109,7 +1251,7 @@ msgstr "next article"
 msgid "Compartilhe"
 msgstr "Share"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:54
+#: opac/webapp/templates/article/includes/levelMenu.html:311
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:16
 #: opac/webapp/templates/issue/toc.html:12
 #: opac/webapp/templates/journal/about.html:17
@@ -1117,7 +1259,7 @@ msgstr "Share"
 msgid "Enviar link por e-mail"
 msgstr "Send link by email"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:57
+#: opac/webapp/templates/article/includes/levelMenu.html:314
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:19
 #: opac/webapp/templates/issue/toc.html:13
 #: opac/webapp/templates/journal/about.html:18
@@ -1125,7 +1267,7 @@ msgstr "Send link by email"
 msgid "Compartilhar no Facebook"
 msgstr "Share in Facebook"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:60
+#: opac/webapp/templates/article/includes/levelMenu.html:317
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:22
 #: opac/webapp/templates/issue/toc.html:14
 #: opac/webapp/templates/journal/about.html:19
@@ -1133,9 +1275,9 @@ msgstr "Share in Facebook"
 msgid "Compartilhar no Twitter"
 msgstr "Share in Twitter"
 
-#: opac/webapp/templates/article/includes/levelMenu.html:63
-#: opac/webapp/templates/article/includes/levelMenu.html:68
-#: opac/webapp/templates/collection/includes/levelMenu.html:45
+#: opac/webapp/templates/article/includes/levelMenu.html:320
+#: opac/webapp/templates/article/includes/levelMenu.html:325
+#: opac/webapp/templates/collection/includes/levelMenu.html:46
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:25
 #: opac/webapp/templates/collection/includes/list_journals_section_title.html:30
 #: opac/webapp/templates/issue/grid.html:17
@@ -1149,7 +1291,7 @@ msgid "Outras redes sociais"
 msgstr "Other social networks"
 
 #: opac/webapp/templates/article/includes/recent_articles_row.html:6
-#: opac/webapp/templates/issue/toc.html:116
+#: opac/webapp/templates/issue/toc.html:143
 msgid "Documento sem título"
 msgstr "Untitled document"
 
@@ -1157,11 +1299,6 @@ msgstr "Untitled document"
 #: opac/webapp/templates/news/includes/collection_news_row.html:11
 msgid "continue lendo"
 msgstr "continue reading"
-
-#: opac/webapp/templates/article/includes/modal/download.html:6
-#: opac/webapp/templates/article/includes/modal/related_article.html:7
-msgid "Fechar"
-msgstr "Close"
 
 #: opac/webapp/templates/article/includes/modal/download.html:8
 msgid "Versão para download de PDF"
@@ -1179,69 +1316,69 @@ msgstr "Similar in"
 msgid "Citados no"
 msgstr "Cited in"
 
-#: opac/webapp/templates/collection/about.html:18
+#: opac/webapp/templates/collection/about.html:23
 #, python-format
 msgid " %(page)s "
 msgstr " %(page)s "
 
-#: opac/webapp/templates/collection/about.html:33
+#: opac/webapp/templates/collection/about.html:38
 msgid " Conteúdo não cadastrado "
 msgstr "No journal information has been submitted"
 
-#: opac/webapp/templates/collection/index.html:15
+#: opac/webapp/templates/collection/index.html:17
 msgid "em números | Métricas"
 msgstr "in numbers | Metrics"
 
-#: opac/webapp/templates/collection/index.html:25
+#: opac/webapp/templates/collection/index.html:27
 msgid "períodicos"
 msgstr "journals"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:28
-#: opac/webapp/templates/collection/index.html:29
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:31
+#: opac/webapp/templates/collection/index.html:31
 #: opac/webapp/templates/collection/list_feed_content.html:7
 msgid "números"
 msgstr "issues"
 
-#: opac/webapp/templates/collection/index.html:33
+#: opac/webapp/templates/collection/index.html:35
 #: opac/webapp/templates/issue/grid.html:65
 msgid "artigos"
 msgstr "articles"
 
-#: opac/webapp/templates/collection/index.html:37
+#: opac/webapp/templates/collection/index.html:39
 msgid "citações"
 msgstr "citations"
 
-#: opac/webapp/templates/collection/index.html:43
+#: opac/webapp/templates/collection/index.html:45
 msgid "Downloads"
 msgstr "Downloads"
 
-#: opac/webapp/templates/collection/index.html:46
+#: opac/webapp/templates/collection/index.html:48
 msgid "Citações"
 msgstr "Citations"
 
-#: opac/webapp/templates/collection/index.html:49
+#: opac/webapp/templates/collection/index.html:51
 msgid "Outros indicadores"
 msgstr "Other indicators"
 
-#: opac/webapp/templates/collection/index.html:60
+#: opac/webapp/templates/collection/index.html:62
 msgid "Lista de periódicos"
 msgstr "Journal list"
 
-#: opac/webapp/templates/collection/index.html:64
+#: opac/webapp/templates/collection/index.html:66
 #: opac/webapp/templates/collection/list_journal.html:19
 msgid "Alfabética"
 msgstr "Alphabetic"
 
-#: opac/webapp/templates/collection/index.html:67
+#: opac/webapp/templates/collection/index.html:69
 #: opac/webapp/templates/collection/list_journal.html:22
 msgid "Temática"
 msgstr "Thematic"
 
-#: opac/webapp/templates/collection/index.html:91
-msgid "Número <span>mais recentes</span>"
-msgstr "Latest <span>issue</span>"
+#: opac/webapp/templates/collection/index.html:93
+msgid "Números <span>mais recentes</span>"
+msgstr ""
 
-#: opac/webapp/templates/collection/index.html:135
+#: opac/webapp/templates/collection/index.html:137
 msgid "em perspectiva"
 msgstr "in perspective"
 
@@ -1253,7 +1390,7 @@ msgstr "Last issue"
 msgid "Nº"
 msgstr "Nº"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:39
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:42
 #: opac/webapp/templates/collection/list_feed_content.html:6
 msgid "descontinuado"
 msgstr "non-current"
@@ -1262,7 +1399,7 @@ msgstr "non-current"
 msgid "de"
 msgstr "of"
 
-#: opac/webapp/templates/collection/includes/levelMenu.html:10
+#: opac/webapp/templates/collection/includes/levelMenu.html:11
 #: opac/webapp/templates/collection/list_journal.html:14
 msgid "Home"
 msgstr "Home"
@@ -1307,53 +1444,48 @@ msgstr "Publishers"
 msgid "editoras"
 msgstr "publishers"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:5
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:7
 msgid "Sobre o"
 msgstr "About"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:17
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:60
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:19
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:62
 msgid "Entre uma ou mais palavras"
 msgstr "Enter one or more words"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:22
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:65
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:24
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:67
 msgid "Todos os índices"
 msgstr "All indexes"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:24
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:67
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:26
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:69
 msgid "Autor"
 msgstr "Author"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:28
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:71
-msgid "Títutlo"
-msgstr "Title"
-
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:36
-#: opac/webapp/templates/issue/includes/alternative_header.html:97
-#: opac/webapp/templates/journal/includes/alternative_header.html:93
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:38
+#: opac/webapp/templates/issue/includes/alternative_header.html:95
+#: opac/webapp/templates/journal/includes/alternative_header.html:91
 msgid "Buscar"
 msgstr "Search"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:42
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:44
 msgid "Adicionar outro campo"
 msgstr "Add another field"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:47
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:49
 msgid "Apagar campo"
 msgstr "Delete field"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:61
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:63
 msgid "Limpar expressão"
 msgstr "Reset"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:90
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:92
 msgid "Sem resultados"
 msgstr "No results"
 
-#: opac/webapp/templates/collection/includes/levelMenu_search.html:94
+#: opac/webapp/templates/collection/includes/levelMenu_search.html:96
 msgid "Não foram encontrados documentos para sua pesquisa"
 msgstr "No documents found which meet your search criteria"
 
@@ -1369,24 +1501,24 @@ msgstr "Current journals"
 msgid "Periódicos descontinuados"
 msgstr "Non-current journals"
 
-#: opac/webapp/templates/collection/includes/list_journals_search_input.html:23
+#: opac/webapp/templates/collection/includes/list_journals_search_input.html:24
 msgid "Digite uma ou mais palavras para filtrar a lista"
 msgstr "Enter one or more words to filter the list"
 
-#: opac/webapp/templates/collection/includes/nav.html:20
-#: opac/webapp/templates/collection/includes/nav.html:62
+#: opac/webapp/templates/collection/includes/nav.html:22
+#: opac/webapp/templates/collection/includes/nav.html:64
 msgid "Busca"
 msgstr "Search"
 
-#: opac/webapp/templates/collection/includes/nav.html:30
+#: opac/webapp/templates/collection/includes/nav.html:32
 msgid "Sobre:"
 msgstr "About:"
 
-#: opac/webapp/templates/collection/includes/nav.html:42
+#: opac/webapp/templates/collection/includes/nav.html:44
 msgid "SciELO.org - Rede SciELO"
 msgstr "SciELO.org - The SciELO Network"
 
-#: opac/webapp/templates/collection/includes/nav.html:93
+#: opac/webapp/templates/collection/includes/nav.html:95
 msgid "Blog SciELO em Perspectiva"
 msgstr "Blog SciELO in Perspective"
 
@@ -1406,24 +1538,24 @@ msgstr "journals"
 msgid "Homepage"
 msgstr "Home page"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:22
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:25
 msgid "Título do periódico"
 msgstr "Journal title"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:26
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:29
 msgid "Grade de número"
 msgstr "Issue grid"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:33
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:36
 #: opac/webapp/templates/journal/detail.html:86
 msgid "Número mais recente"
 msgstr "Most recent issue"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:34
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:37
 msgid "Último"
 msgstr "Latest"
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:42
+#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:45
 msgid "Continua como "
 msgstr "Continues as"
 
@@ -1439,13 +1571,17 @@ msgstr "Access not authorized"
 msgid ""
 "A URL solicitada não foi encontrada no servidor. Se você digitou a URL "
 "manualmente, por favor verifique e tente novamente."
-msgstr "The requested URL was not found on the server. If you typed in the URL, please check it and try again."
+msgstr ""
+"The requested URL was not found on the server. If you typed in the URL, "
+"please check it and try again."
 
 #: opac/webapp/templates/errors/500.html:5
 msgid ""
 "Erro interno do servidor. Tente novamente mais tarde. Nossos engenheiros "
 "foram notificados."
-msgstr "Internal server error. Please try again later. Our technical staff has been notified."
+msgstr ""
+"Internal server error. Please try again later. Our technical staff has "
+"been notified."
 
 #: opac/webapp/templates/errors/500.html:9
 msgid "Id. do erro"
@@ -1457,7 +1593,9 @@ msgstr "Error"
 
 #: opac/webapp/templates/errors/base.html:27
 msgid "Qualquer dúvida, por favor entre em contato com o administrador"
-msgstr "Please contact the administrator if you have any questions, doubts or concerns"
+msgstr ""
+"Please contact the administrator if you have any questions, doubts or "
+"concerns"
 
 #: opac/webapp/templates/includes/footer.html:36
 msgid "Open Access"
@@ -1508,70 +1646,71 @@ msgstr "View the editorial team"
 msgid "Expandir/recolher conteúdo"
 msgstr "Expand/collapse content"
 
-#: opac/webapp/templates/issue/toc.html:64
+#: opac/webapp/templates/issue/toc.html:70
 #: opac/webapp/templates/journal/detail.html:93
 msgid "Sumário"
 msgstr "Summary"
 
-#: opac/webapp/templates/issue/toc.html:73
 #: opac/webapp/templates/issue/toc.html:75
+msgid "Ordenar publicações por"
+msgstr "Sort publications by"
+
+#: opac/webapp/templates/issue/toc.html:78
+msgid "Ordem do fascículo"
+msgstr "Order issues by"
+
+#: opac/webapp/templates/issue/toc.html:79
+msgid "Mais novos primeiro"
+msgstr "Newest first"
+
+#: opac/webapp/templates/issue/toc.html:80
+msgid "Mais antigos primeiro"
+msgstr "Oldest first"
+
+#: opac/webapp/templates/issue/toc.html:96
+#: opac/webapp/templates/issue/toc.html:98
 msgid "Todas as seções"
 msgstr "All the sections"
 
-#: opac/webapp/templates/issue/toc.html:146
+#: opac/webapp/templates/issue/toc.html:177
 msgid "Texto"
 msgstr "Text"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:8
-#: opac/webapp/templates/journal/includes/alternative_header.html:8
-msgid "Ir para a homepage da coleção: "
-msgstr "Go to the home page of the collection:"
+#: opac/webapp/templates/issue/toc.html:205
+msgid "Resumo em"
+msgstr "Abstract in"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:16
-#: opac/webapp/templates/journal/includes/alternative_header.html:16
-msgid "logomarca da coleção:"
-msgstr "Collection's logo"
-
-#: opac/webapp/templates/issue/includes/alternative_header.html:33
-#: opac/webapp/templates/journal/includes/alternative_header.html:33
+#: opac/webapp/templates/issue/includes/alternative_header.html:31
+#: opac/webapp/templates/journal/includes/alternative_header.html:31
 msgid "Número atual"
 msgstr "Current issue"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:53
-#: opac/webapp/templates/journal/includes/alternative_header.html:49
+#: opac/webapp/templates/issue/includes/alternative_header.html:51
+#: opac/webapp/templates/journal/includes/alternative_header.html:47
 msgid "Homepage do periódico"
 msgstr "Journal home page"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:64
-#: opac/webapp/templates/journal/includes/alternative_header.html:60
+#: opac/webapp/templates/issue/includes/alternative_header.html:62
+#: opac/webapp/templates/journal/includes/alternative_header.html:58
 msgid "Números"
 msgstr "Issues"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:70
-#: opac/webapp/templates/journal/includes/alternative_header.html:66
+#: opac/webapp/templates/issue/includes/alternative_header.html:68
+#: opac/webapp/templates/journal/includes/alternative_header.html:64
+#: opac/webapp/templates/journal/includes/levelMenu.html:90
 msgid "todos"
 msgstr "all"
 
-#: opac/webapp/templates/issue/includes/alternative_header.html:77
-#: opac/webapp/templates/journal/includes/alternative_header.html:73
-msgid "anterior"
-msgstr "previous"
-
-#: opac/webapp/templates/issue/includes/alternative_header.html:84
-#: opac/webapp/templates/journal/includes/alternative_header.html:80
-msgid "atual"
-msgstr "current"
-
-#: opac/webapp/templates/issue/includes/alternative_header.html:91
-#: opac/webapp/templates/journal/includes/alternative_header.html:87
+#: opac/webapp/templates/issue/includes/alternative_header.html:89
+#: opac/webapp/templates/journal/includes/alternative_header.html:85
 msgid "próximo"
 msgstr "next"
 
-#: opac/webapp/templates/journal/about.html:38
+#: opac/webapp/templates/journal/about.html:39
 msgid "Conteúdo não cadastrado"
 msgstr "Content not submitted"
 
-#: opac/webapp/templates/journal/about.html:54
+#: opac/webapp/templates/journal/about.html:55
 #: opac/webapp/templates/journal/includes/contact_footer.html:45
 msgid "Siga este periódico nas redes sociais"
 msgstr "Follow this journal in the social networks"
@@ -1618,63 +1757,68 @@ msgstr "Latest articles"
 msgid "Acompanhe os números deste periódico no seu leitor de RSS"
 msgstr "Stay informed of issues for this journal through your RSS reader"
 
-#: opac/webapp/templates/journal/includes/header.html:9
-msgid " Ir para a homepage da coleção "
-msgstr "Go to the home page of the collection"
-
-#: opac/webapp/templates/journal/includes/header.html:41
+#: opac/webapp/templates/journal/includes/header.html:42
 msgid "Publicação de:"
 msgstr "Publication of:"
 
-#: opac/webapp/templates/journal/includes/header.html:46
+#: opac/webapp/templates/journal/includes/header.html:47
 msgid "Área:"
 msgstr "Area:"
 
-#: opac/webapp/templates/journal/includes/header.html:58
+#: opac/webapp/templates/journal/includes/header.html:59
 msgid "Versão impressa ISSN:"
 msgstr "ISSN printed version:"
 
-#: opac/webapp/templates/journal/includes/header.html:65
+#: opac/webapp/templates/journal/includes/header.html:66
 msgid "Versão on-line ISSN:"
 msgstr "ISSN online version:"
 
-#: opac/webapp/templates/journal/includes/header.html:92
-msgid "Corpo Editorial"
-msgstr "Editorial Board"
-
-#: opac/webapp/templates/journal/includes/header.html:109
+#: opac/webapp/templates/journal/includes/header.html:110
 msgid "Siga-nos"
 msgstr "Follow us"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:17
+#: opac/webapp/templates/journal/includes/levelMenu.html:10
+msgid "home do periódico"
+msgstr "Journal homepage"
+
+#: opac/webapp/templates/journal/includes/levelMenu.html:19
 msgid "todos os números"
 msgstr "all issues"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:22
+#: opac/webapp/templates/journal/includes/levelMenu.html:25
+#: opac/webapp/templates/journal/includes/levelMenu.html:29
 msgid "número anterior"
 msgstr "previous issue"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:27
+#: opac/webapp/templates/journal/includes/levelMenu.html:36
+#: opac/webapp/templates/journal/includes/levelMenu.html:40
+#: opac/webapp/templates/journal/includes/levelMenu.html:107
+#: opac/webapp/templates/journal/includes/levelMenu.html:111
 msgid "número atual"
 msgstr "current issue"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:32
+#: opac/webapp/templates/journal/includes/levelMenu.html:47
+#: opac/webapp/templates/journal/includes/levelMenu.html:51
 msgid "número seguinte"
 msgstr "next issue"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:39
+#: opac/webapp/templates/journal/includes/levelMenu.html:59
+#: opac/webapp/templates/journal/includes/levelMenu.html:130
 msgid "buscar"
 msgstr "search"
 
-#: opac/webapp/templates/journal/includes/levelMenu.html:45
-#: opac/webapp/templates/journal/includes/levelMenu.html:49
+#: opac/webapp/templates/journal/includes/levelMenu.html:65
+#: opac/webapp/templates/journal/includes/levelMenu.html:69
+#: opac/webapp/templates/journal/includes/levelMenu.html:136
+#: opac/webapp/templates/journal/includes/levelMenu.html:140
 msgid "métricas"
 msgstr "metrics"
 
-#: opac/webapp/templates/news/includes/issue_last_row.html:9
+#: opac/webapp/templates/news/includes/issue_last_row.html:12
 msgid "Ver"
 msgstr "Open"
 
 #: opac/webapp/templates/news/includes/journal_news_row.html:8
 msgid "Continue lendo"
 msgstr "Continue reading"
+

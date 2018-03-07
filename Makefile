@@ -116,6 +116,16 @@ release_docker_push:
 ## i18n #
 #########
 
+# IMPORTANTE: Seguir os seguintes passos para atualização dos .pot e po:
+#
+# 1. make make_message (Varre todos os arquivo [.html, .py, .txt, ...] buscando por tags de tradução)
+# 2. make update_catalog (Atualizar todos os com .po a apartir do .pot)
+# 3. acessar a ferramenta de tradução colaborativa Transifex(https://www.transifex.com) atualizar o arquivo .pot
+# 4. utilizando a interface do Transifex é possível realizar as traduções
+# 5. após finalizar as traduções realize o download manual dos arquivo traduzidos para suas correspondentes pasta ```opac/webapp/translations/{LANG}/LC_MESSAGES```
+# 6. make compile_messages para gerar os arquivo .mo
+# 7. realize a atualização no repositório de códigos.
+
 # Faz um scan em toda a opac/webapp buscando strings traduzíveis e o resultado fica em opac/webapp/translations/messages.pot
 make_messages:
 	pybabel extract -F opac/webapp/config/babel.cfg -k lazy_gettext -k __ -o opac/webapp/translations/messages.pot .
