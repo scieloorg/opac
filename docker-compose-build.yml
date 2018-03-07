@@ -54,3 +54,76 @@ services:
             - OPAC_USE_PLUMX=True
             - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
             - OPAC_CACHE_ENABLED=False
+
+
+    opac-rq-worker-1:
+        build:
+            context: .
+            args:
+                - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+                - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
+                - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
+        command: /start_worker.sh
+        user: nobody
+        restart: always
+        depends_on:
+            - opac_mongo
+            - redis-cache
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./data:/app/data
+        links:
+            - opac_mongo:opac-mongo
+            - redis-cache:redis-cache
+        ports:
+            - "8000:8000"
+        environment:
+            - OPAC_DEBUG_MODE=True
+            - OPAC_MONGODB_NAME=opac_mongo
+            - OPAC_DATABASE_DIR=/app/data
+            - OPAC_SECRET_KEY=s3kr3tk3y
+            - OPAC_MONGODB_HOST=opac-mongo
+            - OPAC_CACHE_ENABLED=True
+            - OPAC_CACHE_DEFAULT_TIMEOUT=3600
+            - OPAC_CACHE_REDIS_HOST=redis-cache
+            - OPAC_SERVER_NAME=opac.scielo.org
+            - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED=True
+            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org
+            - OPAC_RQ_REDIS_HOST=redis-cache
+            - OPAC_RQ_REDIS_PORT=6379
+
+    opac-rq-scheduler:
+        build:
+            context: .
+            args:
+                - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+                - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
+                - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
+        command: /start_scheduler.sh
+        user: nobody
+        restart: always
+        depends_on:
+            - opac_mongo
+            - redis-cache
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./data:/app/data
+        links:
+            - opac_mongo:opac-mongo
+            - redis-cache:redis-cache
+        ports:
+            - "8000:8000"
+        environment:
+            - OPAC_DEBUG_MODE=True
+            - OPAC_MONGODB_NAME=opac_mongo
+            - OPAC_DATABASE_DIR=/app/data
+            - OPAC_SECRET_KEY=s3kr3tk3y
+            - OPAC_MONGODB_HOST=opac-mongo
+            - OPAC_CACHE_ENABLED=True
+            - OPAC_CACHE_DEFAULT_TIMEOUT=3600
+            - OPAC_CACHE_REDIS_HOST=redis-cache
+            - OPAC_SERVER_NAME=opac.scielo.org
+            - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED=True
+            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org
+            - OPAC_RQ_REDIS_HOST=redis-cache
+            - OPAC_RQ_REDIS_PORT=6379

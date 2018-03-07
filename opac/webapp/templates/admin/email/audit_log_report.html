@@ -1,0 +1,87 @@
+<table style="width: 900px" border="0">
+    <tbody>
+        <tr>
+            <td>
+                <h2 style="text-align:center;">Relatório de auditoria de mudanças (últimas 24hs)</h2>
+                <h3 style="text-align:center; color: #5E5E5E">
+                    Data de emissão: {{ report_date }}
+                </h3>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: center">
+                <img style="width: 85px; height: 65px;"
+                     src="{{ url_for('static', filename='img/logo-scielo-signature.png', _external=True) }}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+                <table style="width: 100%; border: 1px solid #cdcdcd">
+                    <thead>
+                        <tr style="text-align: left;">
+                            <th>Usuário:</th>
+                            <th>Ação:</th>
+                            <th>Data:</th>
+                            <th>Modelo:</th>
+                            <th>URL:</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audit_record in records %}
+                            <tr style="{{ loop.cycle('background-color: #f5f5f5', '') }};">
+                                <td style="">
+                                    {{ audit_record.user }}
+                                </td>
+                                <td>
+                                    {% if audit_record.action == 'ADD' %}
+                                        <span style="background-color: #5cb85c; padding: 1px 5px; color: #fff;">
+                                    {% elif audit_record.action == 'UPD' %}
+                                        <span style="background-color: #5bc0de; padding: 1px 5px; color: #fff;">
+                                    {% elif audit_record.action == 'DEL' %}
+                                        <span style="background-color: #d9534f; padding: 1px 5px; color: #fff;">
+                                    {% else %}
+                                        <span>
+                                    {% endif %}
+                                        {{ audit_record.get_action_value|upper }}
+                                    </span>
+
+                                </td>
+                                <td>
+                                    {{ audit_record.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                </td>
+                                <td>
+                                    {{ audit_record.object_class_name }}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('auditlogentry.details_view', _external=True) }}?id={{ audit_record._id }}">
+                                        Ver mais
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center;">
+                <a href="{{ url_for('auditlogentry.index_view', _external=True) }}">
+                    [ Accesar a listagem completa de auditoria ]
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center;">
+                <p>
+                    <small>
+                        Você esta recebendo este email porque é usuário administrador do OPAC (coleção: {{ config['OPAC_COLLECTION'] }}) ou algum outro usuário adminstrador acho que você deveria ser informado.
+                        <br><br>
+                        Se não quiser receber mais email como este, entre em contato com os administradores do site.
+                    </small>
+                </p>
+            </td>
+        </tr>
+    </tbody>
+</table>

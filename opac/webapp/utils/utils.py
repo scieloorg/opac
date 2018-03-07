@@ -6,17 +6,19 @@ import pytz
 import shutil
 import logging
 from uuid import uuid4
+from datetime import datetime, timedelta
 
 from werkzeug import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
-from flask import current_app
-
+from flask import current_app, render_template
 import webapp
 import requests
+from .journal_static_page import JournalStaticPage
 from webapp import models
+from webapp.admin.forms import EmailForm
 
-from opac_schema.v1.models import Pages
+from opac_schema.v1.models import Pages, AuditLogEntry
 
 try:
     from PIL import Image
@@ -385,3 +387,75 @@ def is_recaptcha_valid(request):
         },
         verify=True
     ).json().get("success", False)
+
+
+def send_audit_log_daily_report():
+
+    def filter_only_valid_emails(recipients_list):
+        validated_emails = []
+        for raw_email in recipients_list:
+            form = EmailForm(data={'email': raw_email})
+            if form.validate():
+                validated_emails.append(raw_email)
+
+        return validated_emails
+
+    def collect_recipients_from_conf():
+        print('coletamos os emails para envio definidos na conf: AUDIT_LOG_NOTIFICATION_RECIPIENTS')
+        recipients_from_conf = current_app.config['AUDIT_LOG_NOTIFICATION_RECIPIENTS']
+        recipients_from_conf_validated = filter_only_valid_emails(recipients_from_conf)
+        print('emails definidos na configuração, validados: ', recipients_from_conf_validated)
+        if len(recipients_from_conf_validated) == 0:
+            print('não temos emails (da configuração) válidos, para enviar')
+        return recipients_from_conf_validated
+
+    def colect_recipiets_from_users_table():
+        active_users = webapp.dbsql.session.query(models.User).filter_by(email_confirmed=True)
+        print('recipients_from_users: ', [u.email for u in active_users])
+        return [u.email for u in active_users]
+
+    def prepare_report_email(recipients, records):
+        report_date = datetime.today().strftime('%Y-%m-%d')
+        collection_acronym = current_app.config['OPAC_COLLECTION']
+        email_subject = '[%s] - Relatório de auditoria de mudanças - últimas 24hs (%s) ' % (collection_acronym, report_date)
+        templ_context = {
+            'records': records,
+            'report_date': report_date
+        }
+        email_data = {
+            'recipient': recipients,
+            'subject': email_subject,
+            'html': render_template("admin/email/audit_log_report.html", **templ_context)
+        }
+        return email_data
+
+    flask_app = webapp.create_app()
+
+    with flask_app.app_context():
+        if current_app.config['AUDIT_LOG_NOTIFICATION_ENABLED']:
+
+            target_datetime = datetime.today() - timedelta(days=1)
+            date_range_query = {
+                "created_at": {
+                    '$gte': target_datetime
+                }
+            }
+
+            audit_records = AuditLogEntry.objects.filter(__raw__=date_range_query).order_by('-created_at')
+            audit_records_count = audit_records.count()
+            if audit_records_count > 0:
+                print("registros encontrados: ", audit_records_count)
+                recipients_from_conf_validated = collect_recipients_from_conf()
+                recipients_from_users = colect_recipiets_from_users_table()
+                all_recipients = recipients_from_conf_validated + recipients_from_users
+                print('todos os recipients:', all_recipients)
+
+                for record in audit_records:
+                    print('-> ', record._id, record.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+
+                email_data = prepare_report_email(all_recipients, audit_records)
+                send_email(**email_data)
+            else:
+                print("não encontramos registros modifiados hoje.")
+        else:
+            print('O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED')

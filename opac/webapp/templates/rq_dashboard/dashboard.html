@@ -1,0 +1,231 @@
+{% extends "rq_dashboard/base.html" %}
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="section">
+
+                    <h1>Queues</h1>
+                    <p class="fixed intro">
+                        This list below contains all the registered queues with the
+                        number of jobs currently in the queue. Select a queue
+                        from above to view all jobs currently pending on the queue.
+                    </p>
+
+                    <table id="queues" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Queue</th>
+                                <th class="narrow">Jobs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-role="loading-placeholder">
+                                <td colspan="2">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <script name="queue-row" type="text/template">
+                        <tr data-role="queue" <% if (d.name === 'failed' && d.count > 0) { %> class="failed"<% } %>>
+                            <td><i class="glyphicon glyphicon-inbox" style="opacity: .5;"></i> <a href="<%= d.url %>"><%= d.name %></a></td>
+                            <td class="narrow"><%= d.count %></td>
+                        </tr>
+                    </script>
+
+                    <script name="no-queues-row" type="text/template">
+                        <tr>
+                            <td colspan="3">No queues.</td>
+                        </tr>
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="section">
+
+                    <h1>Workers</h1>
+                    <p class="fixed intro">This list below contains all the registered workers.</p>
+
+                    <table id="workers" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width:48px">State</th>
+                                <th>Worker</th>
+                                <th>Queues</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-role="loading-placeholder">
+                                <td colspan="3">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <script name="worker-row" type="text/template">
+                        <tr data-role="worker">
+                            <td><i class="glyphicon glyphicon-<%= d.state %>"></i></td>
+                            <td><%= d.name %></td>
+                            <td><%= d.queues.join(', ') %></td>
+                        </tr>
+                    </script>
+
+                    <script name="no-workers-row" type="text/template">
+                        <tr>
+                            <td colspan="3">No workers.</td>
+                        </tr>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section">
+                    <h1>Jobs on
+                        {% if queue.name == 'failed' %}
+                            <span class="label label-danger">{{ queue.name }}</span>
+                        {% else %}
+                            <span class="label label-default">{{ queue.name }}</span>
+                        {% endif %}
+                    </h1>
+
+                    <div class="btn-group pull-right">
+                        <a href="{{ url_for('rq_dashboard.compact_queue', queue_name=queue.name) }}"
+                           id="compact-btn" class="btn btn-default"
+                           data-toggle="tooltip" title="Remove all stale jobs from this queue (non-destructive)" >
+                            <i class="glyphicon glyphicon-resize-small"></i> Compact
+                        </a>
+                        <a href="{{ url_for('rq_dashboard.requeue_all') }}"
+                           id="requeue-all-btn" class="btn btn-default">
+                           <i class="glyphicon glyphicon-retweet"></i> Requeue All
+                        </a>
+                        <a href="{{ url_for('rq_dashboard.empty_queue', queue_name=queue.name) }}"
+                           id="empty-btn" class="btn btn-danger"
+                           data-toggle="tooltip" title="Remove all jobs from this queue (<b>destructive</b>)" data-html=true >
+                            <i class="glyphicon glyphicon-trash glyphicon-white"></i> Empty
+                        </a>
+                    </div>
+                    <p class="intro">
+                        This list below contains all the registered jobs on queue <span class="label label-default">{{ queue.name }}</span>, sorted by age (oldest on top).
+                    </p>
+                    <table id="jobs" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th class="narrow">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-role="loading-placeholder">
+                                <td colspan="2">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <nav aria-label="Page navigation">
+                        <div id="page-selection">
+                            <nav>
+                                <ul class="pagination"></ul>
+                            </nav>
+                        </div>
+                    </nav>
+
+                    <script name="job-row" type="text/template">
+                        <tr data-role="job" data-job-id="<%= d.id %>">
+                            <td>
+                                <i class="glyphicon glyphicon-file" style="opacity: .5;"></i>
+                                <span class="description"><%= $('<div/>').text(d.description).html() %></span>
+                                <% if (d.exc_info) { %>
+                                    <span class="origin">from <strong><%= d.origin %></strong></span>
+                                <% } %>
+                                <div class="job_id"><%= d.id %></div>
+                                <% if (d.exc_info) { %>
+                                    <span class="end_date">Failed <%= d.ended_at %></span>
+                                    <pre class="exc_info"><%= $('<div/>').text(d.exc_info).html() %></pre>
+                                <% } %>
+                            </td>
+                            <td>
+                                <span class="creation_date"><%= d.created_at %></span>
+                            </td>
+                            <td class="actions narrow">
+                                <div class="btn-group-vertical" role="group">
+                                    <% if (d.exc_info) { %>
+                                        <a href="#" data-role="requeue-job-btn" class="btn btn-default">
+                                            <i class="glyphicon glyphicon-retweet"></i> Requeue
+                                        </a>
+                                    <% } %>
+                                    <a href="#" data-role="cancel-job-btn" class="btn btn-danger">
+                                        <i class="glyphicon glyphicon-remove"></i> Cancel
+                                    </a>
+                                    <button class="btn btn-clipboard"
+                                            data-clipboard-text="<%= d.description %>">
+                                        <i class="glyphicon glyphicon-copy"></i> Copiar args
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </script>
+
+                    <script name="no-jobs-row" type="text/template">
+                        <tr>
+                            <td colspan="3">No jobs.</td>
+                        </tr>
+                    </script>
+
+                    <script name="no-previous-page-link" type="text/template">
+                        <li class="previous disabled">
+                            <a href="#" >&laquo;</a>
+                        </li>
+                    </script>
+
+                    <script name="previous-page-link" type="text/template">
+                        <li class="previous">
+                            <a href="<%= url %>">&laquo;</a>
+                        </li>
+                    </script>
+
+                    <script name="page-link" type="text/template">
+                        <li class="next">
+                            <a href="<%= url %>"><%= number %></a>
+                        </li>
+                    </script>
+
+                    <script name="next-page-link" type="text/template">
+                        <li class="next">
+                            <a href="<%= url %>">&raquo;</a>
+                        </li>
+                    </script>
+
+                    <script name="no-next-page-link" type="text/template">
+                        <li class="next disabled">
+                            <a href="#" >&raquo;</a>
+                        </li>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block inline_js %}
+    /* função de copia dos args do job */
+    var clipboard = new Clipboard('.btn-clipboard');
+    clipboard.on('success', function(e) {
+        alert('Os args do job foram copiados!');
+        e.clearSelection();
+    });
+
+
+    var POLL_INTERVAL = {{ poll_interval }};
+    {% include "rq_dashboard/dashboard.js" with context %}
+
+{% endblock %}
