@@ -164,7 +164,7 @@
 
                               {{ lang|trans_alpha2 }}:
 
-                              {% if lang in article.abstract_languages or lang in article.article_text_languages %}
+                              {% if lang in article.abstract_languages %}
                                 <span class="abstract">
                                   <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}">
                                     {% trans %}Resumo{% endtrans %}
@@ -172,8 +172,12 @@
                                 </span>
                               {% endif %}
 
+                              {% if lang in article.article_text_languages and lang in article.abstract_languages %}
+                              |
+                              {% endif %}
+
                               {% if lang in article.article_text_languages %}
-                                | <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">
+                                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">
                                   {% trans %}Texto{% endtrans %}
                                 </a>
                               {% endif %}
