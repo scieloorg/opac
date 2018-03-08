@@ -62,27 +62,31 @@
               {% endif %}
               <div class="block summary collapseContent">
                 <div class="row">
-    							<div class="col-sm-12 col-md-12">
+                  <div class="col-sm-12 col-md-12">
 
-    								<div class="row row-filtro-ordena">
-    									<div class="col-md-6 col-sm-6">
-    										<a href="javascript:;" class="collapse-title">
-    											<h1>{% trans %}Sumário{% endtrans %}</h1>
-    										</a>
-    									</div>
-    									<div class="col-sm-6 col-md-6">
-    										<div class="box-filtro pull-right">
-    											{% trans %}Ordenar publicações por{% endtrans %}
-    											<div class="selectBox inline">
-    												<select name="sortBy" id="sortBy">
-    													<option value="0" selected="selected">{% trans %}Ordem do fascículo{% endtrans %}</option>
-    													<option value="YEAR_ASC">{% trans %}Mais novos primeiro{% endtrans %}</option>
-    													<option value="YEAR_DESC">{% trans %}Mais antigos primeiro{% endtrans %}</option>
-    												</select>
-    											</div>
-    										</div>
-    									</div>
-    								</div>
+                    <div class="row row-filtro-ordena">
+                      <div class="col-md-6 col-sm-6">
+                        <a href="javascript:;" class="collapse-title">
+                          <h1>{% trans %}Sumário{% endtrans %}</h1>
+                        </a>
+                      </div>
+
+                      {% if issue.type == 'volume_issue' %}
+                        <div class="col-sm-6 col-md-6">
+                          <div class="box-filtro pull-right">
+                            {% trans %}Ordenar publicações por{% endtrans %}
+                            <div class="selectBox inline">
+                              <select name="sortBy" id="sortBy">
+                                <option value="0" selected="selected">{% trans %}Ordem do fascículo{% endtrans %}</option>
+                                <option value="YEAR_ASC">{% trans %}Mais novos primeiro{% endtrans %}</option>
+                                <option value="YEAR_DESC">{% trans %}Mais antigos primeiro{% endtrans %}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+
+                    </div>
 
                     <div class="collapse-content issueIndent">
                     <strong>{{ issue_legend|default('--', True) }}</strong>
@@ -200,17 +204,18 @@
 
                           {% endfor %}
                         </ul>
-                      </li>
 
-                    {# Adicionar divs com os resumos #}
-                    {% for lang in article.languages %}
-                      <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}">
-                        {% if article.get_abstract_by_lang(lang) %}
-                          <p><strong>{% trans %}Resumo em{% endtrans %} {{ lang|trans_alpha2 }}:</strong></p>
-                          {{ article.get_abstract_by_lang(lang) }}
-                        {% endif %}
-                      </div>
-                    {% endfor %}
+                        {# Adicionar divs com os resumos #}
+                        {% for lang in article.languages|reverse %}
+                          <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}">
+                            {% if article.get_abstract_by_lang(lang) %}
+                              <p><strong>{% trans %}Resumo em{% endtrans %} {{ lang|trans_alpha2 }}:</strong></p>
+                              {{ article.get_abstract_by_lang(lang) }}
+                            {% endif %}
+                          </div>
+                        {% endfor %}
+
+                      </li>
 
                   {% endfor %}
 
