@@ -976,6 +976,11 @@ def email_share_ajax():
                         'fields': [key for key in form.data.keys()]})
 
 
+@main.route("/form_mail/", methods=['GET'])
+def email_form():
+    return render_template("email/email_form.html")
+
+
 # ##################################Others#######################################
 
 
