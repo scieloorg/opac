@@ -91,8 +91,7 @@ def get_lang_from_session():
 @main.route('/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def index():
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    language = session.get('lang', get_locale())
     news = controllers.get_latest_news_by_lang(language)
 
     tweets = controllers.get_collection_tweets()
