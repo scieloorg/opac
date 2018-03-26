@@ -132,8 +132,7 @@ def collection_list():
 @main.route('/journals/feed/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list_feed():
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
+    language = session.get('lang', get_locale())
     collection = controllers.get_current_collection()
 
     title = 'SciELO - %s - %s' % (collection.name, _('Últimos periódicos inseridos na coleção'))
@@ -187,8 +186,7 @@ def collection_list_feed():
 @main.route("/collection/about/", methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def about_collection():
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
+    language = session.get('lang', get_locale())
 
     context = {}
 
@@ -291,8 +289,7 @@ def journal_detail(url_seg):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # todo: ajustar para que seja só noticias relacionadas ao periódico
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    language = session.get('lang', get_locale())
     news = controllers.get_latest_news_by_lang(language)
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
@@ -366,8 +363,7 @@ def journal_feed(url_seg):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(last_issue))
 
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    feed_language = session.get('lang', default_lang)
+    feed_language = session.get('lang', get_locale())
     feed_language = feed_language[:2].lower()
 
     for article in articles:
@@ -395,8 +391,7 @@ def journal_feed(url_seg):
 @main.route("/journal/<string:url_seg>/about/", methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang)
 def about_journal(url_seg):
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
+    language = session.get('lang', get_locale())
 
     journal = controllers.get_journal_by_url_seg(url_seg)
 
@@ -515,8 +510,7 @@ def issue_grid(url_seg):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # idioma da sessão
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    language = session.get('lang', get_locale())
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
     issues_data = controllers.get_issues_for_grid_by_jid(journal.id, is_public=True)
@@ -547,8 +541,7 @@ def issue_grid(url_seg):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    language = session.get('lang', get_locale())
 
     section_filter = request.args.get('section', '', type=str)
 
@@ -633,8 +626,7 @@ def issue_feed(url_seg, url_seg_issue):
                     url=request.url_root,
                     subtitle=utils.get_label_issue(issue))
 
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    feed_language = session.get('lang', default_lang)
+    feed_language = session.get('lang', get_locale())
 
     for article in articles:
         # ######### TODO: Revisar #########
@@ -892,8 +884,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang) or default_lang
+    language = session.get('lang', get_locale())
     pdf_filename = '%s.pdf' % pdf_filename
 
     journal = controllers.get_journal_by_acron(journal_acron)
