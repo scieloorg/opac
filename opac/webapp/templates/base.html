@@ -50,8 +50,10 @@
   </head>
   <body class="{% block body_class %}{% endblock %}">
     <a name="top"></a>
+
     {% block content %}{% endblock %}
 
+    {# it is remove when using varnish #}
     <esi:remove>
       <div class="modal fade" id="SendViaEmail" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -110,6 +112,7 @@
         </div>
       </div>
     </esi:remove>
+    {# it is remove when using varnish #}
 
     <esi:include src="{{ url_for('main.email_form') }}"/>
 
