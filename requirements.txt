@@ -3,7 +3,7 @@ mongoengine==0.15.0
 flask-mongoengine==0.9.5
 Flask-Admin==1.5.0
 Flask-SQLAlchemy==2.3.2
-SQLAlchemy-Utils==0.32.21
+SQLAlchemy-Utils==0.33.1
 Flask-Security==3.0.0
 Flask-Login==0.4.1
 Flask-Script==2.0.6
