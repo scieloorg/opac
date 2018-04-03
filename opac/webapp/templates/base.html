@@ -1,11 +1,6 @@
 {% import 'macros/collection.html' as coll_macro %}
 <!DOCTYPE html>
 
-{% if config.DEBUG %}
-  <!-- Temporário para teste do varnish cache -->
- {{ session }}
-{% endif %}
-
 {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')).replace('_', '-')  %}
   <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ html_lang }}"> <![endif]-->
   <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="{{ html_lang }}"> <![endif]-->
@@ -133,6 +128,10 @@
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}?v={{ config.VCS_REF }}"></script>
     {% block extra_js %}{% endblock %}
     <script>
+
+      // Garanti que o valor do campo share_url é a URL corrente.
+      $('#share_url').val(window.location.href);
+
       $("#sendViaEmail").submit(function(e) {
 
         var url = {{ url_for('main.email_share_ajax') }};
