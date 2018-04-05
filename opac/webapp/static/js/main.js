@@ -1002,6 +1002,20 @@ var Portal = {
       				Journal.publicationSort($(this).val());
     			});
 			})
+			
+
+       		$(".scroll").on("click",function(e) {
+				e.preventDefault();
+
+				var d = $(this).attr("href");
+				var g = d.split("#")[1];				
+				var p = $("a[name="+g+"]").offset();
+
+				$("html,body").animate({
+					scrollTop: (p.top-70)
+				},500);
+
+			});
 
 		},
 		Bindings: function(ctn) {
@@ -1102,6 +1116,7 @@ var Cookie = {
 };
 
 $(function() {
+
 	Portal.Init();
 
 	if($(".searchForm").length)
