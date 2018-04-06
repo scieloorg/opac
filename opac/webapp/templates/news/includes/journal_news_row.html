@@ -1,7 +1,7 @@
 <div class="slide-item release">
   <div class="col-md-12">
     <span>{{ item.publication_date }}</span>
-    <a href="{{ item.url }}" target="_blank" style="margin: 5px auto;"><img src="../../../static/img/article-image.jpg" class="img-responsive" /></a>
+    <a href="{{ item.url }}" target="_blank"><img src="../../../static/img/article-image.jpg" class="img-responsive" /></a>
     <h3 class="ellipsis">{{ item.title }}</h3>
     <div class="ellipsis">
       {{ item.description|striptags|replace('Read More →', '') }}
