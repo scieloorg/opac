@@ -63,6 +63,7 @@ var target_src = {
             path.join(paths['static_js'], 'moment.js'),
             path.join(paths['static_js'], 'moment_locale_pt_br.js'),
             path.join(paths['static_js'], 'moment_locale_es.js'),
+            path.join(paths['static_js'], 'recaptcha-api.js'),
         ],
         'scielo-article': [
             path.join(paths['static_js'], 'scielo-article.js'),
