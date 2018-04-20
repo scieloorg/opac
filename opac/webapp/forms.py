@@ -27,3 +27,9 @@ class EmailShareForm(FlaskForm):
 
                 if not match:
                     raise ValidationError(_('Endereço de e-mail inválido.'))
+
+
+class ContactForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    your_email = StringField('your_email', validators=[DataRequired(), Email()])
+    message = TextAreaField('message', validators=[DataRequired()])

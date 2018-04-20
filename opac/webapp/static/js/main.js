@@ -121,9 +121,9 @@ var Portal = {
 
 			$(".slider").each(Portal.Slider);
 
-			$(".sendViaMail").on("click",function(e) {
+			$(".share_modal_id").on("click",function(e) {
 				e.preventDefault();
-				$("#SendViaEmail").modal("show");
+				$("#share_modal_id").modal("show");
 			});
 
 			$(".showBlock").on("click",function() {
@@ -993,7 +993,6 @@ var Portal = {
 			$(title).removeClass("closed");
 		}
 	}
-
 	Journal = {
 		Init: function() {
 
@@ -1002,13 +1001,13 @@ var Portal = {
       				Journal.publicationSort($(this).val());
     			});
 			})
-			
+
 
        		$(".scroll").on("click",function(e) {
 				e.preventDefault();
 
 				var d = $(this).attr("href");
-				var g = d.split("#")[1];				
+				var g = d.split("#")[1];
 				var p = $("a[name="+g+"]").offset();
 
 				$("html,body").animate({

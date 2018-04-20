@@ -44,8 +44,9 @@ def add_collection_to_g():
 
 
 @main.before_app_request
-def add_email_share_to_g():
+def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
+    setattr(g, 'email_contact', forms.ContactForm())
 
 
 @babel.localeselector
@@ -494,6 +495,42 @@ def download_journal_list(list_type, extension):
         response = Response(data, mimetype=mimetype)
         response.headers['Content-Disposition'] = 'attachment; filename=%s' % filename
         return response
+
+
+@main.route("/<string:url_seg>/contact", methods=['POST'])
+def contact(url_seg):
+
+    if not request.is_xhr:
+        abort(400, _('Requisição inválida.'))
+
+    if utils.is_recaptcha_valid(request):
+
+        form = forms.ContactForm(request.form)
+
+        # As contas de e-mail deve ser as que estão cadastradas no períodico.
+        recipients = ['jamil.atta@scielo.org']
+
+        if form.validate():
+            sent, message = controllers.send_email_contact(recipients,
+                                                           form.data['name'],
+                                                           form.data['your_email'],
+                                                           form.data['message'])
+
+            return jsonify({'sent': sent, 'message': str(message),
+                            'fields': [key for key in form.data.keys()]})
+
+        else:
+            return jsonify({'sent': False, 'message': form.errors,
+                            'fields': [key for key in form.data.keys()]})
+
+    else:
+        abort(403, _('Requisição proibida.'))
+
+
+@main.route("/form_contact/", methods=['GET'])
+def form_contact():
+    return render_template("journal/includes/contact.html")
+
 
 # ###################################Issue#######################################
 

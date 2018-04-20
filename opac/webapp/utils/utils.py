@@ -367,3 +367,16 @@ def utc_to_local(utc_dt):
 
     return local_tz.normalize(local_dt)
 
+
+def is_recaptcha_valid(request):
+    """
+    Verify if the response for the Google recaptcha is valid.
+    """
+    return requests.post(
+        current_app.config["GOOGLE_VERIFY_RECAPTCHA_URL"],
+        data={
+            'secret': current_app.config["GOOGLE_VERIFY_RECAPTCHA_KEY"],
+            'response': request.form['g-recaptcha-response'],
+        },
+        verify=True
+    ).json().get("success", False)

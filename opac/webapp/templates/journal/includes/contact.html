@@ -1,36 +1,64 @@
-<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
-        <h4 class="modal-title">Entre em contato com {{ journal.publisher_name }}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label class="control-label">Seu Nome</label>
-          <input type="text" name="nome" value="" class="form-control" placeholder="Digite seu nome" />
+<esi:remove>
+  <div class="modal fade" id="contact_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
+          <h4 class="modal-title">Entre em contato com {{ journal.publisher_name }}</h4>
         </div>
-        
-        <div class="form-group">
-          <label class="control-label">Seu e-mail</label>
-          <input type="text" name="email" value="" class="form-control" placeholder="Digite seu email" />
-        </div>  
+        <form action="" method="POST" id="contact_form_id">
 
-        <div class="form-group">
-          <label class="control-label">Mensagem</label>
-          <textarea name="mensagem" class="form-control" placeholder="Digite sua mensagem"></textarea>
-        </div>
+          {{ g.email_contact.csrf_token() }}
 
-        <div class="form-group">
-          <div class="g-recaptcha" data-sitekey="6LejVjUUAAAAABU6P_loTY7IAPg6JaQOxLaZug5l"></div>
-        </div>
-        
-      </div>
-      <div class="modal-footer">
-        <div class="btn-block">
-          <input type="button" value="Enviar Mensagem" class="btn btn-primary">
-        </div>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label class="control-label">{% trans %}Seu Nome{% endtrans %}*</label>
+                {{ g.email_contact.name(class="form-control valid", placeholder="Digite seu Nome") }}
+                <label class="control-label" id="{{g.email_contact.name.name}}_error"></label>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
+                {{ g.email_contact.your_email(class="form-control valid", placeholder="Digite seu e-mail") }}
+                <label class="control-label" id="{{g.email_contact.your_email.name}}_error"></label>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label">{% trans %}Mensagem{% endtrans %}*</label>
+                {{ g.email_contact.message(class="form-control valid", placeholder="Digite sua mensagem", rows="10") }}
+                <label class="control-label" id="{{g.email_contact.message.name}}_error"></label>
+            </div>
+
+            <div class="form-group">
+              <div id="contact_captcha_id"></div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <div class="btn-block">
+              <input type="submit" value="Enviar Mensagem" class="btn btn-primary" id="contact_submit_btn_id">
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
+
+  <div class="modal fade in" id="contact_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Mensagem</h4>
+            </div>
+            <div class="modal-body">
+                <div class="midGlyph">
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</esi:remove>
+
+<esi:include src="{{ url_for('main.form_contact') }}"/>
