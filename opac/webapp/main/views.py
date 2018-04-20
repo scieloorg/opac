@@ -501,7 +501,7 @@ def download_journal_list(list_type, extension):
 def contact(url_seg):
 
     if not request.is_xhr:
-        abort(400, _('Requisição inválida.'))
+        abort(403, _('Requisição inválida, deve ser ajax.'))
 
     if utils.is_recaptcha_valid(request):
 
@@ -524,7 +524,7 @@ def contact(url_seg):
                             'fields': [key for key in form.data.keys()]})
 
     else:
-        abort(403, _('Requisição proibida.'))
+        abort(400, _('Requisição inválida, captcha inválido. '))
 
 
 @main.route("/form_contact/", methods=['GET'])
