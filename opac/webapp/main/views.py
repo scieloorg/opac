@@ -507,8 +507,9 @@ def contact(url_seg):
 
         form = forms.ContactForm(request.form)
 
-        # As contas de e-mail deve ser as que estão cadastradas no períodico.
-        recipients = ['jamil.atta@scielo.org']
+        journal = controllers.get_journal_by_url_seg(url_seg)
+
+        recipients = journal.editor_email
 
         if form.validate():
             sent, message = controllers.send_email_contact(recipients,
@@ -524,7 +525,7 @@ def contact(url_seg):
                             'fields': [key for key in form.data.keys()]})
 
     else:
-        abort(400, _('Requisição inválida, captcha inválido. '))
+        abort(400, _('Requisição inválida, captcha inválido.'))
 
 
 @main.route("/form_contact/", methods=['GET'])
