@@ -178,6 +178,15 @@
         e.preventDefault();
       });
 
+      
+
+      //destacando campos com erro.
+      //deve ser revisto pelo pessoal do back end para incluir a validação.
+      $("#errorReportModal").submit(function(e) {
+        $('.form-group').addClass("has-error");
+        return false;
+      });
+
       moment.locale('{{ session.lang }}');
 
       $("#date").text(moment().format("L HH:mm:ss ZZ"));
