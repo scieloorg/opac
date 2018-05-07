@@ -960,6 +960,28 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
     return (True, __('Mensagem enviada!'))
 
 
+def send_email_contact(recipents, name, your_mail, message):
+    """
+    Envia uma mensagem de contato com o períodico
+
+    @params:
+    - ``your_mail``: Email do usuário deseja entrar em contato
+    - ``recipents``: Lista de emails que receberão essa mensaem
+    - ``message``  : Mensagem
+    """
+    subject = __('Contato de usuário via site SciELO')
+    user = __('O usuário %s, com e-mail: %s, entra em contato com a seguinte mensagem:'
+              % (name.strip(), your_mail.strip()))
+    message = '%s<br/><br/>%s' % (user, message)
+
+    sent, message = utils.send_email(recipents, subject, message)
+
+    if not sent:
+        return (sent, message)
+
+    return (True, __('Mensagem enviada!'))
+
+
 # -------- PAGES --------
 
 

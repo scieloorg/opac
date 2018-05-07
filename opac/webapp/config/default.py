@@ -123,6 +123,13 @@ import os
 
       - Pindom visitor insights:
         - OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC: URL do JS para utilizar o Pingdom visitor insights (ex: `//rum-static.pingdom.net/pa-XXXXXXXXX.js`) (default: None)
+
+      - Google reCAPTCHA:
+        - OPAC_GOOGLE_RECAPTCHA_SECRET_KEY: Chave do site
+        - OPAC_GOOGLE_VERIFY_RECAPTCHA_KEY Chave secreta do parceiro
+        - OPAC_GOOGLE_RECAPTCHA_URL: URL do JavaScript Google reCAPTCHA
+        - OPAC_GOOGLE_VERIFY_RECAPTCHA_URL: URL de verificação do google (default: https://www.google.com/recaptcha/api/siteverify )
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -349,3 +356,8 @@ CACHE_REDIS_PASSWORD = os.environ.get('OPAC_CACHE_REDIS_PASSWORD', None)
 # Pingdom Visitor Insights:
 PINGDOM_VISITOR_INSIGHTS_JS_SRC = os.environ.get('OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC', None)
 
+# Google Recaptcha
+GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('OPAC_GOOGLE_RECAPTCHA_SECRET_KEY', "")
+GOOGLE_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_RECAPTCHA_URL', "https://www.google.com/recaptcha/api.js")
+GOOGLE_VERIFY_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_URL', "https://www.google.com/recaptcha/api/siteverify")
+GOOGLE_VERIFY_RECAPTCHA_KEY = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_KEY', "")
