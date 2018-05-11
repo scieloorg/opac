@@ -1018,8 +1018,6 @@ def email_error_ajax():
 
     form = forms.ErrorForm(request.form)
 
-    print(form.data)
-
     if form.validate():
 
         recipients = [email.strip() for email in current_app.config.get('EMAIL_ACCOUNTS_RECEIVE_ERRORS') if email.strip() != '']
