@@ -130,6 +130,9 @@ import os
         - OPAC_GOOGLE_RECAPTCHA_URL: URL do JavaScript Google reCAPTCHA
         - OPAC_GOOGLE_VERIFY_RECAPTCHA_URL: URL de verificação do google (default: https://www.google.com/recaptcha/api/siteverify )
 
+      - Formulário de erro:
+        - EMAIL_ACCOUNTS_RECEIVE_ERRORS: # Contas de email para receber mensagens de erros da interface.
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -167,6 +170,8 @@ OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'spa')
 # Conta de email padrão para emails enviado do site - deve ser um email válido
 DEFAULT_EMAIL = os.environ.get('OPAC_DEFAULT_EMAIL', 'scielo@scielo.org')
 
+# Contas de email para receber mensagens de erros da interface.
+EMAIL_ACCOUNTS_RECEIVE_ERRORS = ['scielo@scielo.org', ]
 
 # Credenciais para envio de emails
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-

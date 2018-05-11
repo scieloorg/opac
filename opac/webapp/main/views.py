@@ -47,6 +47,7 @@ def add_collection_to_g():
 def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
     setattr(g, 'email_contact', forms.ContactForm())
+    setattr(g, 'error', forms.ErrorForm())
 
 
 @babel.localeselector
@@ -1007,6 +1008,40 @@ def email_share_ajax():
 @main.route("/form_mail/", methods=['GET'])
 def email_form():
     return render_template("email/email_form.html")
+
+
+@main.route("/email_error_ajax/", methods=['POST'])
+def email_error_ajax():
+
+    if not request.is_xhr:
+        abort(400, _('Requisição inválida.'))
+
+    form = forms.ErrorForm(request.form)
+
+    print(form.data)
+
+    if form.validate():
+
+        recipients = [email.strip() for email in current_app.config.get('EMAIL_ACCOUNTS_RECEIVE_ERRORS') if email.strip() != '']
+
+        sent, message = controllers.send_email_error(form.data['name'],
+                                                     form.data['your_email'],
+                                                     recipients,
+                                                     form.data['url'],
+                                                     form.data['error_type'],
+                                                     form.data['message'])
+
+        return jsonify({'sent': sent, 'message': str(message),
+                        'fields': [key for key in form.data.keys()]})
+
+    else:
+        return jsonify({'sent': False, 'message': form.errors,
+                        'fields': [key for key in form.data.keys()]})
+
+
+@main.route("/error_mail/", methods=['GET'])
+def error_form():
+    return render_template("includes/error_form.html")
 
 
 # ##################################Others#######################################
