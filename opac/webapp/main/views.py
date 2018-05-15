@@ -509,7 +509,7 @@ def contact(url_seg):
 
         journal = controllers.get_journal_by_url_seg(url_seg)
 
-        if journal.enable_contact:
+        if not journal.enable_contact:
             abort(403, _('Periódico não permite envio de email.'))
 
         recipients = journal.editor_email
