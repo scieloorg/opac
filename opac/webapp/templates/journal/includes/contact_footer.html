@@ -21,6 +21,9 @@
         {% if journal.publisher_telephone %}
           Tel/Fax: {{ journal.publisher_telephone }}
         {% endif %}
+        {% if journal.editor_email %}
+          <b>E-mail:</b> {{ journal.editor_email }}
+        {% endif %}
       </div>
     </div>
     <div id="followus" class="col-md-4 col-sm-4 journalLinks">

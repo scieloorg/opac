@@ -404,6 +404,9 @@ class CollectionAdminView(OpacBaseAdminView):
 
 
 class JournalAdminView(OpacBaseAdminView):
+    can_edit = True
+
+    form_columns = ('enable_contact',)
 
     column_filters = [
         'current_status', 'index_at', 'is_public',
