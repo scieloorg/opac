@@ -406,7 +406,11 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
     can_edit = True
 
-    form_columns = ('enable_contact',)
+    form_columns = ('enable_contact', )
+
+    form_overrides = {
+        "enable_contact": custom_fields.RequiredBooleanField,
+    }
 
     column_filters = [
         'current_status', 'index_at', 'is_public',
