@@ -1696,7 +1696,7 @@ class JournalAdminViewTests(BaseTestCase):
                     self.assertTemplateUsed('admin/model/list.html')
                     # verificamos os filtros da view
                     can_edit = self.get_context_variable('admin_view').can_edit
-                    self.assertFalse(can_edit)
+                    self.assertTrue(can_edit)
 
     def test_admin_journal_check_can_delete_is_false(self):
         """
