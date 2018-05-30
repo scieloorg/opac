@@ -42,7 +42,7 @@
             <h3 style="display: inline;">{% trans %}Métricas deste periódico{% endtrans %}</h3> |
             <span id="date" class="datetime"></span>
             <ul>
-              <li><a target="_blank" href="{{ config.METRICS_URL }}/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
+              <li><a data-toggle="modal" data-target="#metric_modal_id">SciELO</a>
               <li><a href="">Google Metrics</a>
                 <div>
                   <small>

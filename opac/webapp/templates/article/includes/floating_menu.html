@@ -7,7 +7,7 @@
     <span class="sci-ico-download glyphFloatMenu"></span>
   </a>
 
-  <a href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}" class="floatingMenuItem fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
+  <a data-toggle="modal" data-target="#metric_modal_id" class="floatingMenuItem fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
     <span class="sci-ico-metrics glyphFloatMenu"></span>
   </a>
 
@@ -65,7 +65,7 @@
         </a>
       </li>
       <li>
-        <a href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}" class="fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
+        <a data-toggle="modal" data-target="#metric_modal_id" class="fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
           <span class="sci-ico-metrics glyphFloatMenu"></span>
         </a>
       </li>
