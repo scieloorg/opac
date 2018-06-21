@@ -75,6 +75,8 @@ import os
 
       - Metrics:
         - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
+        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a/)
+        - OPAC_DIMENSIONS_METRICS:   Habilita métricas do Dimensions (default: True)
 
       - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
@@ -265,6 +267,10 @@ URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
 
 # analytics scielo
 METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
+
+# third-party metrics
+DIMENSIONS_METRICS = os.environ.get('OPAC_DIMENSIONS_METRICS', True)
+PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
 
 NEWS_LIST_LIMIT = 10
 

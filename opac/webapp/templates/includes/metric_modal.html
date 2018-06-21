@@ -7,28 +7,61 @@
           <h4 class="modal-title">Metricas</h4>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="col-md-4 col-center" style="text-align:center">
-              <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}" >
-                  <div class="logo-statistc logo-statistc-scielo"></div>
-                  <div>Scielo Analytics</div>
-              </a>
-            </div>
-            <div class="col-md-4 col-center" style="text-align:center">
-              <a href="">
-                <div class="logo-statistc logo-statistc-dimension"></div>
-                <div>Dimension Badge</div>
-              </a>
-            </div>
-            <div class="col-md-4 col-center" style="text-align:center">
-              <a href="">
-                <div class="logo-statistc logo-statistc-plumx"></div>
-                <div>PlumX</div>
-              </a>
-            </div>
+          <div class="modal-metrics">
+              <div class="row">
+                {% if article %}
+                    <div class="badge-link col-center">
+                      <a target="_blank" href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}" >
+                          <div class="logo-statistc logo-statistc-scielo"></div>
+                          <div>Scielo Analytics</div>
+                      </a>
+                    </div>
+                    {% if config.DIMENSIONS_METRICS %}
+                    <div class="badge-link col-center">
+                        <div class="logo-statistc">
+                            <span class="__dimensions_badge_embed__"
+                                  data-doi="{{ article.doi }}"
+                                  data-legend="never"
+                                  data-style="small_circle">
+                            </span>
+                            <script type="text/javascript"
+                                    src="https://badge.dimensions.ai/badge.js"
+                                    charset="utf-8" async>
+                            </script>
+                        </div>
+                        <div>Dimensions</div>
+                    </div>
+                    {% endif %}
+                    {% if config.PLUMX_METRICS_URL %}
+                    <div class="badge-link col-center">
+                        <div class="logo-statistc">
+                            <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
+                               data-popup="hidden"
+                               data-size="large"
+                               class="plumx-plum-print-popup"
+                               data-site="scielo">
+                               {{ article.title }}
+                            </a>
+                            <script type="text/javascript"
+                                    src="https://d39af2mgp1pqhg.cloudfront.net/widget-popup.js">
+                            </script>
+                        </div>
+                        <div>PlumX</div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="badge-link col-center">
+                      <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}" >
+                          <div class="logo-statistc logo-statistc-scielo"></div>
+                          <div>Scielo Analytics</div>
+                      </a>
+                    </div>
+                {% endif %}
+              </div>
+
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>

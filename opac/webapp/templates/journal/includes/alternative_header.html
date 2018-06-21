@@ -94,11 +94,11 @@
         </li>
         <li>
           {% if journal.scielo_issn or journal.eletronic_issn or journal.print_issn %}
-            <a href="javascript:;" data-toggle="modal" data-target="#metric_modal_id" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
+            <a target="_blank" href="{{ config.METRICS_URL }}/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
               <span class="glyphBtn metrics"></span>
             </a>
           {% else %}
-            <a href="javascript:;" data-toggle="modal" data-target="#metric_modal_id" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
+            <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}" class="showTooltip" data-placement="bottom" title="{% trans %}Métricas{% endtrans %}">
               <span class="glyphBtn metrics"></span>
             </a>
           {% endif %}
