@@ -16,38 +16,40 @@
                           <div>Scielo Analytics</div>
                       </a>
                     </div>
-                    {% if config.DIMENSIONS_METRICS %}
-                    <div class="badge-link col-center">
-                        <div class="logo-statistc">
-                            <span class="__dimensions_badge_embed__"
-                                  data-doi="{{ article.doi }}"
-                                  data-legend="never"
-                                  data-style="small_circle">
-                            </span>
-                            <script type="text/javascript"
-                                    src="https://badge.dimensions.ai/badge.js"
-                                    charset="utf-8" async>
-                            </script>
+                    {% if article.doi %}
+                        {% if config.DIMENSIONS_METRICS %}
+                        <div class="badge-link col-center">
+                            <div class="logo-statistc">
+                                <span class="__dimensions_badge_embed__"
+                                      data-doi="{{ article.doi }}"
+                                      data-legend="never"
+                                      data-style="small_circle">
+                                </span>
+                                <script type="text/javascript"
+                                        src="https://badge.dimensions.ai/badge.js"
+                                        charset="utf-8" async>
+                                </script>
+                            </div>
+                            <div>Dimensions</div>
                         </div>
-                        <div>Dimensions</div>
-                    </div>
-                    {% endif %}
-                    {% if config.PLUMX_METRICS_URL %}
-                    <div class="badge-link col-center">
-                        <div class="logo-statistc">
-                            <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
-                               data-popup="hidden"
-                               data-size="large"
-                               class="plumx-plum-print-popup"
-                               data-site="scielo">
-                               {{ article.title }}
-                            </a>
-                            <script type="text/javascript"
-                                    src="https://d39af2mgp1pqhg.cloudfront.net/widget-popup.js">
-                            </script>
+                        {% endif %}
+                        {% if config.PLUMX_METRICS_URL %}
+                        <div class="badge-link col-center">
+                            <div class="logo-statistc">
+                                <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
+                                   data-popup="hidden"
+                                   data-size="large"
+                                   class="plumx-plum-print-popup"
+                                   data-site="scielo">
+                                   {{ article.title }}
+                                </a>
+                                <script type="text/javascript"
+                                        src="https://d39af2mgp1pqhg.cloudfront.net/widget-popup.js">
+                                </script>
+                            </div>
+                            <div>PlumX</div>
                         </div>
-                        <div>PlumX</div>
-                    </div>
+                        {% endif %}
                     {% endif %}
                 {% else %}
                     <div class="badge-link col-center">
