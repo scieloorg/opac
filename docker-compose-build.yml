@@ -63,7 +63,7 @@ services:
                 - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
                 - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
                 - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
-        command: /start_worker.sh
+        command: /app/start_worker.sh
         user: nobody
         restart: always
         depends_on:
@@ -99,7 +99,7 @@ services:
                 - OPAC_BUILD_DATE=${OPAC_BUILD_DATE}            # export OPAC_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
                 - OPAC_VCS_REF=${OPAC_VCS_REF}                  # export OPAC_VCS_REF=`git rev-parse --short HEAD`
                 - OPAC_WEBAPP_VERSION=${OPAC_WEBAPP_VERSION}    # export OPAC_WEBAPP_VERSION="v0.1.0-dev"
-        command: /start_scheduler.sh
+        command: /app/start_scheduler.sh
         user: nobody
         restart: always
         depends_on:

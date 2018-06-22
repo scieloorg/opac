@@ -57,7 +57,7 @@ services:
 
     opac-rq-worker-1:
         image: scieloorg/opac
-        command: /start_worker.sh
+        command: /app/start_worker.sh
         user: nobody
         restart: always
         depends_on:
@@ -88,7 +88,7 @@ services:
 
     opac-rq-scheduler:
         image: scieloorg/opac
-        command: /start_scheduler.sh
+        command: /app/start_scheduler.sh
         user: nobody
         restart: always
         depends_on:
