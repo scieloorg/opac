@@ -492,7 +492,10 @@ class AdminViewsTestCase(BaseTestCase):
                     expected_email = {
                         'subject': u'Instruções para recuperar sua senha',
                         'recipients': [credentials['email'], ],
-                        'body_has_link': u'<a href="http://localhost%s' % reset_pwd_url
+                        'body_has_link': u'<a href="http://%s%s' % (
+                            current_app.config['SERVER_NAME'],
+                            reset_pwd_url
+                        )
                     }
 
                     # when

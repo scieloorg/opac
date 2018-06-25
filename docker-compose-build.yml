@@ -75,8 +75,6 @@ services:
         links:
             - opac_mongo:opac-mongo
             - redis-cache:redis-cache
-        ports:
-            - "8000:8000"
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_MONGODB_NAME=opac_mongo
@@ -111,8 +109,6 @@ services:
         links:
             - opac_mongo:opac-mongo
             - redis-cache:redis-cache
-        ports:
-            - "8000:8000"
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_MONGODB_NAME=opac_mongo
