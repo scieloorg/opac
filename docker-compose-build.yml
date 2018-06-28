@@ -47,3 +47,8 @@ services:
             - OPAC_DATABASE_DIR=/app/data
             - OPAC_SECRET_KEY=s3kr3tk3y
             - OPAC_MONGODB_HOST=opac-mongo
+            - OPAC_USE_METRICS=True
+            - OPAC_METRICS_URL=http://analytics.scielo.org
+            - OPAC_USE_DIMENSIONS=True
+            - OPAC_USE_PLUMX=True
+            - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a

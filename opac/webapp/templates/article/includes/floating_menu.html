@@ -7,9 +7,11 @@
     <span class="sci-ico-download glyphFloatMenu"></span>
   </a>
 
+  {% if config.USE_METRICS or config.USE_DIMENSIONS or config.USE_PLUMX %}
   <a data-toggle="modal" data-target="#metric_modal_id" class="floatingMenuItem fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
     <span class="sci-ico-metrics glyphFloatMenu"></span>
   </a>
+  {% endif %}
 
   <ul class="floatingMenu fm-slidein" data-fm-toogle="hover">
     <li class="fm-wrap">

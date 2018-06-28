@@ -74,9 +74,11 @@ import os
         - OPAC_TWITTER_SCREEN_NAME: Twitter screen name (default: 'RedeSciELO')
 
       - Metrics:
+        - OPAC_USE_METRICS:   ativa/desativa a integração com o SciELO Analytics. Se sim, definir como 'True' (default: 'False')
         - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
-        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a/)
-        - OPAC_DIMENSIONS_METRICS:   Habilita métricas do Dimensions (default: True)
+        - OPAC_USE_DIMENSIONS:   ativa/desativa a integração com o Dimensions. Se sim, definir como 'True' (default: 'False')
+        - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
+        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a)
 
       - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
@@ -266,10 +268,12 @@ THUMBNAIL_WIDTH = 100
 URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
 
 # analytics scielo
+USE_METRICS = os.environ.get('OPAC_USE_METRICS', 'False') == 'True'
 METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
 
 # third-party metrics
-DIMENSIONS_METRICS = os.environ.get('OPAC_DIMENSIONS_METRICS', True)
+USE_DIMENSIONS = os.environ.get('OPAC_USE_DIMENSIONS', 'False') == 'True'
+USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
 
 NEWS_LIST_LIMIT = 10
