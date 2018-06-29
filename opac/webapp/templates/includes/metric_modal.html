@@ -21,26 +21,30 @@
                     {% if article.doi %}
                         {% if config.USE_DIMENSIONS %}
                         <div class="badge-link col-center">
-                            <div class="logo-statistc">
-                                <span class="__dimensions_badge_embed__"
-                                      data-doi="{{ article.doi }}"
-                                      data-legend="never"
-                                      data-style="small_circle">
-                                </span>
+                            <div class="logo-statistc logo-statistc-dimension">
+                                <div class="badge-logo">
+                                    <span class="__dimensions_badge_embed__"
+                                        data-doi="{{ article.doi }}"
+                                        data-legend="never"
+                                        data-style="small_circle">
+                                    </span>
+                                </div>
                             </div>
                             <div>Dimensions</div>
                         </div>
                         {% endif %}
                         {% if config.USE_PLUMX %}
                         <div class="badge-link col-center">
-                            <div class="logo-statistc">
-                                <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
-                                   data-popup="hidden"
-                                   data-size="large"
-                                   class="plumx-plum-print-popup"
-                                   data-site="scielo">
-                                   {{ article.title }}
-                                </a>
+                            <div class="logo-statistc logo-statistc-plumx">
+                                <div class="badge-logo">
+                                    <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
+                                        data-popup="hidden"
+                                        data-size="large"
+                                        class="plumx-plum-print-popup"
+                                        data-site="scielo">
+                                        {{ article.title }}
+                                    </a>
+                                </div>
                             </div>
                             <div>PlumX</div>
                         </div>

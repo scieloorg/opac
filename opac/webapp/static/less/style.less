@@ -107,8 +107,9 @@
 }
 
 .modal .modal-dialog .modal-content .modal-metrics {
-    margin: auto;
-    max-width: fit-content;
+    margin: 0 auto;
+    max-width: -moz-fit-content;
+    max-width: -webkit-fit-content;
 }
 
 .modal .badge-link {
@@ -120,4 +121,11 @@
 
 .modal .logo-statistc {
     width:100px;
+}
+
+.modal .logo-statistc .badge-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
