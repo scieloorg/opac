@@ -58,8 +58,13 @@ services:
             - OPAC_SSM_SCHEME=http
             - OPAC_SSM_DOMAIN=172.19.0.1
             - OPAC_SSM_PORT=8001
-            # - OPAC_CACHE_ENABLED=True
-            # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
-            # - OPAC_CACHE_REDIS_HOST=redis-cache
+            - OPAC_CACHE_ENABLED=True
+            - OPAC_CACHE_DEFAULT_TIMEOUT=3600
+            - OPAC_CACHE_REDIS_HOST=redis-cache
+            - OPAC_USE_METRICS=True
+            - OPAC_METRICS_URL=http://analytics.scielo.org
+            - OPAC_USE_DIMENSIONS=True
+            - OPAC_USE_PLUMX=True
+            - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
         stdin_open: True
         tty: true
