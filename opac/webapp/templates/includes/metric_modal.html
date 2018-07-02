@@ -14,7 +14,7 @@
                     <div class="badge-link col-center">
                         <a target="_blank" href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}" >
                             <div class="logo-statistc logo-statistc-scielo"></div>
-                            <div>Scielo Analytics</div>
+                            <div>SciELO Analytics</div>
                         </a>
                     </div>
                     {% endif %}
@@ -30,7 +30,9 @@
                                     </span>
                                 </div>
                             </div>
-                            <div>Dimensions</div>
+                            <a target="_blank" href="{{ config.DIMENSIONS_METRICS_URL }}/{{ article.doi }}">
+                                <div>Dimensions</div>
+                            </a>
                         </div>
                         {% endif %}
                         {% if config.USE_PLUMX %}
@@ -46,7 +48,9 @@
                                     </a>
                                 </div>
                             </div>
-                            <div>PlumX</div>
+                            <a target="_blank" href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}">
+                                <div>PlumX</div>
+                            </a>
                         </div>
                         {% endif %}
                     {% endif %}

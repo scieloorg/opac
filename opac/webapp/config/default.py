@@ -77,6 +77,7 @@ import os
         - OPAC_USE_METRICS:   ativa/desativa a integração com o SciELO Analytics. Se sim, definir como 'True' (default: 'False')
         - OPAC_METRICS_URL:   URL para SciELO Analytics (default: 'http://analytics.scielo.org')
         - OPAC_USE_DIMENSIONS:   ativa/desativa a integração com o Dimensions. Se sim, definir como 'True' (default: 'False')
+        - OPAC_DIMENSIONS_METRICS_URL:   URL para o Dimensions (default: https://badge.dimensions.ai/details/doi)
         - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
         - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a)
 
@@ -273,6 +274,10 @@ METRICS_URL = os.environ.get('OPAC_METRICS_URL', 'http://analytics.scielo.org')
 
 # third-party metrics
 USE_DIMENSIONS = os.environ.get('OPAC_USE_DIMENSIONS', 'False') == 'True'
+DIMENSIONS_METRICS_URL = os.environ.get(
+    'OPAC_DIMENSIONS_METRICS_URL',
+    'https://badge.dimensions.ai/details/doi'
+)
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
 
