@@ -48,5 +48,6 @@ services:
             - OPAC_USE_METRICS=True
             - OPAC_METRICS_URL=http://analytics.scielo.org
             - OPAC_USE_DIMENSIONS=True
+            - OPAC_DIMENSIONS_URL=https://badge.dimensions.ai/details/doi
             - OPAC_USE_PLUMX=True
             - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
