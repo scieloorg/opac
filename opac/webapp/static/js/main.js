@@ -1004,8 +1004,7 @@ var Portal = {
 
 
        		$(".scroll").on("click",function(e) {
-				e.preventDefault();
-
+				
 				var d = $(this).attr("href");
 				var g = d.split("#")[1];
 				var p = $("a[name="+g+"]").offset();
