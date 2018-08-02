@@ -1020,3 +1020,8 @@ def email_form():
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
+
+
+@main.route("/img/scielo.gif", methods=['GET'])
+def full_text_image():
+    return send_from_directory('static', 'img/full_text_scielo_img.gif')
