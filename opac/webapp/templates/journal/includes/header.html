@@ -98,11 +98,13 @@
               <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
             </a>
           </li>
-          <li>
-            <a href="javascript:;" data-toggle="modal" data-target="#contact_modal_id" >
-              <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
-            </a>
-          </li>
+          {% if journal.enable_contact %}
+            <li>
+              <a href="javascript:;" data-toggle="modal" data-target="#contact_modal_id" >
+                <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
+              </a>
+            </li>
+          {% endif %}
           {% if journal.social_networks %}
             <li>
               <a href="#followus">

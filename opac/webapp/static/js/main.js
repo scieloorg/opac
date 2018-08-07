@@ -1002,18 +1002,19 @@ var Portal = {
     			});
 			})
 
-
        		$(".scroll").on("click",function(e) {
-				e.preventDefault();
 
 				var d = $(this).attr("href");
 				var g = d.split("#")[1];
-				var p = $("a[name="+g+"]").offset();
 
-				$("html,body").animate({
-					scrollTop: (p.top-70)
-				},500);
+				if($("a[name="+g+"]").length>0){
 
+					var p = $("a[name="+g+"]").offset();
+					$("html,body").animate({
+						scrollTop: (p.top+1)
+					},500);
+
+				}
 			});
 
 		},

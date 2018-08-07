@@ -510,6 +510,9 @@ def contact(url_seg):
 
         journal = controllers.get_journal_by_url_seg(url_seg)
 
+        if not journal.enable_contact:
+            abort(403, _('Periódico não permite envio de email.'))
+
         recipients = journal.editor_email
 
         if form.validate():
@@ -1050,3 +1053,8 @@ def error_form():
 def download_file_by_filename(filename):
     media_root = current_app.config['MEDIA_ROOT']
     return send_from_directory(media_root, filename)
+
+
+@main.route("/img/scielo.gif", methods=['GET'])
+def full_text_image():
+    return send_from_directory('static', 'img/full_text_scielo_img.gif')

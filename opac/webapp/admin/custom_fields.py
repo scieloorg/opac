@@ -1,9 +1,27 @@
 # coding: utf-8
 
+import wtforms
 from flask_admin.form.upload import ImageUploadField, FileUploadField, ImageUploadInput, FileUploadInput
 from flask import current_app
 
 from webapp.utils import namegen_filename, thumbgen_filename
+
+
+class RequiredBooleanField(wtforms.fields.SelectField):
+    # wtforms/flask-admin has a flaw related
+    # to boolean fields with required=True in the model
+    # Ultimatelly false values wouldn't pass validation of the form
+    # thus the workaround
+    def __init__(self, *args, **kwargs):
+        choices = [
+            (True, "True"),
+            (False, "False"),
+        ]
+
+        kwargs["choices"] = choices
+        kwargs["coerce"] = lambda x: str(x) == "True"
+
+        super(RequiredBooleanField, self).__init__(*args, **kwargs)
 
 
 class MediaImageUploadInput(ImageUploadInput):
