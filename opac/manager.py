@@ -5,12 +5,17 @@ import sys
 import json
 import fnmatch
 import unittest
+import logging
 from uuid import uuid4
+
+from slugify import slugify
+
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEBAPP_PATH = os.path.abspath(os.path.join(HERE, 'webapp'))
 sys.path.insert(0, HERE)
 sys.path.insert(1, WEBAPP_PATH)
+logger = logging.getLogger(__name__)
 
 FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE', None)
 
@@ -30,7 +35,7 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content  # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page  # noqa
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
@@ -327,7 +332,10 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
 
 
 @manager.command
-def populate_journal_pages(directory=app.config['PAGE_PATH']):
+def populate_journal_pages(
+        pages_source_path=app.config['JOURNAL_PAGES_SOURCE_PATH'],
+        images_source_path=app.config['JOURNAL_IMAGES_SOURCE_PATH']
+        ):
     """
     Esse comando cadastra as páginas secundárias dos periódicos localizado em
     data/pages.
@@ -348,8 +356,8 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
 
 
     """
+    logger.setLevel(logging.INFO)
     acron_list = [journal.acronym for journal in Journal.objects.all()]
-
     file_names = {'en': ['iaboutj.htm',
                          'iedboard.htm',
                          'iinstruc.htm'],
@@ -361,42 +369,63 @@ def populate_journal_pages(directory=app.config['PAGE_PATH']):
                          'einstruc.htm'],
                   }
 
-    for acron in acron_list:
-        journal_dir = os.path.join(directory, acron)
+    for acron in sorted(acron_list):
+        journal_pages_path = os.path.join(pages_source_path, acron)
 
         for lang, files in file_names.items():
             content = ''
 
-            print("Cadastrando as páginas do periódico com acrônimo: %s idioma: %s" % (acron, lang))
+            logger.info(
+                "Cadastrando as páginas informativas: %s (%s)" % (acron, lang))
 
             for file in files:
-                file_path = os.path.join(journal_dir, file)
-
-                try:
-                    fp = open_file(file_path, 'r', encoding='iso-8859-1')
-                except IOError as e:
-                    print(e)
-                else:
-                    content += fix_page_content(file, fp.read())
-
-            images_list = extract_images(content)
-
-            for image in images_list:
-                image_name = '%s_%s' % (acron, os.path.basename(image))
-                image_path = os.path.join(journal_dir, os.path.basename(image))
-
-                try:
-                    # Verifica se a imagem existe
-                    open_file(image_path, mode='r')
-                except IOError as e:
-                    print(e)
-                else:
-                    img = create_image(image_path, image_name, thumbnail=True)
-                    content = content.replace(image, img.get_absolute_url)
+                file_path = os.path.join(journal_pages_path, file)
+                content += fix_page(file_path)
 
             if content:
-                create_page('Página secundária %s (%s)' % (acron.upper(), lang),
-                            lang, content, acron, 'Página secundária do periódico %s' % acron)
+                images_in_file = list(set(extract_images(content)))
+                images_in_file = [img
+                                  for img in images_in_file
+                                  if '://' not in img]
+
+                new_images = []
+                names_list = []
+                for img_in_file in images_in_file:
+                    img_basename = os.path.basename(img_in_file)
+                    name, ext = os.path.splitext(img_basename)
+                    names_list.append(name)
+                    if '/img/revistas/' in img_in_file:
+                        img_src_path = os.path.join(
+                            images_source_path,
+                            img_in_file[img_in_file.find('/img/revistas/') +
+                                        len('/img/revistas/'):])
+                    else:
+                        img_src_path = os.path.join(
+                            journal_pages_path, img_basename)
+                    try:
+                        # Verifica se a imagem existe
+                        open_file(img_src_path, mode='r')
+                    except IOError as e:
+                        logger.error(
+                            u'%s (corresponding to %s)' % (e, img_in_file))
+                    else:
+                        new_images.append((img_src_path, name, ext))
+
+                for img_src_path, img_name, ext in list(set(new_images)):
+                    alt_name = slugify(img_name)
+                    if alt_name not in names_list:
+                        img_name = alt_name
+
+                    img_dest_name = '%s_%s%s' % (acron, img_name, ext)
+                    img = create_image(
+                        img_src_path, img_dest_name, thumbnail=True)
+                    content = content.replace(
+                        img_in_file, img.get_absolute_url)
+
+                create_page(
+                    'Página secundária %s (%s)' % (acron.upper(), lang),
+                    lang, content, acron,
+                    'Página secundária do periódico %s' % acron)
 
 
 if __name__ == '__main__':

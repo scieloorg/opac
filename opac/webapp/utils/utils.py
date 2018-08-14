@@ -4,6 +4,7 @@ import os
 import re
 import pytz
 import shutil
+import logging
 from uuid import uuid4
 
 from werkzeug import secure_filename
@@ -14,6 +15,7 @@ from flask import current_app
 import webapp
 import requests
 from utils.journal_static_page import JournalStaticPage
+from utils.journal_static_page import JournalStaticPageFile
 from webapp import models
 
 from opac_schema.v1.models import Pages
@@ -27,6 +29,7 @@ CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído
 REGEX_EMAIL = re.compile(
     r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
     re.IGNORECASE)  # RFC 2822 (simplified)
+logger = logger.getLogger(__name__)
 
 
 def namegen_filename(obj, file_data=None):
@@ -255,8 +258,12 @@ def generate_thumbnail(input_filename):
         img = Image.open(input_filename)
         img.thumbnail(size)
         img.save(image_path)
+    except KeyError as e:
+        logger.error(u'%s' % e)
+    except IOError as e:
+        logger.error(u'%s' % e)
     except Exception as e:
-        print(e)
+        logger.exception('Unexpected error', e)
     else:
         return image_path
 
@@ -273,11 +280,13 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
     """
 
     image_root = current_app.config['IMAGE_ROOT']
-
+    if not os.path.isdir(image_root):
+        os.makedirs(image_root)
     image_destiation_path = os.path.join(image_root, filename)
 
     if check_if_exists:
-        img = webapp.dbsql.session.query(models.Image).filter_by(name=filename).first()
+        img = webapp.dbsql.session.query(
+            models.Image).filter_by(name=filename).first()
         if img:
             return img
 
@@ -285,7 +294,7 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
         shutil.copyfile(image_path, image_destiation_path)
     except IOError as e:
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
-        print("ERROR: %s" % e)
+        logger.error(u'%s' % e)
 
     if thumbnail:
         generate_thumbnail(image_destiation_path)
@@ -315,6 +324,14 @@ def fix_page_content(filename, content):
     Insert the anchor based on filename
     """
     return JournalStaticPage(filename, content).body
+
+
+def fix_page(filename):
+    """
+    Extract the header and the footer of the page
+    Insert the anchor based on filename
+    """
+    return JournalStaticPageFile(filename).body
 
 
 def extract_images(content):
