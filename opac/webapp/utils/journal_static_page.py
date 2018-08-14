@@ -36,20 +36,20 @@ class JournalStaticPage(object):
 
     @property
     def footer(self):
-        temp = None
+        _footer = None
         if 'script=sci_serial' in self.content:
             p = self.content.rfind('script=sci_serial')
-            temp = self.content[:p]
-            p = temp.rfind('<p ')
-            temp = self.content[p:]
-            if '</body>' in temp:
-                temp = temp[:temp.find('</body>')]
-                temp = temp.strip()
+            _footer = self.content[:p]
+            p = _footer.rfind('<p ')
+            _footer = self.content[p:]
+            _footer = _footer[:_footer.find('</body>')]
+            _footer = _footer.strip()
+            if _footer.startswith('<p') and _footer.endswith('</p>'):
+                pass
             else:
-                temp = None
-        if temp is None:
-            logger.info('%s has unexpected footer format.' % self.filename)
-        return temp
+                print(self.filename, 'footer', 'unexpected format')
+                _footer = None
+        return _footer
 
     @property
     def anchor(self):
@@ -64,12 +64,11 @@ class JournalStaticPage(object):
 
     @property
     def body(self):
-        new = self.content
-        if self.header:
-            new = new.replace(self.header, self.anchor)
-        if self.footer:
+        if all([self.header, self.footer]):
+            new = self.content.replace(self.header, self.anchor)
             new = new.replace(self.footer, '<hr noshade="" size="1"/>')
-        return new
+            return new
+        return self.content
 
 
 class JournalStaticPageFile(object):
