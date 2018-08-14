@@ -337,8 +337,9 @@ def populate_journal_pages(
         images_source_path=app.config['JOURNAL_IMAGES_SOURCE_PATH']
         ):
     """
-    Esse comando cadastra as páginas secundárias dos periódicos localizado em
-    data/pages.
+    Esse comando faz o primeiro registro das páginas secundárias
+    dos periódicos localizado em /data/pages.
+    Cada vez que executa cria um novo registro.
 
     As páginas dos periódico SciELO contém a seguinte estrutura:
 
@@ -368,16 +369,16 @@ def populate_journal_pages(
                          'eedboard.htm',
                          'einstruc.htm'],
                   }
-
+    n = 0
+    j = 0
+    j_total = len(acron_list)
     for acron in sorted(acron_list):
         journal_pages_path = os.path.join(pages_source_path, acron)
-
+        j += 1
+        print('{}/{} {}'.format(j, j_total, acron))
         for lang, files in file_names.items():
+
             content = ''
-
-            logger.info(
-                "Cadastrando as páginas informativas: %s (%s)" % (acron, lang))
-
             for file in files:
                 file_path = os.path.join(journal_pages_path, file)
                 content += fix_page(file_path)
@@ -421,11 +422,12 @@ def populate_journal_pages(
                         img_src_path, img_dest_name, thumbnail=True)
                     content = content.replace(
                         img_in_file, img.get_absolute_url)
-
+                n += 1
                 create_page(
                     'Página secundária %s (%s)' % (acron.upper(), lang),
                     lang, content, acron,
                     'Página secundária do periódico %s' % acron)
+    print('Páginas criadas: {}'.format(n))
 
 
 if __name__ == '__main__':
