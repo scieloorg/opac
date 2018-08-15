@@ -29,7 +29,7 @@ CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído
 REGEX_EMAIL = re.compile(
     r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
     re.IGNORECASE)  # RFC 2822 (simplified)
-logger = logger.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def namegen_filename(obj, file_data=None):
