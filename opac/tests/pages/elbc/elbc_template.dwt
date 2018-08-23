@@ -1,0 +1,40 @@
+<html>
+<head>
+<link rel="STYLESHEET" type="text/css" href="/css/revistas.css">
+<!-- #BeginEditable "doctitle" --> 
+<title>Rodrigu&eacute;sia - </title>
+<!-- #EndEditable --> 
+</head>
+<style>
+.rodape {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 8pt; color: #666666; text-align: center; font-weight: normal; font-style: normal}
+</style>
+<body>
+<table width="100%" border="0">
+  <tr> 
+    <td width="30%" align="center" valign="top"> 
+      <p><!-- #BeginEditable "link" --><a href="/scielo.php?script=sci_serial&pid=0370-6583&lng=pt&nrm=iso"><img
+    src="/img/revistas/rod/plogo.gif" border="0"></a><!-- #EndEditable --></p>
+      <p align="center" class="issn">ISSN 0370-6583 <!-- #BeginEditable "impresso" --><i>vers&atilde;o 
+        impressa</i><!-- #EndEditable --><br>
+        ISSN 2175-7860 <!-- #BeginEditable "online" --><i>vers&atilde;o online</i><!-- #EndEditable --></p>
+    </td>
+    <td width="70%" valign="top" align="left"><!-- #BeginEditable "topo" --> 
+      <blockquote> 
+        <p class="titulo">{Topo}</p>
+      </blockquote>
+      <ul>
+        <li>{Link}</li>
+      </ul>
+      <!-- #EndEditable --></td>
+  </tr>
+</table>
+<!-- #BeginEditable "texto" -->{texto}<!-- #EndEditable --> <a name="end"></a> 
+<p align="center" class="rodapep">Rua Pacheco Le&atilde;o 915, Jardim Bot&acirc;nico, Rio de Janeiro, RJ.<br>
+  CEP: 22460-030, Rio de Janeiro, RJ - Brasil.<br>
+  Tel.: +55 21 3204-2148<br>
+Fax: +55 21 3204-2071</p>
+<p align="center"><a href="mailto:rodriguesia@jbrj.gov.br"><img
+src="/img/revistas/e-mailt.gif" border="0"></a><br>
+<a href="mailto:rodriguesia@jbrj.gov.br">rodriguesia@jbrj.gov.br</a></p>
+</body>
+</html>
