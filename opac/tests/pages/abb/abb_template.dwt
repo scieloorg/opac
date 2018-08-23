@@ -1,0 +1,44 @@
+<html>
+<head>
+<link rel="STYLESHEET" type="text/css" href="/css/revistas.css">
+<!-- #BeginEditable "doctitle" --> 
+<title>Acta Bot. Bras. - </title>
+<!-- #EndEditable --> 
+</head>
+<style>
+.rodape {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 8pt; color: #666666; text-align: center; font-weight: normal; font-style: normal}
+</style>
+<body>
+<table width="100%" border="0">
+  <tr> 
+    <td width="30%" align="center" valign="top"> 
+      <p><!-- #BeginEditable "link" --><a href="/scielo.php?script=sci_serial&pid=0102-3306&lng=es&nrm=iso"><img
+    src="/img/revistas/abb/plogo.gif" border="0"></a><!-- #EndEditable --></p>
+      <p align="center" class="issn">ISSN 0102-3306 <!-- #BeginEditable "impresso" --><i>versi&oacute;n 
+        impresa</i><!-- #EndEditable --><br>
+        ISSN 1677-941X <!-- #BeginEditable "online" --><i>versi&oacute;n online</i><!-- #EndEditable --></p>
+    </td>
+    <td width="70%" valign="top" align="left"><!-- #BeginEditable "topo" --> 
+      <blockquote> 
+        <p class="titulo">{Topo}</p>
+      </blockquote>
+      <ul>
+        <li>{Link}</li>
+      </ul>
+      <!-- #EndEditable --></td>
+  </tr>
+</table>
+<!-- #BeginEditable "texto" -->{texto}<!-- #EndEditable --> 
+<p><a name="end"></a> 
+</p>
+<p align="center" class="rodapep"><b>Acta Botanica Brasileira<br>
+Av. Presidente Ant&ocirc;nio Carlos, 6627<br>
+  Campus Pampulha UFMG<br>
+  Biblioteca Central 300B</b><br>
+  <b>31270-901 Belo Horizonte, MG, Brazil<br>
+</b><b>Phone (55 31) 3409 3960, (55 31) 3409 2683</b></p>
+<p align="center"><img
+src="/img/revistas/e-mailt.gif" border="0"><br>
+  <a href="mailto:acta@botanica.org.br">acta@botanica.org.br</a></p>
+</body>
+</html>

@@ -15,7 +15,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 WEBAPP_PATH = os.path.abspath(os.path.join(HERE, 'webapp'))
 sys.path.insert(0, HERE)
 sys.path.insert(1, WEBAPP_PATH)
-logger = logging.getLogger(__name__)
+
+LOGGING_LEVEL = os.environ.get('LOGGING_LEVEL', 'DEBUG')
 
 FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE', None)
 
@@ -357,7 +358,10 @@ def populate_journal_pages(
 
 
     """
-    logger.setLevel(logging.INFO)
+    logging.basicConfig(level=LOGGING_LEVEL,
+                        filename='journal_pages.log',
+                        filemode='w')
+
     acron_list = [journal.acronym for journal in Journal.objects.all()]
     file_names = {'en': ['iaboutj.htm',
                          'iedboard.htm',
@@ -369,19 +373,14 @@ def populate_journal_pages(
                          'eedboard.htm',
                          'einstruc.htm'],
                   }
-    n = 0
-    j = 0
     j_total = len(acron_list)
-    for acron in sorted(acron_list):
+    done = 0
+    for j, acron in enumerate(sorted(acron_list)):
         journal_pages_path = os.path.join(pages_source_path, acron)
-        j += 1
         print('{}/{} {}'.format(j, j_total, acron))
         for lang, files in file_names.items():
 
-            content = ''
-            for file in files:
-                file_path = os.path.join(journal_pages_path, file)
-                content += fix_page(file_path)
+            content = fix_page(journal_pages_path, files)
 
             if content:
                 images_in_file = list(set(extract_images(content)))
@@ -407,7 +406,7 @@ def populate_journal_pages(
                         # Verifica se a imagem existe
                         open_file(img_src_path, mode='r')
                     except IOError as e:
-                        logger.error(
+                        logging.error(
                             u'%s (corresponding to %s)' % (e, img_in_file))
                     else:
                         new_images.append((img_src_path, name, ext))
@@ -422,12 +421,12 @@ def populate_journal_pages(
                         img_src_path, img_dest_name, thumbnail=True)
                     content = content.replace(
                         img_in_file, img.get_absolute_url)
-                n += 1
+                done += 1
                 create_page(
                     'Página secundária %s (%s)' % (acron.upper(), lang),
                     lang, content, acron,
                     'Página secundária do periódico %s' % acron)
-    print('Páginas criadas: {}'.format(n))
+    print('Páginas criadas: {}/{}'.format(done, j_total))
 
 
 if __name__ == '__main__':
