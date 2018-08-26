@@ -250,13 +250,19 @@ GA_TRACKING_CODE = os.environ.get('GA_TRACKING_CODE', None)
 # debug toolbar:
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
+# paginas secundarias
+DATA_PATH = os.path.join(PROJECT_PATH, '../../data')
+JOURNAL_PAGES_SOURCE_PATH = os.environ.get(
+  'OPAC_JOURNAL_PAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'pages'))
+JOURNAL_IMAGES_SOURCE_PATH = os.environ.get(
+  'OPAC_JOURNAL_IMAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'img'))
+
 # media files
 DEFAULT_MEDIA_ROOT = os.path.abspath(os.path.join(PROJECT_PATH, 'media'))
 MEDIA_ROOT = os.environ.get('OPAC_MEDIA_ROOT', DEFAULT_MEDIA_ROOT)
 IMAGE_ROOT = os.path.join(MEDIA_ROOT, 'images')
 FILE_ROOT = os.path.join(MEDIA_ROOT, 'files')
 MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')
-PAGE_PATH = os.path.abspath(os.path.join(PROJECT_PATH, '../../data/pages'))
 
 # extensions
 FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')
