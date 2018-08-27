@@ -21,7 +21,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.schema-version="1.0"
 
 RUN apk --update add --no-cache \
-    git gcc build-base zlib-dev jpeg-dev curl
+    git gcc build-base zlib-dev jpeg-dev curl libxml2-dev libxslt-dev py3-lxml
 
 
 COPY ./requirements.txt /app/requirements.txt
