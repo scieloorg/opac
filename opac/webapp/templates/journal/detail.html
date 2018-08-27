@@ -2,184 +2,187 @@
 
 {% block main_content %}
 
-  <section class="journalContent">
+<section class="journalContent">
     <div class="container">
-      <div class="col-md-4 col-md-offset-8 share">
-        <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
-        <a href="{{ url_for('main.journal_feed', url_seg=journal.url_segment)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
-        <span class="divisor"></span>
-        {% trans %}Compartilhe{% endtrans %}
-        <a href="" class="share_modal_id showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
-        <a href="" class="shareFacebook showTooltip" data-placement="top" title="{% trans %}Compartilhar no Facebook{% endtrans %}"><span class="glyphBtn facebook"></span></a>
-        <a href="" class="shareTwitter showTooltip" data-placement="top" title="{% trans %}Compartilhar no Twitter{% endtrans %}"><span class="glyphBtn twitter"></span></a>
-        <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="{% trans %}Outras redes sociais{% endtrans %}"><span class="glyphBtn otherNetworks"></span></a>
-        <ul class="dropdown-menu">
-          <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
-          <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
-          <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
-          <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
-          <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
-          <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
-          <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
-        </ul>
-      </div>
-      <div class="col-md-12 content journalHome">
-
-        <div class="block mission">
-          {# mission #}
-          {% if journal.mission %}
-            <div class="col-md-6 col-sm-6">
-                <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
-                {% if session.lang %}
-                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|safe|default(_("Periódico sem missão cadastrada"), true) }}</p>
-                {% endif %}
+        <div class="col-md-4 col-md-offset-8 share">
+            <div class="dropdown" style="display:inline-table">
+                <button class="btn add-article-collection" type="button" data-toggle="dropdown">
+                    <span class="sci-ico-filePDF"></span>
+                    <span class="hidden-sm" style="font-size:12px;">Minha Coleção</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu article-list"></ul>
             </div>
-          {% endif %}
-          {# mission #}
-
-          {# analytics #}
-          <div class="col-md-6 col-sm-6">
-            <h3 style="display: inline;">{% trans %}Métricas deste periódico{% endtrans %}</h3> |
-            <span id="date" class="datetime"></span>
-            <ul>
-              <li><a target="_blank" href="{{ config.METRICS_URL }}/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
-              <li><a href="">Google Metrics</a>
-                <div>
-                  <small>
-                    {% trans %}Índice h5{% endtrans %}:
-                    {% if journal.metrics.total_h5_index and journal.metrics.h5_metric_year %}
-                      ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
-                    {% endif %}
-                  </small>
-                  <strong>
-                    {{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}
-                  </strong>
-                </div>
-                <div>
-                  <small>
-                    {% trans %}Mediana h5{% endtrans %}:
-                    {% if journal.metrics.total_h5_median and journal.metrics.h5_metric_year %}
-                      {# a mediana é obtida sempre para o ano atual #}
-                      ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
-                    {% endif %}
-                  </small>
-                  <strong>
-                    {{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}
-                  </strong>
-                </div>
-              </li>
+            <a href="javascript:window.print();" class="sharePrint showTooltip" data-placement="top" title="{% trans %}Imprimir{% endtrans %}"><span class="glyphBtn print"></span></a>
+            <a href="{{ url_for('main.journal_feed', url_seg=journal.url_segment)}}" class="showTooltip" data-placement="top" title="Atom" target="_blank"><span class="glyphBtn rssMini"></span></a>
+            <span class="divisor"></span>
+            {% trans %}Compartilhe{% endtrans %}
+            <a href="" class="share_modal_id showTooltip" data-placement="top" title="{% trans %}Enviar link por e-mail{% endtrans %}"><span class="glyphBtn sendMail"></span></a>
+            <a href="" class="shareFacebook showTooltip" data-placement="top" title="{% trans %}Compartilhar no Facebook{% endtrans %}"><span class="glyphBtn facebook"></span></a>
+            <a href="" class="shareTwitter showTooltip" data-placement="top" title="{% trans %}Compartilhar no Twitter{% endtrans %}"><span class="glyphBtn twitter"></span></a>
+            <a href="" class="showTooltip dropdown-toggle" data-toggle="dropdown" data-placement="top" title="{% trans %}Outras redes sociais{% endtrans %}"><span class="glyphBtn otherNetworks"></span></a>
+            <ul class="dropdown-menu">
+                <li class="dropdown-header">{% trans %}Outras redes sociais{% endtrans %}</li>
+                <li><a href="" class="shareGooglePlus"><span class="glyphBtn googlePlus"></span> Google+</a></li>
+                <li><a href="" class="shareLinkedIn"><span class="glyphBtn linkedIn"></span> LinkedIn</a></li>
+                <li><a href="" class="shareReddit"><span class="glyphBtn reddit"></span> Reddit</a></li>
+                <li><a href="" class="shareStambleUpon"><span class="glyphBtn stambleUpon"></span> StambleUpon</a></li>
+                <li><a href="" class="shareCiteULike"><span class="glyphBtn citeULike"></span> CiteULike</a></li>
+                <li><a href="" class="shareMendeley"><span class="glyphBtn mendeley"></span> Mendeley</a></li>
             </ul>
-          </div>
-          <div class="clearfix"></div>
         </div>
-        {# analytics #}
-
-        {# last issue #}
-        {% if journal.last_issue %}
-          <div class="block lastIssue">
-            <div class="col-md-12 col-sm-12">
-              <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
-                {% if journal.last_issue.cover_url %}
-                  <img src="{{ latest_issue.cover_url }}" class="image" alt="{% trans %}Capa do número mais recente{% endtrans %}" /> <!-- a imagem é opcional -->
+        <div class="col-md-12 content journalHome">
+            <div class="block mission">
+                {# mission #}
+                {% if journal.mission %}
+                <div class="col-md-6 col-sm-6">
+                    <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
+                    {% if session.lang %}
+                    <p>{{ journal.get_mission_by_lang(session.lang[:2])|safe|default(_("Periódico sem missão cadastrada"), true) }}</p>
+                    {% endif %}
+                </div>
                 {% endif %}
-                <span class="text">
-                  <small>{% trans %}Número mais recente{% endtrans %}</small>
-                  <h2>{{ latest_issue_legend|default('--', True) }}</h2>
-                </span>
-              </a>
+                {# mission #}
+
+                {# analytics #}
+                <div class="col-md-6 col-sm-6">
+                    <h3 style="display: inline;">{% trans %}Métricas deste periódico{% endtrans %}</h3> |
+                    <span id="date" class="datetime"></span>
+                    <ul>
+                        <li><a target="_blank" href="{{ config.METRICS_URL }}/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
+                        <li>
+                            <a href="">Google Metrics</a>
+                            <div>
+                                <small>
+                                    {% trans %}Índice h5{% endtrans %}:
+                                    {% if journal.metrics.total_h5_index and journal.metrics.h5_metric_year %}
+                                    ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
+                                    {% endif %}
+                                </small>
+                                <strong>
+                                    {{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}
+                                </strong>
+                            </div>
+                            <div>
+                                <small>
+                                    {% trans %}Mediana h5{% endtrans %}:
+                                    {% if journal.metrics.total_h5_median and journal.metrics.h5_metric_year %}
+                                    {# a mediana é obtida sempre para o ano atual #}
+                                    ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
+                                    {% endif %}
+                                </small>
+                                <strong>
+                                    {{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}
+                                </strong>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
             </div>
-            {% if sections %}
-              <div class="col-md-6 col-sm-6">
-                <h3>{% trans %}Sumário{% endtrans %}</h3>
-                <ul>
-                  {% for section in sections %}
-                    <li><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}#{{ section|upper }}">{{ section }}</a></li>
-                  {% endfor %}
-                </ul>
-              </div>
+            {# analytics #}
+
+            {# last issue #}
+            {% if journal.last_issue %}
+            <div class="block lastIssue">
+                <div class="col-md-12 col-sm-12">
+                    <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
+                        {% if journal.last_issue.cover_url %}
+                        <img src="{{ latest_issue.cover_url }}" class="image" alt="{% trans %}Capa do número mais recente{% endtrans %}" /> <!-- a imagem é opcional -->
+                        {% endif %}
+                        <span class="text">
+                            <small>{% trans %}Número mais recente{% endtrans %}</small>
+                            <h2>{{ latest_issue_legend|default('--', True) }}</h2>
+                        </span>
+                    </a>
+                </div>
+                {% if sections %}
+                <div class="col-md-6 col-sm-6">
+                    <h3>{% trans %}Sumário{% endtrans %}</h3>
+                    <ul>
+                        {% for section in sections %}
+                        <li><a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}#{{ section|upper }}">{{ section }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                <div class="clearfix"></div>
+            </div>
             {% endif %}
-            <div class="clearfix"></div>
-          </div>
+            {# last issue #}
 
-        {% endif %}
-        {# last issue #}
+            {# press_releases #}
+            {% if press_releases %}
+            <div class="block releases">
+                <div class="col-md-12">
+                    <h2>Press-releases</h2>
+                    <div class="slider" id="pressrelease">
+                        <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
+                        <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
+                        <div class="slide-container" style="height: 171px;">
+                            <div class="slide-wrapper" style="width: 1220px;">
+                                {% for press_release in press_releases  %}
+                                {% include "press_release/includes/press_releases_row.html" %}
+                                {% endfor %}
 
-        {# press_releases #}
-        {% if press_releases %}
-          <div class="block releases">
-            <div class="col-md-12">
-              <h2>Press-releases</h2>
-              <div class="slider" id="pressrelease">
-                <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
-                <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
-                <div class="slide-container" style="height: 171px;">
-                  <div class="slide-wrapper" style="width: 1220px;">
-
-                    {% for press_release in press_releases  %}
-                      {% include "press_release/includes/press_releases_row.html" %}
-                    {% endfor %}
-
-                  </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-          </div>
-        {% endif %}
-        {# press_release #}
+            {% endif %}
+            {# press_release #}
 
-        {# recent_articles #}
-        {% if recent_articles %}
-          <div class="block recent_articles">
-            <div class="col-md-12">
-              <h2>{% trans %}Artigos mais recentes{% endtrans %}</h2>
-              <div class="slider" id="recent_articles">
-                <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
-                <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
-                <div class="slide-container" style="height: 171px;">
-                  <div class="slide-wrapper" style="width: 1220px;">
-                    {% for article in recent_articles  %}
-                      {% include "article/includes/recent_articles_row.html" %}
-                    {% endfor %}
-                  </div>
+            {# recent_articles #}
+            {% if recent_articles %}
+            <div class="block recent_articles">
+                <div class="col-md-12">
+                    <h2>{% trans %}Artigos mais recentes{% endtrans %}</h2>
+                    <div class="slider" id="recent_articles">
+                        <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
+                        <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
+                        <div class="slide-container" style="height: 171px;">
+                            <div class="slide-wrapper" style="width: 1220px;">
+                                {% for article in recent_articles  %}
+                                {% include "article/includes/recent_articles_row.html" %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-          </div>
-        {% endif %}
-        {# recent_articles #}
+            {% endif %}
+            {# recent_articles #}
 
-        {# news #}
-        {% if news %}
-          <div class="block news">
-            <div class="col-md-12">
-              <h2>{% trans %}Notícias{% endtrans %}</h2>
-              <div class="slider" id="noticias">
-                <a href="javascript:;" class="slide-back" style="top: 90.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
-                <a href="javascript:;" class="slide-next" style="top: 90.5px;"><span class="glyphBtn arrowRight"></span></a>
+            {# news #}
+            {% if news %}
+            <div class="block news">
+                <div class="col-md-12">
+                    <h2>{% trans %}Notícias{% endtrans %}</h2>
+                    <div class="slider" id="noticias">
+                        <a href="javascript:;" class="slide-back" style="top: 90.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
+                        <a href="javascript:;" class="slide-next" style="top: 90.5px;"><span class="glyphBtn arrowRight"></span></a>
+                        <div class="slide-container" style="height: 181px;">
+                            <div class="slide-wrapper" style="width: 2260px;">
+                                {% for item in news  %}
+                                {% include "news/includes/journal_news_row.html" %}
+                                {% endfor %}
 
-                <div class="slide-container" style="height: 181px;">
-                  <div class="slide-wrapper" style="width: 2260px;">
-
-                  {% for item in news  %}
-                    {% include "news/includes/journal_news_row.html" %}
-                  {% endfor %}
-
-                  </div>
-                  <div class="clearfix"></div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="clearfix"></div>
             </div>
-            <div class="clearfix"></div>
-          </div>
-        {% endif %}
-        {# news #}
+            {% endif %}
+            {# news #}
 
-      </div>
+        </div>
     </div>
-  </section>
-
+</section>
   {% include "journal/includes/contact_footer.html" %}
 
 {% endblock %}
