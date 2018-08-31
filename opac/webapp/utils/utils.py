@@ -284,28 +284,26 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
         os.makedirs(image_root)
     image_destiation_path = os.path.join(image_root, filename)
 
-    if check_if_exists:
-        img = webapp.dbsql.session.query(
-            models.Image).filter_by(name=filename).first()
-        if img:
-            return img
-
     try:
         shutil.copyfile(image_path, image_destiation_path)
     except IOError as e:
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
         logger.error(u'%s' % e)
+    else:
+        if thumbnail:
+            generate_thumbnail(image_destiation_path)
 
-    if thumbnail:
-        generate_thumbnail(image_destiation_path)
+        if check_if_exists:
+            img = webapp.dbsql.session.query(
+                models.Image).filter_by(name=filename).first()
+            if img:
+                return img
 
-    img = models.Image(name=namegen_filename(filename),
-                       path='images/' + filename)
-
-    webapp.dbsql.session.add(img)
-    webapp.dbsql.session.commit()
-
-    return img
+        img = models.Image(name=namegen_filename(filename),
+                           path='images/' + filename)
+        webapp.dbsql.session.add(img)
+        webapp.dbsql.session.commit()
+        return img
 
 
 def create_page(name, language, content, journal=None, description=None):
