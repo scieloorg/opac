@@ -14,8 +14,6 @@ from flask import current_app
 
 import webapp
 import requests
-from utils.journal_static_page import JournalStaticPage
-from utils.journal_static_page import JournalStaticPageFile
 from webapp import models
 
 from opac_schema.v1.models import Pages
@@ -284,28 +282,26 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
         os.makedirs(image_root)
     image_destiation_path = os.path.join(image_root, filename)
 
-    if check_if_exists:
-        img = webapp.dbsql.session.query(
-            models.Image).filter_by(name=filename).first()
-        if img:
-            return img
-
     try:
         shutil.copyfile(image_path, image_destiation_path)
     except IOError as e:
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
         logger.error(u'%s' % e)
+    else:
+        if thumbnail:
+            generate_thumbnail(image_destiation_path)
 
-    if thumbnail:
-        generate_thumbnail(image_destiation_path)
+        if check_if_exists:
+            img = webapp.dbsql.session.query(
+                models.Image).filter_by(name=filename).first()
+            if img:
+                return img
 
-    img = models.Image(name=namegen_filename(filename),
-                       path='images/' + filename)
-
-    webapp.dbsql.session.add(img)
-    webapp.dbsql.session.commit()
-
-    return img
+        img = models.Image(name=namegen_filename(filename),
+                           path='images/' + filename)
+        webapp.dbsql.session.add(img)
+        webapp.dbsql.session.commit()
+        return img
 
 
 def create_page(name, language, content, journal=None, description=None):
@@ -324,26 +320,6 @@ def fix_page_content(filename, content):
     Insert the anchor based on filename
     """
     return JournalStaticPage(filename, content).body
-
-
-def fix_page(journal_pages_path, files):
-    """
-    Extract the header and the footer of the page
-    Insert the anchor based on filename
-    """
-    content = []
-    unavailable_message = None
-    for file in files:
-        file_path = os.path.join(journal_pages_path, file)
-        page = JournalStaticPageFile(file_path)
-        if page.unavailable_message:
-            content.append(page.anchor)
-            unavailable_message = page.unavailable_message
-        else:
-            content.append(page.body)
-    if unavailable_message is not None:
-        content.append(unavailable_message)
-    return '\n'.join(content)
 
 
 def extract_images(content):
