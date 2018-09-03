@@ -248,6 +248,9 @@ def router_legacy():
             article = controllers.get_article_by_pid(pid)
 
             if not article:
+                article = controllers.get_article_by_oap_pid(pid)
+
+            if not article:
                 abort(404, _('Artigo não encontrado'))
 
             if not article.is_public:

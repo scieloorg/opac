@@ -686,6 +686,69 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
+    def test_legacy_url_aop_article_detail(self):
+        """
+        Teste da ``view function`` ``router_legacy``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            aop_pid = '1111-11111111111111111'
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'aop_pid': aop_pid})
+
+            url = '%s?script=sci_arttext&pid=%s' % (
+                                                    url_for('main.router_legacy'),
+                                                    aop_pid
+                                                    )
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    def test_legacy_url_aop_article_detail_wrong_aop_pid(self):
+        """
+        Teste da ``view function`` ``router_legacy``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            utils.makeOneArticle({'title': 'Article Y',
+                                  'issue': issue,
+                                  'journal': journal,
+                                  'url_segment': '10-11',
+                                  'aop_pid': '1111-11111111111111110'})
+
+            url = '%s?script=sci_arttext&pid=%s' % (
+                                                    url_for('main.router_legacy'),
+                                                    '1111-11111111111111111'
+                                                    )
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 404)
+            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+
     def test_article_detail_without_articles(self):
         """
         Teste para avaliar o retorno da ``view function`` ``article_detail``
