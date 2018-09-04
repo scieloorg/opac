@@ -803,6 +803,19 @@ def get_article_by_pid(pid, **kwargs):
     return Article.objects(pid=pid, **kwargs).first()
 
 
+def get_article_by_oap_pid(aop_pid, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``aop_pid``.
+
+    - ``aop_pid``: string, contendo o OAP_PID do artigo.
+    """
+
+    if not aop_pid:
+        raise ValueError(__('Obrigatório um aop_pid.'))
+
+    return Article.objects(aop_pid=aop_pid, **kwargs).first()
+
+
 def get_recent_articles_of_issue(issue_iid, is_public=True):
     """
     Retorna a lista de artigos de um issue/
