@@ -14,8 +14,6 @@ from flask import current_app
 
 import webapp
 import requests
-from utils.journal_static_page import JournalStaticPage
-from utils.journal_static_page import JournalStaticPageFile
 from webapp import models
 
 from opac_schema.v1.models import Pages
@@ -322,26 +320,6 @@ def fix_page_content(filename, content):
     Insert the anchor based on filename
     """
     return JournalStaticPage(filename, content).body
-
-
-def fix_page(journal_pages_path, files):
-    """
-    Extract the header and the footer of the page
-    Insert the anchor based on filename
-    """
-    content = []
-    unavailable_message = None
-    for file in files:
-        file_path = os.path.join(journal_pages_path, file)
-        page = JournalStaticPageFile(file_path)
-        if page.unavailable_message:
-            content.append(page.anchor)
-            unavailable_message = page.unavailable_message
-        else:
-            content.append(page.body)
-    if unavailable_message is not None:
-        content.append(unavailable_message)
-    return '\n'.join(content)
 
 
 def extract_images(content):

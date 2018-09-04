@@ -5,18 +5,13 @@ import sys
 import json
 import fnmatch
 import unittest
-import logging
 from uuid import uuid4
-
-from slugify import slugify
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEBAPP_PATH = os.path.abspath(os.path.join(HERE, 'webapp'))
 sys.path.insert(0, HERE)
 sys.path.insert(1, WEBAPP_PATH)
-
-LOGGING_LEVEL = os.environ.get('LOGGING_LEVEL', 'DEBUG')
 
 FLASK_COVERAGE = os.environ.get('FLASK_COVERAGE', None)
 
@@ -36,7 +31,9 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page  # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page # noqa
+from webapp.utils.journal_static_page import JournalNewPages, PAGE_NAMES_BY_LANG, get_acron_list # noqa
+
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
@@ -354,79 +351,35 @@ def populate_journal_pages(
 
     OBS.: A extensão dos html é htm.
 
-    Assinatura não esta sendo importada conforme mencionado no tk: https://github.com/scieloorg/opac/issues/630
+    Assinatura não esta sendo importada conforme mencionado no tk:
+    https://github.com/scieloorg/opac/issues/630
 
 
     """
-    logging.basicConfig(level=LOGGING_LEVEL,
-                        filename='journal_pages.log',
-                        filemode='w')
-
     acron_list = [journal.acronym for journal in Journal.objects.all()]
-    file_names = {'en': ['iaboutj.htm',
-                         'iedboard.htm',
-                         'iinstruc.htm'],
-                  'pt_BR': ['paboutj.htm',
-                            'pedboard.htm',
-                            'pinstruc.htm'],
-                  'es': ['eaboutj.htm',
-                         'eedboard.htm',
-                         'einstruc.htm'],
-                  }
     j_total = len(acron_list)
     done = 0
     for j, acron in enumerate(sorted(acron_list)):
-        journal_pages_path = os.path.join(pages_source_path, acron)
-        print('{}/{} {}'.format(j, j_total, acron))
-        for lang, files in file_names.items():
-
-            content = fix_page(journal_pages_path, files)
-
+        print('{}/{} {}'.format(j+1, j_total, acron))
+        pages_src_files = JournalNewPages(pages_source_path,
+                                          images_source_path, acron)
+        for lang, files in PAGE_NAMES_BY_LANG.items():
+            content, images_in_file = pages_src_files.get_new_journal_page(
+                                                    files)
             if content:
-                images_in_file = list(set(extract_images(content)))
-                images_in_file = [img
-                                  for img in images_in_file
-                                  if '://' not in img]
-
-                new_images = []
-                names_list = []
-                for img_in_file in images_in_file:
-                    img_basename = os.path.basename(img_in_file)
-                    name, ext = os.path.splitext(img_basename)
-                    names_list.append(name)
-                    if '/img/revistas/' in img_in_file:
-                        img_src_path = os.path.join(
-                            images_source_path,
-                            img_in_file[img_in_file.find('/img/revistas/') +
-                                        len('/img/revistas/'):])
-                    else:
-                        img_src_path = os.path.join(
-                            journal_pages_path, img_basename)
-                    try:
-                        # Verifica se a imagem existe
-                        open_file(img_src_path, mode='r')
-                    except IOError as e:
-                        logging.error(
-                            u'%s (corresponding to %s)' % (e, img_in_file))
-                    else:
-                        new_images.append((img_src_path, name, ext))
-
-                for img_src_path, img_name, ext in list(set(new_images)):
-                    alt_name = slugify(img_name)
-                    if alt_name not in names_list:
-                        img_name = alt_name
-
-                    img_dest_name = '%s_%s%s' % (acron, img_name, ext)
+                page_img_paths = pages_src_files.get_journal_page_img_paths(
+                                                            images_in_file)
+                for img_in_file, img_src, img_dest in page_img_paths:
                     img = create_image(
-                        img_src_path, img_dest_name, thumbnail=True)
-                    content = content.replace(
-                        img_in_file, img.get_absolute_url)
-                done += 1
+                        img_src, img_dest, check_if_exists=False)
+                    content = content.replace(img_in_file,
+                                              img.get_absolute_url)
                 create_page(
                     'Página secundária %s (%s)' % (acron.upper(), lang),
                     lang, content, acron,
                     'Página secundária do periódico %s' % acron)
-    print('Páginas criadas: {}/{}'.format(done, j_total))
+                done += 1
+    print('Páginas: {}\nPeriódicos: {}'.format(done, j_total))
 
 
 if __name__ == '__main__':
