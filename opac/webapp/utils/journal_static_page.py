@@ -69,13 +69,6 @@ class JournalStaticPageFile(object):
     def __init__(self, filename):
         self.filename = filename
         self.name = os.path.basename(filename)
-        title = self.h1.get(self.name)
-        if title is None:
-            alt = [v for k, v in self.h1.items()
-                   if self.name.startswith(k[:5])]
-            if len(alt) == 1:
-                title = alt[0]
-        self.anchor_title = '<h1>{}</h1>'.format(title or '')
         self.version = self.versions[self.name[0]]
         self.file_content = self._read()
         self.get_tree()
@@ -95,6 +88,16 @@ class JournalStaticPageFile(object):
                 self._info('Not found: begin. FAILED {}'.format(parser))
             else:
                 break
+
+    @property
+    def anchor_title(self):
+        title = self.h1.get(self.name)
+        if title is None:
+            alt = [v for k, v in self.h1.items()
+                   if self.name[:5] == k[:5]]
+            if len(alt) == 1:
+                title = alt[0]
+        return '<h1>{}</h1>'.format(title or '')
 
     @property
     def _body_tree(self):
