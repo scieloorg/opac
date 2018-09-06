@@ -49,6 +49,18 @@ class JournalStaticPageFile(object):
         'instructions': 'instruc',
     }
     versions = {'p': 'português', 'e': 'español', 'i': 'English'}
+    h1 = {
+        'paboutj.htm': 'Sobre o periódico',
+        'pedboard.htm': 'Corpo Editorial',
+        'pinstruc.htm': 'Instruções aos autores',
+        'eaboutj.htm': 'Acerca de la revista',
+        'eedboard.htm': 'Cuerpo Editorial',
+        'einstruc.htm': 'Instrucciones a los autores',
+        'iaboutj.htm': 'About the journal',
+        'iedboard.htm': 'Editorial Board',
+        'iinstruc.htm': 'Instructions to authors',
+    }
+
     PT_UNAVAILABLE_MSG = 'Informação não disponível em português. ' + \
                          'Consultar outra versão. '
     ES_UNAVAILABLE_MSG = 'Información no disponible en español. ' + \
@@ -57,6 +69,13 @@ class JournalStaticPageFile(object):
     def __init__(self, filename):
         self.filename = filename
         self.name = os.path.basename(filename)
+        title = self.h1.get(self.name)
+        if title is None:
+            alt = [v for k, v in self.h1.items()
+                   if self.name.startswith(k[:5])]
+            if len(alt) == 1:
+                title = alt[0]
+        self.anchor_title = '<h1>{}</h1>'.format(title or '')
         self.version = self.versions[self.name[0]]
         self.file_content = self._read()
         self.get_tree()
@@ -390,7 +409,8 @@ class JournalStaticPageFile(object):
     @property
     def body(self):
         return '<!-- inicio {} -->'.format(self.filename) + \
-               self.anchor + self.middle + '<hr noshade="" size="1"/>' + \
+               self.anchor + self.anchor_title + \
+               self.middle + '<hr noshade="" size="1"/>' + \
                '<!-- fim {} -->'.format(self.filename)
 
 
