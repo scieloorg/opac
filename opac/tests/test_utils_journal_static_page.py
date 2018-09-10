@@ -105,6 +105,75 @@ class JournalStaticPageTestCase(BaseTestCase):
         if os.path.isfile(f):
             return f
 
+    def test_title_icse_eaboutj(self):
+        jspf = JournalStaticPageFile(self.html_file('icse_eaboutj'))
+        self.assertEqual(
+            jspf.anchor_title, '<h1>Acerca de la revista</h1>')
+        self.assertTrue(
+            '<h1>Acerca de la revista</h1>' in jspf.body)
+
+    def test_title_eins_eedboar(self):
+        jspf = JournalStaticPageFile(self.html_file('eins_eedboard'))
+        self.assertEqual(jspf.anchor_title, '<h1>Cuerpo Editorial</h1>')
+        self.assertTrue(
+            '<h1>Cuerpo Editorial</h1>' in jspf.body)
+
+    def test_title_abb_einstruc(self):
+        jspf = JournalStaticPageFile(self.html_file('abb_einstruc'))
+        self.assertEqual(
+            jspf.anchor_title, '<h1>Instrucciones a los autores</h1>')
+        self.assertTrue(
+            '<h1>Instrucciones a los autores</h1>' in jspf.body)
+
+    def test_title_bjgeo_einstr(self):
+        jspf = JournalStaticPageFile(self.html_file('bjgeo_einstruct'))
+        self.assertEqual(
+            jspf.anchor_title, '<h1>Instrucciones a los autores</h1>')
+        self.assertTrue(
+            '<h1>Instrucciones a los autores</h1>' in jspf.body)
+
+    def test_title_bjmbr_pabout(self):
+        jspf = JournalStaticPageFile(self.html_file('bjmbr_paboutj'))
+        self.assertEqual(jspf.anchor_title, '<h1>Sobre o periódico</h1>')
+        self.assertTrue(
+            '<h1>Sobre o periódico</h1>' in jspf.body)
+
+    def test_title_eagri_pedboa(self):
+        jspf = JournalStaticPageFile(self.html_file('eagri_pedboard'))
+        self.assertEqual(jspf.anchor_title, '<h1>Corpo Editorial</h1>')
+        self.assertTrue(
+            '<h1>Corpo Editorial</h1>' in jspf.body)
+
+    def test_title_abb_pinstruc(self):
+        jspf = JournalStaticPageFile(self.html_file('abb_pinstruc'))
+        self.assertEqual(jspf.anchor_title, '<h1>Instruções aos autores</h1>')
+        self.assertTrue(
+            '<h1>Instruções aos autores</h1>' in jspf.body)
+
+    def test_title_bjgeo_pinstr(self):
+        jspf = JournalStaticPageFile(self.html_file('bjgeo_pinstruct'))
+        self.assertEqual(jspf.anchor_title, '<h1>Instruções aos autores</h1>')
+        self.assertTrue(
+            '<h1>Instruções aos autores</h1>' in jspf.body)
+
+    def test_title_bjmbr_iabout(self):
+        jspf = JournalStaticPageFile(self.html_file('bjmbr_iaboutj'))
+        self.assertEqual(jspf.anchor_title, '<h1>About the journal</h1>')
+        self.assertTrue(
+            '<h1>About the journal</h1>' in jspf.body)
+
+    def test_title_bjmbr_iedboa(self):
+        jspf = JournalStaticPageFile(self.html_file('bjmbr_iedboard'))
+        self.assertEqual(jspf.anchor_title, '<h1>Editorial Board</h1>')
+        self.assertTrue(
+            '<h1>Editorial Board</h1>' in jspf.body)
+
+    def test_title_bjmbr_iinstr(self):
+        jspf = JournalStaticPageFile(self.html_file('bjmbr_iinstruc'))
+        self.assertEqual(jspf.anchor_title, '<h1>Instructions to authors</h1>')
+        self.assertTrue(
+            '<h1>Instructions to authors</h1>' in jspf.body)
+
     def test_insert_bold_to_p_subtitulo_aa_eedboard(self):
         jspf = JournalStaticPageFile(self.html_file('aa_eedboard'))
 
