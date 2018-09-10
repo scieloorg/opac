@@ -14,7 +14,7 @@
 
     {% block extra_meta %}{% endblock %}
 
-    <title>{% block title %}{{ coll_macro.get_collection_name() }}{% endblock %}</title>
+    <title>SciELO - {% block title %}{{ coll_macro.get_collection_name() }}{% endblock %}</title>
 
     <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-bundle.css') }}?v={{ config.VCS_REF }}">
