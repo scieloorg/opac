@@ -861,9 +861,30 @@ class MainTestCase(BaseTestCase):
         # with
         with current_app.app_context():
             collection = utils.makeOneCollection()
-            sponsor1 = utils.makeOneSponsor({'name': 'spo1', 'url': 'http://sponsor1.com', 'logo_url': 'http://sponsor1.com/logo1.png'})
-            sponsor2 = utils.makeOneSponsor({'name': 'spo2', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
-            sponsor3 = utils.makeOneSponsor({'name': 'spo3', 'url': 'http://sponsor2.com', 'logo_url': 'http://sponsor2.com/logo1.png'})
+            sponsor1 = utils.makeOneSponsor(
+                {
+                    'order': 0,
+                    'name': 'spo1',
+                    'url': 'http://sponsor1.com',
+                    'logo_url': 'http://sponsor1.com/logo1.png'
+                }
+            )
+            sponsor2 = utils.makeOneSponsor(
+                {
+                    'order': 1,
+                    'name': 'spo2',
+                    'url': 'http://sponsor2.com',
+                    'logo_url': 'http://sponsor2.com/logo1.png'
+                }
+            )
+            sponsor3 = utils.makeOneSponsor(
+                {
+                    'order': 2,
+                    'name': 'spo3',
+                    'url': 'http://sponsor2.com',
+                    'logo_url': 'http://sponsor2.com/logo1.png'
+                }
+            )
             collection.sponsors = [
                 sponsor1,
                 sponsor2,

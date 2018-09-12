@@ -13,7 +13,7 @@
   </div>
   {% if g.collection and g.collection.sponsors %}
     <div class="partners">
-      {% for sponsor in g.collection.sponsors %}
+      {% for sponsor in g.collection.sponsors|sort(attribute='order') %}
         {% if sponsor.url and sponsor.logo_url %}
           <a href="{{ sponsor.url }}" target="_blank">
             {% if sponsor.logo_url %}

@@ -15,6 +15,7 @@ from flask import url_for, redirect, request, flash, abort, current_app, render_
 from flask_admin.contrib import sqla, mongoengine
 from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
+from mongoengine.errors import NotUniqueError
 
 from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
@@ -351,13 +352,14 @@ class SponsorAdminView(OpacBaseAdminView):
     can_create = True
     can_edit = True
     can_delete = True
-    create_modal = True
-    edit_modal = True
+    create_modal = False
+    edit_modal = False
     can_view_details = True
     column_exclude_list = ('_id', )
     column_searchable_list = ('name',)
 
     column_labels = dict(
+        order=__('Ordem'),
         name=__('Nome'),
         url=__('URL'),
         logo_url=__('URL da logomarca')
@@ -367,6 +369,12 @@ class SponsorAdminView(OpacBaseAdminView):
         # é necessario definir um valor para o campo ``_id`` na criação.
         if is_created:
             model._id = str(uuid4().hex)
+
+    def handle_view_exception(self, exc):
+        if isinstance(exc, NotUniqueError):
+            flash(_('Financiador com Ordem ou Nome já cadastrado!'), 'error')
+            return True
+        return super(SponsorAdminView, self).handle_view_exception(exc)
 
 
 class CollectionAdminView(OpacBaseAdminView):

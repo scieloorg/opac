@@ -50,6 +50,7 @@ def makeOneSponsor(attrib=None):  # noqa
 
     collection = {
         '_id': default_id,
+        'order': attrib.get('order', 0),
         'name': name,
         'url': attrib.get('url', None),
         'logo_url': attrib.get('logo_url', None),

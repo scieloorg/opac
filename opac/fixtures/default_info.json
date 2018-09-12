@@ -28,22 +28,27 @@
         }]
     },
     "sponsors": [{
+        "order": 0,
         "name": "FAPESP",
         "url": "http://www.fapesp.br/",
         "logo_path": "fixtures/imgs/fapesp.png"
     }, {
+        "order": 1,
         "name": "CNPQ",
         "url": "http://www.cnpq.br/",
         "logo_path": "fixtures/imgs/cnpq.png"
     }, {
+        "order": 2,
         "name": "BVS",
         "url": "http://bvsalud.org/",
         "logo_path": "fixtures/imgs/bvs.png"
     }, {
+        "order": 3,
         "name": "BIREME",
         "url": "http://regional.bvsalud.org/bvs/bireme/homepage.htm",
         "logo_path": "fixtures/imgs/bireme.png"
     }, {
+        "order": 4,
         "name": "FAP",
         "url": "http://www.fapunifesp.edu.br/",
         "logo_path": "fixtures/imgs/fap.png"

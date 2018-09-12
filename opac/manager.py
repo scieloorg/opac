@@ -314,6 +314,7 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
         for _ in data['sponsors']:
             sponsor = Sponsor()
             sponsor._id = str(uuid4().hex)
+            sponsor.order = _['order']
             sponsor.name = _['name']
             img = create_image(_['logo_path'], os.path.basename(_['logo_path']))
             sponsor.logo_url = '%s%s' % (domain, img.get_absolute_url)

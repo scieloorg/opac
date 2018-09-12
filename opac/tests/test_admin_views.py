@@ -4553,7 +4553,7 @@ class SponsorAdminViewTests(BaseTestCase):
             can_delete = self.get_context_variable('admin_view').can_delete
             self.assertTrue(can_delete)
 
-    def test_admin_sponsor_check_create_modal_is_true(self):
+    def test_admin_sponsor_check_create_modal_is_false(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -4586,9 +4586,9 @@ class SponsorAdminViewTests(BaseTestCase):
             self.assertTemplateUsed('admin/model/list.html')
             # verificamos os filtros da view
             create_modal = self.get_context_variable('admin_view').create_modal
-            self.assertTrue(create_modal)
+            self.assertFalse(create_modal)
 
-    def test_admin_sponsor_check_edit_modal_is_true(self):
+    def test_admin_sponsor_check_edit_modal_is_false(self):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -4621,7 +4621,7 @@ class SponsorAdminViewTests(BaseTestCase):
             self.assertTemplateUsed('admin/model/list.html')
             # verificamos os filtros da view
             edit_modal = self.get_context_variable('admin_view').edit_modal
-            self.assertTrue(edit_modal)
+            self.assertFalse(edit_modal)
 
     def test_admin_sponsor_check_can_view_details_is_true(self):
         """
