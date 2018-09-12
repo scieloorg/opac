@@ -33,7 +33,7 @@ dev_compose_up:
 	@docker-compose -f $(COMPOSE_FILE_DEV) up -d
 
 dev_compose_logs:
-	@docker-compose -f $(COMPOSE_FILE_DEV) logs -f
+	@docker-compose -f $(COMPOSE_FILE_DEV) logs -f $(SERVICE)
 
 dev_compose_stop:
 	@docker-compose -f $(COMPOSE_FILE_DEV) stop
@@ -202,4 +202,3 @@ static_check_deps:
 static_install_deps:
 	@echo 'instalando as dependência (package.json):'
 	@npm install
-
