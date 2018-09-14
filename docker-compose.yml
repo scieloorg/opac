@@ -31,6 +31,7 @@ services:
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ./data:/app/data
+            - ./data/img:/app/data/img
         links:
             - opac_mongo:opac-mongo
             - redis-cache:redis-cache
@@ -51,3 +52,5 @@ services:
             - OPAC_DIMENSIONS_URL=https://badge.dimensions.ai/details/doi
             - OPAC_USE_PLUMX=True
             - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
+            - OPAC_JOURNAL_PAGES_SOURCE_PATH=/app/data/pages
+            - OPAC_JOURNAL_IMAGES_SOURCE_PATH=/app/data/img
