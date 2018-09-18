@@ -137,6 +137,20 @@ import os
 
 """
 
+
+def _display_scimago_id(url, scimago_id):
+    if scimago_id in ['', None]:
+        return ''
+    url = url or 'SCIMAGO_ID'
+    return url.replace('SCIMAGO_ID', scimago_id)
+
+
+def display_scimago_id(scimago_id):
+    default = 'https://www.scimagojr.com/journalsearch.php?q=SCIMAGO_ID&tip=sid&clean=0'
+    url = os.environ.get('SCIMAGO_URL', default)
+    return _display_scimago_id(url, scimago_id)
+
+
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 HERE = os.path.dirname(os.path.abspath(__file__))
 
