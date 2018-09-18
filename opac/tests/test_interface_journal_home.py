@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 import flask
 from flask import url_for, current_app
 
@@ -250,3 +251,135 @@ class JournalHomeTestCase(BaseTestCase):
                     network=journal_data['social_networks'][0]['network'].title(),
                 )
                 self.assertIn(expected_social_link, response.data.decode('utf-8'))
+
+    def test_journal_scimago_link(self):
+        """
+        COM:
+            - Periódico COM scimago_id
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que SIM aparece o link para scimago
+        """
+        with current_app.app_context():
+            # with
+            collection = utils.makeOneCollection()
+            journal_data = {
+                'collection': collection,
+                'scimago_id': '22596',
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for('main.journal_detail',
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode('utf-8')
+                # then
+                self.assertStatus(response, 200)
+                expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q=22596'
+                self.assertIn(expected, response_data)
+
+                expected = '<a target="_blank" href="{}">Scimago'.format(expected)
+                self.assertIn(expected, response_data)
+
+    def test_journal_scimago_enabled_is_false(self):
+        """
+        COM:
+            - Periódico COM scimago_id
+            - SCIMAGO_ENABLED is False
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que NÃO aparece o link para scimago
+        """
+        with current_app.app_context():
+            # with
+            SCIMAGO_ENABLED = current_app.config['SCIMAGO_ENABLED']
+            current_app.config['SCIMAGO_ENABLED'] = False
+            collection = utils.makeOneCollection()
+            journal_data = {
+                'collection': collection,
+                'scimago_id': '22596',
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for('main.journal_detail',
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode('utf-8')
+                # then
+                self.assertStatus(response, 200)
+                expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q=22596'
+                self.assertNotIn(expected, response_data)
+
+                expected = '<a target="_blank" href="{}">Scimago'.format(expected)
+                self.assertNotIn(expected, response_data)
+            current_app.config['SCIMAGO_ENABLED'] = SCIMAGO_ENABLED
+
+    def test_journal_scimago_is_none(self):
+        """
+        COM:
+            - Periódico SEM scimago_id
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que NÃO aparece o link para scimago
+        """
+        with current_app.app_context():
+            # with
+            collection = utils.makeOneCollection()
+            journal_data = {
+                'collection': collection,
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for('main.journal_detail',
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode('utf-8')
+                # then
+                self.assertStatus(response, 200)
+                expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q='
+                self.assertNotIn(expected, response_data)
+
+                expected = '<a target="_blank" href="{}">Scimago'.format(expected)
+                self.assertNotIn(expected, response_data)
+
+    def test_journal_scimago_url_config(self):
+        """
+        COM:
+            - Periódico COM scimago_id
+            - SCIMAGO_URL COM valor novo
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que SIM aparece o link para scimago, com URL diferente
+        """
+        with current_app.app_context():
+            # with
+            temp = current_app.config['SCIMAGO_URL']
+            current_app.config['SCIMAGO_URL'] = 'https://novaurl/'
+
+            collection = utils.makeOneCollection()
+            journal_data = {
+                'collection': collection,
+                'scimago_id': '22596',
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for('main.journal_detail',
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode('utf-8')
+                # then
+                self.assertStatus(response, 200)
+                expected = 'https://novaurl/22596'
+                self.assertIn(expected, response_data)
+
+                expected = '<a target="_blank" href="{}">Scimago'.format(expected)
+                self.assertIn(expected, response_data)
+            current_app.config['SCIMAGO_URL'] = temp
