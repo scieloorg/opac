@@ -214,7 +214,9 @@ def router_legacy():
     script_php = request.args.get('script', None)
     pid = request.args.get('pid', None)
 
-    if script_php and pid:
+    if pid is None or script_php is None:
+        abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+    elif script_php and pid:
 
         if script_php == 'sci_serial':
             # pid = issn
@@ -277,6 +279,34 @@ def router_legacy():
                 abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
             return issue_grid(journal.url_segment)
+
+        elif script_php == 'sci_pdf':
+            # accesso ao pdf do artigo:
+            article = controllers.get_article_by_pid(pid)
+
+            if not article:
+                article = controllers.get_article_by_oap_pid(pid)
+
+            if not article:
+                abort(404, _('Artigo não encontrado'))
+
+            if not article.is_public:
+                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+
+            if not article.issue.is_public:
+                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+            if not article.journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+            return article_detail_pdf(
+                article.journal.url_segment,
+                article.issue.url_segment,
+                article.url_segment)
+
+        else:
+            abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+
     else:
         return redirect('/')
 
@@ -581,7 +611,7 @@ def issue_grid(url_seg):
     return render_template("issue/grid.html", **context)
 
 
-@main.route('/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route(r'/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
@@ -648,7 +678,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route(r'/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -695,10 +725,10 @@ def issue_feed(url_seg, url_seg_issue):
 # ##################################Article######################################
 
 
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
+@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
+@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
@@ -855,10 +885,10 @@ def article_ssm_content_raw():
         return get_content_from_ssm(resource_ssm_path)
 
 
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
+@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
+@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -910,6 +940,8 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
         except Exception:
             abort(404, _('PDF do Artigo não encontrado'))
+    else:
+        abort(404, _('PDF do Artigo não encontrado'))
 
     context = {
         'next_article': next_article,
