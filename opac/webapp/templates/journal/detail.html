@@ -43,6 +43,9 @@
             <span id="date" class="datetime"></span>
             <ul>
               <li><a target="_blank" href="{{ config.METRICS_URL }}/?journal={{ journal.scielo_issn or journal.eletronic_issn or journal.print_issn }}&collection={{ config.OPAC_COLLECTION }}">SciELO</a>
+              {% if config.SCIMAGO_ENABLED and journal.scimago_id %}
+              <li><a target="_blank" href="{{ config.SCIMAGO_URL }}{{ journal.scimago_id }}">Scimago</a>
+              {% endif %}
               <li><a href="">Google Metrics</a>
                 <div>
                   <small>

@@ -1383,7 +1383,8 @@ class JournalAdminViewTests(BaseTestCase):
             'current_status',
             'index_at',
             'is_public',
-            'unpublish_reason'
+            'unpublish_reason',
+            'scimago_id',
         ]
         with current_app.app_context():
             collection = makeOneCollection()
