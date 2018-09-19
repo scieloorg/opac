@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <div class="row modal-center">
-          <div class="col-md-6">
+          <div class="{% if config['READCUBE_ENABLED'] %}col-md-6{% else %}col-md-12{%endif%}">
             <span class="sci-ico-filePDF"></span>
             <br/>
             <strong>PDF</strong>
@@ -33,14 +33,16 @@
             {% endif %}
             </ul>
           </div>
-          <div class="col-md-6">
-            <span class="glyphBtn readcubeViewMid"></span>
-            <br/>
-            <strong>ReadCube</strong>
-            <ul class="md-list">
-              <li class="colspan3"><a href="">Visualizar <br/>o texto</a></li>
-            </ul>
-          </div>
+          {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
+            <div class="col-md-6">
+              <span class="glyphBtn readcubeViewMid"></span>
+              <br/>
+              <strong>ReadCube</strong>
+              <ul class="md-list">
+                <li class="colspan3"><a href="">Visualizar <br/>o texto</a></li>
+              </ul>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
