@@ -194,9 +194,9 @@ class LegacyURLTestCase(BaseTestCase):
             response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
 
             # then
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 400)
             self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+            self.assert_template_used("errors/400.html")
 
     def test_scielo_php_with_sci_issuetoc_script_but_incorrect_pid_must_redirect_to_home(self):
         """
@@ -209,9 +209,9 @@ class LegacyURLTestCase(BaseTestCase):
             response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
 
             # then
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 400)
             self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+            self.assert_template_used("errors/400.html")
 
     def test_scielo_php_with_sci_arttext_script_but_incorrect_pid_must_redirect_to_home(self):
         """
@@ -224,9 +224,9 @@ class LegacyURLTestCase(BaseTestCase):
             response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
 
             # then
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 400)
             self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+            self.assert_template_used("errors/400.html")
 
     def test_scielo_php_with_sci_abstract_script_but_incorrect_pid_must_redirect_to_home(self):
         """
@@ -239,9 +239,9 @@ class LegacyURLTestCase(BaseTestCase):
             response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
 
             # then
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 400)
             self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+            self.assert_template_used("errors/400.html")
 
     def test_scielo_php_with_sci_issues_script_but_incorrect_pid_must_redirect_to_home(self):
         """
@@ -254,6 +254,21 @@ class LegacyURLTestCase(BaseTestCase):
             response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
 
             # then
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 400)
             self.assertEqual('text/html; charset=utf-8', response.content_type)
-            self.assert_template_used("collection/index.html")
+            self.assert_template_used("errors/400.html")
+
+    def test_scielo_php_with_sci_pdf_script_but_incorrect_pid_must_redirect_to_home(self):
+        """
+        acessar a url: /scielo.php?script=sci_serial&pid=  (pid inválido) vai redirecionar para index
+        """
+        # with
+        with current_app.app_context():
+            # when
+            qs = '?script=sci_pdf&pid='
+            response = self.client.get(url_for('main.router_legacy') + qs, follow_redirects=True)
+
+            # then
+            self.assertStatus(response, 400)
+            self.assertEqual('text/html; charset=utf-8', response.content_type)
+            self.assert_template_used("errors/400.html")

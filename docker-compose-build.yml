@@ -53,3 +53,4 @@ services:
             - OPAC_DIMENSIONS_URL=https://badge.dimensions.ai/details/doi
             - OPAC_USE_PLUMX=True
             - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
+            - OPAC_CACHE_ENABLED=False

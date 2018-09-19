@@ -58,7 +58,7 @@ services:
             - OPAC_SSM_SCHEME=http
             - OPAC_SSM_DOMAIN=172.19.0.1
             - OPAC_SSM_PORT=8001
-            - OPAC_CACHE_ENABLED=True
+            - OPAC_CACHE_ENABLED=False
             - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             - OPAC_CACHE_REDIS_HOST=redis-cache
             - OPAC_USE_METRICS=True

@@ -213,8 +213,13 @@ def router_legacy():
 
     script_php = request.args.get('script', None)
     pid = request.args.get('pid', None)
-
-    if script_php and pid:
+    allowed_scripts = [
+        'sci_serial', 'sci_issuetoc', 'sci_arttext', 'sci_abstract', 'sci_issues', 'sci_pdf'
+    ]
+    if (script_php is not None) and (script_php in allowed_scripts) and not pid:
+        # se tem pelo menos um param: pid ou script_php
+        abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+    elif script_php and pid:
 
         if script_php == 'sci_serial':
             # pid = issn
@@ -277,6 +282,34 @@ def router_legacy():
                 abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
             return issue_grid(journal.url_segment)
+
+        elif script_php == 'sci_pdf':
+            # accesso ao pdf do artigo:
+            article = controllers.get_article_by_pid(pid)
+
+            if not article:
+                article = controllers.get_article_by_oap_pid(pid)
+
+            if not article:
+                abort(404, _('Artigo não encontrado'))
+
+            if not article.is_public:
+                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+
+            if not article.issue.is_public:
+                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+            if not article.journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+            return article_detail_pdf(
+                article.journal.url_segment,
+                article.issue.url_segment,
+                article.url_segment)
+
+        else:
+            abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+
     else:
         return redirect('/')
 
@@ -910,6 +943,8 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
         except Exception:
             abort(404, _('PDF do Artigo não encontrado'))
+    else:
+        abort(404, _('PDF do Artigo não encontrado'))
 
     context = {
         'next_article': next_article,
