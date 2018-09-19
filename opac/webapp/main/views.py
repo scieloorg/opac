@@ -213,8 +213,11 @@ def router_legacy():
 
     script_php = request.args.get('script', None)
     pid = request.args.get('pid', None)
-
-    if pid is None or script_php is None:
+    allowed_scripts = [
+        'sci_serial', 'sci_issuetoc', 'sci_arttext', 'sci_abstract', 'sci_issues', 'sci_pdf'
+    ]
+    if (script_php is not None) and (script_php in allowed_scripts) and not pid:
+        # se tem pelo menos um param: pid ou script_php
         abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
     elif script_php and pid:
 
@@ -611,7 +614,7 @@ def issue_grid(url_seg):
     return render_template("issue/grid.html", **context)
 
 
-@main.route(r'/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route('/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
@@ -678,7 +681,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route(r'/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -725,10 +728,10 @@ def issue_feed(url_seg, url_seg_issue):
 # ##################################Article######################################
 
 
-@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
-@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
-@main.route(r'/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
+@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
@@ -885,10 +888,10 @@ def article_ssm_content_raw():
         return get_content_from_ssm(resource_ssm_path)
 
 
-@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
-@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
-@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
-@main.route(r'/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
