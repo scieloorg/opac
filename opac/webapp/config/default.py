@@ -382,3 +382,9 @@ GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('OPAC_GOOGLE_RECAPTCHA_SECRET_KEY',
 GOOGLE_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_RECAPTCHA_URL', "https://www.google.com/recaptcha/api.js")
 GOOGLE_VERIFY_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_URL', "https://www.google.com/recaptcha/api/siteverify")
 GOOGLE_VERIFY_RECAPTCHA_KEY = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_KEY', "")
+
+
+SCIMAGO_URL = os.environ.get(
+              'SCIMAGO_URL',
+              'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q=')
+SCIMAGO_ENABLED = os.environ.get('SCIMAGO_ENABLED', 'True') == 'True'
