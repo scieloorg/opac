@@ -340,9 +340,12 @@ class JournalHomeTestCase(BaseTestCase):
                     url_for('main.journal_detail',
                             url_seg=journal.url_segment))
                 response_data = response.data.decode('utf-8')
+                
+                expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q='
+                if '&amp;' in response_data:
+                    expected = expected.replace('&', '&amp;')
                 # then
                 self.assertStatus(response, 200)
-                expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q='
                 self.assertNotIn(expected, response_data)
 
                 expected = '<a target="_blank" href="{}">Scimago'.format(expected)
