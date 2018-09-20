@@ -1016,3 +1016,15 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertIn(collection['address1'], response.data.decode('utf-8'))
             self.assertIn(collection['address2'], response.data.decode('utf-8'))
+
+    def test_get_robots_txt_file(self):
+        """
+        Teste de acesso ao arquivo robots.txt.
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            with self.client as c:
+                response = c.get('/robots.txt')
+                self.assertStatus(response, 200)
+                self.assertIn('User-agent: *', response.data.decode('utf-8'))
+                self.assertIn('Disallow: /', response.data.decode('utf-8'))
