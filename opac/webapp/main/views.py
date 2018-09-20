@@ -1063,3 +1063,8 @@ def download_file_by_filename(filename):
 @main.route("/img/scielo.gif", methods=['GET'])
 def full_text_image():
     return send_from_directory('static', 'img/full_text_scielo_img.gif')
+
+
+@main.route("/robots.txt", methods=['GET'])
+def get_robots_txt_file():
+    return send_from_directory('static', 'robots.txt')
