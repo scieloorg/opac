@@ -1,8 +1,10 @@
 # coding: utf-8
+import random
 import unittest
 import flask
 import warnings
 from flask import url_for, g, current_app
+from flask import render_template
 
 from .base import BaseTestCase
 
@@ -1016,3 +1018,46 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertIn(collection['address1'], response.data.decode('utf-8'))
             self.assertIn(collection['address2'], response.data.decode('utf-8'))
+
+    def test_home_page_last_issues(self):
+        """
+        Teste da página inicial, deve retorna utf-8 como conjunto de caracter e
+        o template ``collection/index.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+            issues = [
+                {'volume': '2', 'number': '5B', 'year': '2011'},
+                {'volume': '12', 'suppl_text': 'suppl', 'year': '2015'},
+                {'volume': '23', 'year': '2016'},
+                {'number': '43', 'year': '2017'},
+            ]
+            journals = utils.makeAnyJournal(items=len(issues))
+            for journal, _issue in zip(journals, issues):
+                _issue.update({'journal': journal})
+                journal.last_issue = utils.makeOneIssue(_issue)
+
+            for journal, expected_issue in zip(journals, issues):
+                context = {
+                    'journal': journal
+                }
+                response_data = render_template(
+                                    "news/includes/issue_last_row.html",
+                                    **context)
+                self.assertIn(
+                    'Ano: </strong><b>{}'.format(
+                        expected_issue.get('year')),
+                    response_data)
+
+                fields = ['volume', 'number', 'suppl_text']
+                labels = ['Volume', 'Número', 'Suplemento']
+                for label, field in zip(labels, fields):
+                    value = expected_issue.get(field)
+                    if value is None:
+                        assert_function = self.assertNotIn
+                    else:
+                        assert_function = self.assertIn
+                    assert_function(
+                        '{}: </strong><b>{}'.format(label, value),
+                        response_data)
