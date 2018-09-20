@@ -1,0 +1,40 @@
+# Allow only major search spiders
+# User-agent: *
+# Crawl-delay: 10
+
+# User-agent: Mediapartners-Google
+# Disallow:
+
+# User-agent: Googlebot
+# Disallow:
+
+# User-agent: Adsbot-Google
+# Disallow:
+
+# User-agent: Googlebot-Image
+# Disallow:
+
+# User-agent: Googlebot-Mobile
+# Disallow:
+
+# User-agent: MSNBot
+# Disallow:
+
+# User-agent: bingbot
+# Disallow:
+
+# User-agent: Slurp
+# Disallow:
+
+# User-agent: Yahoo! Slurp
+# Disallow:
+
+# User-agent: ia_archiver
+# Allow: /
+
+# User-agent: archive.org_bot
+# Allow: /
+
+# Block all other spiders
+User-agent: *
+Disallow: /
