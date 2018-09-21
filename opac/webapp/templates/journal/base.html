@@ -10,7 +10,11 @@
 
   {% include "journal/includes/alternative_header.html" %}
 
-  {% include "journal/includes/contact.html" %}
+  <esi:remove>
+    {% include "journal/includes/contact.html" %}
+  </esi:remove>
+  <esi:include src="{{ url_for('main.form_contact', url_seg=journal.url_seg ) }}"/>
+
 
 {% endblock %}
 
