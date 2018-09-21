@@ -48,7 +48,10 @@
 
     {% block content %}{% endblock %}
 
-    {% include "email/email_form.html" %}
+    <esi:remove>
+      {% include "email/email_form.html" %}
+    </esi:remove>
+    <esi:include src="{{ url_for('main.email_form') }}" />
 
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
 
