@@ -567,9 +567,16 @@ def contact(url_seg):
         abort(400, _('Requisição inválida, captcha inválido.'))
 
 
-@main.route("/form_contact/", methods=['GET'])
-def form_contact():
-    return render_template("journal/includes/contact.html")
+@main.route("/form_contact/<string:url_seg>/", methods=['GET'])
+def form_contact(url_seg):
+    journal = controllers.get_journal_by_url_seg(url_seg)
+    if not journal:
+        abort(404, _('Periódico não encontrado'))
+
+    context = {
+        'journal': journal
+    }
+    return render_template("journal/includes/contact.html", **context)
 
 
 # ###################################Issue#######################################
