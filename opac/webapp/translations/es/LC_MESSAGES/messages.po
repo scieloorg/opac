@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-09-12 15:50-0300\n"
+"POT-Creation-Date: 2018-09-18 11:14-0300\n"
 "PO-Revision-Date: 2018-03-07 00:47+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: es\n"
@@ -22,7 +22,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.3.4\n"
 
 #: opac/tests/test_admin_custom_filters.py:100
 #: opac/tests/test_admin_custom_filters.py:114
@@ -1649,6 +1649,10 @@ msgstr "a Declaración de Acceso abierto"
 msgid "Todos os números"
 msgstr "Todos los números"
 
+#: opac/webapp/templates/issue/grid.html:71
+msgid "número especial"
+msgstr ""
+
 #: opac/webapp/templates/issue/grid.html:95
 msgid "Nenhum número encontrado para esse periódico"
 msgstr "Ningún fascículo fue encontrado para este periódico"
@@ -1873,3 +1877,4 @@ msgstr "Ver"
 #: opac/webapp/templates/news/includes/journal_news_row.html:8
 msgid "Continue lendo"
 msgstr "Continúe leyendo"
+
