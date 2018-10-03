@@ -1,0 +1,12 @@
+{# Retorna o número do fascículo especial que deve ser exibido #}
+{% macro get_issue_special_number(issue_number=None) -%}
+    {%- if issue_number -%}
+        {%- if 'spe' in issue_number -%}
+            {{ issue_number|replace('spe', _(' número especial ')) }}
+        {%- else -%}
+            issue_number
+        {%- endif -%}
+    {%- else -%}
+        {% trans %}número especial{% endtrans %}
+    {%- endif -%}
+{%- endmacro %}

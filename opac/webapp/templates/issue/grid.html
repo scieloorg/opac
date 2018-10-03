@@ -1,4 +1,5 @@
 {% extends "issue/base.html" %}
+{% import "macros/issue.html" as issue_macros %}
 
 {% block main_content %}
 
@@ -65,19 +66,15 @@
                                   url_seg_issue=volume_issue[volume].issue.url_segment) }}" class="btn ahead">{{ volume_issue[volume].art_count }} {% trans %}artigos{% endtrans %}</a>
                       {% endif %}
                       {% for issue in issue_list|sort(attribute='order') %}
-                        {% if issue.type == 'special' %}
+                        {% if issue.type == 'special' -%}
                           <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
                           url_seg_issue=issue.url_segment) }}" class="btn">
-                            spe.{% if issue.spe_text -%}{{issue.spe_text}}{%- endif %}
+                            {{ issue_macros.get_issue_special_number(issue_number=issue.number) }}
                           </a>
                         {% elif issue.type == 'supplement' %}
                           <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
                           url_seg_issue=issue.url_segment) }}" class="btn">
-                            {% if issue.number %}
-                              {{ issue.number }} suppl.{% if issue.suppl_text and issue.suppl_text != '0' -%}{{issue.suppl_text}}{%- endif %}
-                            {% else %}
-                              suppl.{% if issue.suppl_text and issue.suppl_text != '0' -%}{{issue.suppl_text}}{%- endif %}
-                            {% endif %}
+                            {% if issue.number %}{{ issue.number }} {% endif %}{% trans %}supl.{% endtrans %}{% if issue.suppl_text and issue.suppl_text != '0' -%}{{ issue.suppl_text }}{%- endif %}
                           </a>
                         {% else %}
                           {# Evitando o None na grade #}
