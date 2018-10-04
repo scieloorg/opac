@@ -30,12 +30,12 @@ RUN pip --no-cache-dir install -r requirements.txt && \
     pip --no-cache-dir install -r /app/requirements.dev.txt
 
 
-RUN sed -i 's/\r//' /start_worker.sh \
-    && sed -i 's/\r//' /start_scheduler.sh \
-    && chmod +x /start_worker.sh \
-    && chmod +x /start_scheduler.sh \
-    && chown nobody /start_worker.sh \
-    && chown nobody /start_scheduler.sh
+RUN sed -i 's/\r//' start_worker.sh \
+    && sed -i 's/\r//' start_scheduler.sh \
+    && chmod +x start_worker.sh \
+    && chmod +x start_scheduler.sh \
+    && chown nobody start_worker.sh \
+    && chown nobody start_scheduler.sh
 
 RUN make compile_messages
 RUN chown -R nobody:nogroup /app
