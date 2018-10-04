@@ -839,7 +839,7 @@ class PressReleaseAdminView(OpacBaseAdminView):
 class AuditLogEntryAdminView(OpacBaseAdminView):
     can_create = False
     can_edit = False
-    can_delete = True
+    can_delete = False
     column_searchable_list = ('description', 'user', )
     column_default_sort = ('created_at', True)
 

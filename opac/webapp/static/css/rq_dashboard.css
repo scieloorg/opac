@@ -1,0 +1,51 @@
+p.fixed.intro {
+    height: 5em;
+}
+
+table tbody tr td.narrow {
+    width: 100px;
+}
+
+table#jobs td.actions a {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+table#jobs span.description {
+    color: #555;
+    font-weight: 600;
+}
+
+table#jobs span.origin {
+    color: #888;
+}
+
+table#jobs div.job_id {
+    color: gray;
+    margin-left: 24px;
+}
+
+table#jobs pre.exc_info {
+    color: #555;
+    margin-left: 24px;
+    border-left: 2px solid darkorange;
+    background-color: lightgoldenrodyellow;
+}
+
+
+table tbody tr td {
+    vertical-align: middle;
+}
+
+table tr.failed {
+    color: red;
+    border-top: 2px solid red;
+}
+
+table tr.failed td {
+    background-color: lightgoldenrodyellow;
+}
+
+span.loading {
+    color: #555;
+}

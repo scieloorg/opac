@@ -3,10 +3,13 @@
 import logging
 from raven.contrib.flask import Sentry
 
-from flask import Flask
+import rq_dashboard
+import rq_scheduler_dashboard
+
+from flask import Flask, flash, redirect, url_for, request
 from flask_htmlmin import HTMLMIN
 from flask_mongoengine import MongoEngine
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 import flask_admin
 from flask_mail import Mail
@@ -57,6 +60,8 @@ def create_app():
     app.url_map.strict_slashes = False
 
     # Configurações
+    app.config.from_object(rq_dashboard.default_settings)
+    app.config.from_object(rq_scheduler_dashboard.default_settings)
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
 
@@ -125,6 +130,19 @@ def create_app():
 
     from .main import main as main_bp
     app.register_blueprint(main_bp)
+
+    # Setup RQ Dashboard e Scheduler: - mover para um modulo proprio
+    def check_user_logged_in_or_redirect():
+        if not current_user.is_authenticated:
+            flash(u'Please log in to access this page.')
+            return redirect(url_for('admin.login_view', next=request.path or '/'))
+
+    rq_scheduler_dashboard.blueprint.before_request(check_user_logged_in_or_redirect)
+    rq_dashboard.blueprint.before_request(check_user_logged_in_or_redirect)
+    app.register_blueprint(rq_scheduler_dashboard.blueprint, url_prefix='/admin/scheduler')
+    app.register_blueprint(rq_dashboard.blueprint, url_prefix='/admin/workers')
+
+    # FIM do setup RQ Dashboard e Scheduler: - mover para um modulo proprio
 
     app.wsgi_app = ProxyFix(app.wsgi_app)
 

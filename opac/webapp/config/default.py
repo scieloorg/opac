@@ -135,6 +135,14 @@ import os
         - OPAC_GOOGLE_RECAPTCHA_URL: URL do JavaScript Google reCAPTCHA
         - OPAC_GOOGLE_VERIFY_RECAPTCHA_URL: URL de verificação do google (default: https://www.google.com/recaptcha/api/siteverify )
 
+      - Auditoria:
+        - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED: (True/False) ativa/desativa envio de notificaçÕes via email do relatorio de auditoria
+        - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS: (string), lista de email que devem receber o emails com relatorio de auditoria
+
+      - Scheduler:
+        - OPAC_RQ_REDIS_HOST: host do servidor de Redis (pode ser o mesmo server do Cache)
+        - OPAC_RQ_REDIS_PORT: porta do servidor de Redis (pode ser o mesmo server do Cache)
+        - OPAC_RQ_REDIS_PASSWORD: senha do servidor de Redis (pode ser o mesmo server do Cache)
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -340,20 +348,20 @@ SSM_MEDIA_PATH = os.environ.get('OPAC_SSM_MEDIA_PATH', '/media/assets/')
 
 # SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/'
 SSM_BASE_URI = "{scheme}://{domain}:{port}".format(
-  scheme=SSM_SCHEME,
-  domain=SSM_DOMAIN,
-  port=SSM_PORT)
+    scheme=SSM_SCHEME,
+    domain=SSM_DOMAIN,
+    port=SSM_PORT)
 
 # SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/media/assets/'
 SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
-  scheme=SSM_SCHEME,
-  domain=SSM_DOMAIN,
-  port=SSM_PORT,
-  path=SSM_MEDIA_PATH)
+    scheme=SSM_SCHEME,
+    domain=SSM_DOMAIN,
+    port=SSM_PORT,
+    path=SSM_MEDIA_PATH)
 
 # session cookie settings:
 
-SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', '127.0.0.1:8000')
 SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
 SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
 SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
@@ -388,3 +396,19 @@ SCIMAGO_URL = os.environ.get(
               'SCIMAGO_URL',
               'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q=')
 SCIMAGO_ENABLED = os.environ.get('SCIMAGO_ENABLED', 'True') == 'True'
+# Audit Log Email notifications:
+AUDIT_LOG_NOTIFICATION_ENABLED = os.environ.get('OPAC_AUDIT_LOG_NOTIFICATION_ENABLED', 'True') == 'True'
+_audit_log_notification_recipients = os.environ.get('OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS', None)
+AUDIT_LOG_NOTIFICATION_RECIPIENTS = _audit_log_notification_recipients.split(',') if _audit_log_notification_recipients else []
+
+
+# RQ REDIS CONNECTION
+REDIS_HOST = os.environ.get('OPAC_RQ_REDIS_HOST', CACHE_REDIS_HOST)
+REDIS_PORT = int(os.environ.get('OPAC_RQ_REDIS_PORT', CACHE_REDIS_PORT))
+REDIS_PASSWORD = os.environ.get('OPAC_RQ_REDIS_PASSWORD', None)
+RQ_REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
+RQ_REDIS_SETTINGS = {
+    'host': REDIS_HOST,
+    'port': REDIS_PORT,
+    'password': REDIS_PASSWORD,
+}

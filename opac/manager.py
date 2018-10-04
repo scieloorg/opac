@@ -29,14 +29,15 @@ else:
     COV = None
 
 from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
-from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article  # noqa
+from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, AuditLogEntry  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content, send_audit_log_daily_report # noqa
 from webapp.utils.journal_static_page import JournalNewPages, PAGE_NAMES_BY_LANG, get_acron_list # noqa
 
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
+from webapp.tasks import setup_schedule  # noqa
 
 app = create_app()
 migrate = Migrate(app, dbsql)
@@ -51,6 +52,7 @@ def make_shell_context():
         'Journal': Journal,
         'Issue': Issue,
         'Article': Article,
+        'AuditLogEntry': AuditLogEntry,
     }
     return dict(
         app=app,
@@ -59,6 +61,8 @@ def make_shell_context():
         mail=mail,
         cache=cache,
         **app_models)
+
+
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
@@ -381,6 +385,21 @@ def populate_journal_pages(
                     'Página secundária do periódico %s' % acron)
                 done += 1
     print('Páginas: {}\nPeriódicos: {}'.format(done, j_total))
+
+
+@manager.command
+def setup_scheduler_tasks():
+    setup_schedule()
+
+
+@manager.command
+def send_audit_log_emails():
+    print('coletando registros de auditoria modificados hoje!')
+    print('envio de notificações habilitado? (AUDIT_LOG_NOTIFICATION_ENABLED): ',
+          app.config['AUDIT_LOG_NOTIFICATION_ENABLED'])
+    print('lista recipients (além dos usuários) AUDIT_LOG_NOTIFICATION_RECIPIENTS: ',
+          app.config['AUDIT_LOG_NOTIFICATION_RECIPIENTS'])
+    send_audit_log_daily_report()
 
 
 if __name__ == '__main__':
