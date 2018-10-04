@@ -14,7 +14,7 @@ from flask_mail import Message
 from flask import current_app, render_template
 import webapp
 import requests
-from .journal_static_page import JournalStaticPage
+from .journal_static_page import JournalStaticPageFile
 from webapp import models
 from webapp.admin.forms import EmailForm
 
@@ -321,7 +321,7 @@ def fix_page_content(filename, content):
     Extract the header and the footer of the page
     Insert the anchor based on filename
     """
-    return JournalStaticPage(filename, content).body
+    return JournalStaticPageFile(filename, content).body
 
 
 def extract_images(content):
