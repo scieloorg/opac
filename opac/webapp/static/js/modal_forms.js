@@ -82,6 +82,10 @@ var ModalForms = {
 
     render_captcha: function(captcha_id, captcha_key, captcha_theme){
 
+        if(this.render_captcha){
+          $(this.submit_btn_id).attr('disabled', 'disabled');
+        }
+
         if (this.rcaptcha === null){
             this.rcaptcha = grecaptcha.render(captcha_id, {
                                                 sitekey: captcha_key,
@@ -112,12 +116,10 @@ var ModalForms = {
         this.rcaptcha = null;
 
         if (this.has_captcha === true){
-            $(this.submit_btn_id).attr('disabled', 'disabled');
             this.registry_recaptcha_modal();
         }
 
         var self = this;
-
         $(this.form_id).submit(function(e) {
 
             e.preventDefault();
