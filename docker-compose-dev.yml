@@ -48,18 +48,16 @@ services:
             - "8000:8000"
         environment:
             - OPAC_DEBUG_MODE=True
-            - OPAC_MONGODB_HOST=192.168.1.160
-            - OPAC_MONGODB_NAME=hml_opac_sp
-            - OPAC_MONGODB_PASS=aeQuu8pi
+            - OPAC_MONGODB_NAME=opac
+            - OPAC_MONGODB_HOST=opac_mongo
             - OPAC_MONGODB_PORT=27017
-            - OPAC_MONGODB_USER=opac.user
             - OPAC_DATABASE_DIR=/app/data
             - OPAC_MAIL_SERVER=mailhog
             - OPAC_MAIL_PORT=1025
             - OPAC_SECRET_KEY=s3kr3tk3y
-            # - OPAC_SSM_SCHEME=http
-            # - OPAC_SSM_DOMAIN=172.19.0.1
-            # - OPAC_SSM_PORT=8001
+            - OPAC_SSM_SCHEME=http
+            - OPAC_SSM_DOMAIN=172.19.0.1
+            - OPAC_SSM_PORT=8001
             - OPAC_CACHE_ENABLED=False
             - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             - OPAC_CACHE_REDIS_HOST=redis-cache
