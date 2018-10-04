@@ -735,6 +735,21 @@ def issue_feed(url_seg, url_seg_issue):
 # ##################################Article######################################
 
 
+@main.route('/article/<regex("S\d{4}-\d{3}[0-9xX][0-2][0-9]{3}\d{4}\d{5}"):pid>/')
+@cache.cached(key_prefix=cache_key_with_lang)
+def article_detail_pid(pid):
+
+    article = controllers.get_article_by_pid(pid)
+
+    if not article:
+        abort(404, _('Artigo não encontrado'))
+
+    return redirect(url_for('main.article_detail',
+                            url_seg=article.journal.acronym,
+                            url_seg_issue=article.issue.url_segment,
+                            url_seg_article=article.url_segment))
+
+
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
