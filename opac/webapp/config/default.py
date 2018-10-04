@@ -361,7 +361,7 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
 
 # session cookie settings:
 
-SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', '127.0.0.1:8000')
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
 SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
 SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
 SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')

@@ -81,6 +81,12 @@
         "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
       );
 
+      //validação para form contact modal. Apenas pinta os campos.
+      $("#contactModalForm").submit(function(e) {
+        $('.form-group').addClass("has-error");
+        return false;
+      });
+
       moment.locale('{{ session.lang }}');
 
       $("#date").text(moment().format("L HH:mm:ss ZZ"));
