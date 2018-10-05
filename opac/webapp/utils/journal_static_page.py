@@ -188,16 +188,18 @@ class JournalStaticPageFile(object):
                         len(self.original_website)
                     elem[attr_name] = url[p:]
                 if elem[attr_name] != url:
-                    if self.is_equal(elem.string, url) and \
-                       elem[attr_name].startswith('/'):
-                        elem.string = '{}{}'.format(
-                            self.original_website,
-                            elem.string.replace(url, elem[attr_name]))
-                        print(elem.string)
+                    self.fix_elem_string(elem, attr_name, url)
 
-    def is_equal(self, a_content, a_href):
-        print(a_content, a_href)
-        return a_content.strip().replace('&nbsp;', '') == a_href
+    def fix_elem_string(self, elem, attr_name, url):
+        if elem.string is not None:
+            elem_string = elem.string.strip().replace('&nbsp;', '')
+            if elem_string == url:
+                elem.string = '{}{}'.format(
+                    self.original_website,
+                    elem.string.replace(url, elem[attr_name]))
+            elif url.endswith(elem_string):
+                elem.string = '{}{}'.format(
+                    self.original_website, elem[attr_name])
 
     def get_original_website_reference(self, elem_name, attribute_name):
         mentions = []
