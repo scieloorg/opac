@@ -146,6 +146,8 @@ import os
         - OPAC_RQ_REDIS_HOST: host do servidor de Redis (pode ser o mesmo server do Cache)
         - OPAC_RQ_REDIS_PORT: porta do servidor de Redis (pode ser o mesmo server do Cache)
         - OPAC_RQ_REDIS_PASSWORD: senha do servidor de Redis (pode ser o mesmo server do Cache)
+        - OPAC_MAILING_CRON_STRING: valor de cron padrão para o envio de emails
+        - OPAC_DEFAULT_SCHEDULER_TIMEOUT: timeout do screduler cron (dafault: 1000).
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -417,3 +419,7 @@ RQ_REDIS_SETTINGS = {
     'port': REDIS_PORT,
     'password': REDIS_PASSWORD,
 }
+MAILING_CRON_STRING = os.environ.get(
+    'OPAC_MAILING_CRON_STRING', '0 7 * * *')
+DEFAULT_SCHEDULER_TIMEOUT = int(
+    os.environ.get('OPAC_DEFAULT_SCHEDULER_TIMEOUT', 1000))
