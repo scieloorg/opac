@@ -337,7 +337,8 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
 @manager.command
 def populate_journal_pages(
         pages_source_path=app.config['JOURNAL_PAGES_SOURCE_PATH'],
-        images_source_path=app.config['JOURNAL_IMAGES_SOURCE_PATH']
+        images_source_path=app.config['JOURNAL_IMAGES_SOURCE_PATH'],
+        original_website=app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
         ):
     """
     Esse comando faz o primeiro registro das páginas secundárias
@@ -366,7 +367,7 @@ def populate_journal_pages(
     done = 0
     for j, acron in enumerate(sorted(acron_list)):
         print('{}/{} {}'.format(j+1, j_total, acron))
-        pages_src_files = JournalNewPages(pages_source_path,
+        pages_src_files = JournalNewPages(original_website, pages_source_path,
                                           images_source_path, acron)
         for lang, files in PAGE_NAMES_BY_LANG.items():
             content, images_in_file = pages_src_files.get_new_journal_page(

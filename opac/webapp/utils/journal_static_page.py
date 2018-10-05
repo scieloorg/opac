@@ -44,7 +44,7 @@ class JournalStaticPageFile(object):
     # about, editors, instructions, contact
     # 'iaboutj.htm', 'iedboard.htm', 'iinstruc.htm'
     anchors = {
-        'about': 'about',
+        'about': 'aboutj',
         'editors': 'edboard',
         'instructions': 'instruc',
     }
@@ -66,7 +66,9 @@ class JournalStaticPageFile(object):
     ES_UNAVAILABLE_MSG = 'Información no disponible en español. ' + \
                          'Consultar otra versión. '
 
-    def __init__(self, filename):
+    def __init__(self, original_website, filename):
+        self.original_website = original_website
+        self.acron = os.path.basename(os.path.dirname(filename))
         self.filename = filename
         self.name = os.path.basename(filename)
         self.version = self.versions[self.name[0]]
@@ -133,6 +135,77 @@ class JournalStaticPageFile(object):
             self._info(u'%s' % e)
             logging.error(u'%s' % e)
         return _content or ''
+
+    @property
+    def original_website(self):
+        return self._original_website
+
+    @original_website.setter
+    def original_website(self, value):
+        website = value
+        if '//' in website:
+            website = website[website.find('//')+2:]
+        if website.endswith('/'):
+            website = website[:-1]
+        self._original_website = website
+
+    @property
+    def original_journal_home_page(self):
+        return '{}/{}'.format(self.original_website, self.acron)
+
+    @property
+    def new_journal_home_page(self):
+        return '/journal/{}/'.format(self.acron)
+
+    def new_about_journal_page(self, anchor):
+        return self.new_journal_home_page+'about/#'+anchor
+
+    def new_author_page(self, old_page):
+        if 'exprSearch=' in old_page:
+            name = old_page[old_page.rfind('exprSearch=')+len('exprSearch='):]
+            if '&' in name:
+                name = name[:name.find('&')]
+            return '//search.scielo.org/?q=au:{}'.format(
+                name.replace(' ', '+')
+            )
+        return old_page
+
+    def remove_original_website_location(self):
+        for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
+            for elem in self.get_original_website_reference(
+                    elem_name, attr_name):
+                url = elem[attr_name]
+                if url.lower().endswith(self.original_journal_home_page):
+                    elem[attr_name] = self.new_journal_home_page
+                elif url.endswith('.htm') and '/{}/'.format(self.acron) in url:
+                    for new, old in self.anchors.items():
+                        if old in url:
+                            elem[attr_name] = self.new_about_journal_page(new)
+                elif 'cgi-bin' in url and 'indexSearch=AU' in url:
+                    elem[attr_name] = self.new_author_page(url)
+                elif self.original_website in url:
+                    p = url.find(self.original_website) + \
+                        len(self.original_website)
+                    elem[attr_name] = url[p:]
+                if elem[attr_name] != url:
+                    if self.is_equal(elem.string, url) and \
+                       elem[attr_name].startswith('/'):
+                        elem.string = '{}{}'.format(
+                            self.original_website,
+                            elem.string.replace(url, elem[attr_name]))
+                        print(elem.string)
+
+    def is_equal(self, a_content, a_href):
+        print(a_content, a_href)
+        return a_content.strip().replace('&nbsp;', '') == a_href
+
+    def get_original_website_reference(self, elem_name, attribute_name):
+        mentions = []
+        for item in self._body_tree.find_all(elem_name):
+            value = item.get(attribute_name, '')
+            if self.original_website in value:
+                mentions.append(item)
+        return mentions
 
     def _remove_anchors(self):
         items = self._body_tree.find_all('a')
@@ -311,8 +384,8 @@ class JournalStaticPageFile(object):
             msg = self._check_unavailable_message(p_items[0][1])
             if msg is not None:
                 self._info(len(p_items[0][1]))
-                self._info(p_items[0][1][:200])
-                if len(p_items[0][1]) < 200:
+                self._info(p_items[0][1][:300])
+                if len(p_items[0][1]) < 300:
                     self._unavailable_message = '<p>{}</p>'.format(msg)
                     self._info(self._unavailable_message)
                 else:
@@ -402,6 +475,7 @@ class JournalStaticPageFile(object):
 
     @property
     def middle(self):
+        self.remove_original_website_location()
         self.remove_p_in_li()
         self._remove_anchors()
         self._insert_bold_to_p_subtitulo()
@@ -419,7 +493,8 @@ class JournalStaticPageFile(object):
 
 class JournalNewPages(object):
 
-    def __init__(self, revistas_path, img_revistas_path, acron):
+    def __init__(self, original_website, revistas_path, img_revistas_path, acron):
+        self.original_website = original_website
         self.revistas_path = revistas_path
         self.img_revistas_path = img_revistas_path
         self.acron = acron
@@ -436,7 +511,8 @@ class JournalNewPages(object):
         unavailable_message = None
         for file in files:
             file_path = os.path.join(self.journal_pages_path, file)
-            page = JournalStaticPageFile(file_path)
+            page = JournalStaticPageFile(
+                self.original_website, file_path)
             if page.unavailable_message:
                 content.append(page.anchor)
                 unavailable_message = page.unavailable_message
@@ -548,14 +624,20 @@ def generate_journals_pages(REVISTAS_PATH, IMG_REVISTAS_PATH, acron_list=None):
         acron_list = get_acron_list(REVISTAS_PATH)
     not_found = []
     images = []
+    RESULTADO = REVISTAS_PATH+'_new'
+    if not os.path.isdir(RESULTADO):
+        os.makedirs(RESULTADO)
     for acron in acron_list:
-        pages_source = JournalPagesSourceFiles(REVISTAS_PATH,
+        pages_source = JournalNewPages('www.scielo.br', REVISTAS_PATH,
                                                IMG_REVISTAS_PATH, acron)
         for lang, files in PAGE_NAMES_BY_LANG.items():
             content, images_in_file = pages_source.get_new_journal_page(files)
             if content:
                 journal_img_paths = pages_source.get_journal_page_img_paths(
                                                 images_in_file)
+                resultado = '{}/{}_{}.html'.format(RESULTADO, acron, lang)
+                with open(resultado, 'w') as f:
+                    f.write(content)
             if len(journal_img_paths) < len(images_in_file):
                 _found = [item[0] for item in journal_img_paths]
                 for img_in_file in images_in_file:
