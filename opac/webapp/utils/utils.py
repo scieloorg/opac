@@ -456,6 +456,6 @@ def send_audit_log_daily_report():
                 email_data = prepare_report_email(all_recipients, audit_records)
                 send_email(**email_data)
             else:
-                print("não encontramos registros modifiados hoje.")
+                print("não encontramos registros modificados hoje.")
         else:
             print('O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED')

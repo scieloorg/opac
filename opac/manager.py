@@ -37,7 +37,7 @@ from webapp.utils.journal_static_page import JournalNewPages, PAGE_NAMES_BY_LANG
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
 from webapp.admin.forms import EmailForm  # noqa
-from webapp.tasks import setup_schedule  # noqa
+from webapp.tasks import setup_scheduler, clear_scheduler  # noqa
 
 app = create_app()
 migrate = Migrate(app, dbsql)
@@ -388,8 +388,20 @@ def populate_journal_pages(
 
 
 @manager.command
-def setup_scheduler_tasks():
-    setup_schedule()
+@manager.option('-c', '--cronstr', dest='cron_string')
+def setup_scheduler_tasks(cron_string=None):
+    cron_string = cron_string or app.config['MAILING_CRON_STRING']
+    if not cron_string:
+        print('Valor de cron nulo para o scheduler. Definit cron pelo parâmetro ou pela var env.')
+        return sys.exit(1)
+    queue_name = 'mailing'
+    clear_scheduler(queue_name)
+    setup_scheduler(send_audit_log_daily_report, queue_name, cron_string)
+
+
+@manager.command
+def clear_scheduler_tasks():
+    clear_scheduler(queue_name='mailing')
 
 
 @manager.command
