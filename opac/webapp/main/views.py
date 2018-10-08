@@ -47,6 +47,7 @@ def add_collection_to_g():
 def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
     setattr(g, 'email_contact', forms.ContactForm())
+    setattr(g, 'error', forms.ErrorForm())
 
 
 @babel.localeselector
@@ -735,6 +736,21 @@ def issue_feed(url_seg, url_seg_issue):
 # ##################################Article######################################
 
 
+@main.route('/article/<regex("S\d{4}-\d{3}[0-9xX][0-2][0-9]{3}\d{4}\d{5}"):pid>/')
+@cache.cached(key_prefix=cache_key_with_lang)
+def article_detail_pid(pid):
+
+    article = controllers.get_article_by_pid(pid)
+
+    if not article:
+        abort(404, _('Artigo não encontrado'))
+
+    return redirect(url_for('main.article_detail',
+                            url_seg=article.journal.acronym,
+                            url_seg_issue=article.issue.url_segment,
+                            url_seg_article=article.url_segment))
+
+
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
@@ -1055,6 +1071,38 @@ def email_share_ajax():
 @main.route("/form_mail/", methods=['GET'])
 def email_form():
     return render_template("email/email_form.html")
+
+
+@main.route("/email_error_ajax/", methods=['POST'])
+def email_error_ajax():
+
+    if not request.is_xhr:
+        abort(400, _('Requisição inválida.'))
+
+    form = forms.ErrorForm(request.form)
+
+    if form.validate():
+
+        recipients = [email.strip() for email in current_app.config.get('EMAIL_ACCOUNTS_RECEIVE_ERRORS') if email.strip() != '']
+
+        sent, message = controllers.send_email_error(form.data['name'],
+                                                     form.data['your_email'],
+                                                     recipients,
+                                                     form.data['url'],
+                                                     form.data['error_type'],
+                                                     form.data['message'])
+
+        return jsonify({'sent': sent, 'message': str(message),
+                        'fields': [key for key in form.data.keys()]})
+
+    else:
+        return jsonify({'sent': False, 'message': form.errors,
+                        'fields': [key for key in form.data.keys()]})
+
+
+@main.route("/error_mail/", methods=['GET'])
+def error_form():
+    return render_template("includes/error_form.html")
 
 
 # ##################################Others#######################################

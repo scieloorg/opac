@@ -2,6 +2,7 @@
 
 import unittest
 import re
+from unittest.mock import patch
 from flask import current_app, url_for, g
 from flask_login import current_user
 from webapp import dbsql, mail
@@ -489,30 +490,31 @@ class AdminViewsTestCase(BaseTestCase):
                         'email': 'foo@bar.com',
                         'password': '123'
                     }
-                    expected_email = {
-                        'subject': u'Instruções para recuperar sua senha',
-                        'recipients': [credentials['email'], ],
-                        'body_has_link': u'<a href="http://%s%s' % (
-                            current_app.config['SERVER_NAME'],
-                            reset_pwd_url
-                        )
-                    }
+                    with patch.dict(current_app.config, {'SERVER_NAME': 'localhost'}):
+                        expected_email = {
+                            'subject': u'Instruções para recuperar sua senha',
+                            'recipients': [credentials['email'], ],
+                            'body_has_link': u'<a href="http://%s%s' % (
+                                current_app.config['SERVER_NAME'],
+                                reset_pwd_url
+                            )
+                        }
 
-                    # when
-                    create_user(credentials['email'], credentials['password'], True)
-                    with mail.record_messages() as outbox:
-                        response = c.post(
-                            reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
-                        # then
-                        self.assertStatus(response, 200)
+                        # when
+                        create_user(credentials['email'], credentials['password'], True)
+                        with mail.record_messages() as outbox:
+                            response = c.post(
+                                reset_pwd_url,
+                                data={'email': credentials['email']},
+                                follow_redirects=True)
+                            # then
+                            self.assertStatus(response, 200)
 
-                        self.assertEqual(1, len(outbox))
-                        email_msg = outbox[0]
-                        self.assertEqual(expected_email['subject'], email_msg.subject)
-                        self.assertEqual(expected_email['recipients'], email_msg.recipients)
-                        self.assertIn(expected_email['body_has_link'], email_msg.html)
+                            self.assertEqual(1, len(outbox))
+                            email_msg = outbox[0]
+                            self.assertEqual(expected_email['subject'], email_msg.subject)
+                            self.assertEqual(expected_email['recipients'], email_msg.recipients)
+                            self.assertIn(expected_email['body_has_link'], email_msg.html)
 
     def test_reset_password_send_valid_link_via_email(self):
         """

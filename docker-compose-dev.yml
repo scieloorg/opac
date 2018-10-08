@@ -71,11 +71,11 @@ services:
             # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             # - OPAC_CACHE_REDIS_HOST=redis-cache
             # novas settings para auditoria
-            - OPAC_SERVER_NAME=127.0.0.1:8000
             - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED=True
-            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org
+            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org,patricia.morimoto@scielo.org
             - OPAC_RQ_REDIS_HOST=redis-cache
             - OPAC_RQ_REDIS_PORT=6379
+            - OPAC_SERVER_NAME=0.0.0.0:8000
         stdin_open: True
         tty: true
 
@@ -116,12 +116,11 @@ services:
             # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             # - OPAC_CACHE_REDIS_HOST=redis-cache
             # novas settings para auditoria
-            - OPAC_SERVER_NAME=127.0.0.1:8000
             - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED=True
-            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org
+            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org,patricia.morimoto@scielo.org
             - OPAC_RQ_REDIS_HOST=redis-cache
             - OPAC_RQ_REDIS_PORT=6379
-
+            - OPAC_SERVER_NAME=0.0.0.0:8000
     opac-rq-scheduler:
         build:
             context: .
@@ -159,8 +158,8 @@ services:
             # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             # - OPAC_CACHE_REDIS_HOST=redis-cache
             # novas settings para auditoria
-            - OPAC_SERVER_NAME=127.0.0.1:8000
             - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED=True
-            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org
+            - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS=foo@scielo.org,bar@scielo.org,patricia.morimoto@scielo.org
             - OPAC_RQ_REDIS_HOST=redis-cache
             - OPAC_RQ_REDIS_PORT=6379
+            - OPAC_SERVER_NAME=0.0.0.0:8000

@@ -33,3 +33,11 @@ class ContactForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
     your_email = StringField('your_email', validators=[DataRequired(), Email()])
     message = TextAreaField('message', validators=[DataRequired()])
+
+
+class ErrorForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
+    your_email = StringField('your_email', validators=[DataRequired(), Email()])
+    error_type = StringField('error_type', validators=[DataRequired()])
+    url = HiddenField('share_url', validators=[URL(), DataRequired()])
+    message = TextAreaField('message', validators=[DataRequired()])

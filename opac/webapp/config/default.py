@@ -135,6 +135,9 @@ import os
         - OPAC_GOOGLE_RECAPTCHA_URL: URL do JavaScript Google reCAPTCHA
         - OPAC_GOOGLE_VERIFY_RECAPTCHA_URL: URL de verificação do google (default: https://www.google.com/recaptcha/api/siteverify )
 
+      - Formulário de erro:
+        - EMAIL_ACCOUNTS_RECEIVE_ERRORS: # Contas de email para receber mensagens de erros da interface.
+
       - Auditoria:
         - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED: (True/False) ativa/desativa envio de notificaçÕes via email do relatorio de auditoria
         - OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS: (string), lista de email que devem receber o emails com relatorio de auditoria
@@ -143,6 +146,8 @@ import os
         - OPAC_RQ_REDIS_HOST: host do servidor de Redis (pode ser o mesmo server do Cache)
         - OPAC_RQ_REDIS_PORT: porta do servidor de Redis (pode ser o mesmo server do Cache)
         - OPAC_RQ_REDIS_PASSWORD: senha do servidor de Redis (pode ser o mesmo server do Cache)
+        - OPAC_MAILING_CRON_STRING: valor de cron padrão para o envio de emails
+        - OPAC_DEFAULT_SCHEDULER_TIMEOUT: timeout do screduler cron (dafault: 1000).
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -180,6 +185,8 @@ OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'spa')
 # Conta de email padrão para emails enviado do site - deve ser um email válido
 DEFAULT_EMAIL = os.environ.get('OPAC_DEFAULT_EMAIL', 'scielo@scielo.org')
 
+# Contas de email para receber mensagens de erros da interface.
+EMAIL_ACCOUNTS_RECEIVE_ERRORS = ['scielo@scielo.org', ]
 
 # Credenciais para envio de emails
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
@@ -363,7 +370,7 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
 
 # session cookie settings:
 
-SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', '127.0.0.1:8000')
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
 SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
 SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
 SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
@@ -414,3 +421,7 @@ RQ_REDIS_SETTINGS = {
     'port': REDIS_PORT,
     'password': REDIS_PASSWORD,
 }
+MAILING_CRON_STRING = os.environ.get(
+    'OPAC_MAILING_CRON_STRING', '0 7 * * *')
+DEFAULT_SCHEDULER_TIMEOUT = int(
+    os.environ.get('OPAC_DEFAULT_SCHEDULER_TIMEOUT', 1000))
