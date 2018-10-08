@@ -170,10 +170,17 @@ class JournalStaticPageFile(object):
             )
         return old_page
 
+    def fix_url(self, elem, attr_name):
+        invalid_text = '{}/revistas/{}/'.format(
+                self.original_website, self.acron)
+        if '{}www'.format(invalid_text) in elem[attr_name]:
+            elem[attr_name] = elem[attr_name].replace(invalid_text, '')
+
     def remove_original_website_location(self):
         for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
             for elem in self.get_original_website_reference(
                     elem_name, attr_name):
+                self.fix_url(elem, attr_name)
                 url = elem[attr_name]
                 if url.lower().endswith(self.original_journal_home_page):
                     elem[attr_name] = self.new_journal_home_page

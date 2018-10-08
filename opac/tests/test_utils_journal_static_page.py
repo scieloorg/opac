@@ -374,76 +374,112 @@ class JournalStaticPageTestCase(BaseTestCase):
             'www.scielo.br', self.html_file('abb_pinstruc'))
         self.assertTrue(jspf.PT_UNAVAILABLE_MSG in jspf.unavailable_message)
 
+    def _in_antes_e_depois(self, file_content, body, antes, depois):
+        self.assertIn(antes, file_content)
+        self.assertNotIn(depois, file_content)
+        self.assertNotIn(antes, body)
+        self.assertIn(depois, body)
+
+    def _count_antes_e_depois(self, file_content, body, text, antes=0, depois=0):
+        self.assertEqual(file_content.count(text), antes)
+        self.assertEqual(body.count(text), depois)
+
     def test_title_icse_iinstruc_remove_original_website_location(self):
         jspf = JournalStaticPageFile(
             'www.scielo.br', self.html_file('icse_iinstruc'))
-        self.assertEqual(jspf.file_content.count('www.scielo.br'), 22)
-        self.assertEqual(
-            jspf.file_content.count('indexSearch=AU&exprSearch='), 12)
-        self.assertEqual(
-            jspf.file_content.count('//search.scielo.org/?q=au:'), 0)
-        self.assertIn('www.scielo.br/cgi-bin/', jspf.file_content)
-        self.assertIn(
+        self.assertEqual(jspf.file_content.count('www.scielo.br'), 23)
+
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'indexSearch=AU&exprSearch=', antes=12)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '//search.scielo.org/?q=au:', depois=12)
+
+        self._in_antes_e_depois(
+            jspf.file_content, jspf.body,
             'http://www.scielo.br/cgi-bin/wxis.exe/iah/'
             '?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&'
             'lang=p&nextAction=lnk&'
             'indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI',
-            jspf.file_content)
-        self.assertNotIn('www.scielo.br/cgi-bin/', jspf.body)
-        self.assertIn(
-            '//search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI',
-            jspf.body)
-        self.assertEqual(jspf.body.count('indexSearch=AU&exprSearch='), 0)
-        self.assertEqual(jspf.body.count('//search.scielo.org/?q=au:'), 12)
+            '//search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI')
 
-        self.assertEqual(
-            jspf.file_content.count(
-                'www.scielo.br/img/revistas/icse/levels.pdf'), 2)
-        self.assertEqual(
-            jspf.file_content.count(
-                'www.scielo.br/revistas/icse/levels.pdf'), 2)
-        self.assertEqual(
-            jspf.file_content.count(
-                'www.scielo.br/revistas/icse/iinstruc.htm'), 2)
-        self.assertEqual(
-            jspf.file_content.count(
-                'www.scielo.br/revistas/icse/iedboard.htm'), 2)
-        self.assertEqual(
-            jspf.file_content.count(
-                'www.scielo.br/revistas/icse/iaboutj.htm'), 2)
+        self.assertIn('/img/revistas/icse/levels.pdf', jspf.body)
 
-        self.assertEqual(
-            jspf.body.count('"/img/revistas/icse/levels.pdf"'), 1)
-        self.assertEqual(
-            jspf.body.count('"/revistas/icse/levels.pdf"'), 1)
-        self.assertEqual(
-            jspf.body.count('"/journal/icse/about/#instructions"'), 1)
-        self.assertEqual(
-            jspf.body.count('"/journal/icse/about/#editors"'), 1)
-        self.assertEqual(
-            jspf.body.count('"/journal/icse/about/#about"'), 1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/img/revistas/icse/levels.pdf',
+            antes=2, depois=1)
 
-        self.assertEqual(
-            jspf.body.count('www.scielo.br/revistas/icse/iinstruc.htm'), 0)
-        self.assertEqual(
-            jspf.body.count('www.scielo.br/revistas/icse/iedboard.htm'), 0)
-        self.assertEqual(
-            jspf.body.count('www.scielo.br/revistas/icse/iaboutj.htm'), 0)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/revistas/icse/levels.pdf',
+            antes=2, depois=1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '"/revistas/icse/levels.pdf"',
+            depois=1)
 
-        self.assertEqual(
-            jspf.body.count('>www.scielo.br/img/revistas/icse/levels.pdf<'), 1)
-        self.assertEqual(
-            jspf.body.count('>www.scielo.br/revistas/icse/levels.pdf<'), 1)
-        self.assertEqual(
-            jspf.body.count(
-                '>www.scielo.br/journal/icse/about/#instructions'), 1)
-        self.assertEqual(
-            jspf.body.count('>www.scielo.br/journal/icse/about/#editors'), 1)
-        self.assertEqual(
-            jspf.body.count('>www.scielo.br/journal/icse/about/#about'), 1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/revistas/icse/iinstruc.htm',
+            antes=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '"/journal/icse/about/#instructions"',
+            depois=1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '/journal/icse/about/#instructions',
+            depois=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/journal/icse/about/#instructions',
+            depois=1)
 
-        self.assertIn('/journal/icse/about/#about', jspf.body)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/revistas/icse/iaboutj.htm',
+            antes=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '"/journal/icse/about/#about"',
+            depois=1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '/journal/icse/about/#about',
+            depois=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/journal/icse/about/#about',
+            depois=1)
+
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/revistas/icse/iedboard.htm',
+            antes=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '"/journal/icse/about/#editors"',
+            depois=1)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            '/journal/icse/about/#editors',
+            depois=2)
+        self._count_antes_e_depois(
+            jspf.file_content, jspf.body,
+            'www.scielo.br/journal/icse/about/#editors',
+            depois=1)
+
         self.assertEqual(jspf.body.count('www.scielo.br'), 5)
+        self.assertIn(
+            '<p><a href="http://www.scielo.br/revistas/'
+            'icse/www1.folha.uol.com.br">www1.folha.uol.com.br</a></p>',
+            jspf.file_content)
+        self.assertIn(
+            '<p><a href="http://www1.folha.uol.com.br">'
+            'www1.folha.uol.com.br</a></p>',
+            jspf.body)
 
     def test_title_icse_eaboutj_remove_original_website_location(self):
         jspf = JournalStaticPageFile(
