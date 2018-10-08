@@ -387,7 +387,6 @@ class JournalStaticPageTestCase(BaseTestCase):
     def test_title_icse_iinstruc_remove_original_website_location(self):
         jspf = JournalStaticPageFile(
             'www.scielo.br', self.html_file('icse_iinstruc'))
-        self.assertEqual(jspf.file_content.count('www.scielo.br'), 23)
 
         self._count_antes_e_depois(
             jspf.file_content, jspf.body,
@@ -471,7 +470,6 @@ class JournalStaticPageTestCase(BaseTestCase):
             'www.scielo.br/journal/icse/about/#editors',
             depois=1)
 
-        self.assertEqual(jspf.body.count('www.scielo.br'), 5)
         self.assertIn(
             '<p><a href="http://www.scielo.br/revistas/'
             'icse/www1.folha.uol.com.br">www1.folha.uol.com.br</a></p>',
@@ -480,6 +478,25 @@ class JournalStaticPageTestCase(BaseTestCase):
             '<p><a href="http://www1.folha.uol.com.br">'
             'www1.folha.uol.com.br</a></p>',
             jspf.body)
+
+        self.assertIn('http://www.scielo.br/clinics', jspf.file_content)
+        self.assertIn('http://www.scielo.br/clinics', jspf.body)
+
+        self.assertEqual(
+            jspf.file_content.count(
+                'http://www.scielo.br/scielo.php?script=sci_serial&'
+                'pid=0102-4450&lng=en&nrm=iso'),
+            1)
+        self.assertEqual(
+            jspf.body.count(
+                'http://www.scielo.br/scielo.php?script=sci_serial&amp;'
+                'pid=0102-4450&amp;lng=en&amp;nrm=iso'),
+            0)
+        self.assertEqual(
+            jspf.body.count(
+                '/scielo.php?script=sci_serial&amp;'
+                'pid=0102-4450&amp;lng=en&amp;nrm=iso'),
+            2)
 
     def test_title_icse_eaboutj_remove_original_website_location(self):
         jspf = JournalStaticPageFile(
