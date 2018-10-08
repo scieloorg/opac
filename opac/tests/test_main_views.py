@@ -1,5 +1,4 @@
 # coding: utf-8
-import random
 import unittest
 import flask
 import warnings
@@ -681,6 +680,59 @@ class MainTestCase(BaseTestCase):
                                                url_seg_issue=issue.url_segment,
                                                url_seg_article=article.url_segment,
                                                lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    def test_article_detail_pid_redirect(self):
+        """
+        Teste da ``view function`` ``article_detail_pid``, verifica somente o
+        redirecionamento.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            utils.makeOneArticle({'title': 'Article Y',
+                                  'issue': issue,
+                                  'journal': journal,
+                                  'pid': 'S0102-311X2018000100101',
+                                  'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail_pid',
+                                               pid='S0102-311X2018000100101'))
+
+            self.assertStatus(response, 302)
+
+    def test_article_detail_pid_redirect_follow(self):
+        """
+        Teste da ``view function`` ``article_detail_pid``,
+        deve retornar uma página que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'pid': 'S0102-311X2018000100101',
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail_pid',
+                                               pid='S0102-311X2018000100101'),
+                                       follow_redirects=True)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
