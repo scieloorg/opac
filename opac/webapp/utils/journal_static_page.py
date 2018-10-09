@@ -69,7 +69,6 @@ class JournalStaticPageFile(object):
                          'Consult other version. '
 
     def __init__(self, original_website, filename):
-        self.replacements = []
         self.original_website = original_website
         self.acron = os.path.basename(os.path.dirname(filename))
         self.filename = filename
@@ -77,7 +76,6 @@ class JournalStaticPageFile(object):
         self.version = self.versions[self.name[0]]
         self.file_content = self._read()
         self.get_tree()
-        self.remove_original_website_location()
 
     def get_tree(self):
         """
@@ -88,6 +86,7 @@ class JournalStaticPageFile(object):
         for parser in ['lxml', 'html.parser']:
             if parser is not None:
                 self.tree = BeautifulSoup(self.file_content, parser)
+                self.migrate_urls_to_new_website()
             if self.middle_end_insertion_position is None:
                 self._info('Not found: end. FAILED {}'.format(parser))
             elif self.middle_begin_insertion_position is None:
@@ -174,18 +173,19 @@ class JournalStaticPageFile(object):
             )
         return old_page
 
-    def remove_original_website_location(self):
+    def migrate_urls_to_new_website(self):
+        replacements = []
         for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
-            for elem in self.get_original_website_reference(
+            for elem in self.find_original_website_reference(
                     elem_name, attr_name):
                 self.fix_invalid_url(elem, attr_name)
                 old_url = elem[attr_name]
                 elem[attr_name] = self.get_new_url(old_url)
                 if elem[attr_name] != old_url:
-                    self.replacements.append((old_url, elem[attr_name]))
+                    replacements.append((old_url, elem[attr_name]))
                     self.fix_elem_string(elem, attr_name, old_url)
-        self.replacements = set(list(self.replacements))
-        for old, new in self.replacements:
+        replacements = set(list(replacements))
+        for old, new in replacements:
             if self.body.count(old) > 0:
                 self._info(
                     'CONFERIR: ainda existe: {} ({})'.format(
@@ -263,7 +263,7 @@ class JournalStaticPageFile(object):
                 elem.string = '{}{}'.format(
                     self.original_website, elem[attr_name])
 
-    def get_original_website_reference(self, elem_name, attribute_name):
+    def find_original_website_reference(self, elem_name, attribute_name):
         mentions = []
         for item in self._body_tree.find_all(elem_name):
             value = item.get(attribute_name, '')
@@ -435,24 +435,22 @@ class JournalStaticPageFile(object):
         return ''
 
     def _check_unavailable_message(self, content):
-        if len(content) < 300:
-            if self.version == 'português' and 'não disponível' in content:
-                return self.PT_UNAVAILABLE_MSG
-            elif self.version == 'español' and 'no disponible' in content:
-                return self.ES_UNAVAILABLE_MSG
-            elif self.version == 'English' and 'not available' in content:
-                return self.EN_UNAVAILABLE_MSG
-            self._info('CONFERIR: IGNORED unavailable_message')
-            self._info(content[:300])
+        if self.version == 'português' and 'não disponível' in content:
+            return self.PT_UNAVAILABLE_MSG
+        elif self.version == 'español' and 'no disponible' in content:
+            return self.ES_UNAVAILABLE_MSG
+        elif self.version == 'English' and 'not available' in content:
+            return self.EN_UNAVAILABLE_MSG
 
     def _get_unavailable_message(self):
         self._unavailable_message = None
         text = self._check_unavailable_message(self.body_content)
         if text:
             p_items = self.sorted_by_relevance
-            msg = self._check_unavailable_message(p_items[0][1])
-            if msg is not None:
-                self._unavailable_message = '<p>{}</p>'.format(msg)
+            if len((p_items[0][1])) < 300:
+                msg = self._check_unavailable_message(p_items[0][1])
+                if msg is not None:
+                    self._unavailable_message = '<p>{}</p>'.format(msg)
 
     @property
     def sorted_by_relevance(self):

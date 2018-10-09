@@ -310,7 +310,7 @@ class JournalStaticPageTestCase(BaseTestCase):
         self.assertTrue('script=sci_serial' in jspf.body_content)
         self.assertTrue('Home' in jspf.body_content)
 
-        self.assertFalse('"middle_end"' in jspf.body_content)
+        self.assertNotIn('"middle_end"', jspf.file_content)
         jspf.insert_p_middle_end()
         self.assertTrue('"middle_end"' in jspf.body_content)
         self.assertTrue(jspf.p_middle_end is not None)
@@ -353,15 +353,15 @@ class JournalStaticPageTestCase(BaseTestCase):
     def test_insert_middle_end_bjmbr_iaboutj(self):
         jspf = JournalStaticPageFile(
             'www.scielo.br', self.html_file('bjmbr_iaboutj'))
-        self.assertEqual(jspf.body_content.count('<li>'), 17)
-        self.assertEqual(jspf.body_content.count('<p>'), 23)
-        self.assertTrue('<li>\n<p>Sociedade Brasileira de Biologia Celular ' +
-                        '(SBBC) </p></li>' in jspf.body_content)
-        jspf.remove_p_in_li()
-        self.assertEqual(jspf.body_content.count('<li>'), 17)
-        self.assertEqual(jspf.body_content.count('<p>'), 10)
-        self.assertTrue(
-            '<li>\nSociedade Brasileira de Biologia Celular (SBBC) </li>' in
+        self.assertEqual(len(jspf._body_tree.find_all('li')), 17)
+        self.assertEqual(len(jspf._body_tree.find_all('p')), 27)
+        self.assertIn(
+            '<P>Sociedade Brasileira de Biologia Celular (SBBC) </p>',
+            jspf.file_content)
+        self.assertEqual(jspf.body.count('<li>'), 13)
+        self.assertEqual(jspf.body.count('<p>'), 10)
+        self.assertNotIn(
+            '<P>Sociedade Brasileira de Biologia Celular (SBBC) </p>',
             jspf.body_content)
 
     def test_unavailable_msg_es_abb_einstruc(self):
