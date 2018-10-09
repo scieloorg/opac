@@ -268,6 +268,8 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # paginas secundarias
 DATA_PATH = os.path.join(PROJECT_PATH, '../../data')
+JOURNAL_PAGES_ORIGINAL_WEBSITE = os.environ.get(
+  'ORIGINAL_WEBSITE', 'www.scielo.br')
 JOURNAL_PAGES_SOURCE_PATH = os.environ.get(
   'OPAC_JOURNAL_PAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'pages'))
 JOURNAL_IMAGES_SOURCE_PATH = os.environ.get(

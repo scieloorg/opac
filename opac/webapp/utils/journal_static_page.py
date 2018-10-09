@@ -44,7 +44,7 @@ class JournalStaticPageFile(object):
     # about, editors, instructions, contact
     # 'iaboutj.htm', 'iedboard.htm', 'iinstruc.htm'
     anchors = {
-        'about': 'about',
+        'about': 'aboutj',
         'editors': 'edboard',
         'instructions': 'instruc',
     }
@@ -65,8 +65,12 @@ class JournalStaticPageFile(object):
                          'Consultar outra versão. '
     ES_UNAVAILABLE_MSG = 'Información no disponible en español. ' + \
                          'Consultar otra versión. '
+    EN_UNAVAILABLE_MSG = 'Information is not available in English. ' + \
+                         'Consult other version. '
 
-    def __init__(self, filename):
+    def __init__(self, original_website, filename):
+        self.original_website = original_website
+        self.acron = os.path.basename(os.path.dirname(filename))
         self.filename = filename
         self.name = os.path.basename(filename)
         self.version = self.versions[self.name[0]]
@@ -82,6 +86,7 @@ class JournalStaticPageFile(object):
         for parser in ['lxml', 'html.parser']:
             if parser is not None:
                 self.tree = BeautifulSoup(self.file_content, parser)
+                self.migrate_urls_to_new_website()
             if self.middle_end_insertion_position is None:
                 self._info('Not found: end. FAILED {}'.format(parser))
             elif self.middle_begin_insertion_position is None:
@@ -133,6 +138,138 @@ class JournalStaticPageFile(object):
             self._info(u'%s' % e)
             logging.error(u'%s' % e)
         return _content or ''
+
+    @property
+    def original_website(self):
+        return self._original_website
+
+    @original_website.setter
+    def original_website(self, value):
+        website = value
+        if '//' in website:
+            website = website[website.find('//')+2:]
+        if website.endswith('/'):
+            website = website[:-1]
+        self._original_website = website
+
+    @property
+    def original_journal_home_page(self):
+        return '{}/{}'.format(self.original_website, self.acron)
+
+    @property
+    def new_journal_home_page(self):
+        return '/journal/{}/'.format(self.acron)
+
+    def new_about_journal_page(self, anchor):
+        return self.new_journal_home_page+'about/#'+anchor
+
+    def new_author_page(self, old_page):
+        if 'exprSearch=' in old_page:
+            name = old_page[old_page.rfind('exprSearch=')+len('exprSearch='):]
+            if '&' in name:
+                name = name[:name.find('&')]
+            return '//search.scielo.org/?q=au:{}'.format(
+                name.replace(' ', '+')
+            )
+        return old_page
+
+    def migrate_urls_to_new_website(self):
+        replacements = []
+        for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
+            for elem in self.find_original_website_reference(
+                    elem_name, attr_name):
+                self.fix_invalid_url(elem, attr_name)
+                old_url = elem[attr_name]
+                elem[attr_name] = self.get_new_url(old_url)
+                if elem[attr_name] != old_url:
+                    replacements.append((old_url, elem[attr_name]))
+                    self.fix_elem_string(elem, attr_name, old_url)
+        replacements = set(list(replacements))
+        for old, new in replacements:
+            if self.body.count(old) > 0:
+                self._info(
+                    'CONFERIR: ainda existe: {} ({})'.format(
+                        old, self.body.count(old)))
+
+    def fix_invalid_url(self, elem, attr_name):
+        """
+        Trocar o padrao:
+        http://www.scielo.br/revistas/icse/www1.folha.uol.com.br
+        Por:
+        http://www1.folha.uol.com.br
+        """
+        invalid_text = '{}/revistas/{}/'.format(
+                self.original_website, self.acron)
+        if '{}www'.format(invalid_text) in elem[attr_name]:
+            elem[attr_name] = elem[attr_name].replace(invalid_text, '')
+
+    def get_new_url(self, url):
+        if url.strip().count(' ') > 0:
+            self._info('CONFERIR: URL MANTIDA | INVALID URL {} {}'.format(
+                        url, self.filename))
+            return url
+
+        # www.scielo.br/icse -> /journal/icse/
+        if url.lower().endswith(self.original_journal_home_page):
+            return self.new_journal_home_page
+
+        # www.scielo.br/revistas/icse/iaboutj.htm -> /journal/icse/about/#about
+        if url.endswith('.htm') and '/{}/'.format(self.acron) in url:
+            for new, old in self.anchors.items():
+                if old in url:
+                    return self.new_about_journal_page(new)
+
+        # http://www.scielo.br/cgi-bin/wxis.exe/iah/
+        # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
+        # lang=p&nextAction=lnk&
+        # indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI
+        # ->
+        # //search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI')
+        if 'cgi-bin' in url and 'indexSearch=AU' in url:
+            return self.new_author_page(url)
+
+        # www.scielo.br/revistas/icse/levels.pdf -> /revistas/icse/levels.pdf
+        #
+        # www.scielo.br/img/revistas/icse/levels.pdf ->
+        # /img/revistas/icse/levels.pdf
+        #
+        # http://www.scielo.br/scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
+        # ->
+        # /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
+        #
+        # http://www.scielo.br -> /
+        if self.original_website in url:
+            p = url.find(self.original_website) + \
+                len(self.original_website)
+            relative_url = url[p:].strip()
+            for relative in ['/scielo.php', '/fbpe', '/revistas',
+                             '/img/revistas']:
+                if relative_url.startswith(relative):
+                    return relative_url
+                if relative_url in ["", '/']:
+                    return '/'
+            self._info('CONFERIR: URL MANTIDA {} {} {}'.format(
+                        url, relative_url, self.filename))
+        return url
+
+    def fix_elem_string(self, elem, attr_name, original_url):
+        if elem.string is not None:
+            elem_string = elem.string.strip().replace('&nbsp;', '')
+            if elem_string == original_url:
+                elem.string = '{}{}'.format(
+                    self.original_website,
+                    elem.string.replace(original_url, elem[attr_name]))
+            elif original_url.endswith(elem_string):
+                elem.string = '{}{}'.format(
+                    self.original_website, elem[attr_name])
+
+    def find_original_website_reference(self, elem_name, attribute_name):
+        mentions = []
+        for item in self._body_tree.find_all(elem_name):
+            value = item.get(attribute_name, '')
+            if self.original_website in value:
+                mentions.append(item)
+        return mentions
 
     def _remove_anchors(self):
         items = self._body_tree.find_all('a')
@@ -302,21 +439,18 @@ class JournalStaticPageFile(object):
             return self.PT_UNAVAILABLE_MSG
         elif self.version == 'español' and 'no disponible' in content:
             return self.ES_UNAVAILABLE_MSG
+        elif self.version == 'English' and 'not available' in content:
+            return self.EN_UNAVAILABLE_MSG
 
     def _get_unavailable_message(self):
         self._unavailable_message = None
         text = self._check_unavailable_message(self.body_content)
         if text:
             p_items = self.sorted_by_relevance
-            msg = self._check_unavailable_message(p_items[0][1])
-            if msg is not None:
-                self._info(len(p_items[0][1]))
-                self._info(p_items[0][1][:200])
-                if len(p_items[0][1]) < 200:
+            if len((p_items[0][1])) < 300:
+                msg = self._check_unavailable_message(p_items[0][1])
+                if msg is not None:
                     self._unavailable_message = '<p>{}</p>'.format(msg)
-                    self._info(self._unavailable_message)
-                else:
-                    self._info('IGNORED')
 
     @property
     def sorted_by_relevance(self):
@@ -419,7 +553,8 @@ class JournalStaticPageFile(object):
 
 class JournalNewPages(object):
 
-    def __init__(self, revistas_path, img_revistas_path, acron):
+    def __init__(self, original_website, revistas_path, img_revistas_path, acron):
+        self.original_website = original_website
         self.revistas_path = revistas_path
         self.img_revistas_path = img_revistas_path
         self.acron = acron
@@ -433,19 +568,21 @@ class JournalNewPages(object):
         """
         content = []
         img_paths = []
-        unavailable_message = None
+        unavailable_message = []
         for file in files:
             file_path = os.path.join(self.journal_pages_path, file)
-            page = JournalStaticPageFile(file_path)
+            page = JournalStaticPageFile(
+                self.original_website, file_path)
             if page.unavailable_message:
-                content.append(page.anchor)
-                unavailable_message = page.unavailable_message
+                unavailable_message.append(
+                    page.anchor + page.anchor_title + page.unavailable_message)
+                content.append(unavailable_message[-1])
             else:
                 content.append(page.body)
                 img_paths.extend(page.img_paths)
-        if unavailable_message is not None:
-            content.append(unavailable_message)
-        return '\n'.join(content), sorted(list(set(img_paths)))
+        text = ' <!-- UNAVAILABLE MESSAGE: {} --> '.format(
+                    len(unavailable_message))
+        return '\n'.join(content)+text, sorted(list(set(img_paths)))
 
     def _find_journal_page_img_file(self, img_in_file):
         img_basename = os.path.basename(img_in_file)
@@ -548,14 +685,20 @@ def generate_journals_pages(REVISTAS_PATH, IMG_REVISTAS_PATH, acron_list=None):
         acron_list = get_acron_list(REVISTAS_PATH)
     not_found = []
     images = []
+    RESULTADO = REVISTAS_PATH+'_new'
+    if not os.path.isdir(RESULTADO):
+        os.makedirs(RESULTADO)
     for acron in acron_list:
-        pages_source = JournalPagesSourceFiles(REVISTAS_PATH,
+        pages_source = JournalNewPages('www.scielo.br', REVISTAS_PATH,
                                                IMG_REVISTAS_PATH, acron)
         for lang, files in PAGE_NAMES_BY_LANG.items():
             content, images_in_file = pages_source.get_new_journal_page(files)
             if content:
                 journal_img_paths = pages_source.get_journal_page_img_paths(
                                                 images_in_file)
+                resultado = '{}/{}_{}.html'.format(RESULTADO, acron, lang)
+                with open(resultado, 'w') as f:
+                    f.write(content)
             if len(journal_img_paths) < len(images_in_file):
                 _found = [item[0] for item in journal_img_paths]
                 for img_in_file in images_in_file:
