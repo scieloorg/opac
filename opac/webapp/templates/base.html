@@ -55,9 +55,9 @@
 
     {% include "includes/error_form.html" %}
 
-    <script src="{{ config.GOOGLE_RECAPTCHA_URL }}"></script>
-
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
+
+    <script src="{{ config.GOOGLE_RECAPTCHA_URL }}"></script>
 
     {% block extra_js %}{% endblock %}
 

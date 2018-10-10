@@ -136,7 +136,7 @@ import os
         - OPAC_GOOGLE_VERIFY_RECAPTCHA_URL: URL de verificação do google (default: https://www.google.com/recaptcha/api/siteverify )
 
       - Formulário de erro:
-        - EMAIL_ACCOUNTS_RECEIVE_ERRORS: # Contas de email para receber mensagens de erros da interface.
+        - OPAC_EMAIL_ACCOUNTS_RECEIVE_ERRORS: # Contas de email para receber mensagens de erros da interface.
 
       - Auditoria:
         - OPAC_AUDIT_LOG_NOTIFICATION_ENABLED: (True/False) ativa/desativa envio de notificaçÕes via email do relatorio de auditoria
@@ -186,7 +186,8 @@ OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'spa')
 DEFAULT_EMAIL = os.environ.get('OPAC_DEFAULT_EMAIL', 'scielo@scielo.org')
 
 # Contas de email para receber mensagens de erros da interface.
-EMAIL_ACCOUNTS_RECEIVE_ERRORS = ['scielo@scielo.org', ]
+_accounts_receive_errors = os.environ.get('OPAC_EMAIL_ACCOUNTS_RECEIVE_ERRORS', None)
+EMAIL_ACCOUNTS_RECEIVE_ERRORS = _accounts_receive_errors.split(',') if _accounts_receive_errors else []
 
 # Credenciais para envio de emails
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
@@ -267,6 +268,8 @@ DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 # paginas secundarias
 DATA_PATH = os.path.join(PROJECT_PATH, '../../data')
+JOURNAL_PAGES_ORIGINAL_WEBSITE = os.environ.get(
+  'ORIGINAL_WEBSITE', 'www.scielo.br')
 JOURNAL_PAGES_SOURCE_PATH = os.environ.get(
   'OPAC_JOURNAL_PAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'pages'))
 JOURNAL_IMAGES_SOURCE_PATH = os.environ.get(
