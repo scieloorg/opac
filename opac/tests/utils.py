@@ -1,7 +1,9 @@
 # coding: utf-8
 import datetime
+import random
 from uuid import uuid4
 from flask import current_app
+from slugify import slugify
 from opac_schema.v1 import models
 
 
@@ -125,6 +127,57 @@ def makeAnyJournal(items=3, attrib=None):  # noqa
         journals.append(journal)
 
     return journals
+
+
+def makeOnePage(attrib=None):  # noqa
+    """
+    Retorna um objeto ``Page`` com os atributos obrigatórios:
+    ``_id``, ``jid``, ``is_public``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    default_id = attrib.get('_id', str(uuid4().hex))
+    default_name = "page-%s" % default_id
+    texts = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.' + \
+            ' Ut cursus porttitor suscipit. ' + \
+            'Suspendisse ut dolor volutpat, ' + \
+            'tempor eros nec, tincidunt dui. Integer id ornare lectus, ' + \
+            'sit amet consectetur leo. Mauris massa massa, ' + \
+            'ut, euismod aliquet erat. Cras id blandit magna, et porttitor' + \
+            ' purus. Vestibulum rhoncus euismod purus at ultrices. '
+    texts = texts.split()
+    times = random.choice(range(10, len(texts)))
+
+    page = {
+        '_id': default_id,
+        'name': attrib.get('name', default_name),
+        'slug_name': slugify(attrib.get('name', default_name)),
+        'journal': attrib.get('journal', ''),
+        'content': ' '.join([random.choice(texts) for n in range(0, times)]),
+        'description': 'Description {}'.format(default_name),
+        'language': attrib.get('language', 'pt_BR'),
+        'created_at': attrib.get('created', datetime.datetime.now()),
+        'updated_at': attrib.get('updated', datetime.datetime.now()),
+    }
+    page.update(attrib)
+    return models.Pages(**page).save()
+
+
+def makeAnyPage(items=3, attrib=None):  # noqa
+    """
+    Retorna uma lista de objetos ``Pages`` com atributos ``jid``,
+    ``is_public`` e ``acronym`` limitando a quantidade pelo param ``items``.
+    Param attrib para adicionar atributo aos objecto do tipo Pages
+    """
+    pages = []
+
+    for _ in range(items):
+
+        page = makeOnePage(attrib)
+
+        pages.append(page)
+
+    return pages
 
 
 def makeOneIssue(attrib=None):  # noqa
@@ -276,7 +329,7 @@ def makeAnyArticle(issue=None, items=3, attrib=None):  # noqa
     """
     Retorna uma lista de objetos ``Article`` com atributos ``aid``,
     ``issue`` limitando a quantidade pelo param ``items`` e o param issue
-    permiti definir um objeto ``Issue`` para o artcile ou será criado
+    permiti definir um objeto ``Issue`` para o artcile ou será c riado
     automáticamente.
     """
     articles = []

@@ -1011,6 +1011,9 @@ class MainTestCase(BaseTestCase):
             # then
             self.assertStatus(response, 200)
             self.assertIn('<div class="partners">', response.data.decode('utf-8'))
+            self.assertIn('"/about/"', response.data.decode('utf-8'))
+            self.assertNotIn(
+                '/collection/about/', response.data.decode('utf-8'))
 
             for sponsor in [sponsor1, sponsor2, sponsor3]:
                 self.assertIn(sponsor.name, response.data.decode('utf-8'))
@@ -1125,3 +1128,69 @@ class MainTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
                 self.assertIn('User-agent: *', response.data.decode('utf-8'))
                 self.assertIn('Disallow: /', response.data.decode('utf-8'))
+
+
+class PageTestCase(BaseTestCase):
+
+    def test_pages_list(self):
+        """
+        Teste para avaliar o retorno da ``view function`` pages,
+        ao cadastrar 3 páginas a interface deve retornar uma listagem
+        contendo elementos esperados e também deve retornar o template
+        ``collection/about.html``.
+        """
+        utils.makeOneCollection()
+        pages = [
+            utils.makeOnePage({'name': 'Critérios SciELO'}),
+            utils.makeOnePage({'name': 'FAQ SciELO'}),
+            utils.makeOnePage({'name': 'Equipe SciELO'})
+        ]
+
+        response = self.client.get(url_for('main.about_collection'))
+
+        self.assertStatus(response, 200)
+        self.assertTemplateUsed('collection/about.html')
+
+        for page in pages:
+            self.assertIn('/about/%s' % page.slug_name,
+                          response.data.decode('utf-8'))
+
+        self.assertListEqual(
+            sorted([page.slug_name for page in pages]),
+            sorted(
+                [page.slug_name
+                 for page in self.get_context_variable('pages')]))
+
+    def test_page(self):
+        """
+        Teste da ``view function`` ``page``, deve retornar uma página
+        que usa o template ``collection/about.html``.
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            page = utils.makeOnePage({'name': 'Critérios SciELO'})
+            response = self.client.get(url_for('main.about_collection',
+                                               slug_name=page.slug_name))
+
+            self.assertEqual(200, response.status_code)
+            self.assertTemplateUsed('collection/about.html')
+            self.assertIn('Critérios SciELO', response.data.decode('utf-8'))
+            self.assertIn('"/about/"', response.data.decode('utf-8'))
+            self.assertEqual(
+                self.get_context_variable('page').slug_name, page.slug_name)
+
+    def test_page_with_unknown_name(self):
+        """
+        Teste da ``view function`` ``page`` com um id desconhecido
+        deve retornar uma página com ``status_code`` 404 e msg
+        ``Página não encontrada``.
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            unknown_page_name = 'xxjfsfadfa0k2qhs8slwnui8'
+            response = self.client.get(url_for('main.about_collection',
+                                       slug_name=unknown_page_name))
+            self.assertStatus(response, 404)
+            self.assertIn('Página não encontrada',
+                          response.data.decode('utf-8'))
