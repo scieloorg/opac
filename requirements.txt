@@ -15,7 +15,7 @@ unicodecsv==0.14.1
 feedparser==5.2.1
 legendarium==2.0.2
 -e git+https://git@github.com/scieloorg/opac_schema@v2.48#egg=opac_schema
-Flask-HTMLmin==1.4.0
+Flask-HTMLmin==1.5.0
 python-slugify==1.2.4
 requests==2.19.1
 gunicorn==19.8.1
