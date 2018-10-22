@@ -52,12 +52,15 @@ Pode acessar `nossa wiki <https://github.com/scieloorg/opac/wiki/Configura%C3%A7
 Como executar os tests
 ======================
 
+
 - Para rodar os tests de unidade, pode executar: ``make test``
 - Para ter o relatório de coverage deve executar: ``make test_coverage``
+
 
 ===========================================
 Arquivos: Dockerfile* e docker-compose*.yml
 ===========================================
+
 
 - **Dockerfile**: contém as definições para construir a imagem pronta para instalar em **produção**
 - **Dockerfile-dev**: contém as definições para construir a imagem pronta para instalar em **desenvolvimento**
@@ -66,9 +69,11 @@ Arquivos: Dockerfile* e docker-compose*.yml
 - **docker-compose-build.yml**: contém as definições para construir as imagems e iniciar todos os containers necessários para rodar no **Travis/CI**
 - **docker-compose-dev.yml**: contém as definições para iniciar todos os containers necessários para rodar em **desenvolvimento**
 
+
 =================================================
 Instalação utilizando Docker para desenvolvimento
 =================================================
+
 
 Para executar o ambiente (de desenvolvimento) com Docker, utilizando as definições do arquivo **Dockerfile-dev** e **docker-compose.yml-dev** na raiz do projeto.
 Simplesmente executar:
@@ -80,11 +85,14 @@ Simplesmente executar:
 5. para parar os containers, executar: ``make dev_compose_stop``
 6. para abrir uma terminal dentro do container, executar: ``make dev_compose_exec_shell_webapp``
 
+
 =========================================
 Reportar problemas, ou solicitar mudanças
 =========================================
 
+
 Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalidade, pode `criar um ticket <https://github.com/scieloorg/opac/issues>`_ com seus pedidos.
+
 
 =========================================
 Equipe responsável por instalação, desenvolvimento e manutenção
