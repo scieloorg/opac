@@ -1141,7 +1141,10 @@ class PageTestCase(BaseTestCase):
         """
         utils.makeOneCollection()
         pages = [
-            utils.makeOnePage({'name': 'Critérios SciELO'}),
+            utils.makeOnePage({'name': 'Criterios SciELO',
+                               'language': 'es_ES'}),
+            utils.makeOnePage({'name': 'Critérios SciELO',
+                               'language': 'pt_BR'}),
             utils.makeOnePage({'name': 'FAQ SciELO'}),
             utils.makeOnePage({'name': 'Equipe SciELO'})
         ]
@@ -1156,7 +1159,7 @@ class PageTestCase(BaseTestCase):
                           response.data.decode('utf-8'))
 
         self.assertListEqual(
-            sorted([page.slug_name for page in pages]),
+            sorted([page.slug_name for page in pages[1:]]),
             sorted(
                 [page.slug_name
                  for page in self.get_context_variable('pages')]))

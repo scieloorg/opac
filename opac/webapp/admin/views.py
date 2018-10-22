@@ -706,7 +706,7 @@ class PagesAdminView(OpacBaseAdminView):
                      [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
     )
 
-    form_excluded_columns = ('created_at', 'updated_at')
+    form_excluded_columns = ('created_at', 'updated_at', 'slug_name')
 
     def _content_formatter(self, context, model, name):
         return Markup(model.content)
