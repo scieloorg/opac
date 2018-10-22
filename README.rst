@@ -80,6 +80,7 @@ Simplesmente executar:
 5. para parar os containers, executar: ``make dev_compose_stop``
 6. para abrir uma terminal dentro do container, executar: ``make dev_compose_exec_shell_webapp``
 
+
 =========================================
 Reportar problemas, ou solicitar mudanças
 =========================================
