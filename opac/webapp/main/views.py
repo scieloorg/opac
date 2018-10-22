@@ -579,7 +579,7 @@ def form_contact(url_seg):
     context = {
         'journal': journal
     }
-    return render_template("journal/includes/contact.html", **context)
+    return render_template("journal/includes/contact_form.html", **context)
 
 
 # ###################################Issue#######################################
