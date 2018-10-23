@@ -62,7 +62,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor6, response_data)
                 expected_anchor7 = """<a href="%s" class="onlineSubmission">\n      <span class="glyphBtn infoMenu"></span>\n      %s %s\n    </a>""" % (url_for('.about_collection'), __('Sobre o SciELO'), collection.name)
                 self.assertIn(expected_anchor7, response_data)
-                expected_anchor8 = """<li>\n            <a href="/collection/about/">\n              %s\n            </a>\n          </li>""" % __('Contatos')
+                expected_anchor8 = """<li>\n            <a href="/about/">\n              %s\n            </a>\n          </li>""" % __('Contatos')
                 self.assertIn(expected_anchor8, response_data)
                 expected_anchor9 = """<a href="#">\n        <strong>SciELO.org - %s</strong>\n      </a>""" % __('Rede SciELO')
                 self.assertIn(expected_anchor9, response_data)

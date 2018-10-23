@@ -35,6 +35,7 @@ from .utils import utils
 from uuid import uuid4
 
 from mongoengine import Q
+from mongoengine.errors import InvalidQueryError
 
 
 # -------- COLLECTION --------
@@ -1036,3 +1037,13 @@ def get_page_by_id(id):
 
 def get_pages_by_lang(lang, journal=''):
     return Pages.objects(language=lang, journal=journal)
+
+
+def get_pages():
+    return Pages.objects()
+
+
+def get_page_by_slug_name(slug_name):
+    if not slug_name:
+        raise ValueError(__('Obrigatório um slug_name.'))
+    return Pages.objects(Q(slug_name=slug_name)).first()

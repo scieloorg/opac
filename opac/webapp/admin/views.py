@@ -670,7 +670,7 @@ class PagesAdminView(OpacBaseAdminView):
     column_searchable_list = ('name', 'description')
 
     column_exclude_list = [
-        '_id', 'content',
+        '_id', 'content', 'slug_name',
     ]
 
     column_labels = dict(

@@ -1015,3 +1015,39 @@ class FunctionsInControllerTestCase(BaseTestCase):
             ValueError,
             controllers.count_elements_by_type_and_visibility,
             'ksjkadjkajsdkja')
+
+
+class PageControllerTestCase(BaseTestCase):
+
+    def _make_one(self, attrib=None):
+        """
+        Retorna um objeto ``Pages`` com os atributos obrigatórios:
+        ``_id``, o param ``attrib`` atualiza os atributos do objeto.
+        """
+        return utils.makeOnePage(attrib=attrib)
+
+    def test_get_page_by_lang(self):
+        """
+        Teste da função controllers.get_pages_by_lang() para retornar um objeto:
+        ``Pages``.
+        """
+        page = self._make_one()
+        self.assertEqual(
+            [page.language for page in controllers.get_pages()], 
+            [page['language']])
+        self.assertEqual(
+            [page.language for page in controllers.get_pages_by_lang(
+                lang='pt_BR')],
+            ['pt_BR'])
+
+    def test_get_page_by_slug_name(self):
+        """
+        Teste da função controllers.get_page_by_slug_name()
+        para retornar um objeto: ``Pages``.
+        """
+        page = self._make_one({'name': 'Critérios'})
+        slug_name = page.slug_name
+        self.assertEqual(
+            'Critérios',
+            controllers.get_page_by_slug_name(slug_name).name)
+

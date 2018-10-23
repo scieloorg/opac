@@ -185,18 +185,19 @@ def collection_list_feed():
     return feed.get_response()
 
 
-@main.route("/collection/about/", methods=['GET'])
+@main.route("/about/", methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection():
+def about_collection(slug_name=None):
     language = session.get('lang', get_locale())
 
     context = {}
 
-    page_id = request.args.get('page_id')
-
-    if page_id:
+    if slug_name:
         # caso seja uma página
-        page = controllers.get_page_by_id(page_id)
+        page = controllers.get_page_by_slug_name(slug_name)
+        if not page:
+            abort(404, _('Página não encontrada'))
         context['page'] = page
     else:
         # caso não seja uma página é uma lista
@@ -204,6 +205,7 @@ def about_collection():
         context['pages'] = pages
 
     return render_template("collection/about.html", **context)
+
 
 # ###################################Journal#####################################
 
@@ -227,7 +229,7 @@ def router_legacy():
             journal = controllers.get_journal_by_issn(pid)
 
             if not journal:
-                abort(404, _('Periódico não encontrada'))
+                abort(404, _('Periódico não encontrado'))
 
             if not journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
@@ -577,7 +579,7 @@ def form_contact(url_seg):
     context = {
         'journal': journal
     }
-    return render_template("journal/includes/contact.html", **context)
+    return render_template("journal/includes/contact_form.html", **context)
 
 
 # ###################################Issue#######################################
