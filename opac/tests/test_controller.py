@@ -1045,9 +1045,17 @@ class PageControllerTestCase(BaseTestCase):
         Teste da função controllers.get_page_by_slug_name()
         para retornar um objeto: ``Pages``.
         """
-        page = self._make_one({'name': 'Critérios'})
+        page = self._make_one({'name': 'Critérios', 'language': 'pt_BR', 'content': 'texto em port.'})
+        page = self._make_one({'name': 'Critérios', 'language': 'es_ES', 'content': 'texto en esp.'})
         slug_name = page.slug_name
-        self.assertEqual(
-            'Critérios',
-            controllers.get_page_by_slug_name(slug_name).name)
+
+        _page = controllers.get_page_by_slug_name('es_ES', slug_name)
+        self.assertEqual('Critérios', _page.name)
+        self.assertEqual('texto en esp.', _page.content)
+        self.assertEqual('es_ES', _page.language)
+
+        _page = controllers.get_page_by_slug_name('pt_BR', slug_name)
+        self.assertEqual('Critérios', _page.name)
+        self.assertEqual('pt_BR', _page.language)
+        self.assertEqual('texto em port.', _page.content)
 

@@ -1043,7 +1043,9 @@ def get_pages():
     return Pages.objects()
 
 
-def get_page_by_slug_name(slug_name):
+def get_page_by_slug_name(lang, slug_name):
+    if not lang:
+        raise ValueError(__('Obrigatório um lang.'))
     if not slug_name:
         raise ValueError(__('Obrigatório um slug_name.'))
-    return Pages.objects(Q(slug_name=slug_name)).first()
+    return Pages.objects(language=lang, slug_name=slug_name).first()

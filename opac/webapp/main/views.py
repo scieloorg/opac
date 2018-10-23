@@ -195,7 +195,7 @@ def about_collection(slug_name=None):
 
     if slug_name:
         # caso seja uma página
-        page = controllers.get_page_by_slug_name(slug_name)
+        page = controllers.get_page_by_slug_name(language, slug_name)
         if not page:
             abort(404, _('Página não encontrada'))
         context['page'] = page
