@@ -123,8 +123,15 @@ var Portal = {
 
 			$(".share_modal_id").on("click",function(e) {
 				e.preventDefault();
-				$("#share_modal_id").modal("show");
+				$.get("/form_mail/", function(html) {
+					$("#share_modal_id").html(html);
+					$("#share_modal_id").modal("show");
+				});
 			});
+
+			$('#share_modal_id').on('hidden.bs.modal', function () {
+			    $("#share_modal_id").empty();
+		    });
 
 			$(".showBlock").on("click",function() {
 				var t = $(this),
@@ -1142,4 +1149,3 @@ $(function() {
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
 
 });
-

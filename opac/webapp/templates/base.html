@@ -48,10 +48,7 @@
 
     {% block content %}{% endblock %}
 
-    <esi:remove>
-      {% include "email/email_form.html" %}
-    </esi:remove>
-    <esi:include src="{{ url_for('main.email_form') }}" />
+    <div class="modal fade" id="share_modal_id" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
     {% include "includes/error_form.html" %}
 
