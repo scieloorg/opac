@@ -40,9 +40,6 @@ class Page(object):
     def content(self, value):
         self.tree = BeautifulSoup(value, 'lxml')
 
-    def _info(self, msg):
-        logger.debug('%s %s' % (self.filename, msg))
-
     @property
     def original_website(self):
         return self._original_website
@@ -57,6 +54,12 @@ class Page(object):
         self._original_website = website
 
     def new_author_page(self, old_page):
+        # http://www.scielo.br/cgi-bin/wxis.exe/iah/
+        # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
+        # lang=p&nextAction=lnk&
+        # indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI
+        # ->
+        # //search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI')
         if 'exprSearch=' in old_page:
             name = old_page[old_page.rfind('exprSearch=')+len('exprSearch='):]
             if '&' in name:
@@ -76,40 +79,27 @@ class Page(object):
                 elem[attr_name] = self.get_new_url(old_url)
                 if elem[attr_name] != old_url:
                     replacements.append((old_url, elem[attr_name]))
-                    self.fix_elem_string(elem, attr_name, old_url)
+                    elem.string = self.link_display_text(
+                        elem[attr_name], elem.string, old_url)
+
         replacements = set(list(replacements))
         for old, new in replacements:
             if self.body.count(old) > 0:
-                self._info(
+                logging.info(
                     'CONFERIR: ainda existe: {} ({})'.format(
                         old, self.body.count(old)))
 
-    def fix_invalid_url(self):
+    def fix_invalid_url(self, elem, attr_name):
         pass
 
-    def get_new_url(self, url):
-        if url.strip().count(' ') > 0:
-            self._info('CONFERIR: URL MANTIDA | INVALID URL {} {}'.format(
-                        url, self.filename))
-            return url
-
-        # http://www.scielo.br/cgi-bin/wxis.exe/iah/
-        # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
-        # lang=p&nextAction=lnk&
-        # indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI
-        # ->
-        # //search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI')
-        if 'cgi-bin' in url and 'indexSearch=AU' in url:
-            return self.new_author_page(url)
-
+    def replace_by_relative_url(self, url):
         # www.scielo.br/revistas/icse/levels.pdf -> /revistas/icse/levels.pdf
         #
         # www.scielo.br/img/revistas/icse/levels.pdf ->
         # /img/revistas/icse/levels.pdf
         #
         # http://www.scielo.br/scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
-        # ->
-        # /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
+        # -> /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
         #
         # http://www.scielo.br -> /
         if self.original_website in url:
@@ -121,20 +111,28 @@ class Page(object):
                     return relative_url
                 if relative_url in ["", '/']:
                     return '/'
-            self._info('CONFERIR: URL MANTIDA {} {} {}'.format(
-                        url, relative_url, self.filename))
         return url
 
-    def fix_elem_string(self, elem, attr_name, original_url):
-        if elem.string is not None:
-            elem_string = elem.string.strip().replace('&nbsp;', '')
-            if elem_string == original_url:
-                elem.string = '{}{}'.format(
-                    self.original_website,
-                    elem.string.replace(original_url, elem[attr_name]))
-            elif original_url.endswith(elem_string):
-                elem.string = '{}{}'.format(
-                    self.original_website, elem[attr_name])
+    def get_new_url(self, url):
+        if url.strip().count(' ') > 0:
+            return url
+
+        if 'cgi-bin' in url and 'indexSearch=AU' in url:
+            return self.new_author_page(url)
+
+        if self.original_website in url:
+            return self.replace_by_relative_url(url)
+        return url
+
+    def link_display_text(self, link, display_text, original_url):
+        if display_text is not None:
+            text = display_text.strip().replace('&nbsp;', '')
+            if text == original_url:
+                return '{}{}'.format(self.original_website,
+                                     text.replace(original_url, link))
+            elif original_url.endswith(text):
+                return '{}{}'.format(self.original_website, link)
+        return display_text
 
     def find_original_website_reference(self, elem_name, attribute_name):
         mentions = []
@@ -150,34 +148,37 @@ class Page(object):
                 for img in self.tree.find_all('img')
                 if img.get('src')]
 
-    def find_image_file_location(self, image):
-        img_in_file = image.get('src')
-        img_basename = os.path.basename(img_in_file)
-
-        location = img_basename
+    def guess_file_location(self, file_path):
+        if '/img/revistas/' in file_path:
+            return os.path.join(
+                self.img_revistas_path,
+                file_path[file_path.find('/img/revistas/') +
+                          len('/img/revistas/'):])
+        if '/revistas/' in file_path:
+            return os.path.join(
+                self.revistas_path,
+                file_path[file_path.find('/revistas/') +
+                          len('/revistas/'):])
         if self.page_path:
-            location = os.path.join(self.page_path, img_basename)
-        if not os.path.isfile(location):
-            if '/img/revistas/' in img_in_file:
-                location = os.path.join(
-                    self.img_revistas_path,
-                    img_in_file[img_in_file.find('/img/revistas/') +
-                                len('/img/revistas/'):])
-            elif '/revistas/' in img_in_file:
-                location = os.path.join(
-                    self.revistas_path,
-                    img_in_file[img_in_file.find('/revistas/') +
-                                len('/revistas/'):])
+            if self.original_website in file_path:
+                location = file_path[file_path.find(self.original_website) +
+                                     len(self.original_website):]
+                return os.path.join(self.page_path, location[1:])
+            elif file_path.startswith('/'):
+                location = file_path[1:]
+                return os.path.join(self.page_path, location)
+
+    def confirm_file_location(self, file_location, file_path):
         try:
             # Verifica se a imagem existe
-            open(location)
+            open(file_location)
         except IOError as e:
             logging.error(
-                u'%s (corresponding to %s)' % (e, img_in_file))
+                u'%s (corresponding to %s)' % (e, file_path))
         else:
-            return location
+            return file_location
 
-    def get_new_file_name(self, file_location):
+    def get_slug_name(self, file_location):
         file_basename = os.path.basename(file_location)
         file_name, file_ext = os.path.splitext(file_basename)
         if file_location is not None:
@@ -189,21 +190,38 @@ class Page(object):
             self.used_names[new_file_name] = file_basename
             return new_file_name
 
+    @property
+    def prefixes(self):
+        return [self.page_name, self.lang]
+
+    def add_prefix_to_slug_name(self, new_img_name):
+        _prefixes = self.prefixes + [new_img_name]
+        parts = [part for part in _prefixes if part is not None]
+        return '_'.join(parts)
+
     def get_image_info(self, img_in_file):
-        img_location = self.find_image_file_location(img_in_file)
-        if img_location is not None:
-            new_img_name = self.get_new_file_name(img_location)
-            img_dest_name = '%s_%s' % (self.acron, new_img_name)
+        img_location = self.guess_file_location(img_in_file)
+        if self.confirm_file_location(img_location, img_in_file):
+            new_img_name = self.get_slug_name(img_location)
+            img_dest_name = self.add_prefix_to_slug_name(new_img_name)
             return (img_in_file, img_location, img_dest_name)
 
-    def create_images(self, images_in_file):
-        for image in images_in_file:
+    def create_images(self, images=None):
+        for image in images or self.images:
             # interna ou externa
-            image_info = self.get_image_info(image.get('src'))
-            if image_info:
-                img_in_file, img_src, img_dest = image_info
-                img = create_image(img_src, img_dest, check_if_exists=False)
+            src = image.get('src')
+            if ':' not in src:
+                # interno
+                self.register_image(image)
+
+    def register_image(self, image):
+        image_info = self.get_image_info(image.get('src'))
+        if image_info:
+            img_in_file, img_src, img_dest = image_info
+            img = create_image(
+                img_src, img_dest, check_if_exists=False)
             image['src'] = img.get_absolute_url
+
 
 
 class JournalPage(Page):
@@ -214,6 +232,10 @@ class JournalPage(Page):
         super().__init__(content, original_website, revistas_path,
                          img_revistas_path, page_path, page_name, lang)
         self.acron = acron
+
+    @property
+    def prefixes(self):
+        return [self.acron]
 
     @property
     def original_journal_home_page(self):
@@ -247,8 +269,6 @@ class JournalPage(Page):
 
     def get_new_url(self, url):
         if url.strip().count(' ') > 0:
-            self._info('CONFERIR: URL MANTIDA | INVALID URL {} {}'.format(
-                        url, self.filename))
             return url
 
         # www.scielo.br/icse -> /journal/icse/
@@ -261,35 +281,9 @@ class JournalPage(Page):
                 if old in url:
                     return self.new_about_journal_page(new)
 
-        # http://www.scielo.br/cgi-bin/wxis.exe/iah/
-        # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
-        # lang=p&nextAction=lnk&
-        # indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI
-        # ->
-        # //search.scielo.org/?q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI')
         if 'cgi-bin' in url and 'indexSearch=AU' in url:
             return self.new_author_page(url)
 
-        # www.scielo.br/revistas/icse/levels.pdf -> /revistas/icse/levels.pdf
-        #
-        # www.scielo.br/img/revistas/icse/levels.pdf ->
-        # /img/revistas/icse/levels.pdf
-        #
-        # http://www.scielo.br/scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
-        # ->
-        # /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
-        #
-        # http://www.scielo.br -> /
         if self.original_website in url:
-            p = url.find(self.original_website) + len(self.original_website)
-            relative_url = url[p:].strip()
-            for relative in ['/scielo.php', '/fbpe', '/revistas',
-                             '/img/revistas']:
-                if relative_url.startswith(relative):
-                    return relative_url
-                if relative_url in ["", '/']:
-                    return '/'
-            self._info('CONFERIR: URL MANTIDA {} {} {}'.format(
-                        url, relative_url, self.filename))
+            return self.replace_by_relative_url(url)
         return url
-
