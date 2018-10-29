@@ -123,31 +123,15 @@ var Portal = {
 
 			$(".share_modal_id").on("click",function(e) {
 				e.preventDefault();
-				$("#share_modal_id").modal("show");
+				$.get("/form_mail/", function(html) {
+					$("#share_modal_id").html(html);
+					$("#share_modal_id").modal("show");
+				});
 			});
 
-			$(".showBlock").on("click",function() {
-				var t = $(this),
-					rel = t.data("rel"),
-					hide = t.data("hide");
-
-				$(rel).find("input:text,textarea").val("");
-				$(rel).slideDown("fast");
-				$(hide).hide();
-			});
-
-			$(".showFloatInfo").on("click",function() {
-				var cmd = $(this).data("rel");
-				cmd = cmd.split(";");
-
-				$("a",cmd[0]).removeClass("selected");
-				$(cmd[2]).hide();
-
-				if(cmd[1] != "null") {
-					$(this).addClass("selected");
-					$(cmd[1]).fadeIn("fast");
-				}
-			});
+			$('#share_modal_id').on('hidden.bs.modal', function () {
+			    $(this).empty();
+		    });
 
 			$(".alternativeHeader").each(function() {
 				var menu = $(".mainMenu nav ul").html();
@@ -1142,4 +1126,3 @@ $(function() {
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
 
 });
-

@@ -54,7 +54,7 @@ var ModalForms = {
           },
           error: function (data) {
             $(self.modal_id).modal('toggle');
-            $('.midGlyph').toggleClass('unsuccess');
+            $('.midGlyph').removeClass('success').toggleClass('unsuccess');
             $('.midGlyph').html(self.error_message);
             $(self.email_confirm_modal_id).modal('show');
           }
