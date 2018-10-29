@@ -49,6 +49,7 @@
               {% trans %}Remover remetente, assunto e comentários{% endtrans %}
             </a>
           </div>
+
         </div>
       </div>
       <div class="modal-footer">
@@ -74,4 +75,14 @@
       "{% trans %}Email enviado com sucesso.{% endtrans %}",
       "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
     );
+
+    $(".showBlock").on("click",function() {
+      var t = $(this),
+        rel = t.data("rel"),
+        hide = t.data("hide");
+
+      $(rel).find("input:text,textarea").val("");
+      $(rel).slideDown("fast");
+      $(hide).hide();
+    });
 </script>

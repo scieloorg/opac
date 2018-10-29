@@ -133,29 +133,6 @@ var Portal = {
 			    $(this).empty();
 		    });
 
-			$(".showBlock").on("click",function() {
-				var t = $(this),
-					rel = t.data("rel"),
-					hide = t.data("hide");
-
-				$(rel).find("input:text,textarea").val("");
-				$(rel).slideDown("fast");
-				$(hide).hide();
-			});
-
-			$(".showFloatInfo").on("click",function() {
-				var cmd = $(this).data("rel");
-				cmd = cmd.split(";");
-
-				$("a",cmd[0]).removeClass("selected");
-				$(cmd[2]).hide();
-
-				if(cmd[1] != "null") {
-					$(this).addClass("selected");
-					$(cmd[1]).fadeIn("fast");
-				}
-			});
-
 			$(".alternativeHeader").each(function() {
 				var menu = $(".mainMenu nav ul").html();
 				$(this).find("nav ul").html(menu);
