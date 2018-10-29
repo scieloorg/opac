@@ -130,7 +130,7 @@ var Portal = {
 			});
 
 			$('#share_modal_id').on('hidden.bs.modal', function () {
-			    $("#share_modal_id").empty();
+			    $(this).empty();
 		    });
 
 			$(".showBlock").on("click",function() {

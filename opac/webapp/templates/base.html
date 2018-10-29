@@ -50,6 +50,23 @@
 
     <div class="modal fade" id="share_modal_id" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
+    <div class="modal fade in" id="share_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title">Mensagem</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="midGlyph">
+
+                      <br><br>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
     {% include "includes/error_form.html" %}
 
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
@@ -62,23 +79,6 @@
 
       // Garante que o valor do campo share_url é a URL corrente.
       $('#share_url').val(window.location.href);
-
-      var share_email = Object.create(ModalForms);
-
-      share_email.init(
-        "#share_modal_id",
-        "#share_form_id",
-        "{{ url_for('main.email_share_ajax') }}",
-        "POST",
-        "#share_submit_btn_id",
-        true,
-        "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
-        "share_captcha_id",
-        "light",
-        "#share_modal_confirm_id",
-        "{% trans %}Email enviado com sucesso.{% endtrans %}",
-        "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
-      );
 
       var error_form = Object.create(ModalForms);
 

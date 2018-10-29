@@ -10,7 +10,7 @@
         {% trans %}Enviar página por e-mail{% endtrans %}
       </h4>
     </div>
-    <form name="share_form_id" id="share_form_id" action="{{ url_for('main.email_share_ajax') }}" method="post" class="validate">
+    <form name="share_form_id" id="share_form_id" class="validate">
       {{ g.email_share.csrf_token() }}
       {{ g.email_share.share_url(value=request.url) }}
       <div class="modal-body">
@@ -58,19 +58,20 @@
   </div>
 </div>
 
-<div class="modal fade in" id="share_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
-  <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title">Mensagem</h4>
-          </div>
-          <div class="modal-body">
-              <div class="midGlyph">
-
-                  <br><br>
-              </div>
-          </div>
-      </div>
-  </div>
-</div>
+<script>
+    var share_email = Object.create(ModalForms);
+    share_email.init(
+      "#share_modal_id",
+      "#share_form_id",
+      "{{ url_for('main.email_share_ajax') }}",
+      "POST",
+      "#share_submit_btn_id",
+      true,
+      "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
+      "share_captcha_id",
+      "light",
+      "#share_modal_confirm_id",
+      "{% trans %}Email enviado com sucesso.{% endtrans %}",
+      "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
+    );
+</script>
