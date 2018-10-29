@@ -1063,7 +1063,7 @@ class PageControllerTestCase(BaseTestCase):
         self.assertIsNone(_page)
 
         _page = controllers.get_page_by_slug_name('Bla')
-        self.assertIsNone(_page)
+        self.assertEqual(len(_page), 0)
 
         _page = controllers.get_page_by_slug_name(slug_name)
         self.assertEqual(len(_page), 2)
