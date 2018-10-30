@@ -306,6 +306,41 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
         return img
 
 
+def create_file(file_path, filename, check_if_exists=True):
+    """
+    Função que cria um arquivo para o modelo File.
+
+    Parâmento file_path caminho absoluto para o arquivo.
+    Parâmento filename nome do arquivo com extensão.
+    Parâmento check_if_exists verifica se o arquivo existe considera somente o
+    nome do arquivo.
+    """
+
+    file_root = current_app.config['IMAGE_ROOT']
+    if not os.path.isdir(file_root):
+        os.makedirs(file_root)
+    file_destination_path = os.path.join(file_root, filename)
+
+    try:
+        shutil.copyfile(file_path, file_destination_path)
+    except IOError as e:
+        # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
+        logger.error(u'%s' % e)
+    else:
+
+        if check_if_exists:
+            _file = webapp.dbsql.session.query(
+                models.File).filter_by(name=filename).first()
+            if _file:
+                return _file
+
+        _file = models.File(name=namegen_filename(filename),
+                            path='files/' + filename)
+        webapp.dbsql.session.add(_file)
+        webapp.dbsql.session.commit()
+        return _file
+
+
 def create_page(name, language, content, journal=None, description=None):
 
     page = Pages(_id=str(uuid4().hex), name=name, language=language,
