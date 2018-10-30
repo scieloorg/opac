@@ -12,7 +12,7 @@
     </div>
     <form name="share_form_id" id="share_form_id" class="validate">
       {{ g.email_share.csrf_token() }}
-      {{ g.email_share.share_url(value=request.url) }}
+      {{ g.email_share.share_url(value=url) }}
       <div class="modal-body">
         <div class="form-group">
           <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>

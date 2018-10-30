@@ -1072,7 +1072,8 @@ def email_share_ajax():
 
 @main.route("/form_mail/", methods=['GET'])
 def email_form():
-    return render_template("email/email_form.html")
+    context = {'url': request.args.get('url')}
+    return render_template("email/email_form.html", **context)
 
 
 @main.route("/email_error_ajax/", methods=['POST'])

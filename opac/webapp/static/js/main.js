@@ -123,7 +123,8 @@ var Portal = {
 
 			$(".share_modal_id").on("click",function(e) {
 				e.preventDefault();
-				$.get("/form_mail/", function(html) {
+				var url = $(location).attr('href');
+				$.get("/form_mail/", {"url": url}, function(html) {
 					$("#share_modal_id").html(html);
 					$("#share_modal_id").modal("show");
 				});
