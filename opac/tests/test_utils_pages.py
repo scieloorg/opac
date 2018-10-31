@@ -3,7 +3,8 @@
 import os
 from .base import BaseTestCase
 
-from unittest.mock import patch
+from unittest.mock import patch, Mock
+from webapp.utils import page as module_page
 from webapp.utils.page import (
     Page, JournalPage, new_author_url_page
 )
@@ -182,27 +183,25 @@ class UtilsPageTestCase(BaseTestCase):
         ret = self.page.get_prefixed_slug_name('/abc/abc/Critério_Brasil.jpg')
         self.assertEqual(ret, expected)
 
-    @patch.object(Page, 'confirm_file_location')
+    @patch.object(module_page, 'confirm_file_location', return_value=True)
     def test_get_file_info_img1(self, mocked_confirm_file_location):
-        mocked_confirm_file_location.return_value = True
         result = self.page.get_file_info('/img/revistas/img1.jpg')
         img_location = os.path.join(IMG_REVISTAS_PATH, 'img1.jpg')
         img_dest_name = 'criterios_es_img1.jpg'
-        self.assertEqual(result, (img_location, img_dest_name))
+        self.assertEqual(result, (img_location, img_dest_name, False))
 
-    @patch.object(Page, 'confirm_file_location')
+    @patch.object(module_page, 'confirm_file_location', return_value=True)
     def test_get_file_info_img2(self, mocked_confirm_file_location):
-        mocked_confirm_file_location.return_value = True
         result = self.page.get_file_info('/abc/img2.jpg')
         img_location = os.path.join(HTDOCS, 'abc/img2.jpg')
         img_dest_name = 'criterios_es_img2.jpg'
-        self.assertEqual(result, (img_location, img_dest_name))
+        self.assertEqual(result, (img_location, img_dest_name, False))
 
-    @patch.object(Page, 'confirm_file_location')
+    @patch.object(module_page, 'confirm_file_location', return_value=True)
     @patch.object(Page, '_register_image')
-    def test_create_images(self,
-                           mocked_register_image,
-                           mocked_confirm_file_location):
+    def test_create_images_from_local_files(self,
+                                            mocked_register_image,
+                                            mocked_confirm_file_location):
         self.page.content = '''
             <img src="/img/revistas/img1.jpg"/>
             <img src="http://www.scielo.br/abc/img2.jpg"/>
@@ -213,7 +212,6 @@ class UtilsPageTestCase(BaseTestCase):
             '/media/criterios_es_img2.jpg',
             '/media/criterios_es_img3.jpg',
             ]
-        mocked_confirm_file_location.return_value = True
         self.page.create_images()
 
         results = [img['src'] for img in self.page.images]
@@ -227,11 +225,11 @@ class UtilsPageTestCase(BaseTestCase):
             self.assertEqual(result, expected)
         self.assertEqual(results, expected_items)
 
-    @patch.object(Page, 'confirm_file_location')
+    @patch.object(module_page, 'confirm_file_location', return_value=True)
     @patch.object(Page, '_register_file')
-    def test_create_files(self,
-                           mocked_register_file,
-                           mocked_confirm_file_location):
+    def test_create_files_from_local_files(self,
+                                           mocked_register_file,
+                                           mocked_confirm_file_location):
         self.page.content = '''
             <a href="/img/revistas/img1.jpg"/>
             <a href="http://www.scielo.br/abc/img2.jpg"/>
@@ -242,7 +240,6 @@ class UtilsPageTestCase(BaseTestCase):
             '/media/criterios_es_img2.jpg',
             '/media/criterios_es_img3.jpg',
             ]
-        mocked_confirm_file_location.return_value = True
         self.page.create_files()
 
         results = [item['href'] for item in self.page.files]
@@ -255,6 +252,103 @@ class UtilsPageTestCase(BaseTestCase):
         for result, expected in zip(results, expected_items):
             self.assertEqual(result, expected)
         self.assertEqual(results, expected_items)
+
+    @patch('requests.get')
+    def test_downloaded_file(self, mocked_requests_get):
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'content'
+        mocked_requests_get.return_value = mocked_response
+        f = module_page.downloaded_file('https://bla/bla.pdf')
+        self.assertEqual(open(f, 'rb').read(), mocked_response.content)
+        os.remove(f)
+
+    @patch.object(module_page, 'downloaded_file')
+    @patch.object(module_page, 'confirm_file_location')
+    @patch.object(Page, '_register_image')
+    def test_create_images_from_downloaded_files(self,
+                           mocked_register_image,
+                           mocked_confirm_file_location,
+                           mocked_downloaded_file):
+        self.page.content = '''
+            <img src="/img/revistas/img1.jpg"/>
+            <img src="http://www.scielo.br/abc/img2.jpg"/>
+            <img src="/revistas/img3.jpg"/>
+            <img src="http://www.scielo.org/local/Image/scielo20_pt.png"/>'''
+        mocked_register_image.side_effect = [
+            '/media/criterios_es_img1.jpg',
+            '/media/criterios_es_img2.jpg',
+            '/media/criterios_es_img3.jpg',
+            ]
+        mocked_downloaded_file.side_effect = [
+            '/tmp/img1.jpg',
+            '/tmp/img2.jpg',
+            '/tmp/img3.jpg',
+            ]
+        mocked_confirm_file_location.side_effect = [
+            False, True, False, True, False, True
+        ]
+        self.page.create_images()
+
+        results = [img['src'] for img in self.page.images]
+        expected_items = [
+             '/media/criterios_es_img1.jpg',
+             '/media/criterios_es_img2.jpg',
+             '/media/criterios_es_img3.jpg',
+             'http://www.scielo.org/local/Image/scielo20_pt.png'
+            ]
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
+        self.assertEqual(results, expected_items)
+
+    @patch.object(module_page, 'downloaded_file')
+    @patch.object(module_page, 'confirm_file_location')
+    @patch.object(Page, '_register_file')
+    def test_create_files_from_downloaded_files(self,
+                           mocked_register_file,
+                           mocked_confirm_file_location,
+                           mocked_downloaded_file):
+        self.page.content = '''
+            <a href="/img/revistas/img1.jpg"/>
+            <a href="http://www.scielo.br/abc/img2.jpg"/>
+            <a href="/revistas/img3.jpg"/>
+            <a href="http://www.scielo.org/local/Image/scielo20_pt.png"/>'''
+        mocked_register_file.side_effect = [
+            '/media/criterios_es_img1.jpg',
+            '/media/criterios_es_img2.jpg',
+            '/media/criterios_es_img3.jpg',
+            ]
+        mocked_downloaded_file.side_effect = [
+            '/tmp/img1.jpg',
+            '/tmp/img2.jpg',
+            '/tmp/img3.jpg',
+            ]
+        mocked_confirm_file_location.side_effect = [
+            False, True, False, True, False, True
+        ]
+        self.page.create_files()
+
+        results = [item['href'] for item in self.page.files]
+        expected_items = [
+             '/media/criterios_es_img1.jpg',
+             '/media/criterios_es_img2.jpg',
+             '/media/criterios_es_img3.jpg',
+             'http://www.scielo.org/local/Image/scielo20_pt.png'
+            ]
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
+        self.assertEqual(results, expected_items)
+
+    @patch.object(module_page, 'downloaded_file', side_effect=None)
+    @patch.object(module_page, 'confirm_file_location', side_effect=[False, False])
+    @patch.object(module_page, 'logging')
+    def test_create_files_failure(self, mock_logger,
+                           mocked_confirm_file_location,
+                           mocked_downloaded_file):
+        self.page.content = '''<a href="/img/revistas/img1.jpg"/>'''
+        self.page.create_files()
+        mock_logger.info.assert_called_with(
+            "CONFERIR: /img/revistas/img1.jpg não encontrado")
 
 
 class UtilsJournalPageTestCase(BaseTestCase):

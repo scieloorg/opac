@@ -2,7 +2,8 @@
 
 import os
 import logging
-
+import requests
+import tempfile
 
 from webapp.utils import create_image, create_file  # noqa
 
@@ -48,6 +49,40 @@ def slugify_filename(file_location, used_names):
         used_names[new_file_name] = file_basename
         return new_file_name
     return file_basename
+
+
+def downloaded_file(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        file_path = os.path.join(tempfile.mkdtemp(), os.path.basename(url))
+        with open(file_path, 'wb') as f:
+            f.write(response.content)
+        return file_path
+
+
+def confirm_file_location(file_location, file_path):
+    try:
+        # Verifica se a imagem existe
+        if file_location is None:
+            return False
+        open(file_location)
+        return True
+    except IOError as e:
+        logging.error(
+            u'%s (corresponding to %s)' % (e, file_path))
+        return False
+
+
+def delete_file(file_path):
+    try:
+        # Verifica se a imagem existe
+        os.remove(file_path)
+    except IOError as e:
+        logging.error(
+            u'%s (corresponding to %s)' % (e, file_path))
+    else:
+        logging.error(
+            u'%s (corresponding to %s)' % (e, file_path))
 
 
 class Page(object):
@@ -199,16 +234,6 @@ class Page(object):
                 location = file_path[1:]
                 return os.path.join(self.static_files_path, location)
 
-    def confirm_file_location(self, file_location, file_path):
-        try:
-            # Verifica se a imagem existe
-            open(file_location)
-        except IOError as e:
-            logging.error(
-                u'%s (corresponding to %s)' % (e, file_path))
-        else:
-            return file_location
-
     def get_prefixed_slug_name(self, img_location):
         new_img_name = slugify_filename(img_location, self.used_names)
 
@@ -216,44 +241,55 @@ class Page(object):
         parts = [part for part in _prefixes if part is not None]
         return '_'.join(parts)
 
+    def is_asset_url(self, referenced):
+        name, ext = os.path.splitext(referenced)
+        if ext.lower() in ['.pdf', '.html', '.htm', '.jpg', '.png', '.gif']:
+            return 'https://{}{}'.format(self.original_website, referenced)
+
     def get_file_info(self, referenced):
         file_location = self.guess_file_location(referenced)
-        if self.confirm_file_location(file_location, referenced):
+        valid_path = confirm_file_location(file_location, referenced)
+        url = None
+        if not valid_path:
+            url = self.is_asset_url(referenced)
+            if url:
+                file_location = downloaded_file(url)
+                valid_path = confirm_file_location(file_location, referenced)
+        if valid_path:
             file_dest_name = self.get_prefixed_slug_name(file_location)
-            return (file_location, file_dest_name)
+            return (file_location, file_dest_name, url is not None)
+        logging.info('CONFERIR: {} não encontrado'.format(referenced))
 
     def create_images(self, images=None, migrate_url=True):
         if migrate_url and self.original_website in self.content:
             self.migrate_urls()
         for image in images or self.images:
-            # interna ou externa
             src = image.get('src')
             if ':' not in src:
-                # interno
                 image_info = self.get_file_info(src)
                 if image_info:
-                    img_src, img_dest = image_info
+                    img_src, img_dest, is_temp = image_info
                     image['src'] = self._register_image(img_src, img_dest)
 
     def create_files(self, files=None, migrate_url=True):
         if migrate_url and self.original_website in self.content:
             self.migrate_urls()
         for _file in files or self.files:
-            # interna ou externa
             href = _file.get('href')
             if ':' not in href:
-                # interno
                 _file_info = self.get_file_info(href)
                 if _file_info:
-                    _file_href, _file_dest = _file_info
+                    _file_href, _file_dest, is_temp = _file_info
                     _file['href'] = self._register_file(_file_href, _file_dest)
 
     def _register_image(self, img_src, img_dest):
         img = create_image(img_src, img_dest, check_if_exists=False)
+        delete_file(img_src)
         return img.get_absolute_url
 
     def _register_file(self, source, destination):
         _file = create_file(source, destination, check_if_exists=False)
+        delete_file(source)
         return _file.get_absolute_url
 
 
