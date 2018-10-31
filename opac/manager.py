@@ -31,8 +31,8 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, AuditLogEntry  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content, send_audit_log_daily_report # noqa
-from webapp.utils.journal_static_page import JournalNewPages, PAGE_NAMES_BY_LANG, get_acron_list # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_page, create_image, create_file, send_audit_log_daily_report # noqa
+from webapp.utils.journal_static_page import NewJournalPage, PAGE_NAMES_BY_LANG  # noqa
 
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
@@ -367,22 +367,16 @@ def populate_journal_pages(
     done = 0
     for j, acron in enumerate(sorted(acron_list)):
         print('{}/{} {}'.format(j+1, j_total, acron))
-        pages_src_files = JournalNewPages(original_website, pages_source_path,
-                                          images_source_path, acron)
+        new_page = NewJournalPage(original_website, pages_source_path,
+                                  images_source_path, acron)
         for lang, files in PAGE_NAMES_BY_LANG.items():
-            content, images_in_file = pages_src_files.get_new_journal_page(
-                                                    files)
+            content = new_page.get_new_journal_page(files)
             if content:
-                page_img_paths = pages_src_files.get_journal_page_img_paths(
-                                                            images_in_file)
-                for img_in_file, img_src, img_dest in page_img_paths:
-                    img = create_image(
-                        img_src, img_dest, check_if_exists=False)
-                    content = content.replace(img_in_file,
-                                              img.get_absolute_url)
+                new_content = new_page.migrate_urls(
+                    content, create_image, create_file)
                 create_page(
                     'Página secundária %s (%s)' % (acron.upper(), lang),
-                    lang, content, acron,
+                    lang, new_content, acron,
                     'Página secundária do periódico %s' % acron)
                 done += 1
     print('Páginas: {}\nPeriódicos: {}'.format(done, j_total))

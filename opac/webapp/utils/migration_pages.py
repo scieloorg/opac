@@ -5,8 +5,6 @@ import logging
 import requests
 import tempfile
 
-from webapp.utils import create_image, create_file  # noqa
-
 
 from bs4 import BeautifulSoup
 from slugify import slugify
@@ -85,7 +83,7 @@ def delete_file(file_path):
             u'%s (corresponding to %s)' % (e, file_path))
 
 
-class Page(object):
+class MigrationPage(object):
 
     def __init__(self, content, original_website, revistas_path,
                  img_revistas_path,
@@ -122,7 +120,12 @@ class Page(object):
             website = website[:-1]
         self._original_website = website
 
-    def migrate_urls(self):
+    def migrate_urls(self, create_image_function, create_file_function):
+        self.fix_urls()
+        self.create_files(create_file_function)
+        self.create_images(create_image_function)
+
+    def fix_urls(self):
         replacements = []
         for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
             for elem in self.find_original_website_reference(
@@ -260,40 +263,32 @@ class Page(object):
             return (file_location, file_dest_name, url is not None)
         logging.info('CONFERIR: {} não encontrado'.format(referenced))
 
-    def create_images(self, images=None, migrate_url=True):
-        if migrate_url and self.original_website in self.content:
-            self.migrate_urls()
-        for image in images or self.images:
+    def create_images(self, create_function):
+        for image in self.images:
             src = image.get('src')
             if ':' not in src:
                 image_info = self.get_file_info(src)
                 if image_info:
                     img_src, img_dest, is_temp = image_info
-                    image['src'] = self._register_image(img_src, img_dest)
+                    image['src'] = create_function(
+                        img_src, img_dest, check_if_exists=False)
+                    if is_temp:
+                        delete_file(img_src)
 
-    def create_files(self, files=None, migrate_url=True):
-        if migrate_url and self.original_website in self.content:
-            self.migrate_urls()
-        for _file in files or self.files:
+    def create_files(self, create_function):
+        for _file in self.files:
             href = _file.get('href')
             if ':' not in href:
                 _file_info = self.get_file_info(href)
                 if _file_info:
                     _file_href, _file_dest, is_temp = _file_info
-                    _file['href'] = self._register_file(_file_href, _file_dest)
-
-    def _register_image(self, img_src, img_dest):
-        img = create_image(img_src, img_dest, check_if_exists=False)
-        delete_file(img_src)
-        return img.get_absolute_url
-
-    def _register_file(self, source, destination):
-        _file = create_file(source, destination, check_if_exists=False)
-        delete_file(source)
-        return _file.get_absolute_url
+                    _file['href'] = create_function(
+                        _file_href, _file_dest, check_if_exists=False)
+                    if is_temp:
+                        delete_file(_file_href)
 
 
-class JournalPage(Page):
+class MigrationJournalPage(MigrationPage):
 
     anchors = {
         'about': 'aboutj',
