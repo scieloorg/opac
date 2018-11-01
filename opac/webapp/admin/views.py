@@ -21,7 +21,7 @@ from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
-from webapp.utils import get_timed_serializer
+from webapp.utils import get_timed_serializer, migrate_page
 from opac_schema.v1.models import Sponsor, Journal, Issue, Article, AuditLogEntry, Pages
 from webapp.admin.custom_widget import CKEditorField
 
@@ -756,7 +756,14 @@ class PagesAdminView(OpacBaseAdminView):
             'object_class_name': 'Page',
             'object_pk': model._id,
         }
-
+        """
+        content = form._fields['content']
+        new_content = migrate_page(
+            content,
+            page_name=form._fields['name'],
+            language=form._fields['language'])
+        form._fields['content'] = new_content
+        """
         if login.current_user.is_authenticated:
             audit_payload['user'] = login.current_user.email
 

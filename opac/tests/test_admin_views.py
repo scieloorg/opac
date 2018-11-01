@@ -12,6 +12,7 @@ from webapp.controllers import get_user_by_email
 from webapp.notifications import send_confirmation_email
 from .base import BaseTestCase
 from tests.utils import (
+    makeOnePage,
     makeOneJournal,
     makeOneIssue,
     makeOneArticle,
@@ -4700,3 +4701,56 @@ class SponsorAdminViewTests(BaseTestCase):
             self.assertEqual(len(expected_column_searchable_list), len(column_searchable_list))
             for expected_searchable_field in expected_column_searchable_list:
                 self.assertIn(expected_searchable_field, column_searchable_list)
+
+
+class PagesAdminViewTests(BaseTestCase):
+    """
+    def test_on_model_change(self):
+        result = '<a href="/revistas/abcd.pdf"><img src="/img/revistas/abcd.png">'
+        expected = '<a href="/revistas/abcd.pdf"><img src="/img/revistas/abcd.png">'
+        p = makeOnePage({'content': result})
+
+        form
+        view = webapp.admin.PagesAdminView()
+        view.on_model_change(form, p, True)
+        self.assertEqual(
+            result,
+            expected)
+    """
+    def test_on_model_change(self):
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        pages_index_url = url_for('pages.index_view')
+        # when
+        with self.client as client:
+            # login do usuario admin
+            login_response = client.post(
+                login_url,
+                data=admin_user,
+                follow_redirects=True)
+            self.assertStatus(login_response, 200)
+            # acesso a aba de pages
+            pages_list_response = client.get(pages_index_url)
+            self.assertStatus(pages_list_response, 200)
+            self.assertTemplateUsed('admin/model/list.html')
+            # verificamos os filtros da view
+            # send data as POST form to endpoint
+            sent = {
+                'content': '<a href="/revistas/abcd.pdf">',
+                'slug_name': 'criterios',
+                'name': 'criterios',
+                'language': 'pt_BR'
+            }
+            result = client.post(
+                '/admin/pages/new/',
+                data=sent
+            )
+            # check result from server with expected data
+            self.assertIn(
+                'my_test_url',
+                result.data.decode('utf-8')
+            )

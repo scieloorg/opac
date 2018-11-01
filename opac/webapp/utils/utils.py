@@ -17,6 +17,7 @@ import requests
 from webapp import models
 from webapp.admin.forms import EmailForm
 
+from webapp.utils.page_migration import PageMigration, MigratedPage
 from opac_schema.v1.models import Pages, AuditLogEntry
 
 try:
@@ -350,13 +351,63 @@ def create_page(name, language, content, journal=None, description=None):
     return page
 
 
-def extract_images(content):
-    """
-    Return a list of images to be collect from content
-    Try get imgs by href e src tags.
-    """
+def create_new_journal_page(acron, files, lang):
+    pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
 
-    return re.findall('src="([^"]+)"', content)
+    content = join_html_files_content(pages_source_path, acron, files)
+    if content:
+        migrate_page(content, acron=acron, language=lang)
+
+
+def join_html_files_content(revistas_path, acron, files):
+    """
+    Extract the header and the footer of the page
+    Insert the anchor based on filename
+    """
+    content = []
+    unavailable_message = []
+    for file in files:
+        file_path = os.path.join(revistas_path, acron, file)
+        page = webapp.utils.journal_static_page.OldJournalPageFile(file_path)
+        if page.unavailable_message:
+            unavailable_message.append(
+                page.anchor + page.anchor_title + page.unavailable_message)
+            content.append(unavailable_message[-1])
+        else:
+            content.append(page.body)
+    text = ' <!-- UNAVAILABLE MESSAGE: {} --> '.format(
+                len(unavailable_message))
+    return '\n'.join(content)+text
+
+
+def migrate_page_create_image(src, dest, check_if_exists=False):
+    return create_image(src, dest, check_if_exists).get_absolute_url
+
+
+def migrate_page_create_file(src, dest, check_if_exists=False):
+    return create_file(src, dest, check_if_exists).get_absolute_url
+
+
+def migrate_page(content, acron=None, page_name=None, language=None):
+    if content:
+        pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
+        images_source_path = current_app.config['JOURNAL_IMAGES_SOURCE_PATH']
+        original_website = current_app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
+
+        migration = PageMigration(
+            migrate_page_create_image, migrate_page_create_file,
+            original_website, pages_source_path, images_source_path)
+
+        page = MigratedPage(
+            migration, content,
+            acron=acron, page_name=page_name, lang=language)
+        page.migrate_urls()
+
+        create_page(
+                    'Página secundária %s (%s)' % (acron.upper(), language),
+                    language, page.content, acron,
+                    'Página secundária do periódico %s' % acron)
+        return page.content
 
 
 def get_resource_url(resource, type, lang):

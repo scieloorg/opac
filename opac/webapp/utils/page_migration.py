@@ -50,12 +50,16 @@ def slugify_filename(file_location, used_names):
 
 
 def downloaded_file(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        file_path = os.path.join(tempfile.mkdtemp(), os.path.basename(url))
-        with open(file_path, 'wb') as f:
-            f.write(response.content)
-        return file_path
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            file_path = os.path.join(tempfile.mkdtemp(), os.path.basename(url))
+            with open(file_path, 'wb') as f:
+                f.write(response.content)
+            return file_path
+    except requests.exceptions.ConnectionError as e:
+        logging.error(
+            u'%s (corresponding to %s)' % (e, url))
 
 
 def confirm_file_location(file_location, file_path):
@@ -83,29 +87,30 @@ def delete_file(file_path):
             u'%s (corresponding to %s)' % (e, file_path))
 
 
-class MigrationPage(object):
+class PageMigration(object):
 
-    def __init__(self, content, original_website, revistas_path,
+    def __init__(self,
+                 create_image_function,
+                 create_file_function,
+                 original_website,
+                 revistas_path,
                  img_revistas_path,
-                 static_files_path=None, page_name=None, lang=None):
+                 static_files_path=None):
         self.original_website = original_website
         self.revistas_path = revistas_path
         self.img_revistas_path = img_revistas_path
         self.static_files_path = static_files_path
-        self.lang = lang
-        self.page_name = page_name
-        self.content = content
         self.used_names = {}
-        self.INVALID_TEXT_IN_URL = None
-        self.prefixes = [self.page_name, self.lang]
+        self._create_file_function = create_file_function
+        self._create_image_function = create_image_function
 
     @property
-    def content(self):
-        return str(self.tree)
+    def create_image_function(self):
+        return self._create_image_function
 
-    @content.setter
-    def content(self, value):
-        self.tree = BeautifulSoup(value, 'lxml')
+    @property
+    def create_file_function(self):
+        return self._create_file_function
 
     @property
     def original_website(self):
@@ -120,38 +125,15 @@ class MigrationPage(object):
             website = website[:-1]
         self._original_website = website
 
-    def migrate_urls(self, create_image_function, create_file_function):
-        self.fix_urls()
-        self.create_files(create_file_function)
-        self.create_images(create_image_function)
-
-    def fix_urls(self):
-        replacements = []
-        for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
-            for elem in self.find_original_website_reference(
-                    elem_name, attr_name):
-                old_url = str(elem[attr_name])
-                new_url = self.get_new_url(old_url)
-                if new_url != old_url:
-                    replacements.append((old_url, new_url))
-                    old_display_text = elem.string
-                    elem[attr_name] = new_url
-                    new_display_text = self.link_display_text(
-                        new_url, old_display_text, old_url)
-                    if new_display_text != old_display_text:
-                        elem.string = new_display_text
-
-        replacements = list(sorted(set(replacements)))
-        for old, new in replacements:
-            q = self.content.count(old)
-            if q > 0:
-                logging.info(
-                    'CONFERIR: ainda existe: {} ({})'.format(old, q))
-
-    def _fix_invalid_url(self, url):
-        if self.INVALID_TEXT_IN_URL and self.INVALID_TEXT_IN_URL in url:
-            return url.replace(self.INVALID_TEXT_IN_URL, '')
-        return url
+    def link_display_text(self, link, display_text, original_url):
+        if display_text is not None:
+            text = display_text.strip().replace('&nbsp;', '')
+            if text == original_url:
+                return '{}{}'.format(self.original_website,
+                                     text.replace(original_url, link))
+            elif original_url.endswith(text):
+                return '{}{}'.format(self.original_website, link)
+        return display_text
 
     def replace_by_relative_url(self, url):
         # www.scielo.br/revistas/icse/levels.pdf -> /revistas/icse/levels.pdf
@@ -176,7 +158,6 @@ class MigrationPage(object):
         return url
 
     def get_new_url(self, url):
-        url = self._fix_invalid_url(url)
         if url.strip().count(' ') > 0:
             return url
 
@@ -186,36 +167,6 @@ class MigrationPage(object):
         if self.original_website in url:
             return self.replace_by_relative_url(url)
         return url
-
-    def link_display_text(self, link, display_text, original_url):
-        if display_text is not None:
-            text = display_text.strip().replace('&nbsp;', '')
-            if text == original_url:
-                return '{}{}'.format(self.original_website,
-                                     text.replace(original_url, link))
-            elif original_url.endswith(text):
-                return '{}{}'.format(self.original_website, link)
-        return display_text
-
-    def find_original_website_reference(self, elem_name, attribute_name):
-        mentions = []
-        for item in self.tree.find_all(elem_name):
-            value = item.get(attribute_name, '')
-            if self.original_website in value:
-                mentions.append(item)
-        return mentions
-
-    @property
-    def images(self):
-        return [img
-                for img in self.tree.find_all('img')
-                if img.get('src')]
-
-    @property
-    def files(self):
-        return [item
-                for item in self.tree.find_all('a')
-                if item.get('href')]
 
     def guess_file_location(self, file_path):
         if '/img/revistas/' in file_path:
@@ -237,19 +188,19 @@ class MigrationPage(object):
                 location = file_path[1:]
                 return os.path.join(self.static_files_path, location)
 
-    def get_prefixed_slug_name(self, img_location):
+    def get_prefixed_slug_name(self, prefixes, img_location):
         new_img_name = slugify_filename(img_location, self.used_names)
 
-        _prefixes = self.prefixes + [new_img_name]
-        parts = [part for part in _prefixes if part is not None]
-        return '_'.join(parts)
+        _prefixes = prefixes
+        parts = [slugify(part) for part in _prefixes if part is not None]
+        return '_'.join(parts + [new_img_name])
 
     def is_asset_url(self, referenced):
         name, ext = os.path.splitext(referenced)
         if ext.lower() in ['.pdf', '.html', '.htm', '.jpg', '.png', '.gif']:
-            return 'https://{}{}'.format(self.original_website, referenced)
+            return 'http://{}{}'.format(self.original_website, referenced)
 
-    def get_file_info(self, referenced):
+    def get_file_info(self, prefixes, referenced):
         file_location = self.guess_file_location(referenced)
         valid_path = confirm_file_location(file_location, referenced)
         url = None
@@ -259,36 +210,13 @@ class MigrationPage(object):
                 file_location = downloaded_file(url)
                 valid_path = confirm_file_location(file_location, referenced)
         if valid_path:
-            file_dest_name = self.get_prefixed_slug_name(file_location)
+            file_dest_name = self.get_prefixed_slug_name(
+                prefixes, file_location)
             return (file_location, file_dest_name, url is not None)
         logging.info('CONFERIR: {} não encontrado'.format(referenced))
 
-    def create_images(self, create_function):
-        for image in self.images:
-            src = image.get('src')
-            if ':' not in src:
-                image_info = self.get_file_info(src)
-                if image_info:
-                    img_src, img_dest, is_temp = image_info
-                    image['src'] = create_function(
-                        img_src, img_dest, check_if_exists=False)
-                    if is_temp:
-                        delete_file(img_src)
 
-    def create_files(self, create_function):
-        for _file in self.files:
-            href = _file.get('href')
-            if ':' not in href:
-                _file_info = self.get_file_info(href)
-                if _file_info:
-                    _file_href, _file_dest, is_temp = _file_info
-                    _file['href'] = create_function(
-                        _file_href, _file_dest, check_if_exists=False)
-                    if is_temp:
-                        delete_file(_file_href)
-
-
-class MigrationJournalPage(MigrationPage):
+class JournalPageMigration:
 
     anchors = {
         'about': 'aboutj',
@@ -296,19 +224,24 @@ class MigrationJournalPage(MigrationPage):
         'instructions': 'instruc',
     }
 
-    def __init__(self, content, original_website, revistas_path,
-                 img_revistas_path, acron,
-                 static_files_path=None, page_name=None, lang=None):
-        super().__init__(content, original_website, revistas_path,
-                         img_revistas_path, static_files_path, page_name, lang)
+    def __init__(self, original_website, acron):
+        self.original_website = original_website
         self.acron = acron
-        self.prefixes = [acron]
-        """
-        ERRADO: http://www.scielo.br/revistas/icse/www1.folha.uol.com.br
-        CORRETO: http://www1.folha.uol.com.br
-        """
         self.INVALID_TEXT_IN_URL = '{}/revistas/{}/www'.format(
             self.original_website, acron)
+
+    @property
+    def original_website(self):
+        return self._original_website
+
+    @original_website.setter
+    def original_website(self, value):
+        website = value
+        if '//' in website:
+            website = website[website.find('//')+2:]
+        if website.endswith('/'):
+            website = website[:-1]
+        self._original_website = website
 
     @property
     def original_journal_home_page(self):
@@ -329,7 +262,18 @@ class MigrationJournalPage(MigrationPage):
             return self.new_journal_home_page+'about'
         return ''
 
+    def _fix_invalid_url(self, url):
+        """
+        ERRADO: http://www.scielo.br/revistas/icse/www1.folha.uol.com.br
+        CORRETO: http://www1.folha.uol.com.br
+        """
+        if self.INVALID_TEXT_IN_URL and self.INVALID_TEXT_IN_URL in url:
+            return url.replace(self.INVALID_TEXT_IN_URL, '')
+        return url
+
     def get_new_url(self, url):
+        url = self._fix_invalid_url(url)
+
         # www.scielo.br/icse -> /journal/icse/
         if url.lower().endswith(self.original_journal_home_page):
             return self.new_journal_home_page
@@ -339,5 +283,102 @@ class MigrationJournalPage(MigrationPage):
             for new, old in self.anchors.items():
                 if old in url:
                     return self.new_about_journal_page(new)
+        return url
 
-        return super().get_new_url(url)
+
+class MigratedPage(object):
+
+    def __init__(self, migration, content,
+                 acron=None, page_name=None, lang=None):
+        self.lang = lang
+        self.page_name = page_name
+        self.content = content
+        self.prefixes = [acron] or [page_name, lang]
+        self.migration = migration
+        self.j_migration = None
+        if acron:
+            self.j_migration = JournalPageMigration(
+                migration.original_website, acron)
+
+    @property
+    def content(self):
+        return str(self.tree)
+
+    @content.setter
+    def content(self, value):
+        self.tree = BeautifulSoup(value, 'lxml')
+
+    def migrate_urls(self):
+        self.fix_urls()
+        self.create_files()
+        self.create_images()
+
+    def fix_urls(self):
+        replacements = []
+        for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
+            for elem in self.find_original_website_reference(
+                    elem_name, attr_name):
+                old_url = str(elem[attr_name])
+                new_url = old_url
+                if self.j_migration:
+                    new_url = self.j_migration.get_new_url(new_url)
+                new_url = self.migration.get_new_url(new_url)
+                if new_url != old_url:
+                    replacements.append((old_url, new_url))
+                    old_display_text = elem.string
+                    elem[attr_name] = new_url
+                    new_display_text = self.migration.link_display_text(
+                        new_url, old_display_text, old_url)
+                    if new_display_text != old_display_text:
+                        elem.string = new_display_text
+
+        replacements = list(sorted(set(replacements)))
+        for old, new in replacements:
+            q = self.content.count(old)
+            if q > 0:
+                logging.info(
+                    'CONFERIR: ainda existe: {} ({})'.format(old, q))
+
+    def find_original_website_reference(self, elem_name, attribute_name):
+        mentions = []
+        for item in self.tree.find_all(elem_name):
+            value = item.get(attribute_name, '')
+            if self.migration.original_website in value:
+                mentions.append(item)
+        return mentions
+
+    @property
+    def images(self):
+        return [img
+                for img in self.tree.find_all('img')
+                if img.get('src')]
+
+    @property
+    def files(self):
+        return [item
+                for item in self.tree.find_all('a')
+                if item.get('href')]
+
+    def create_images(self):
+        for image in self.images:
+            src = image.get('src')
+            if ':' not in src:
+                image_info = self.migration.get_file_info(self.prefixes, src)
+                if image_info:
+                    img_src, img_dest, is_temp = image_info
+                    image['src'] = self.migration.create_image_function(
+                        img_src, img_dest, check_if_exists=False)
+                    if is_temp:
+                        delete_file(img_src)
+
+    def create_files(self):
+        for _file in self.files:
+            href = _file.get('href')
+            if ':' not in href:
+                _file_info = self.migration.get_file_info(self.prefixes, href)
+                if _file_info:
+                    _file_href, _file_dest, is_temp = _file_info
+                    _file['href'] = self.migration.create_file_function(
+                        _file_href, _file_dest, check_if_exists=False)
+                    if is_temp:
+                        delete_file(_file_href)

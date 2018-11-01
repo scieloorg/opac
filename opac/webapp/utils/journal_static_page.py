@@ -5,8 +5,6 @@ import logging
 
 from bs4 import BeautifulSoup, Comment, element
 
-from webapp.utils import migration_pages
-
 
 LOGGING_LEVEL = os.environ.get('LOGGING_LEVEL', 'DEBUG')
 logging.basicConfig(level=LOGGING_LEVEL)
@@ -410,51 +408,6 @@ class OldJournalPageFile(object):
                self.anchor + self.anchor_title + \
                self.middle + '<hr noshade="" size="1"/>' + \
                '<!-- fim {} -->'.format(self.filename)
-
-
-class NewJournalPage(object):
-    """
-    Representa a página secundária do periódico no site novo
-    Sua função é a partir das páginas antigas
-    ('iaboutj.htm', 'iedboard.htm', 'iinstruc.htm'), obter uma única página.
-    E, também, como há no conteúdo da página links para o site antigo, corrigir os links
-    para o site novo
-    """
-    def __init__(self, original_website, revistas_path, img_revistas_path, acron):
-        self.content = None
-        self.original_website = original_website
-        self.revistas_path = revistas_path
-        self.img_revistas_path = img_revistas_path
-        self.acron = acron
-        self.journal_pages_path = os.path.join(revistas_path, acron)
-
-    def get_new_journal_page_content(self, files):
-        """
-        Extract the header and the footer of the page
-        Insert the anchor based on filename
-        """
-        content = []
-        unavailable_message = []
-        for file in files:
-            file_path = os.path.join(self.journal_pages_path, file)
-            page = OldJournalPageFile(file_path)
-            if page.unavailable_message:
-                unavailable_message.append(
-                    page.anchor + page.anchor_title + page.unavailable_message)
-                content.append(unavailable_message[-1])
-            else:
-                content.append(page.body)
-        text = ' <!-- UNAVAILABLE MESSAGE: {} --> '.format(
-                    len(unavailable_message))
-        return '\n'.join(content)+text
-
-    def migrate_urls(self, content, create_image, create_file):
-        if content:
-            page = migration_pages.MigrationJournalPage(
-                content, self.original_website, self.revistas_path,
-                self.img_revistas_path, self.acron)
-            page.migrate_urls(create_image, create_file)
-            return page.content
 
 
 def has_header(content):
