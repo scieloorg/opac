@@ -1145,8 +1145,10 @@ class PageTestCase(BaseTestCase):
                                'language': 'es_ES'}),
             utils.makeOnePage({'name': 'Critérios SciELO',
                                'language': 'pt_BR'}),
-            utils.makeOnePage({'name': 'FAQ SciELO'}),
-            utils.makeOnePage({'name': 'Equipe SciELO'})
+            utils.makeOnePage({'name': 'FAQ SciELO',
+                               'language': 'pt_BR'}),
+            utils.makeOnePage({'name': 'Equipe SciELO',
+                               'language': 'pt_BR'})
         ]
 
         response = self.client.get(url_for('main.about_collection'))
@@ -1155,8 +1157,10 @@ class PageTestCase(BaseTestCase):
         self.assertTemplateUsed('collection/about.html')
 
         for page in pages:
-            self.assertIn('/about/%s' % page.slug_name,
-                          response.data.decode('utf-8'))
+            if page.language == 'pt_BR':
+                self.assertIn(
+                    '/about/%s/%s' % (page.slug_name, page.language),
+                    response.data.decode('utf-8'))
 
         self.assertListEqual(
             sorted([page.slug_name for page in pages[1:]]),
@@ -1172,9 +1176,11 @@ class PageTestCase(BaseTestCase):
         with current_app.app_context():
             utils.makeOneCollection()
 
-            page = utils.makeOnePage({'name': 'Critérios SciELO'})
+            page = utils.makeOnePage({'name': 'Critérios SciELO',
+                                      'language': 'es_ES'})
             response = self.client.get(url_for('main.about_collection',
-                                               slug_name=page.slug_name))
+                                               slug_name=page.slug_name,
+                                               lang=page.language))
 
             self.assertEqual(200, response.status_code)
             self.assertTemplateUsed('collection/about.html')
@@ -1193,7 +1199,6 @@ class PageTestCase(BaseTestCase):
             utils.makeOneCollection()
             unknown_page_name = 'xxjfsfadfa0k2qhs8slwnui8'
             response = self.client.get(url_for('main.about_collection',
-                                       slug_name=unknown_page_name))
+                                       slug_name=unknown_page_name,
+                                       lang='ab_cd'))
             self.assertStatus(response, 404)
-            self.assertIn('Página não encontrada',
-                          response.data.decode('utf-8'))
