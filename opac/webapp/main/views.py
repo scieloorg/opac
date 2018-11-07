@@ -186,16 +186,16 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>', methods=['GET'])
+@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None):
-    language = session.get('lang', get_locale())
+def about_collection(slug_name=None, lang=None):
+    language = lang or session.get('lang', get_locale())
 
     context = {}
-
+    page = None
     if slug_name:
         # caso seja uma página
-        page = controllers.get_page_by_slug_name(language, slug_name)
+        page = controllers.get_page_by_slug_name(slug_name, language)
         if not page:
             abort(404, _('Página não encontrada'))
         context['page'] = page
@@ -1072,7 +1072,8 @@ def email_share_ajax():
 
 @main.route("/form_mail/", methods=['GET'])
 def email_form():
-    return render_template("email/email_form.html")
+    context = {'url': request.args.get('url')}
+    return render_template("email/email_form.html", **context)
 
 
 @main.route("/email_error_ajax/", methods=['POST'])

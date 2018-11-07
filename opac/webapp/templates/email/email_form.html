@@ -1,79 +1,88 @@
 
-<div class="modal fade" id="share_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-          <span aria-hidden="true">&times;</span>
-          <span class="sr-only">{% trans %}Fechar{% endtrans %}</span>
-        </button>
-        <h4 class="modal-title">
-          {% trans %}Enviar página por e-mail{% endtrans %}
-        </h4>
-      </div>
-      <form name="share_form_id" id="share_form_id" action="{{ url_for('main.email_share_ajax') }}" method="post" class="validate">
-        {{ g.email_share.csrf_token() }}
-        {{ g.email_share.share_url(value=request.url) }}
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
-              {{ g.email_share.your_email(class="form-control valid") }}
-              <label class="control-label" id="{{g.email_share.your_email.name}}_error"></label>
-          </div>
-          <div class="form-group">
-            <label class="control-label">{% trans %}Para{% endtrans %}*</label>
-            {{ g.email_share.recipients(class="form-control valid multipleMail") }}
-            <label class="control-label" id="{{g.email_share.recipients.name}}_error"></label>
-            <span class="text-muted">
-              {% trans %}Utilize ; (ponto e vírgula) para inserir mais emails.{% endtrans %}
-            </span>
-          </div>
-          <div class="form-group">
-            <div id="share_captcha_id"></div>
-          </div>
-          <div class="form-group extendForm">
-
-            <a href="javascript:;" class="showBlock" id="showBlock" data-rel="#extraFields" data-hide="#showBlock">
-              {% trans %}Alterar assunto e comentários{% endtrans %}
-            </a>
-
-            <div id="extraFields" style="display: none;">
-              <div class="form-group">
-                <label>{% trans %}Assunto{% endtrans %}</label>
-                {{ g.email_share.subject(class="form-control valid") }}
-              </div>
-              <div class="form-group">
-                <label>{% trans %}Comentário{% endtrans %}</label>
-                {{ g.email_share.comment(class="form-control") }}
-              </div>
-              <a href="javascript:;" class="showBlock" data-rel="#showBlock" data-hide="#extraFields">
-                {% trans %}Remover remetente, assunto e comentários{% endtrans %}
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <input type="submit" name="s" value="Enviar" class="btn" id="share_submit_btn_id">
-        </div>
-      </form>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">&times;</span>
+        <span class="sr-only">{% trans %}Fechar{% endtrans %}</span>
+      </button>
+      <h4 class="modal-title">
+        {% trans %}Enviar página por e-mail{% endtrans %}
+      </h4>
     </div>
-  </div>
-</div>
+    <form name="share_form_id" id="share_form_id" class="validate">
+      {{ g.email_share.csrf_token() }}
+      {{ g.email_share.share_url(value=url) }}
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
+            {{ g.email_share.your_email(class="form-control valid") }}
+            <label class="control-label" id="{{g.email_share.your_email.name}}_error"></label>
+        </div>
+        <div class="form-group">
+          <label class="control-label">{% trans %}Para{% endtrans %}*</label>
+          {{ g.email_share.recipients(class="form-control valid multipleMail") }}
+          <label class="control-label" id="{{g.email_share.recipients.name}}_error"></label>
+          <span class="text-muted">
+            {% trans %}Utilize ; (ponto e vírgula) para inserir mais emails.{% endtrans %}
+          </span>
+        </div>
+        <div class="form-group">
+          <div id="share_captcha_id"></div>
+        </div>
+        <div class="form-group extendForm">
 
-<div class="modal fade in" id="share_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
-  <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-              <h4 class="modal-title">Mensagem</h4>
-          </div>
-          <div class="modal-body">
-              <div class="midGlyph">
+          <a href="javascript:;" class="showBlock" id="showBlock" data-rel="#extraFields" data-hide="#showBlock">
+            {% trans %}Alterar assunto e comentários{% endtrans %}
+          </a>
 
-                  <br><br>
-              </div>
+          <div id="extraFields" style="display: none;">
+            <div class="form-group">
+              <label>{% trans %}Assunto{% endtrans %}</label>
+              {{ g.email_share.subject(class="form-control valid") }}
+            </div>
+            <div class="form-group">
+              <label>{% trans %}Comentário{% endtrans %}</label>
+              {{ g.email_share.comment(class="form-control") }}
+            </div>
+            <a href="javascript:;" class="showBlock" data-rel="#showBlock" data-hide="#extraFields">
+              {% trans %}Remover remetente, assunto e comentários{% endtrans %}
+            </a>
           </div>
+
+        </div>
       </div>
+      <div class="modal-footer">
+        <input type="submit" name="s" value="Enviar" class="btn" id="share_submit_btn_id">
+      </div>
+    </form>
   </div>
 </div>
 
+<script>
+    var share_email = Object.create(ModalForms);
+    share_email.init(
+      "#share_modal_id",
+      "#share_form_id",
+      "{{ url_for('main.email_share_ajax') }}",
+      "POST",
+      "#share_submit_btn_id",
+      true,
+      "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
+      "share_captcha_id",
+      "light",
+      "#share_modal_confirm_id",
+      "{% trans %}Email enviado com sucesso.{% endtrans %}",
+      "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
+    );
+
+    $(".showBlock").on("click",function() {
+      var t = $(this),
+        rel = t.data("rel"),
+        hide = t.data("hide");
+
+      $(rel).find("input:text,textarea").val("");
+      $(rel).slideDown("fast");
+      $(hide).hide();
+    });
+</script>
