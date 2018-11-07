@@ -17,7 +17,7 @@ legendarium==2.0.2
 -e git+https://git@github.com/scieloorg/opac_schema@v2.48#egg=opac_schema
 Flask-HTMLmin==1.4.0
 python-slugify==1.2.4
-requests==2.19.1
+requests>=2.20.0
 gunicorn==19.8.1
 xlsxwriter==1.1.0
 tweepy==3.6.0
