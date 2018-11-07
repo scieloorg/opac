@@ -82,7 +82,7 @@ def delete_file(file_path):
     except IOError as e:
         logging.error(
             u'%s (corresponding to %s)' % (e, file_path))
-    else:
+    except Exception as e:
         logging.error(
             u'%s (corresponding to %s)' % (e, file_path))
 
@@ -293,7 +293,10 @@ class MigratedPage(object):
         self.lang = lang
         self.page_name = page_name
         self.content = content
-        self.prefixes = [acron] or [page_name, lang]
+        if page_name:
+            self.prefixes = [page_name, lang]
+        else:
+            self.prefixes = [acron]
         self.migration = migration
         self.j_migration = None
         if acron:

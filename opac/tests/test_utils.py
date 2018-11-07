@@ -261,7 +261,7 @@ class UtilsTestCase(BaseTestCase):
         mocked_create_page.side_effect = registered_page
         mocked_delete_file.side_effect = None
         content = '<img src="/img/revistas/abc.jpg"><a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"/>'
-        new_content = wutils.migrate_page(
+        new_content = wutils.migrate_page_content(
             content, acron='rbep', page_name=None, language='pt')
         self.assertEqual(
             '<html><body><img src="/media/rbep_abc.jpg"/>'

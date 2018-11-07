@@ -356,7 +356,12 @@ def create_new_journal_page(acron, files, lang):
 
     content = join_html_files_content(pages_source_path, acron, files)
     if content:
-        migrate_page(content, acron=acron, language=lang)
+        content = migrate_page_content(content, acron=acron, language=language)
+        create_page(
+                    'Página secundária %s (%s)' % (acron.upper(), language),
+                    language, content, acron,
+                    'Página secundária do periódico %s' % acron)
+        return content
 
 
 def join_html_files_content(revistas_path, acron, files):
@@ -388,7 +393,7 @@ def migrate_page_create_file(src, dest, check_if_exists=False):
     return create_file(src, dest, check_if_exists).get_absolute_url
 
 
-def migrate_page(content, acron=None, page_name=None, language=None):
+def migrate_page_content(content, acron=None, page_name=None, language=None):
     if content:
         pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
         images_source_path = current_app.config['JOURNAL_IMAGES_SOURCE_PATH']
@@ -402,11 +407,6 @@ def migrate_page(content, acron=None, page_name=None, language=None):
             migration, content,
             acron=acron, page_name=page_name, lang=language)
         page.migrate_urls()
-
-        create_page(
-                    'Página secundária %s (%s)' % (acron.upper(), language),
-                    language, page.content, acron,
-                    'Página secundária do periódico %s' % acron)
         return page.content
 
 

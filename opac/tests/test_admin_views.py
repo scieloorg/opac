@@ -4716,7 +4716,6 @@ class PagesAdminViewTests(BaseTestCase):
         self.assertEqual(
             result,
             expected)
-    """
     def test_on_model_change(self):
         admin_user = {
             'email': 'admin@opac.org',
@@ -4751,6 +4750,82 @@ class PagesAdminViewTests(BaseTestCase):
             )
             # check result from server with expected data
             self.assertIn(
-                'my_test_url',
+                'Redirecting...',
                 result.data.decode('utf-8')
             )
+            page_index_url = url_for('page.index_view')
+            response = client.get(page_index_url, data={'search': 'criterios'})
+            self.assertIn(page.id, response.data.decode('utf-8'))
+    """
+
+    def test_admin_page_details(self):
+        """
+        Com:
+            - usuário administrador cadastrado (com email confirmado)
+            - um novo registro do tipo: Journal no banco
+        Quando:
+            - fazemos login e
+            - acessamos a pagina de detalhe do periódico: /admin/journal/details/
+        Verificamos:
+            - a pagina mostra o periódico certo
+        """
+        # with
+        content = '<a href="http://www.scielo.br/avaliacao/faq_avaliacao_en.htm"><img src="http://www.scielo.br/img/revistas/abcd/glogo.gif">'
+        page = makeOnePage({'_id': 'xxxxx', 'content': content})
+        admin_user = {
+            'email': 'admin@opac.org',
+            'password': 'foobarbaz',
+        }
+        create_user(admin_user['email'], admin_user['password'], True)
+        login_url = url_for('admin.login_view')
+        # when
+        with current_app.app_context():
+            with self.client as client:
+                # login do usuario admin
+                login_response = client.post(
+                    login_url,
+                    data=admin_user,
+                    follow_redirects=True)
+                self.assertStatus(login_response, 200)
+                self.assertTemplateUsed('admin/index.html')
+                self.assertTrue(current_user.is_authenticated)
+
+                # edit pages
+                sent = {
+                    'content': content * 2,
+                    'slug_name': 'criterios',
+                    'name': 'criterios',
+                    'language': 'pt_BR',
+                    'description': 'DESCRIIIIIIII',
+                }
+                response = client.post(
+                    '/admin/pages/edit/?id={}'.format(page.id),
+                    data=sent,
+                    follow_redirects=True
+                )
+                self.assertTemplateUsed('admin/model/list.html')
+                self.assertStatus(response, 200)
+                self.assertIn(
+                    'DESCRIIIIIIII', response.data.decode('utf-8'))
+                self.assertIn(
+                    'success', response.data.decode('utf-8'))
+                url = url_for('pages.details_view', id=page.id)
+                response = client.get(url)
+                self.assertStatus(response, 200)
+                self.assertTemplateUsed('admin/model/details.html')
+                response_data = response.data.decode('utf-8')
+                self.assertIn(page.id, response_data)
+                self.assertIn(
+                    "/media/files/criterios_pt-br_faq-avaliacao-en.htm",
+                    response_data)
+                self.assertIn(
+                    "/media/images/criterios_pt-br_glogo.gif",
+                    response_data)
+                self.assertEqual(
+                    response_data.count(
+                        "/media/files/criterios_pt-br_faq-avaliacao-en.htm"),
+                    2)
+                self.assertEqual(
+                    response_data.count(
+                        "/media/images/criterios_pt-br_glogo.gif"),
+                    2)
