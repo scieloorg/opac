@@ -10,6 +10,10 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async/>
+  {% if config.MATHJAX_CDN_URL %}
+    {# recomendação da doc do mathjax: "(It can also go in the <body> if necessary, but the head is to be preferred.)" #}
+    <script type="text/javascript" async src="{{ config.MATHJAX_CDN_URL }}"></script>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
