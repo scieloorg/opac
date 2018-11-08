@@ -758,9 +758,7 @@ class PagesAdminView(OpacBaseAdminView):
         }
 
         new_content = migrate_page_content(
-            model.content,
-            page_name=model.name,
-            language=model.language)
+            model.content, model.language, page_name=model.name)
         model.content = new_content
         form._fields['content'].data = new_content
         if login.current_user.is_authenticated:

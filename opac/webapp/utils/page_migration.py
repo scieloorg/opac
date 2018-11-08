@@ -13,7 +13,7 @@ from slugify import slugify
 LOGGING_LEVEL = os.environ.get('LOGGING_LEVEL', 'DEBUG')
 logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
-fh = logging.FileHandler('page.log', mode='w')
+fh = logging.FileHandler('page_migration.log', mode='w')
 fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 
@@ -88,7 +88,9 @@ def delete_file(file_path):
 
 
 class PageMigration(object):
-
+    """
+    Define os dados/regras para migracao de qualquer página html
+    """
     def __init__(self,
                  create_image_function,
                  create_file_function,
@@ -217,6 +219,9 @@ class PageMigration(object):
 
 
 class JournalPageMigration:
+    """
+    Define os dados/regras para migracao de página html de periódico
+    """
 
     anchors = {
         'about': 'aboutj',
@@ -287,7 +292,11 @@ class JournalPageMigration:
 
 
 class MigratedPage(object):
-
+    """
+    Corrigir os links internos
+    Registrar os arquivos e imagens
+    Corrigir os links internos destes arquivos e imagens
+    """
     def __init__(self, migration, content,
                  acron=None, page_name=None, lang=None):
         self.lang = lang

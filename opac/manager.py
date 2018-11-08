@@ -355,8 +355,6 @@ def populate_journal_pages():
 
     Assinatura não esta sendo importada conforme mencionado no tk:
     https://github.com/scieloorg/opac/issues/630
-
-
     """
     acron_list = [journal.acronym for journal in Journal.objects.all()]
     j_total = len(acron_list)

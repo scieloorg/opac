@@ -241,7 +241,7 @@ def create_user(user_email, user_password, user_email_confirmed):
 
 def generate_thumbnail(input_filename):
     """
-    Parâmento input_filename matriz do thumbnail.
+    Parâmetro input_filename matriz do thumbnail.
 
     Caso a geração seja realizado com sucesso deve retorna o path do thumbnail,
     caso contrário None.
@@ -272,10 +272,10 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
     """
     Função que cria uma imagem para o modelo Image.
 
-    Parâmento image_path caminho absoluto para a imagem.
-    Parâmento filename no para o arquivo com extensão.
-    Parâmento thumbnail liga/desliga criação de thumbnail.
-    Parâmento check_if_exists verifica se a image existe considera somente o
+    Parâmetro image_path caminho absoluto para a imagem.
+    Parâmetro filename no para o arquivo com extensão.
+    Parâmetro thumbnail liga/desliga criação de thumbnail.
+    Parâmetro check_if_exists verifica se a image existe considera somente o
     nome da imagem.
     """
 
@@ -310,9 +310,9 @@ def create_file(file_path, filename, check_if_exists=True):
     """
     Função que cria um arquivo para o modelo File.
 
-    Parâmento file_path caminho absoluto para o arquivo.
-    Parâmento filename nome do arquivo com extensão.
-    Parâmento check_if_exists verifica se o arquivo existe considera somente o
+    Parâmetro file_path caminho absoluto para o arquivo.
+    Parâmetro filename nome do arquivo com extensão.
+    Parâmetro check_if_exists verifica se o arquivo existe considera somente o
     nome do arquivo.
     """
 
@@ -342,32 +342,30 @@ def create_file(file_path, filename, check_if_exists=True):
 
 
 def create_page(name, language, content, journal=None, description=None):
-
+    """
+    Função que cria uma página para o modelo Pages.
+    Parâmetro name: título da página
+    Parâmetro language: idioma do texto da página
+    Parâmetro content: conteúdo em HTML da página
+    Parâmetro journal: acrônimo do periódico se a página for de periódico
+    Parâmetro description: descrição da página
+    """
     page = Pages(_id=str(uuid4().hex), name=name, language=language,
                  content=content, journal=journal, description=description)
-
     page.save()
-
     return page
-
-
-def create_new_journal_page(acron, files, lang):
-    pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
-
-    content = join_html_files_content(pages_source_path, acron, files)
-    if content:
-        content = migrate_page_content(content, acron=acron, language=language)
-        create_page(
-                    'Página secundária %s (%s)' % (acron.upper(), language),
-                    language, content, acron,
-                    'Página secundária do periódico %s' % acron)
-        return content
 
 
 def join_html_files_content(revistas_path, acron, files):
     """
-    Extract the header and the footer of the page
-    Insert the anchor based on filename
+    Função que lê os arquivos aboutj.htm, instruct.htm e edboard.htm
+    e os junta em um único conteúdo
+    Retorna o novo conteúdo
+    Parâmetro name: título da página
+    Parâmetro language: idioma do texto da página
+    Parâmetro content: conteúdo em HTML da página
+    Parâmetro journal: acrônimo do periódico se a página for de periódico
+    Parâmetro description: descrição da página
     """
     content = []
     unavailable_message = []
@@ -393,8 +391,19 @@ def migrate_page_create_file(src, dest, check_if_exists=False):
     return create_file(src, dest, check_if_exists).get_absolute_url
 
 
-def migrate_page_content(content, acron=None, page_name=None, language=None):
+def migrate_page_content(content, language, acron=None, page_name=None):
+    """
+    Função que migra o conteúdo de qualquer página HTML
+    Retorna o novo conteúdo
+    Parâmetro content: conteúdo em HTML da página
+    Parâmetro acron: acrônimo do periódico se a página for de periódico
+    Parâmetro page_name: título da página se não é de periódico
+    Parâmetro language: idioma do texto da página
+    """
     if content:
+        if not acron and not page_name:
+            raise IOError('migrate_page_content() requer acron ou page_name')
+
         pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
         images_source_path = current_app.config['JOURNAL_IMAGES_SOURCE_PATH']
         original_website = current_app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
@@ -408,6 +417,25 @@ def migrate_page_content(content, acron=None, page_name=None, language=None):
             acron=acron, page_name=page_name, lang=language)
         page.migrate_urls()
         return page.content
+
+
+def create_new_journal_page(acron, files, lang):
+    """
+    Função que cria uma página secundária de um periódico em um idioma e
+    é composta pelos arquivos about, editorial board e instrucoes aos autores
+    Parâmetro acron: acrônimo do periódico.
+    Parâmetro files: about, editorial board e instrucoes aos autores
+    Parâmetro lang: idioma da página
+    """
+    pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
+    content = join_html_files_content(pages_source_path, acron, files)
+    if content:
+        content = migrate_page_content(content, lang, acron=acron)
+        create_page(
+                    'Página secundária %s (%s)' % (acron.upper(), lang),
+                    lang, content, acron,
+                    'Página secundária do periódico %s' % acron)
+        return content
 
 
 def get_resource_url(resource, type, lang):
