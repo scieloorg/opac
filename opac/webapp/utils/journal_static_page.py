@@ -448,39 +448,3 @@ def wrap(child, new_tag):
             child.wrap(new_tag)
     elif isinstance(child, element.NavigableString):
         return child.wrap(new_tag)
-
-
-def get_acron_list(REVISTAS_PATH):
-    acron_list = []
-    for item in os.listdir(REVISTAS_PATH):
-        path = os.path.join(REVISTAS_PATH, item)
-        if os.path.isdir(path):
-            if set(PAGE_NAMES) & set(os.listdir(path)) == set(PAGE_NAMES):
-                acron_list.append(item)
-    return acron_list
-
-
-def generate_journals_pages(REVISTAS_PATH, IMG_REVISTAS_PATH, acron_list=None):
-    if acron_list is None:
-        acron_list = get_acron_list(REVISTAS_PATH)
-    RESULTADO = REVISTAS_PATH+'_new'
-    if not os.path.isdir(RESULTADO):
-        os.makedirs(RESULTADO)
-    for acron in acron_list:
-        new_page = NewJournalPage('www.scielo.br', REVISTAS_PATH,
-                                  IMG_REVISTAS_PATH, acron)
-        for lang, files in PAGE_NAMES_BY_LANG.items():
-            content = new_page.migrate(files)
-            if content:
-                resultado = '{}/{}_{}.html'.format(RESULTADO, acron, lang)
-                with open(resultado, 'w') as f:
-                    f.write(content)
-
-
-if __name__ == '__main__':
-    import sys
-    paths = [item for item in sys.argv[1:3] if os.path.isdir(item)]
-    if len(paths) == 2:
-        generate_journals_pages(paths[0], paths[1])
-    else:
-        print('Usage: python journal_static_page.py revistas img_revistas')
