@@ -1,86 +1,83 @@
-<esi:remove>
-	<div class="modal fade" id="error_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
-					<h4 class="modal-title">{% trans %} Reportar erro {% endtrans %}</h4>
+<div class="modal-dialog">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
+			<h4 class="modal-title">{% trans %} Reportar erro {% endtrans %}</h4>
+		</div>
+		<form action="" method="POST" id="error_form_id">
+
+			{{ g.error.csrf_token() }}
+
+			{{ g.error.url(value=url) }}
+
+			<div class="modal-body">
+
+				<div class="form-group">
+					<label class="control-label">{% trans %}Seu Nome{% endtrans %}*</label>
+					{{ g.error.name(class="form-control valid", placeholder=_("Digite seu Nome")) }}
+					<label class="control-label" id="{{g.error.name.name}}_error"></label>
 				</div>
-				<form action="" method="POST" id="error_form_id">
 
-					{{ g.error.csrf_token() }}
+	            <div class="form-group">
+	              <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
+	                {{ g.error.your_email(class="form-control valid", placeholder="Digite seu e-mail") }}
+	                <label class="control-label" id="{{g.error.your_email.name}}_error"></label>
+	            </div>
 
-					{{ g.error.url(value=request.url) }}
+				<div class="form-group">
+					<label class="control-label">{% trans %}Erro referente{% endtrans %}:</label>
 
-					<div class="modal-body">
-
-						<div class="form-group">
-							<label class="control-label">{% trans %}Seu Nome{% endtrans %}*</label>
-							{{ g.error.name(class="form-control valid", placeholder=_("Digite seu Nome")) }}
-							<label class="control-label" id="{{g.error.name.name}}_error"></label>
-						</div>
-
-			            <div class="form-group">
-			              <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
-			                {{ g.error.your_email(class="form-control valid", placeholder="Digite seu e-mail") }}
-			                <label class="control-label" id="{{g.error.your_email.name}}_error"></label>
-			            </div>
-
-						<div class="form-group">
-							<label class="control-label">{% trans %}Erro referente{% endtrans %}:</label>
-
-							<div class="radio" style="margin-top:0;">
-								<label><input type="radio" name="error_type" value="content" checked>{% trans %}ao conteúdo{% endtrans %}</label>
-							</div>
-
-							<div class="radio">
-								<label><input type="radio" name="error_type" value="application">{% trans %}à aplicação{% endtrans %}</label>
-							</div>
-
-							<label class="control-label" id="{{g.error.error_type.name}}_error"></label>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">{% trans %}Descrição do erro{% endtrans %} :</label>
-							{{ g.error.message(class="form-control valid", placeholder=_("Digite sua mensagem"), rows="10") }}
-							<label class="control-label" id="{{g.error.message.name}}_error"></label>
-							<span class="info-form">{% trans %}Obs.: Link e título da página são enviados automaticamente{% endtrans %}.</span>
-						</div>
-
-						<div class="form-group">
-         			<div id="error_captcha_id"></div>
-       			</div>
-
+					<div class="radio" style="margin-top:0;">
+						<label><input type="radio" name="error_type" value="content" checked>{% trans %}ao conteúdo{% endtrans %}</label>
 					</div>
 
-					<div class="modal-footer">
-						<div class="btn-block">
-							<input type="submit" name="s" value="{% trans %}Enviar{% endtrans %} " class="btn" id="error_submit_btn_id">
-						</div>
+					<div class="radio">
+						<label><input type="radio" name="error_type" value="application">{% trans %}à aplicação{% endtrans %}</label>
 					</div>
 
-				</form>
+					<label class="control-label" id="{{g.error.error_type.name}}_error"></label>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">{% trans %}Descrição do erro{% endtrans %} :</label>
+					{{ g.error.message(class="form-control valid", placeholder=_("Digite sua mensagem"), rows="10") }}
+					<label class="control-label" id="{{g.error.message.name}}_error"></label>
+					<span class="info-form">{% trans %}Obs.: Link e título da página são enviados automaticamente{% endtrans %}.</span>
+				</div>
+
+				<div class="form-group">
+ 			<div id="error_captcha_id"></div>
 			</div>
-		</div>
+
+			</div>
+
+			<div class="modal-footer">
+				<div class="btn-block">
+					<input type="submit" name="s" value="{% trans %}Enviar{% endtrans %} " class="btn" id="error_submit_btn_id">
+				</div>
+			</div>
+
+		</form>
 	</div>
+</div>
 
-	<a class="floatingBtnError" href="javascript:;" data-toggle="modal" data-target="#error_modal_id"></a>
+<script>
 
-	<div class="modal fade in" id="error_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
-		<div class="modal-dialog modal-sm">
-		    <div class="modal-content">
-		        <div class="modal-header">
-		            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-		            <h4 class="modal-title">Mensagem</h4>
-		        </div>
-		        <div class="modal-body">
-		            <div class="midGlyph">
-		            </div>
-		        </div>
-		    </div>
-		</div>
-	</div>
+  var error_form = Object.create(ModalForms);
 
-</esi:remove>
+  error_form.init(
+    "#error_modal_id",
+    "#error_form_id",
+    "{{ url_for('main.email_error_ajax') }}",
+    "POST",
+    "#error_submit_btn_id",
+    true,
+    "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
+    "error_captcha_id",
+    "light",
+    "#error_modal_confirm_id",
+    "{% trans %}Email de erro enviado com sucesso.{% endtrans %}",
+    "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
+  );
 
-<esi:include src="{{ url_for('main.error_form') }}"/>
+</script>
