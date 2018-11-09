@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 
 {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')).replace('_', '-')  %}
-  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ html_lang }}"> <![endif]-->
-  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="{{ html_lang }}"> <![endif]-->
-  <!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ html_lang }}"> <![endif]-->
-  <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ html_lang }}"> <!--<![endif]-->
+  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ html_lang }}" {% block ie7_extra_namespaces %}{% endblock %} > <![endif]-->
+  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="{{ html_lang }}"        {% block ie8_extra_namespaces %}{% endblock %}> <![endif]-->
+  <!--[if IE 8]>         <html class="no-js lt-ie9" lang="{{ html_lang }}"               {% block ie9_extra_namespaces %}{% endblock %}> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js" lang="{{ html_lang }}" {% block extra_namespaces %}{% endblock %}> <!--<![endif]-->
 {% endwith %}
   <head>
     <meta charset="utf-8">
