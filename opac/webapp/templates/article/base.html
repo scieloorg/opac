@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block ie7_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie7_extra_namespaces %}
+{% block ie8_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie8_extra_namespaces %}
+{% block ie9_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie9_extra_namespaces %}
+{% block extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock extra_namespaces %}
+
 {% block body_class %}journal article{% endblock %}
 
 {% block title %}{{ super() }} - {{ article.title }}{% endblock %}
