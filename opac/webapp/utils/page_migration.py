@@ -5,6 +5,7 @@ import logging
 import requests
 import tempfile
 
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 from slugify import slugify
@@ -63,16 +64,16 @@ def downloaded_file(url):
 
 
 def confirm_file_location(file_location, file_path):
-    try:
-        # Verifica se a imagem existe
-        if file_location is None:
+    if file_location and os.path.isfile(file_location):
+        if os.access(file_location, os.R_OK):
+            return True
+        else:
+            logging.error(
+                u'Não legível %s (%s)' % (file_location, file_path))
             return False
-        open(file_location)
-        return True
-    except IOError as e:
-        logging.error(
-            u'%s (corresponding to %s)' % (e, file_path))
-        return False
+    logging.error(
+        u'Não existe %s (%s)' % (file_location, file_path))
+    return False
 
 
 def delete_file(file_path):
@@ -120,12 +121,8 @@ class PageMigration(object):
 
     @original_website.setter
     def original_website(self, value):
-        website = value
-        if '//' in website:
-            website = website[website.find('//')+2:]
-        if website.endswith('/'):
-            website = website[:-1]
-        self._original_website = website
+        o = urlparse(value)
+        self._original_website = o.netloc or o.path
 
     def link_display_text(self, link, display_text, original_url):
         if display_text is not None:
@@ -138,25 +135,34 @@ class PageMigration(object):
         return display_text
 
     def replace_by_relative_url(self, url):
-        # www.scielo.br/revistas/icse/levels.pdf -> /revistas/icse/levels.pdf
+        # http://www.scielo.br/revistas/icse/levels.pdf
+        # -> /revistas/icse/levels.pdf
         #
-        # www.scielo.br/img/revistas/icse/levels.pdf ->
-        # /img/revistas/icse/levels.pdf
+        # http://www.scielo.br/img/revistas/icse/levels.pdf
+        # -> /img/revistas/icse/levels.pdf
         #
         # http://www.scielo.br/scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
         # -> /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
         #
         # http://www.scielo.br -> /
-        if self.original_website in url:
-            p = url.find(self.original_website) + len(self.original_website)
-            url = url[p:].strip()
+        # www.scielo.br/revistas/icse/levels.pdf
+        # -> /revistas/icse/levels.pdf
+        #
+        # www.scielo.br/img/revistas/icse/levels.pdf
+        # -> /img/revistas/icse/levels.pdf
+        #
+        # www.scielo.br/scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
+        # -> /scielo.php?script=sci_serial&pid=0102-4450&lng=en&nrm=iso
+        #
+        # www.scielo.br -> /
+        if url.count(self.original_website) == 1:
+            new_url = url.split(self.original_website)[1]
             for relative in ['/scielo.php', '/img/revistas', '/revistas']:
-                if relative in url:
-                    return url[url.find(relative):]
-            if '/fbpe' in url:
-                return url[url.find('/fbpe')+len('/fbpe'):]
-            if url == '':
-                return '/'
+                if relative in new_url:
+                    return new_url[new_url.find(relative):]
+            if '/fbpe' in new_url:
+                return new_url[new_url.find('/fbpe')+len('/fbpe'):]
+            return new_url or '/'
         return url
 
     def get_new_url(self, url):
@@ -171,24 +177,29 @@ class PageMigration(object):
         return url
 
     def guess_file_location(self, file_path):
-        if '/img/revistas/' in file_path:
-            return os.path.join(
-                self.img_revistas_path,
-                file_path[file_path.find('/img/revistas/') +
-                          len('/img/revistas/'):])
-        if '/revistas/' in file_path:
-            return os.path.join(
-                self.revistas_path,
-                file_path[file_path.find('/revistas/') +
-                          len('/revistas/'):])
+        """
+        /img/revistas/fig01.gif -> /volumes/img_revistas/fig01.gif
+        /revistas/fig01.gif -> /volumes/revistas/fig01.gif
+        http://www.scielo.br/bla/bla.gif -> /volumes/htdocs/bla/bla.gif
+        /bla/bla.gif -> /volumes/htdocs/bla/bla.gif
+        """
+        changes = [
+            ('/img/revistas/', self.img_revistas_path),
+            ('/revistas/', self.revistas_path),
+        ]
         if self.static_files_path:
-            if self.original_website in file_path:
-                location = file_path[file_path.find(self.original_website) +
-                                     len(self.original_website):]
-                return os.path.join(self.static_files_path, location[1:])
-            elif file_path.startswith('/'):
-                location = file_path[1:]
-                return os.path.join(self.static_files_path, location)
+            changes.append(
+                (self.original_website+'/', self.static_files_path),
+            )
+        for change in changes:
+            if change[0] in file_path:
+                return os.path.join(
+                    change[1],
+                    file_path[file_path.find(change[0]) + len(change[0]):])
+        if self.static_files_path and file_path.startswith('/'):
+            return os.path.join(
+                    self.static_files_path,
+                    file_path[1:])
 
     def get_prefixed_slug_name(self, prefixes, img_location):
         new_img_name = slugify_filename(img_location, self.used_names)
@@ -241,12 +252,8 @@ class JournalPageMigration:
 
     @original_website.setter
     def original_website(self, value):
-        website = value
-        if '//' in website:
-            website = website[website.find('//')+2:]
-        if website.endswith('/'):
-            website = website[:-1]
-        self._original_website = website
+        o = urlparse(value)
+        self._original_website = o.netloc or o.path
 
     @property
     def original_journal_home_page(self):
