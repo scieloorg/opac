@@ -130,7 +130,20 @@ var Portal = {
 				});
 			});
 
+			$(".floatingBtnError").on("click", function(e) {
+				e.preventDefault();
+				var url = $(location).attr('href');
+				$.get("/error_mail/", {"url": url}, function(html) {
+					$("#error_modal_id").html(html);
+					$("#error_modal_id").modal("show");
+				});
+			});
+
 			$('#share_modal_id').on('hidden.bs.modal', function () {
+			    $(this).empty();
+		    });
+
+			$('#error_modal_id').on('hidden.bs.modal', function () {
 			    $(this).empty();
 		    });
 

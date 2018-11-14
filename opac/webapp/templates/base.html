@@ -48,6 +48,7 @@
 
     {% block content %}{% endblock %}
 
+    <!-- share modal -->
     <div class="modal fade" id="share_modal_id" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
     <div class="modal fade in" id="share_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
@@ -66,8 +67,28 @@
           </div>
       </div>
     </div>
+    <!-- share modal -->
 
-    {% include "includes/error_form.html" %}
+    <!-- error modal -->
+    <div class="modal fade" id="error_modal_id" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+    <div class="modal fade in" id="error_modal_confirm_id" tabindex="-1" role="dialog" aria-hidden="false">
+      <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                  <h4 class="modal-title">Mensagem</h4>
+              </div>
+              <div class="modal-body">
+                  <div class="midGlyph">
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <a class="floatingBtnError" href="#" id="#floatingBtnError"></a>
+    <!-- error modal -->
 
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
 
@@ -79,23 +100,6 @@
 
       // Garante que o valor do campo share_url é a URL corrente.
       $('#share_url').val(window.location.href);
-
-      var error_form = Object.create(ModalForms);
-
-      error_form.init(
-        "#error_modal_id",
-        "#error_form_id",
-        "{{ url_for('main.email_error_ajax') }}",
-        "POST",
-        "#error_submit_btn_id",
-        true,
-        "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
-        "error_captcha_id",
-        "light",
-        "#error_modal_confirm_id",
-        "{% trans %}Email de erro enviado com sucesso.{% endtrans %}",
-        "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
-      );
 
       moment.locale('{{ session.lang }}');
 

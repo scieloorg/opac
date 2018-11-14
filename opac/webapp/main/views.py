@@ -1105,7 +1105,8 @@ def email_error_ajax():
 
 @main.route("/error_mail/", methods=['GET'])
 def error_form():
-    return render_template("includes/error_form.html")
+    context = {'url': request.args.get('url')}
+    return render_template("includes/error_form.html", **context)
 
 
 # ##################################Others#######################################

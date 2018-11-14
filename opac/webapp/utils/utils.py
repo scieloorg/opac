@@ -195,7 +195,7 @@ def send_email(recipient, subject, html):
         webapp.mail.send(msg)
         return (True, '')
     except Exception as e:
-        return (False, e.message)
+        return (False, e)
 
 
 def reset_db():
