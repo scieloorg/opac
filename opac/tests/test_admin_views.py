@@ -4704,59 +4704,6 @@ class SponsorAdminViewTests(BaseTestCase):
 
 
 class PagesAdminViewTests(BaseTestCase):
-    """
-    def test_on_model_change(self):
-        result = '<a href="/revistas/abcd.pdf"><img src="/img/revistas/abcd.png">'
-        expected = '<a href="/revistas/abcd.pdf"><img src="/img/revistas/abcd.png">'
-        p = makeOnePage({'content': result})
-
-        form
-        view = webapp.admin.PagesAdminView()
-        view.on_model_change(form, p, True)
-        self.assertEqual(
-            result,
-            expected)
-    def test_on_model_change(self):
-        admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
-        }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        pages_index_url = url_for('pages.index_view')
-        # when
-        with self.client as client:
-            # login do usuario admin
-            login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
-            self.assertStatus(login_response, 200)
-            # acesso a aba de pages
-            pages_list_response = client.get(pages_index_url)
-            self.assertStatus(pages_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            # verificamos os filtros da view
-            # send data as POST form to endpoint
-            sent = {
-                'content': '<a href="/revistas/abcd.pdf">',
-                'slug_name': 'criterios',
-                'name': 'criterios',
-                'language': 'pt_BR'
-            }
-            result = client.post(
-                '/admin/pages/new/',
-                data=sent
-            )
-            # check result from server with expected data
-            self.assertIn(
-                'Redirecting...',
-                result.data.decode('utf-8')
-            )
-            page_index_url = url_for('page.index_view')
-            response = client.get(page_index_url, data={'search': 'criterios'})
-            self.assertIn(page.id, response.data.decode('utf-8'))
-    """
 
     def test_admin_page_details(self):
         """
@@ -4769,7 +4716,6 @@ class PagesAdminViewTests(BaseTestCase):
         Verificamos:
             - a pagina mostra o periódico certo
         """
-        # with
         content = '<a href="http://www.scielo.br/avaliacao/faq_avaliacao_en.htm"><img src="http://www.scielo.br/img/revistas/abcd/glogo.gif">'
         page = makeOnePage({'_id': 'xxxxx', 'content': content})
         admin_user = {
