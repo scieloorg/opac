@@ -31,8 +31,8 @@ else:
 from webapp import create_app, dbsql, dbmongo, mail, cache  # noqa
 from opac_schema.v1.models import Collection, Sponsor, Journal, Issue, Article, AuditLogEntry  # noqa
 from webapp import controllers  # noqa
-from webapp.utils import reset_db, create_db_tables, create_user, create_image, create_page, extract_images, open_file, fix_page_content, send_audit_log_daily_report # noqa
-from webapp.utils.journal_static_page import JournalNewPages, PAGE_NAMES_BY_LANG, get_acron_list # noqa
+from webapp.utils import reset_db, create_db_tables, create_user, create_new_journal_page, send_audit_log_daily_report # noqa
+from webapp.utils.journal_static_page import PAGE_NAMES_BY_LANG  # noqa
 
 from flask_script import Manager, Shell  # noqa
 from flask_migrate import Migrate, MigrateCommand  # noqa
@@ -335,11 +335,7 @@ def populate_database(domain="http://127.0.0.1", filename="fixtures/default_info
 
 
 @manager.command
-def populate_journal_pages(
-        pages_source_path=app.config['JOURNAL_PAGES_SOURCE_PATH'],
-        images_source_path=app.config['JOURNAL_IMAGES_SOURCE_PATH'],
-        original_website=app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
-        ):
+def populate_journal_pages():
     """
     Esse comando faz o primeiro registro das páginas secundárias
     dos periódicos localizado em /data/pages.
@@ -359,32 +355,15 @@ def populate_journal_pages(
 
     Assinatura não esta sendo importada conforme mencionado no tk:
     https://github.com/scieloorg/opac/issues/630
-
-
     """
     acron_list = [journal.acronym for journal in Journal.objects.all()]
     j_total = len(acron_list)
     done = 0
     for j, acron in enumerate(sorted(acron_list)):
         print('{}/{} {}'.format(j+1, j_total, acron))
-        pages_src_files = JournalNewPages(original_website, pages_source_path,
-                                          images_source_path, acron)
         for lang, files in PAGE_NAMES_BY_LANG.items():
-            content, images_in_file = pages_src_files.get_new_journal_page(
-                                                    files)
-            if content:
-                page_img_paths = pages_src_files.get_journal_page_img_paths(
-                                                            images_in_file)
-                for img_in_file, img_src, img_dest in page_img_paths:
-                    img = create_image(
-                        img_src, img_dest, check_if_exists=False)
-                    content = content.replace(img_in_file,
-                                              img.get_absolute_url)
-                create_page(
-                    'Página secundária %s (%s)' % (acron.upper(), lang),
-                    lang, content, acron,
-                    'Página secundária do periódico %s' % acron)
-                done += 1
+            create_new_journal_page(acron, files, lang)
+            done += 1
     print('Páginas: {}\nPeriódicos: {}'.format(done, j_total))
 
 

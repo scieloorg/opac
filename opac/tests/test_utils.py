@@ -1,10 +1,12 @@
 # coding: utf-8
 
 from .base import BaseTestCase
+from unittest.mock import Mock, patch
 
 from . import utils
 
 from webapp import utils as wutils
+import webapp
 
 
 class UtilsTestCase(BaseTestCase):
@@ -208,3 +210,61 @@ class UtilsTestCase(BaseTestCase):
         prev_article = wutils.get_prev_article(articles, article1)
 
         self.assertIsNone(prev_article)
+
+    def test_join_html_files_content(self):
+        files = ['paboutj.htm', 'pedboard.htm', 'pinstruc.htm']
+        content = wutils.join_html_files_content(
+            'opac/tests/fixtures/pages/revistas', 'rbep', files)
+
+        self.assertIn(
+            'Red de Revistas Científicas de América Latina y '
+            'el Caribe, España y Portugal',
+            content
+            )
+        self.assertIn(
+            'Luiz Antunes Netto Carreira, UDESC - '
+            'Universidade do Estado de Santa Catarina',
+            content
+            )
+        self.assertIn(
+            '11. O cadastro no sistema e posterior acesso,'
+            ' por meio de login e senha',
+            content
+            )
+
+    @patch.object(wutils.page_migration, 'delete_file')
+    @patch('requests.get')
+    @patch.object(webapp.utils.utils, 'create_image')
+    @patch.object(webapp.utils.utils, 'create_file')
+    @patch.object(webapp.utils.utils, 'migrate_page_create_image')
+    @patch.object(webapp.utils.utils, 'migrate_page_create_file')
+    @patch.object(webapp.utils.utils, 'create_page')
+    def test_migrate_page(self, mocked_create_page,
+                          mocked_migrate_page_create_file,
+                          mocked_migrate_page_create_image,
+                          mocked_create_file,
+                          mocked_create_image, mocked_requests_get,
+                          mocked_delete_file):
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'content'
+        mocked_requests_get.return_value = mocked_response
+
+        mocked_create_file = Mock()
+        mocked_create_file.get_absolut_url = 'bal'
+        mocked_migrate_page_create_image.side_effect = [
+            '/media/rbep_abc.jpg', ]
+        mocked_migrate_page_create_file.side_effect = [
+            '/media/rbep_avaliacao_en.htm']
+        registered_page = Mock()
+        registered_page.content = ''
+        mocked_create_page.side_effect = registered_page
+        mocked_delete_file.side_effect = None
+        content = '<img src="/img/revistas/abc.jpg"><a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"/>'
+        new_content = wutils.migrate_page_content(
+            content, acron='rbep', page_name=None, language='pt')
+        self.assertEqual(
+            '<html><body><img src="/media/rbep_abc.jpg"/>'
+            '<a href="/media/rbep_avaliacao_en.htm"></a></body></html>',
+            new_content
+        )
