@@ -100,7 +100,7 @@
           </li>
           {% if journal.enable_contact %}
             <li>
-              <a href="javascript:;" data-toggle="modal" data-target="#contact_modal_id" >
+              <a href="javascript:;" class="contact_modal_id" data-url="{{ url_for('main.form_contact', url_seg=journal.url_segment) }}">
                 <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
               </a>
             </li>
@@ -118,4 +118,5 @@
       <div class="clearfix"></div>
     </div>
   </div>
+
 </header>

@@ -9,16 +9,7 @@
 
   {% include "includes/footer.html" %}
 
-  <esi:remove>
-    {% include "journal/includes/contact_form.html" %}
-  </esi:remove>
-  <esi:include src="{{ url_for('main.form_contact', url_seg=journal.url_seg ) }}"/>
-
+  <div class="modal fade" id="contact_modal_id" tabindex="-1" role="dialog" aria-hidden="true"></div>
 
 {% endblock %}
 
-{% block extra_js %}
-
-  {% include "journal/includes/contact_script.html" %}
-
-{% endblock%}

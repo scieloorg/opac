@@ -130,6 +130,15 @@ var Portal = {
 				});
 			});
 
+			$(".contact_modal_id").on("click",function(e) {
+				e.preventDefault();
+				var url = $(location).attr('href');
+				$.get($(this).data('url'), function(html) {
+					$("#contact_modal_id").html(html);
+					$("#contact_modal_id").modal("show");
+				});
+			});
+
 			$(".floatingBtnError").on("click", function(e) {
 				e.preventDefault();
 				var url = $(location).attr('href');

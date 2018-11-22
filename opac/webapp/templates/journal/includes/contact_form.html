@@ -1,46 +1,44 @@
-<div class="modal fade" id="contact_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
-        <h4 class="modal-title">Entre em contato com {{ journal.title }}</h4>
-      </div>
-      <form action="" method="POST" id="contact_form_id">
-
-        {{ g.email_contact.csrf_token() }}
-
-        <div class="modal-body">
-
-          <div class="form-group">
-            <label class="control-label">{% trans %}Seu Nome{% endtrans %}*</label>
-              {{ g.email_contact.name(class="form-control valid", placeholder="Digite seu Nome") }}
-              <label class="control-label" id="{{g.email_contact.name.name}}_error"></label>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
-              {{ g.email_contact.your_email(class="form-control valid", placeholder="Digite seu e-mail") }}
-              <label class="control-label" id="{{g.email_contact.your_email.name}}_error"></label>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label">{% trans %}Mensagem{% endtrans %}*</label>
-              {{ g.email_contact.message(class="form-control valid", placeholder="Digite sua mensagem", rows="10") }}
-              <label class="control-label" id="{{g.email_contact.message.name}}_error"></label>
-          </div>
-
-          <div class="form-group">
-            <div id="contact_captcha_id"></div>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <div class="btn-block">
-            <input type="submit" value="Enviar Mensagem" class="btn btn-primary" id="contact_submit_btn_id">
-          </div>
-        </div>
-      </form>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
+      <h4 class="modal-title">Entre em contato com {{ journal.title }}</h4>
     </div>
+    <form name="contact_form_id" id="contact_form_id" class="validate">
+
+      {{ g.email_contact.csrf_token() }}
+
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label class="control-label">{% trans %}Seu Nome{% endtrans %}*</label>
+            {{ g.email_contact.name(class="form-control valid", placeholder="Digite seu Nome") }}
+            <label class="control-label" id="{{g.email_contact.name.name}}_error"></label>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">{% trans %}Seu e-mail{% endtrans %}*</label>
+            {{ g.email_contact.your_email(class="form-control valid", placeholder="Digite seu e-mail") }}
+            <label class="control-label" id="{{g.email_contact.your_email.name}}_error"></label>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label">{% trans %}Mensagem{% endtrans %}*</label>
+            {{ g.email_contact.message(class="form-control valid", placeholder="Digite sua mensagem", rows="10") }}
+            <label class="control-label" id="{{g.email_contact.message.name}}_error"></label>
+        </div>
+
+        <div class="form-group">
+          <div id="contact_captcha_id"></div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="btn-block">
+          <input type="submit" value="Enviar Mensagem" class="btn btn-primary" id="contact_submit_btn_id">
+        </div>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -58,3 +56,25 @@
       </div>
   </div>
 </div>
+
+
+<script>
+
+  var contact_email2 = Object.create(ModalForms);
+
+  contact_email2.init(
+    "#contact_modal_id",
+    "#contact_form_id",
+    "{{ url_for('main.contact', url_seg=journal.url_segment) }}",
+    "POST",
+    "#contact_submit_btn_id",
+    true,
+    "{{ config.get('GOOGLE_RECAPTCHA_SECRET_KEY') }}",
+    "contact_captcha_id",
+    "light",
+    "#contact_modal_confirm_id",
+    "{% trans %}Email enviado para {% endtrans %} {{journal.publisher_name}} {% trans %}com sucesso.{% endtrans %}",
+    "{% trans %}Erro ao tentar enviar e-mail, por favor tente mais tarde.{% endtrans %}"
+  );
+
+</script>
