@@ -71,7 +71,7 @@ def confirm_file_location(file_location, file_path):
             logging.error(
                 u'Não legível %s (%s)' % (file_location, file_path))
             return False
-    logging.error(
+    logging.info(
         u'Não existe %s (%s)' % (file_location, file_path))
     return False
 
@@ -176,13 +176,14 @@ class PageMigration(object):
             return self.replace_by_relative_url(url)
         return url
 
-    def guess_file_location(self, file_path):
+    def get_possible_locations(self, file_path):
         """
         /img/revistas/fig01.gif -> /volumes/img_revistas/fig01.gif
         /revistas/fig01.gif -> /volumes/revistas/fig01.gif
         http://www.scielo.br/bla/bla.gif -> /volumes/htdocs/bla/bla.gif
         /bla/bla.gif -> /volumes/htdocs/bla/bla.gif
         """
+        possible_locations = []
         changes = [
             ('/img/revistas/', self.img_revistas_path),
             ('/revistas/', self.revistas_path),
@@ -193,17 +194,24 @@ class PageMigration(object):
             )
         for change in changes:
             if change[0] in file_path:
-                return os.path.join(
-                    change[1],
-                    file_path[file_path.find(change[0]) + len(change[0]):])
+                possible_locations.append(
+                    os.path.join(
+                        change[1],
+                        file_path[file_path.find(change[0]) + len(change[0]):])
+                )
+                break
+            elif file_path.count('/') == 0:
+                possible_locations.append(os.path.join(change[1], file_path))
         if self.static_files_path and file_path.startswith('/'):
-            return os.path.join(
+            possible_locations.append(
+                os.path.join(
                     self.static_files_path,
                     file_path[1:])
+                )
+        return [item.replace('\n', '') for item in set(possible_locations)]
 
     def get_prefixed_slug_name(self, prefixes, img_location):
         new_img_name = slugify_filename(img_location, self.used_names)
-
         _prefixes = prefixes
         parts = [slugify(part) for part in _prefixes if part is not None]
         return '_'.join(parts + [new_img_name])
@@ -214,8 +222,12 @@ class PageMigration(object):
             return 'http://{}{}'.format(self.original_website, referenced)
 
     def get_file_info(self, prefixes, referenced):
-        file_location = self.guess_file_location(referenced)
-        valid_path = confirm_file_location(file_location, referenced)
+        file_locations = self.get_possible_locations(referenced)
+        valid_path = False
+        for file_location in file_locations or []:
+            valid_path = confirm_file_location(file_location, referenced)
+            if valid_path:
+                break
         url = None
         if not valid_path:
             url = self.is_asset_url(referenced)
@@ -306,6 +318,7 @@ class MigratedPage(object):
     """
     def __init__(self, migration, content,
                  acron=None, page_name=None, lang=None):
+        self.acron = acron
         self.lang = lang
         self.page_name = page_name
         self.content = content
@@ -315,7 +328,7 @@ class MigratedPage(object):
             self.prefixes = [acron]
         self.migration = migration
         self.j_migration = None
-        if acron:
+        if self.acron:
             self.j_migration = JournalPageMigration(
                 migration.original_website, acron)
 
@@ -326,6 +339,13 @@ class MigratedPage(object):
     @content.setter
     def content(self, value):
         self.tree = BeautifulSoup(value, 'lxml')
+        if self.acron:
+            for item in self.tree.find_all('a'):
+                if item.get('href') and \
+                        os.path.splitext(item.get('href'))[1] != '' and \
+                        item['href'].count('/') == 0:
+                    item['href'] = "/revistas/{}/{}".format(
+                        self.acron, item['href'])
 
     def migrate_urls(self):
         self.fix_urls()
@@ -376,7 +396,8 @@ class MigratedPage(object):
     def files(self):
         return [item
                 for item in self.tree.find_all('a')
-                if item.get('href')]
+                if item.get('href') and os.path.splitext(
+                    item.get('href'))[1] != '']
 
     def create_images(self):
         for image in self.images:

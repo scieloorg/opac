@@ -15,6 +15,10 @@ IMG_REVISTAS_PATH = 'htdocs/img/revistas'
 HTDOCS = 'htdocs'
 
 
+TESTS_REVISTAS_PATH = 'opac/tests/fixtures/pages/revistas'
+TESTS_IMG_REVISTAS_PATH = 'opac/tests/fixtures/pages/img_revistas'
+
+
 class UtilsPageMigration_TestCase(BaseTestCase):
 
     def test_new_author(self):
@@ -110,29 +114,51 @@ class UtilsPageMigrationTestCase(BaseTestCase):
             'www.scielo.br ')
         self.assertEqual(text, expected)
 
-    def test_guess_file_location_img_revistas(self):
+    def test_get_possible_locations_img_revistas(self):
         expected = 'htdocs/img/revistas/abc.jpg'
-        text = self.migration.guess_file_location(
+        expected_items = ['htdocs/img/revistas/abc.jpg']
+        result = self.migration.get_possible_locations(
             'www.scielo.br/img/revistas/abc.jpg'
         )
-        self.assertEqual(text, expected)
+        self.assertIn(expected, result)
+        self.assertEqual(set(expected_items), set(result))
 
-    def test_guess_file_location_revistas(self):
+    def test_get_possible_locations_revistas(self):
         expected = 'htdocs/revistas/abc.jpg'
-        text = self.migration.guess_file_location(
-            'wwww.scielo.br/revistas/abc.jpg'
+        expected_items = ['htdocs/revistas/abc.jpg']
+        result = self.migration.get_possible_locations(
+            'www.scielo.br/revistas/abc.jpg'
         )
-        self.assertEqual(text, expected)
+        self.assertIn(expected, result)
+        self.assertEqual(set(expected_items), set(result))
 
-    def test_guess_file_location_page(self):
+    def test_get_possible_locations_page(self):
         expected = 'htdocs/abc/abc.jpg'
-        text = self.migration.guess_file_location('www.scielo.br/abc/abc.jpg')
-        self.assertEqual(text, expected)
+        expected_items = ['htdocs/abc/abc.jpg']
+        result = self.migration.get_possible_locations(
+            'www.scielo.br/abc/abc.jpg')
+        self.assertIn(expected, result)
+        self.assertEqual(set(expected_items), set(result))
 
-    def test_guess_file_location_page_relative(self):
+    def test_get_possible_locations_page_relative(self):
         expected = 'htdocs/abc/abc.jpg'
-        text = self.migration.guess_file_location('/abc/abc.jpg')
-        self.assertEqual(text, expected)
+        expected_items = [
+            'htdocs/abc/abc.jpg',
+        ]
+        result = self.migration.get_possible_locations('/abc/abc.jpg')
+        self.assertIn(expected, result)
+        self.assertEqual(set(expected_items), set(result))
+
+    def test_get_possible_locations_page_relative_2(self):
+        expected = 'htdocs/abc.jpg'
+        expected_items = [
+            'htdocs/img/revistas/abc.jpg',
+            'htdocs/revistas/abc.jpg',
+            'htdocs/abc.jpg'
+            ]
+        result = self.migration.get_possible_locations('abc.jpg')
+        self.assertIn(expected, result)
+        self.assertEqual(set(expected_items), set(result))
 
     def test_get_prefixed_slug_name(self):
         expected = 'criterios_es_criterio-brasil.jpg'
@@ -169,11 +195,11 @@ class UtilsMigratedPageTestCase(BaseTestCase):
         static_files_path = HTDOCS
         create_image = self.create_item
         create_file = self.create_item
-        migration = PageMigration(create_image, create_file,
+        self.migration = PageMigration(create_image, create_file,
                                   original_website, revistas_path,
                                   img_revistas_path, static_files_path)
         self.page = MigratedPage(
-                 migration, '',
+                 self.migration, '',
                  acron=None, page_name='criterio', lang='es')
 
     def test_content(self):
@@ -208,6 +234,19 @@ class UtilsMigratedPageTestCase(BaseTestCase):
              '/abc/img2.jpg',
              '/revistas/img3.jpg',
              'http://www.scielo.org/local/Image/scielo20_pt.png'
+            ]
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
+        self.assertEqual(results, expected_items)
+
+    def test_fix_urls_2(self):
+        self.page.content = u'''
+            <a href="/journal/abmvz/"/>
+        '''
+        self.page.fix_urls()
+
+        results = [item['href'] for item in self.page.files]
+        expected_items = [
             ]
         for result, expected in zip(results, expected_items):
             self.assertEqual(result, expected)
@@ -433,3 +472,121 @@ class UtilsJournalPageMigrationTestCase(BaseTestCase):
         self.assertEqual(
             self.jmigr.get_new_url('www.scielo.br/revistas/abcd/iedboard.htm'),
             '/journal/abcd/about/#editors')
+
+
+class UtilsMigratedJournalPageTestCase(BaseTestCase):
+
+    def create_item(self, source, dest, check_if_exists=False):
+        return ''
+
+    def setUp(self):
+        original_website = 'http://www.scielo.br'
+        self.revistas_path = TESTS_REVISTAS_PATH
+        self.img_revistas_path = TESTS_IMG_REVISTAS_PATH
+        self.static_files_path = None
+        create_image = self.create_item
+        create_file = self.create_item
+        self.migration = PageMigration(
+                            create_image, create_file,
+                            original_website, self.revistas_path,
+                            self.img_revistas_path,
+                            self.static_files_path)
+        self.page = MigratedPage(
+                 self.migration, '',
+                 acron='aa', lang='es')
+
+    @patch.object(PageMigration, 'create_file_function')
+    def test_create_files(self, mocked_create_file_function):
+        pdf_file_path = 'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
+        self.page.content = '<a href="{}"/>'.format(pdf_file_path)
+        self.assertIn(
+            '/revistas/aa/{}'.format(pdf_file_path),
+            self.page.content
+        )
+
+        for a in self.page.files:
+            result = self.migration.get_possible_locations(a['href'])
+            self.assertIn(
+                '{}/aa/{}'.format(TESTS_REVISTAS_PATH, pdf_file_path),
+                result)
+
+        mocked_create_file_function.side_effect = [
+            '/media/files/aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            ]
+        _file_info = self.page.migration.get_file_info(
+            self.page.prefixes, self.page.files[0]['href'])
+
+        file_info = (
+            'opac/tests/fixtures/pages/revistas/aa/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
+            'aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            False
+        )
+        self.assertEqual(file_info, _file_info)
+        self.page.create_files()
+        results = [item['href'] for item in self.page.files]
+        expected_items = [
+             '/media/files/aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            ]
+        expected = pdf_file_path
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
+
+
+class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
+
+    def create_item(self, source, dest, check_if_exists=False):
+        return ''
+
+    def setUp(self):
+        original_website = 'http://www.scielo.br'
+        self.revistas_path = TESTS_REVISTAS_PATH
+        self.img_revistas_path = TESTS_IMG_REVISTAS_PATH
+        self.static_files_path = None
+        create_image = self.create_item
+        create_file = self.create_item
+        self.migration = PageMigration(
+                            create_image, create_file,
+                            original_website, self.revistas_path,
+                            self.img_revistas_path,
+                            self.static_files_path)
+        self.page = MigratedPage(
+                 self.migration, '',
+                 acron='abmvz', lang='es')
+
+    @patch.object(PageMigration, 'create_file_function')
+    def test_create_files_from_downloaded_files(self, mocked_create_file_function):
+        pdf_file_path = 'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
+        self.page.content = '<a href="{}"/>'.format(pdf_file_path)
+        self.assertIn(
+            '/revistas/abmvz/{}'.format(pdf_file_path),
+            self.page.content
+        )
+
+        for a in self.page.files:
+            result = self.migration.get_possible_locations(a['href'])
+            self.assertIn(
+                '{}/abmvz/{}'.format(TESTS_REVISTAS_PATH, pdf_file_path),
+                result)
+
+        mocked_create_file_function.side_effect = [
+            '/media/files/abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            ]
+        _file_info = self.page.migration.get_file_info(
+            self.page.prefixes, self.page.files[0]['href'])
+
+        file_info = (
+            '/tmp/tmpcjnmoyos/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
+            'abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            True
+        )
+        self.assertEqual(file_info[1], _file_info[1])
+        self.assertEqual(file_info[2], _file_info[2])
+
+        self.page.create_files()
+        results = [item['href'] for item in self.page.files]
+        expected_items = [
+             '/media/files/abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
+            ]
+        expected = pdf_file_path
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
