@@ -4,6 +4,7 @@ import os
 from .base import BaseTestCase
 
 from unittest.mock import patch, Mock
+from webapp.utils import utils as wutils
 from webapp.utils import page_migration
 from webapp.utils.page_migration import (
     MigratedPage, PageMigration, JournalPageMigration, new_author_url_page
@@ -17,6 +18,37 @@ HTDOCS = 'htdocs'
 
 TESTS_REVISTAS_PATH = 'opac/tests/fixtures/pages/revistas'
 TESTS_IMG_REVISTAS_PATH = 'opac/tests/fixtures/pages/img_revistas'
+
+
+class UtilsJournalMigratedPageTestCase(BaseTestCase):
+
+    def setUp(self):
+        original_website = 'http://www.scielo.br'
+        revistas_path = REVISTAS_PATH
+        img_revistas_path = IMG_REVISTAS_PATH
+        static_files_path = HTDOCS
+        self.migration = PageMigration(
+                                  original_website, revistas_path,
+                                  img_revistas_path, static_files_path)
+        self.page = MigratedPage(
+                 self.migration, '',
+                 acron='acron', lang='es')
+
+    def test_content(self):
+        self.page.content = """<html><body><a href="acron.jpg"/>
+            <a href="www.scielo.br/jxabc.png"/>
+            <a href="user@email.org"/>
+            <a href="www.site.org"/>
+            <a href="xyz.txt"/>
+            </body></html>"""
+        self.assertIn('/revistas/acron/acron.jpg', self.page.content)
+        self.assertIn('"user@email.org"', self.page.content)
+        self.assertIn('"www.site.org"', self.page.content)
+        self.assertIn('"xyz.txt"', self.page.content)
+        self.assertIn('"www.scielo.br/jxabc.png"', self.page.content)
+
+        self.page.fix_urls()
+        self.assertIn('"/jxabc.png"', self.page.content)
 
 
 class UtilsPageMigration_TestCase(BaseTestCase):
@@ -48,10 +80,7 @@ class UtilsPageMigrationTestCase(BaseTestCase):
         revistas_path = REVISTAS_PATH
         img_revistas_path = IMG_REVISTAS_PATH
         static_files_path = HTDOCS
-        create_image = Mock()
-        create_file = Mock()
-        self.migration = PageMigration(create_image, create_file,
-                                       original_website, revistas_path,
+        self.migration = PageMigration(original_website, revistas_path,
                                        img_revistas_path, static_files_path)
 
     def test_original_web_site(self):
@@ -160,42 +189,15 @@ class UtilsPageMigrationTestCase(BaseTestCase):
         self.assertIn(expected, result)
         self.assertEqual(set(expected_items), set(result))
 
-    def test_get_prefixed_slug_name(self):
-        expected = 'criterios_es_criterio-brasil.jpg'
-        ret = self.migration.get_prefixed_slug_name(
-            ['criterios', 'es'], '/abc/abc/Critério_Brasil.jpg')
-        self.assertEqual(ret, expected)
-
-    @patch.object(page_migration, 'confirm_file_location', return_value=True)
-    def test_get_file_info_img1(self, mocked_confirm_file_location):
-        result = self.migration.get_file_info(
-            ['criterios', 'es'], '/img/revistas/img1.jpg')
-        img_location = os.path.join(IMG_REVISTAS_PATH, 'img1.jpg')
-        img_dest_name = 'criterios_es_img1.jpg'
-        self.assertEqual(result, (img_location, img_dest_name, False))
-
-    @patch.object(page_migration, 'confirm_file_location', return_value=True)
-    def test_get_file_info_img2(self, mocked_confirm_file_location):
-        result = self.migration.get_file_info(
-            ['criterios', 'es'], '/abc/img2.jpg')
-        img_location = os.path.join(HTDOCS, 'abc/img2.jpg')
-        img_dest_name = 'criterios_es_img2.jpg'
-        self.assertEqual(result, (img_location, img_dest_name, False))
-
 
 class UtilsMigratedPageTestCase(BaseTestCase):
-
-    def create_item(self, source, dest, check_if_exists=False):
-        return ''
 
     def setUp(self):
         original_website = 'http://www.scielo.br'
         revistas_path = REVISTAS_PATH
         img_revistas_path = IMG_REVISTAS_PATH
         static_files_path = HTDOCS
-        create_image = self.create_item
-        create_file = self.create_item
-        self.migration = PageMigration(create_image, create_file,
+        self.migration = PageMigration(
                                   original_website, revistas_path,
                                   img_revistas_path, static_files_path)
         self.page = MigratedPage(
@@ -258,9 +260,7 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             <a href="http://www.scielo.br/abc/img2.jpg"/>
             <a href="/revistas/img3.jpg"/>
             <a href="http://www.scielo.org/local/Image/scielo20_pt.png"/>'''
-
         self.page.fix_urls()
-
         results = [item['href'] for item in self.page.files]
         expected_items = [
              '/img/revistas/img1.jpg',
@@ -272,24 +272,54 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             self.assertEqual(result, expected)
         self.assertEqual(results, expected_items)
 
+    def test_get_prefixed_slug_name(self):
+        expected = 'criterio_es_criterio-brasil.jpg'
+        ret = self.page.get_prefixed_slug_name('/abc/abc/Critério_Brasil.jpg')
+        self.assertEqual(ret, expected)
+
+    @patch.object(os.path, 'isfile', return_value=True)
     @patch.object(page_migration, 'confirm_file_location', return_value=True)
-    @patch.object(PageMigration, 'create_image_function')
+    def test_get_file_info_img1(self, mocked_confirm_file_location,
+                                mocked_isfile):
+        self.page.prefixes = ['criterios', 'es']
+        result = self.page.get_file_info('/img/revistas/img1.jpg')
+        img_location = os.path.join(IMG_REVISTAS_PATH, 'img1.jpg')
+        img_dest_name = 'criterios_es_img1.jpg'
+        self.assertEqual(result, (img_location, img_dest_name, False))
+
+    @patch.object(os.path, 'isfile', return_value=True)
+    @patch.object(page_migration, 'confirm_file_location', return_value=True)
+    def test_get_file_info_img2(self, mocked_confirm_file_location,
+                                mocked_isfile):
+        self.page.prefixes = ['criterios', 'es']
+        result = self.page.get_file_info('/abc/img2.jpg')
+        img_location = os.path.join(HTDOCS, 'abc/img2.jpg')
+        img_dest_name = 'criterios_es_img2.jpg'
+        self.assertEqual(result, (img_location, img_dest_name, False))
+
+    @patch.object(os.path, 'isfile', return_value=True)
+    @patch.object(page_migration, 'confirm_file_location', return_value=True)
+    @patch.object(wutils, 'migrate_page_create_image')
     def test_create_images_from_local_files(self,
                                             mocked_create_image_function,
-                                            mocked_confirm_file_location):
+                                            mocked_confirm_file_location,
+                                            mocked_isfile):
         self.page.content = '''
             <img src="/img/revistas/img1.jpg"/>
             <img src="http://www.scielo.br/abc/img2.jpg"/>
             <img src="/revistas/img3.jpg"/>
             <img src="http://www.scielo.org/local/Image/scielo20_pt.png"/>'''
 
+        mocked_confirm_file_location.side_effect = [
+            True, True, True
+        ]
         mocked_create_image_function.side_effect = [
             '/media/criterios_es_img1.jpg',
             '/media/criterios_es_img2.jpg',
             '/media/criterios_es_img3.jpg',
             ]
         self.page.fix_urls()
-        self.page.create_images()
+        self.page.create_images(mocked_create_image_function)
 
         results = [img['src'] for img in self.page.images]
         expected_items = [
@@ -302,23 +332,60 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             self.assertEqual(result, expected)
         self.assertEqual(results, expected_items)
 
+    @patch.object(os.path, 'isfile', return_value=True)
+    @patch.object(page_migration, 'confirm_file_location')
+    @patch.object(wutils, 'migrate_page_create_file')
+    def test_create_files_from_local_file(self,
+                                          mocked_create_file_function,
+                                          mocked_confirm_file_location,
+                                          mocked_isfile):
+        self.page.content = '''
+            <a href="/img/revistas/img1.jpg"/>
+        '''
+        mocked_confirm_file_location.side_effect = [
+            True,
+            ]
+        mocked_create_file_function.side_effect = [
+            '/media/criterios_es_img1.jpg',
+            ]
+
+        self.assertEqual(self.page.files[0]['href'], '/img/revistas/img1.jpg')
+        file_locations = self.page.migration.get_possible_locations(
+            '/img/revistas/img1.jpg')
+        self.assertEqual(
+            file_locations,
+            ['{}/{}'.format(IMG_REVISTAS_PATH, 'img1.jpg')]
+            )
+
+        self.page.create_files(mocked_create_file_function)
+
+        results = [item['href'] for item in self.page.files]
+        expected_items = [
+             '/media/criterios_es_img1.jpg',
+            ]
+        for result, expected in zip(results, expected_items):
+            self.assertEqual(result, expected)
+        self.assertEqual(results, expected_items)
+
+    @patch.object(os.path, 'isfile', return_value=True)
     @patch.object(page_migration, 'confirm_file_location', return_value=True)
-    @patch.object(PageMigration, 'create_file_function')
+    @patch.object(wutils, 'migrate_page_create_file')
     def test_create_files_from_local_files(self,
-                                           mocked_create_image_function,
-                                           mocked_confirm_file_location):
+                                           mocked_create_file_function,
+                                           mocked_confirm_file_location,
+                                           mocked_isfile):
         self.page.content = '''
             <a href="/img/revistas/img1.jpg"/>
             <a href="http://www.scielo.br/abc/img2.jpg"/>
             <a href="/revistas/img3.jpg"/>
             <a href="http://www.scielo.org/local/Image/scielo20_pt.png"/>'''
-        mocked_create_image_function.side_effect = [
+        mocked_create_file_function.side_effect = [
             '/media/criterios_es_img1.jpg',
             '/media/criterios_es_img2.jpg',
             '/media/criterios_es_img3.jpg',
             ]
         self.page.fix_urls()
-        self.page.create_files()
+        self.page.create_files(mocked_create_file_function)
 
         results = [item['href'] for item in self.page.files]
         expected_items = [
@@ -327,13 +394,13 @@ class UtilsMigratedPageTestCase(BaseTestCase):
              '/media/criterios_es_img3.jpg',
              'http://www.scielo.org/local/Image/scielo20_pt.png'
             ]
+        self.assertEqual(results, expected_items)
         for result, expected in zip(results, expected_items):
             self.assertEqual(result, expected)
-        self.assertEqual(results, expected_items)
 
     @patch.object(page_migration, 'downloaded_file')
     @patch.object(page_migration, 'confirm_file_location')
-    @patch.object(PageMigration, 'create_image_function')
+    @patch.object(wutils, 'migrate_page_create_image')
     def test_create_images_from_downloaded_files(self,
                            mocked_create_item,
                            mocked_confirm_file_location,
@@ -357,7 +424,7 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             False, True, False, True, False, True
         ]
         self.page.fix_urls()
-        self.page.create_images()
+        self.page.create_images(mocked_create_item)
 
         results = [img['src'] for img in self.page.images]
         expected_items = [
@@ -372,7 +439,7 @@ class UtilsMigratedPageTestCase(BaseTestCase):
 
     @patch.object(page_migration, 'downloaded_file')
     @patch.object(page_migration, 'confirm_file_location')
-    @patch.object(PageMigration, 'create_file_function')
+    @patch.object(wutils, 'migrate_page_create_file')
     def test_create_files_from_downloaded_files(self,
                            mocked_create_file_function,
                            mocked_confirm_file_location,
@@ -396,7 +463,7 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             False, True, False, True, False, True
         ]
         self.page.fix_urls()
-        self.page.create_files()
+        self.page.create_files(mocked_create_file_function)
 
         results = [item['href'] for item in self.page.files]
         expected_items = [
@@ -411,13 +478,15 @@ class UtilsMigratedPageTestCase(BaseTestCase):
 
     @patch.object(page_migration, 'downloaded_file', side_effect=None)
     @patch.object(page_migration, 'confirm_file_location', side_effect=[False, False])
+    @patch.object(wutils, 'migrate_page_create_file')
     @patch.object(page_migration, 'logging')
     def test_create_files_failure(self, mock_logger,
+                           mocked_create_file_function,
                            mocked_confirm_file_location,
                            mocked_downloaded_file):
         self.page.content = '''<a href="/img/revistas/img1.jpg"/>'''
         self.page.fix_urls()
-        self.page.create_files()
+        self.page.create_files(mocked_create_file_function)
         mock_logger.info.assert_called_with(
             "CONFERIR: /img/revistas/img1.jpg não encontrado")
 
@@ -476,18 +545,12 @@ class UtilsJournalPageMigrationTestCase(BaseTestCase):
 
 class UtilsMigratedJournalPageTestCase(BaseTestCase):
 
-    def create_item(self, source, dest, check_if_exists=False):
-        return ''
-
     def setUp(self):
         original_website = 'http://www.scielo.br'
         self.revistas_path = TESTS_REVISTAS_PATH
         self.img_revistas_path = TESTS_IMG_REVISTAS_PATH
         self.static_files_path = None
-        create_image = self.create_item
-        create_file = self.create_item
         self.migration = PageMigration(
-                            create_image, create_file,
                             original_website, self.revistas_path,
                             self.img_revistas_path,
                             self.static_files_path)
@@ -495,7 +558,7 @@ class UtilsMigratedJournalPageTestCase(BaseTestCase):
                  self.migration, '',
                  acron='aa', lang='es')
 
-    @patch.object(PageMigration, 'create_file_function')
+    @patch.object(wutils, 'migrate_page_create_file')
     def test_create_files(self, mocked_create_file_function):
         pdf_file_path = 'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
         self.page.content = '<a href="{}"/>'.format(pdf_file_path)
@@ -513,8 +576,7 @@ class UtilsMigratedJournalPageTestCase(BaseTestCase):
         mocked_create_file_function.side_effect = [
             '/media/files/aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
             ]
-        _file_info = self.page.migration.get_file_info(
-            self.page.prefixes, self.page.files[0]['href'])
+        _file_info = self.page.get_file_info(self.page.files[0]['href'])
 
         file_info = (
             'opac/tests/fixtures/pages/revistas/aa/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
@@ -522,7 +584,7 @@ class UtilsMigratedJournalPageTestCase(BaseTestCase):
             False
         )
         self.assertEqual(file_info, _file_info)
-        self.page.create_files()
+        self.page.create_files(mocked_create_file_function)
         results = [item['href'] for item in self.page.files]
         expected_items = [
              '/media/files/aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
@@ -545,7 +607,6 @@ class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
         create_image = self.create_item
         create_file = self.create_item
         self.migration = PageMigration(
-                            create_image, create_file,
                             original_website, self.revistas_path,
                             self.img_revistas_path,
                             self.static_files_path)
@@ -553,7 +614,7 @@ class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
                  self.migration, '',
                  acron='abmvz', lang='es')
 
-    @patch.object(PageMigration, 'create_file_function')
+    @patch.object(wutils, 'migrate_page_create_file')
     def test_create_files_from_downloaded_files(self, mocked_create_file_function):
         pdf_file_path = 'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
         self.page.content = '<a href="{}"/>'.format(pdf_file_path)
@@ -571,8 +632,7 @@ class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
         mocked_create_file_function.side_effect = [
             '/media/files/abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
             ]
-        _file_info = self.page.migration.get_file_info(
-            self.page.prefixes, self.page.files[0]['href'])
+        _file_info = self.page.get_file_info(self.page.files[0]['href'])
 
         file_info = (
             '/tmp/tmpcjnmoyos/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
@@ -582,7 +642,7 @@ class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
         self.assertEqual(file_info[1], _file_info[1])
         self.assertEqual(file_info[2], _file_info[2])
 
-        self.page.create_files()
+        self.page.create_files(mocked_create_file_function)
         results = [item['href'] for item in self.page.files]
         expected_items = [
              '/media/files/abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',

@@ -409,13 +409,12 @@ def migrate_page_content(content, language, acron=None, page_name=None):
         original_website = current_app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
 
         migration = PageMigration(
-            migrate_page_create_image, migrate_page_create_file,
             original_website, pages_source_path, images_source_path)
 
         page = MigratedPage(
             migration, content,
             acron=acron, page_name=page_name, lang=language)
-        page.migrate_urls()
+        page.migrate_urls(migrate_page_create_file, migrate_page_create_image)
         return page.content
 
 
