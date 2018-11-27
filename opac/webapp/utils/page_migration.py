@@ -391,7 +391,6 @@ class MigratedPage(object):
             if url:
                 file_location = downloaded_file(url)
                 valid_path = confirm_file_location(file_location, referenced)
-        logging.info('FILE LOCATION: {}'.format(file_location))
         if valid_path:
             file_dest_name = self.get_prefixed_slug_name(file_location)
             return (file_location, file_dest_name, url is not None)
