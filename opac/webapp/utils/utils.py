@@ -316,7 +316,7 @@ def create_file(file_path, filename, check_if_exists=True):
     nome do arquivo.
     """
 
-    file_root = current_app.config['IMAGE_ROOT']
+    file_root = current_app.config['FILE_ROOT']
     if not os.path.isdir(file_root):
         os.makedirs(file_root)
     file_destination_path = os.path.join(file_root, filename)
@@ -409,13 +409,12 @@ def migrate_page_content(content, language, acron=None, page_name=None):
         original_website = current_app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
 
         migration = PageMigration(
-            migrate_page_create_image, migrate_page_create_file,
             original_website, pages_source_path, images_source_path)
 
         page = MigratedPage(
             migration, content,
             acron=acron, page_name=page_name, lang=language)
-        page.migrate_urls()
+        page.migrate_urls(migrate_page_create_file, migrate_page_create_image)
         return page.content
 
 
