@@ -316,7 +316,7 @@ def create_file(file_path, filename, check_if_exists=True):
     nome do arquivo.
     """
 
-    file_root = current_app.config['IMAGE_ROOT']
+    file_root = current_app.config['FILE_ROOT']
     if not os.path.isdir(file_root):
         os.makedirs(file_root)
     file_destination_path = os.path.join(file_root, filename)
