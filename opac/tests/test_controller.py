@@ -812,6 +812,73 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         self.assertRaises(ValueError, controllers.get_articles_by_iid, [])
 
+    def test_get_recent_articles_of_issue(self):
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'type': 'article-commentary',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '012ijs9y14',
+            'issue': '90210j83',
+            'type': 'brief-report',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikoD90',
+            'issue': '90210j83',
+            'type': 'case-report',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos9B',
+            'issue': '90210j83',
+            'type': 'rapid-communication',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '012ijs9y1B',
+            'issue': '90210j83',
+            'type': 'research-article',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikoD9F',
+            'issue': '90210j83',
+            'type': 'review-article',
+            'journal': 'oak,ajimn1'
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjXX89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1'
+        })
+        self._make_one(attrib={
+            '_id': '9298wjXZ89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1'
+        })
+        result = controllers.get_recent_articles_of_issue(
+            issue_iid='90210j83', is_public=True)
+        self.assertEqual(len(result), 6)
+        result = [article._id for article in result]
+        expected = ['2183ikos90', '2183ikoD90', '2183ikos9B', '012ijs9y1B',
+                    '2183ikoD9F', '012ijs9y14']
+        self.assertEqual(set(result), set(expected))
+
 
 class UserControllerTestCase(BaseTestCase):
 
