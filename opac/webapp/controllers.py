@@ -38,6 +38,15 @@ from mongoengine import Q
 from mongoengine.errors import InvalidQueryError
 
 
+HIGHLIGHTED_TYPES = (
+    u'article-commentary',
+    u'brief-report',
+    u'case-report',
+    u'rapid-communication',
+    u'research-article',
+    u'review-article'
+)
+
 # -------- COLLECTION --------
 
 def get_current_collection():
@@ -825,7 +834,9 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
     if not issue_iid:
         raise ValueError(__('Parámetro obrigatório: issue_iid.'))
 
-    return Article.objects.filter(issue=issue_iid, is_public=is_public).order_by('-order')
+    return Article.objects.filter(
+        issue=issue_iid, is_public=is_public,
+        type__in=HIGHLIGHTED_TYPES).order_by('-order')
 
 # -------- NEWS --------
 
