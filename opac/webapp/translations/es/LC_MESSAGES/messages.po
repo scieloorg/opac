@@ -1523,11 +1523,11 @@ msgstr "Todos"
 
 #: opac/webapp/templates/collection/includes/list_journals_search_input.html:9
 msgid "Periódicos ativos"
-msgstr "Revistas activos"
+msgstr "Revistas activas"
 
 #: opac/webapp/templates/collection/includes/list_journals_search_input.html:13
 msgid "Periódicos descontinuados"
-msgstr "Revistas discontinuados"
+msgstr "Revistas discontinuadas"
 
 #: opac/webapp/templates/collection/includes/list_journals_search_input.html:24
 msgid "Digite uma ou mais palavras para filtrar a lista"
