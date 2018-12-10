@@ -1,5 +1,7 @@
 # coding: utf-8
 import unittest
+from unittest.mock import patch, Mock
+
 import flask
 import warnings
 from flask import url_for, g, current_app
@@ -739,6 +741,48 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    @patch('requests.get')
+    def test_article_detail_translate_version_(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'}]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+            self.assertEqual(content.count('https://link/de_artigo.html'), 1)
+            self.assertEqual(content.count('https://link/pt_artigo.html'), 1)
+            self.assertEqual(content.count('https://link/de_artigo.html">de<'), 1)
+            self.assertEqual(content.count('https://link/pt_artigo.html">pt<'), 1)
 
     def test_legacy_url_aop_article_detail(self):
         """
