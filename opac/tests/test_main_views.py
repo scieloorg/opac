@@ -782,7 +782,8 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(content.count('https://link/de_artigo.html'), 1)
             self.assertEqual(content.count('https://link/pt_artigo.html'), 1)
             self.assertEqual(content.count('https://link/de_artigo.html">de<'), 1)
-            self.assertEqual(content.count('https://link/pt_artigo.html">pt<'), 1)
+            self.assertIn('https://link/pt_artigo.html">Português<', content)
+            self.assertEqual(content.count('https://link/pt_artigo.html">Português<'), 1)
 
     def test_legacy_url_aop_article_detail(self):
         """

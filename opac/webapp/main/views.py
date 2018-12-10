@@ -853,7 +853,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'html': html_article,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
-        'article_lang': lang_code
+        'article_lang': lang_code,
+        'LANG_NAMES': current_app.config.get('LANG_NAMES'),
     }
 
     return render_template("article/detail.html", **context)

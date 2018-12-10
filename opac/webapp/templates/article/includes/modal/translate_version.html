@@ -13,7 +13,7 @@
             {% if article and article.htmls %}
               {% for html in article.htmls  %}
                 <li>
-                  <a href="{{html.url}}">{{html.lang}}</a>
+                  <a href="{{ html.url }}">{{ LANG_NAMES.get(html.lang, html.lang) }}</a>
                 </li>
               {% endfor %}
             {% endif %}

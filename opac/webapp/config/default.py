@@ -255,6 +255,8 @@ LANGUAGES = {
     # 'es_MX': 'Español (México)',
 }
 
+LANG_NAMES = {lang[:2]: name for lang, name in LANGUAGES.items()}
+
 # linguagem padrão:
 BABEL_DEFAULT_LOCALE = 'pt_BR'
 
