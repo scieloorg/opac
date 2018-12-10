@@ -767,7 +767,9 @@ class MainTestCase(BaseTestCase):
                                             'url_segment': '10-11',
                                             'htmls': [
                                                 {'lang': 'de', 'url': 'https://link/de_artigo.html'},
-                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'}]
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
                                             })
 
             response = self.client.get(url_for('main.article_detail',
@@ -782,6 +784,7 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(content.count('https://link/de_artigo.html'), 1)
             self.assertEqual(content.count('https://link/pt_artigo.html'), 1)
             self.assertEqual(content.count('https://link/de_artigo.html">Deutsch<'), 1)
+            self.assertEqual(content.count('https://link/bla_artigo.html">bla<'), 1)
             self.assertIn('https://link/pt_artigo.html">Português<', content)
             self.assertEqual(content.count('https://link/pt_artigo.html">Português<'), 1)
 
