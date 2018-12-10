@@ -781,7 +781,7 @@ class MainTestCase(BaseTestCase):
             content = response.data.decode('utf-8')
             self.assertEqual(content.count('https://link/de_artigo.html'), 1)
             self.assertEqual(content.count('https://link/pt_artigo.html'), 1)
-            self.assertEqual(content.count('https://link/de_artigo.html">de<'), 1)
+            self.assertEqual(content.count('https://link/de_artigo.html">Deutsch<'), 1)
             self.assertIn('https://link/pt_artigo.html">Português<', content)
             self.assertEqual(content.count('https://link/pt_artigo.html">Português<'), 1)
 

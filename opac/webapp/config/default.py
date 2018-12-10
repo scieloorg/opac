@@ -2,6 +2,12 @@
 
 import os
 
+from .lang_names import LANG_NAMES
+
+
+LANG_NAMES = {lang: names[0] for lang, names in LANG_NAMES.items()}
+
+
 """
   Na Configuração padrão, definimos estas configurações para deixar a app rodando em modo "produção".
   Porém é recomendado ajustar algumas configuração para deixar uma instalação segura e
@@ -254,8 +260,6 @@ LANGUAGES = {
     # 'es_ES': 'Español (España)',
     # 'es_MX': 'Español (México)',
 }
-
-LANG_NAMES = {lang[:2]: name for lang, name in LANGUAGES.items()}
 
 # linguagem padrão:
 BABEL_DEFAULT_LOCALE = 'pt_BR'
