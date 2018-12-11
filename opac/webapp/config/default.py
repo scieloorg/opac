@@ -2,12 +2,6 @@
 
 import os
 
-from .lang_names import LANG_NAMES
-
-
-LANG_NAMES = {lang: names[0] for lang, names in LANG_NAMES.items()}
-
-
 """
   Na Configuração padrão, definimos estas configurações para deixar a app rodando em modo "produção".
   Porém é recomendado ajustar algumas configuração para deixar uma instalação segura e

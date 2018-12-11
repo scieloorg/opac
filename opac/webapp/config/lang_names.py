@@ -187,3 +187,7 @@ LANG_NAMES = {
     "za": (u"Saɯ cueŋƅ, Saw cuengh", u"Zhuang, Chuang"),
     "zu": (u"isiZulu", u"Zulu"),
 }
+
+
+def get_original_lang_name(code):
+    return LANG_NAMES.get(code, (code, code))[0]

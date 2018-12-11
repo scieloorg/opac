@@ -20,6 +20,8 @@ from webapp.utils import utils
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
 from webapp import forms
 
+from webapp.config.lang_names import get_original_lang_name
+
 logger = logging.getLogger(__name__)
 
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
@@ -854,7 +856,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
         'article_lang': lang_code,
-        'LANG_NAMES': current_app.config.get('LANG_NAMES'),
+        'get_original_lang_name': get_original_lang_name,
     }
 
     return render_template("article/detail.html", **context)
