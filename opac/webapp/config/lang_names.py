@@ -190,4 +190,14 @@ LANG_NAMES = {
 
 
 def get_original_lang_name(code):
-    return LANG_NAMES.get(code, (code, code))[0]
+    return LANG_NAMES.get(code, (None, code))[0]
+
+
+def display_original_lang_name(code):
+    name = get_original_lang_name(code)
+    if name is None:
+        return code
+    name = name.capitalize()
+    if ',' in name:
+        return name.split(',')[0]
+    return name
