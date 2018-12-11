@@ -10,6 +10,7 @@ from flask import render_template
 from .base import BaseTestCase
 
 from . import utils
+from webapp.config.lang_names import display_original_lang_name
 
 
 class MainTestCase(BaseTestCase):
@@ -781,12 +782,24 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             content = response.data.decode('utf-8')
-            self.assertEqual(content.count('https://link/de_artigo.html'), 1)
-            self.assertEqual(content.count('https://link/pt_artigo.html'), 1)
-            self.assertEqual(content.count('https://link/de_artigo.html">Deutsch<'), 1)
-            self.assertEqual(content.count('https://link/bla_artigo.html">bla<'), 1)
-            self.assertIn('https://link/pt_artigo.html">Português<', content)
-            self.assertEqual(content.count('https://link/pt_artigo.html">Português<'), 1)
+
+            urls = {html['lang']: url_for(
+                                   'main.article_detail',
+                                   url_seg=journal.url_segment,
+                                   url_seg_issue=issue.url_segment,
+                                   url_seg_article=article.url_segment,
+                                   lang_code=html['lang'])
+                    for html in article.htmls
+                    }
+            self.assertIn('{}">Deutsch<'.format(urls['de']), content)
+            self.assertIn('{}">bla<'.format(urls['bla']), content)
+            self.assertIn('{}">Português<'.format(urls['pt']), content)
+            self.assertEqual(
+                content.count('{}">Deutsch<'.format(urls['de'])), 1)
+            self.assertEqual(
+                content.count('{}">Português<'.format(urls['pt'])), 1)
+            self.assertEqual(
+                content.count('{}">bla<'.format(urls['bla'])), 1)
 
     def test_legacy_url_aop_article_detail(self):
         """

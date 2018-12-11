@@ -10,10 +10,10 @@
           <div class="col-md-4 col-md-offset-1">
             <strong>{% trans %}Versão original do texto{% endtrans %}</strong>
             <ul class="md-list">
-            {% if article and article.htmls %}
-              {% for html in article.htmls  %}
+            {% if text_versions %}
+              {% for code, name, url in text_versions  %}
                 <li>
-                  <a href="{{ html.url }}">{{ display_original_lang_name(html.lang) }}</a>
+                  <a href="{{ url }}">{{ name }}</a>
                 </li>
               {% endfor %}
             {% endif %}
