@@ -5,11 +5,23 @@ from bs4 import BeautifulSoup
 
 URL_GSCHOLAR = 'https://scholar.google.com/scholar?q='
 
-#  similares no Google
+#  similares no Google Scholar
 URL_GSCHOLAR_RELATED = '/scholar?q=related:'
 
 #  Citados no Google Scholar
 URL_GSCHOLAR_CITES = '/scholar?cites='
+
+# Similares no Google
+URL_GOOGLE = 'https://www.google.com/search?q='
+
+
+def related_links(article_url, titles):
+    return [
+        ('Google', 'Similares no',
+            get_google_results_searched_by_article_titles(titles)[0]),
+        ('Google Scholar', 'Citados no',
+            get_scholar_results_searched_by_article_titles(titles)[0]),
+    ]
 
 
 def get_page_content(url):
@@ -22,6 +34,10 @@ def get_page_content(url):
         raise
 
 
+def get_google_results_searched_by_article_titles(titles):
+    return [URL_GOOGLE + title for title in titles]
+
+
 def get_scholar_urls(content):
     bs = BeautifulSoup(content, 'lxml')
     return [a['href']
@@ -29,15 +45,15 @@ def get_scholar_urls(content):
             if a.get('href') and a['href'].startswith('/scholar?')]
 
 
-def get_results_searched_by_article_titles(titles):
+def get_scholar_results_searched_by_article_titles(titles):
     return [URL_GSCHOLAR + title for title in titles]
 
 
-def get_results_searched_by_article_url(article_page_url):
+def get_scholar_results_searched_by_article_url(article_page_url):
     return URL_GSCHOLAR + article_page_url
 
 
-def get_cited_and_related_article_urls(article_page_url, titles):
+def get_scholar_cited_and_related_article_urls(article_page_url, titles):
     """
     Retorna URL de cited e related encontrada na página de resultado de busca
     do artigo, fazendo "raspagem de dados"
@@ -51,8 +67,8 @@ def get_cited_and_related_article_urls(article_page_url, titles):
     Link de "Artigos relacionados" (related):
         https://scholar.google.com.br/scholar?q=related:3VfqfSb9P6MJ:scholar.google.com/&scioq=Genome+features+of+Leptospira+interrogans+serovar+Copenhageni&hl=pt-BR&as_sdt=0,5&as_vis=1
     """
-    urls = get_results_searched_by_article_titles(titles) + \
-        [get_results_searched_by_article_url(article_page_url)]
+    urls = get_scholar_results_searched_by_article_titles(titles) + \
+        [get_scholar_results_searched_by_article_url(article_page_url)]
     related = None
     cited = None
     for url in urls:
