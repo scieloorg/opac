@@ -17,6 +17,7 @@ from webapp import babel
 from webapp import cache
 from webapp import controllers
 from webapp.utils import utils
+from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
 from webapp import forms
 
@@ -759,6 +760,10 @@ def article_detail_pid(pid):
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+    article_url = url_for('main.article_detail',
+                          url_seg=url_seg,
+                          url_seg_issue=url_seg_issue,
+                          url_seg_article=url_seg_article)
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
@@ -853,7 +858,9 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'html': html_article,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
-        'article_lang': lang_code
+        'article_lang': lang_code,
+        'related_links': related_articles_urls.related_links(
+            article_url, [article.title]),
     }
 
     return render_template("article/detail.html", **context)

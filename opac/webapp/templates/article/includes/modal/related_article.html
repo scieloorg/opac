@@ -11,18 +11,13 @@
       <div class="modal-body">
         <div class="modal-center">
           <ul class="md-list inline">
-            {% with article_external_url=url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, _external=True)  %}
-              <li class="colspan3">
-                <a href="https://scholar.google.com/scholar?q=related:{{ article_external_url|urlencode }}">
-                  {% trans %}Similares no{% endtrans %}<br/> Google
+            {% for source, label, link in related_links  %}
+              <li>
+                <a href="{{ link }}" target="_blank">
+                  {% trans %}{{ label }}{% endtrans %}<br/> {{ source }}
                 </a>
               </li>
-              <li class="colspan3">
-                <a href="https://scholar.google.com/scholar?q=link:{{ article_external_url|urlencode }}">
-                  {% trans %}Citados no{% endtrans %}<br/> Google Scholar
-                </a>
-              </li>
-            {% endwith %}
+            {% endfor %}
           </ul>
           <div class="clearfix"></div>
         </div>

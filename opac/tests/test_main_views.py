@@ -740,6 +740,36 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
+    def test_article_detail_links_to_gscholar(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
     def test_legacy_url_aop_article_detail(self):
         """
         Teste da ``view function`` ``router_legacy``, deve retornar uma página
