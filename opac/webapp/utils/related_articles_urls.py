@@ -19,7 +19,7 @@ def related_links(article_url, titles):
     return [
         ('Google', 'Similares no',
             get_google_results_searched_by_article_titles(titles)[0]),
-        ('Google Scholar', 'Citados no',
+        ('Google Scholar', 'Citados e Similares no',
             get_scholar_results_searched_by_article_titles(titles)[0]),
     ]
 

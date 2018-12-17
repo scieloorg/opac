@@ -765,10 +765,20 @@ class MainTestCase(BaseTestCase):
                                                lang_code='pt'))
 
             self.assertStatus(response, 200)
+            page_content = response.data.decode('utf-8')
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+            result = self.get_context_variable('related_links')
+            self.assertEqual(result[0][0], 'Google')
+            self.assertEqual(result[1][0], 'Google Scholar')
+            self.assertIn('Article Y', result[0][2])
+            self.assertIn('Article Y', result[1][2])
+            self.assertIn('Google', page_content)
+            self.assertIn('/scholar', page_content)
+
 
     def test_legacy_url_aop_article_detail(self):
         """
