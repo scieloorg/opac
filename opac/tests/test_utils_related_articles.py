@@ -7,39 +7,23 @@ from webapp.utils import related_articles_urls as related_links
 
 class UtilsGScholarTestCase(BaseTestCase):
 
-    def test_get_scholar_urls(self):
-        content = '<a href="/scholar?q=a"/><a href="/scholar?q=related:"/><a href="/scholar?q=b"/>'
-        result = related_links.get_scholar_urls(content)
-        expected = ['/scholar?q=a', '/scholar?q=related:', '/scholar?q=b']
+    def test_get_google_results_searched_by_article_titles(self):
+        expected = [
+            'https://www.google.com/search?q=title 1',
+            'https://www.google.com/search?q=title 2!',
+        ]
+        result = related_links.get_google_results_searched_by_article_titles(
+            ['title 1', 'title 2!'])
         self.assertEqual(expected, result)
 
-    def test_get_results_searched_by_article_titles(self):
+    def test_get_scholar_results_searched_by_article_titles(self):
         expected = [
-            related_links.URL_GSCHOLAR + 'title1',
-            related_links.URL_GSCHOLAR + 'title2',
+            'https://scholar.google.com/scholar?q=title 1',
+            'https://scholar.google.com/scholar?q=title 2!',
         ]
         result = related_links.get_scholar_results_searched_by_article_titles(
-            ['title1', 'title2'])
+            ['title 1', 'title 2!'])
         self.assertEqual(expected, result)
-
-    def test_get_results_searched_by_article_url(self):
-        article_page_url = 'http://www.scielo.br/scielo.php?pid=S0100-879X2004000400003&script=sci_arttext'
-        expected = related_links.URL_GSCHOLAR + article_page_url
-        result = related_links.get_scholar_results_searched_by_article_url(
-            article_page_url)
-        self.assertEqual(expected, result)
-
-    def test_get_cited_and_related_article_urls(self):
-        article_page_url = 'http://www.scielo.br/scielo.php?pid=S0100-879X2004000400003&script=sci_arttext'
-        titles = [
-            'Genome features of Leptospira interrogans serovar Copenhageni',
-        ]
-        result = related_links.get_scholar_cited_and_related_article_urls(
-            article_page_url, titles)
-        if result:
-            self.assertEqual(len(result), 2)
-            self.assertIn('cites=', result[0])
-            self.assertIn('q=related:', result[1])
 
     def test_related_links(self):
         article_page_url = 'http://www.scielo.br/scielo.php?pid=S0100-879X2004000400003&script=sci_arttext'
