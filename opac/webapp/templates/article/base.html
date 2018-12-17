@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{ article.title }}{% endblock %}
+
 {% block ie7_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie7_extra_namespaces %}
 {% block ie8_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie8_extra_namespaces %}
 {% block ie9_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie9_extra_namespaces %}

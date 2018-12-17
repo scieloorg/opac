@@ -40,4 +40,5 @@ class ErrorForm(FlaskForm):
     your_email = StringField('your_email', validators=[DataRequired(), Email()])
     error_type = StringField('error_type', validators=[DataRequired()])
     url = HiddenField('share_url', validators=[URL(), DataRequired()])
+    page_title = HiddenField('page_title', validators=[DataRequired()])
     message = TextAreaField('message', validators=[DataRequired()])
