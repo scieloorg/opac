@@ -36,9 +36,10 @@ class UtilsGScholarTestCase(BaseTestCase):
         ]
         result = related_links.get_scholar_cited_and_related_article_urls(
             article_page_url, titles)
-        self.assertEqual(len(result), 2)
-        self.assertIn('cites=', result[0])
-        self.assertIn('q=related:', result[1])
+        if result:
+            self.assertEqual(len(result), 2)
+            self.assertIn('cites=', result[0])
+            self.assertIn('q=related:', result[1])
 
     def test_related_links(self):
         article_page_url = 'http://www.scielo.br/scielo.php?pid=S0100-879X2004000400003&script=sci_arttext'
