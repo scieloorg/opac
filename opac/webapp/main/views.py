@@ -20,6 +20,8 @@ from webapp.utils import utils
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
 from webapp import forms
 
+from webapp.config.lang_names import display_original_lang_name
+
 logger = logging.getLogger(__name__)
 
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
@@ -810,6 +812,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     html_article = None
 
+    text_versions = None
     if article.htmls:
         try:
             html_url = [html for html in article.htmls if html['lang'] == lang_code]
@@ -843,6 +846,22 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
         except IndexError:
             abort(404, _('Artigo não encontrado'))
+        text_versions = sorted(
+            [
+                (
+                    html['lang'],
+                    display_original_lang_name(html['lang']),
+                    url_for(
+                       'main.article_detail',
+                       url_seg=journal.url_segment,
+                       url_seg_issue=issue.url_segment,
+                       url_seg_article=article.url_segment,
+                       lang_code=html['lang']
+                    )
+                )
+                for html in article.htmls
+            ]
+        )
 
     context = {
         'next_article': next_article,
@@ -853,7 +872,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'html': html_article,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
-        'article_lang': lang_code
+        'article_lang': lang_code,
+        'text_versions': text_versions,
     }
 
     return render_template("article/detail.html", **context)
