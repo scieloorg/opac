@@ -19,6 +19,11 @@ fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 
 
+def is_file(file_path):
+    name, ext = os.path.splitext(file_path)
+    return ext.lower() in ['.pdf', '.html', '.htm', '.jpg', '.png', '.gif']
+
+
 def new_author_url_page(old_url):
     # http://www.scielo.br/cgi-bin/wxis.exe/iah/
     # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
@@ -71,7 +76,7 @@ def confirm_file_location(file_location, file_path):
             logging.error(
                 u'Não legível %s (%s)' % (file_location, file_path))
             return False
-    logging.error(
+    logging.info(
         u'Não existe %s (%s)' % (file_location, file_path))
     return False
 
@@ -93,8 +98,6 @@ class PageMigration(object):
     Define os dados/regras para migracao de qualquer página html
     """
     def __init__(self,
-                 create_image_function,
-                 create_file_function,
                  original_website,
                  revistas_path,
                  img_revistas_path,
@@ -103,17 +106,6 @@ class PageMigration(object):
         self.revistas_path = revistas_path
         self.img_revistas_path = img_revistas_path
         self.static_files_path = static_files_path
-        self.used_names = {}
-        self._create_file_function = create_file_function
-        self._create_image_function = create_image_function
-
-    @property
-    def create_image_function(self):
-        return self._create_image_function
-
-    @property
-    def create_file_function(self):
-        return self._create_file_function
 
     @property
     def original_website(self):
@@ -176,13 +168,22 @@ class PageMigration(object):
             return self.replace_by_relative_url(url)
         return url
 
-    def guess_file_location(self, file_path):
+    def get_file_location(self, referenced):
+        file_locations = self.get_possible_locations(referenced)
+        found = [file_location
+                 for file_location in file_locations
+                 if os.path.isfile(file_location)]
+        if len(found) > 0:
+            return found[0]
+
+    def get_possible_locations(self, file_path):
         """
         /img/revistas/fig01.gif -> /volumes/img_revistas/fig01.gif
         /revistas/fig01.gif -> /volumes/revistas/fig01.gif
         http://www.scielo.br/bla/bla.gif -> /volumes/htdocs/bla/bla.gif
         /bla/bla.gif -> /volumes/htdocs/bla/bla.gif
         """
+        possible_locations = []
         changes = [
             ('/img/revistas/', self.img_revistas_path),
             ('/revistas/', self.revistas_path),
@@ -193,40 +194,29 @@ class PageMigration(object):
             )
         for change in changes:
             if change[0] in file_path:
-                return os.path.join(
-                    change[1],
-                    file_path[file_path.find(change[0]) + len(change[0]):])
+                possible_locations.append(
+                    os.path.join(
+                        change[1],
+                        file_path[file_path.find(change[0]) + len(change[0]):])
+                )
+                break
+            elif file_path.count('/') == 0:
+                possible_locations.append(os.path.join(change[1], file_path))
         if self.static_files_path and file_path.startswith('/'):
-            return os.path.join(
+            possible_locations.append(
+                os.path.join(
                     self.static_files_path,
                     file_path[1:])
-
-    def get_prefixed_slug_name(self, prefixes, img_location):
-        new_img_name = slugify_filename(img_location, self.used_names)
-
-        _prefixes = prefixes
-        parts = [slugify(part) for part in _prefixes if part is not None]
-        return '_'.join(parts + [new_img_name])
+                )
+        return [item.replace('\n', '') for item in set(possible_locations)]
 
     def is_asset_url(self, referenced):
-        name, ext = os.path.splitext(referenced)
-        if ext.lower() in ['.pdf', '.html', '.htm', '.jpg', '.png', '.gif']:
-            return 'http://{}{}'.format(self.original_website, referenced)
-
-    def get_file_info(self, prefixes, referenced):
-        file_location = self.guess_file_location(referenced)
-        valid_path = confirm_file_location(file_location, referenced)
-        url = None
-        if not valid_path:
-            url = self.is_asset_url(referenced)
-            if url:
-                file_location = downloaded_file(url)
-                valid_path = confirm_file_location(file_location, referenced)
-        if valid_path:
-            file_dest_name = self.get_prefixed_slug_name(
-                prefixes, file_location)
-            return (file_location, file_dest_name, url is not None)
-        logging.info('CONFERIR: {} não encontrado'.format(referenced))
+        if is_file(referenced):
+            sep = ''
+            if not referenced.startswith('/'):
+                sep = '/'
+            return 'http://{}{}{}'.format(
+                self.original_website, sep, referenced)
 
 
 class JournalPageMigration:
@@ -306,6 +296,8 @@ class MigratedPage(object):
     """
     def __init__(self, migration, content,
                  acron=None, page_name=None, lang=None):
+        self.used_names = {}
+        self.acron = acron
         self.lang = lang
         self.page_name = page_name
         self.content = content
@@ -315,7 +307,7 @@ class MigratedPage(object):
             self.prefixes = [acron]
         self.migration = migration
         self.j_migration = None
-        if acron:
+        if self.acron:
             self.j_migration = JournalPageMigration(
                 migration.original_website, acron)
 
@@ -326,11 +318,17 @@ class MigratedPage(object):
     @content.setter
     def content(self, value):
         self.tree = BeautifulSoup(value, 'lxml')
+        if self.acron:
+            for item in self.tree.find_all('a'):
+                if item.get('href') and is_file(item.get('href')) and \
+                        item['href'].count('/') == 0:
+                    item['href'] = "/revistas/{}/{}".format(
+                        self.acron, item['href'])
 
-    def migrate_urls(self):
+    def migrate_urls(self, create_file_function, create_image_function):
         self.fix_urls()
-        self.create_files()
-        self.create_images()
+        self.create_files(create_file_function)
+        self.create_images(create_image_function)
 
     def fix_urls(self):
         replacements = []
@@ -376,28 +374,48 @@ class MigratedPage(object):
     def files(self):
         return [item
                 for item in self.tree.find_all('a')
-                if item.get('href')]
+                if item.get('href') and is_file(item.get('href'))]
 
-    def create_images(self):
+    def get_prefixed_slug_name(self, file_path):
+        new_name = slugify_filename(file_path, self.used_names)
+        _prefixes = self.prefixes
+        parts = [slugify(part) for part in _prefixes if part is not None]
+        return '_'.join(parts + [new_name])
+
+    def get_file_info(self, referenced):
+        file_location = self.migration.get_file_location(referenced)
+        valid_path = confirm_file_location(file_location, referenced)
+        url = None
+        if not valid_path:
+            url = self.migration.is_asset_url(referenced)
+            if url:
+                file_location = downloaded_file(url)
+                valid_path = confirm_file_location(file_location, referenced)
+        if valid_path:
+            file_dest_name = self.get_prefixed_slug_name(file_location)
+            return (file_location, file_dest_name, url is not None)
+        logging.info('CONFERIR: {} não encontrado'.format(referenced))
+
+    def create_images(self, create_image_function):
         for image in self.images:
             src = image.get('src')
             if ':' not in src:
-                image_info = self.migration.get_file_info(self.prefixes, src)
+                image_info = self.get_file_info(src)
                 if image_info:
                     img_src, img_dest, is_temp = image_info
-                    image['src'] = self.migration.create_image_function(
+                    image['src'] = create_image_function(
                         img_src, img_dest, check_if_exists=False)
                     if is_temp:
                         delete_file(img_src)
 
-    def create_files(self):
+    def create_files(self, create_file_function):
         for _file in self.files:
             href = _file.get('href')
             if ':' not in href:
-                _file_info = self.migration.get_file_info(self.prefixes, href)
+                _file_info = self.get_file_info(href)
                 if _file_info:
                     _file_href, _file_dest, is_temp = _file_info
-                    _file['href'] = self.migration.create_file_function(
+                    _file['href'] = create_file_function(
                         _file_href, _file_dest, check_if_exists=False)
                     if is_temp:
                         delete_file(_file_href)
