@@ -21,7 +21,7 @@ requests>=2.20.0
 gunicorn==19.8.1
 xlsxwriter==1.1.0
 tweepy==3.6.0
-raven[flask]==6.9.0
+raven[flask]==6.10.0
 beautifulsoup4==4.6.3
 Flask-WTF==0.14.2
 Flask-Caching==1.4.0
