@@ -1113,7 +1113,8 @@ def email_error_ajax():
                                                      recipients,
                                                      form.data['url'],
                                                      form.data['error_type'],
-                                                     form.data['message'])
+                                                     form.data['message'],
+                                                     form.data['page_title'])
 
         return jsonify({'sent': sent, 'message': str(message),
                         'fields': [key for key in form.data.keys()]})

@@ -1,5 +1,7 @@
 {% extends "issue/base.html" %}
 
+{% block title %}{{ issue_legend|default('--', True) }}{% endblock %}
+
 {% block main_content %}
 
   <section class="journalContent">

@@ -985,7 +985,8 @@ def send_email_share(from_email, recipents, share_url, subject, comment):
     return (True, __('Mensagem enviada!'))
 
 
-def send_email_error(user_name, from_email, recipents, url, error_type, comment, subject=None):
+def send_email_error(user_name, from_email, recipents, url, error_type,
+                     comment, page_title, subject=None):
     """
     Envia uma mensagem de erro de página e retorna uma mensagem de
     confirmação
@@ -996,14 +997,21 @@ def send_email_error(user_name, from_email, recipents, url, error_type, comment,
     - ``url``       : URL da página com erro
     - ``subject``   : Assunto
     - ``comment``   : Comentário
+    - ``page_title``: Título da página
     """
     subject = subject or __('[Erro] Erro informado pelo usuário no site SciELO')
-    if error_type == 'application':
-        url = __('O usuário <b>%s</b> com e-mail: <b>%s</b>, informa que existe um erro na aplicação no site SciELO.</br></br>Link: %s' % (user_name, from_email, url))
-    elif error_type == 'content':
-        url = __('O usuário <b>%s</b> com e-mail: <b>%s</b>, informa que existe um erro de conteúdo no site SicELO.</br></br>Link: %s' % (user_name, from_email, url))
 
-    comment = '%s<br/><br/><b>Mensagem do usuário:</b> %s' % (url, comment)
+    msg = __('O usuário <b>%s</b> com e-mail: <b>%s</b>,'
+             ' informa que existe um erro na %s no site SciELO.'
+             '<br><br><b>Título da página:</b> %s'
+             '<br><br><b>Link:</b> %s')
+
+    if error_type == 'application':
+        url = msg % (user_name, from_email, 'aplicação', page_title, url)
+    elif error_type == 'content':
+        url = msg % (user_name, from_email, 'conteúdo', page_title, url)
+
+    comment = '%s<br><br><b>Mensagem do usuário:</b> %s' % (url, comment)
 
     sent, message = utils.send_email(recipents, subject, comment)
 
