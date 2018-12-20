@@ -329,11 +329,12 @@ msgstr "[Error] Error informed by the user in the SciELO site"
 #: opac/webapp/controllers.py:1004
 #, python-format
 msgid ""
-"O usuário <b>%s</b> com e-mail: <b>%s</b>, informs you that there is an error "
-"%s in SciELO.<br><br><b>Título da página:</b> %s<br><br><b>Link:</b>"
+"O usuário <b>%s</b> com e-mail: <b>%s</b>, informa que existe um erro na "
+"%s no site SciELO.<br><br><b>Título da página:</b> %s<br><br><b>Link:</b>"
 " %s"
+
 msgstr ""
-"The user <b>%s</b> with e-mail: <b>%s</b>, informa que existe um erro na "
+"The user <b>%s</b> with e-mail: <b>%s</b>, informs that there is an error "
 "%s in the website SciELO.<br><br><b>Title of page:</b> %s<br><br><b>Link:</b>"
 " %s"
 
