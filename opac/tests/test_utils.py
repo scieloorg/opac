@@ -264,7 +264,7 @@ class UtilsTestCase(BaseTestCase):
         new_content = wutils.migrate_page_content(
             content, acron='rbep', page_name=None, language='pt')
         self.assertEqual(
-            '<html><body><img src="/media/rbep_abc.jpg"/>'
-            '<a href="/media/rbep_avaliacao_en.htm"></a></body></html>',
+            '<img src="/media/rbep_abc.jpg"/>'
+            '<a href="/media/rbep_avaliacao_en.htm"></a>',
             new_content
         )
