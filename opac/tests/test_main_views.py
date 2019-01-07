@@ -801,6 +801,44 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(
                 content.count('{}">bla<'.format(urls['bla'])), 1)
 
+    def test_article_detail_links_to_gscholar(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            page_content = response.data.decode('utf-8')
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            result = self.get_context_variable('related_links')
+            self.assertEqual(result[0][0], 'Google')
+            self.assertEqual(result[1][0], 'Google Scholar')
+            self.assertIn('Article Y', result[0][2])
+            self.assertIn('Article Y', result[1][2])
+            self.assertIn('Google', page_content)
+            self.assertIn('/scholar', page_content)
+
     def test_legacy_url_aop_article_detail(self):
         """
         Teste da ``view function`` ``router_legacy``, deve retornar uma página
