@@ -206,7 +206,7 @@ class UtilsMigratedPageTestCase(BaseTestCase):
 
     def test_content(self):
         self.page.content = '<html><body>x</body></html>'
-        self.assertEqual(self.page.content, '<html><body>x</body></html>')
+        self.assertEqual(self.page.content, 'x')
 
     def test_find_original_website_reference(self):
         self.page.content = '''<img src="www.scielo.br"/>

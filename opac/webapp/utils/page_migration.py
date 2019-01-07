@@ -313,7 +313,7 @@ class MigratedPage(object):
 
     @property
     def content(self):
-        return str(self.tree)
+        return ''.join([str(content) for content in self.tree.body.contents])
 
     @content.setter
     def content(self, value):
