@@ -388,10 +388,17 @@
             default:
                 listAlpha()
         }
+        window.location.hash = target;
 
       });
       $('.home-tab').click(function(){
         window.location.href = "{{ url_for('main.index') }}";
+      });
+
+      $("a[lang][class^='lang']").click(function (e) {
+  		  e.preventDefault();
+          var hash = window.location.hash;
+          window.location = $(this).attr("href") + '?hash=' + hash;
       });
 
     });

@@ -76,10 +76,14 @@ def set_locale(lang_code):
     if lang_code not in list(langs.keys()):
         abort(400, _('Código de idioma inválido'))
 
+    referrer = request.referrer
+    hash = request.args.get('hash')
+    if hash:
+        referrer += "#" + hash
+
     # salvar o lang code na sessão
     session['lang'] = lang_code
-
-    return redirect(request.referrer)
+    return redirect(referrer)
 
 
 def get_lang_from_session():
