@@ -1001,17 +1001,17 @@ def send_email_error(user_name, from_email, recipents, url, error_type,
     """
     subject = subject or __('[Erro] Erro informado pelo usuário no site SciELO')
 
+    if error_type == 'application':
+        _type = __('aplicação')
+    elif error_type == 'content':
+        _type = __('conteúdo')
+
     msg = __('O usuário <b>%s</b> com e-mail: <b>%s</b>,'
              ' informa que existe um erro na %s no site SciELO.'
              '<br><br><b>Título da página:</b> %s'
-             '<br><br><b>Link:</b> %s')
+             '<br><br><b>Link:</b> %s' % (user_name, from_email, _type, page_title, url))
 
-    if error_type == 'application':
-        url = msg % (user_name, from_email, 'aplicação', page_title, url)
-    elif error_type == 'content':
-        url = msg % (user_name, from_email, 'conteúdo', page_title, url)
-
-    comment = '%s<br><br><b>Mensagem do usuário:</b> %s' % (url, comment)
+    comment = '%s<br><br><b>Mensagem do usuário:</b> %s' % (msg, comment)
 
     sent, message = utils.send_email(recipents, subject, comment)
 
