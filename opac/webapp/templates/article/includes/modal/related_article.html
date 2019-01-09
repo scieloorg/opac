@@ -14,7 +14,7 @@
             {% for source, label, link in related_links  %}
               <li>
                 <a href="{{ link }}" target="_blank">
-                  {% trans %}{{ label }}{% endtrans %}<br/> {{ source }}
+                  {{ source }}
                 </a>
               </li>
             {% endfor %}
