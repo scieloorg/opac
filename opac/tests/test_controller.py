@@ -805,6 +805,150 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self.assertListEqual(sorted(articles), sorted(expected))
 
+    def test_get_articles_by_iid_from_aop_issue(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), deve retorna uma
+        lista de articles.
+        """
+
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-01',
+            'is_aop': True,
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-10',
+            'is_aop': True,
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjso89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-08',
+            'is_aop': True,
+        })
+
+        expected = ['2183ikos90', '9298wjso89', '012ijs9y24']
+
+        articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
+
+        self.assertListEqual(articles, expected)
+
+    def test_get_articles_by_iid_from_regular_issue_with_ex_aop(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), deve retorna uma
+        lista de articles.
+        """
+
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-01',
+            'aop_pid': 'S111',
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-10',
+            'is_aop': True,
+            'aop_pid': 'S111',
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjso89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-08',
+            'is_aop': True,
+            'aop_pid': 'S111',
+        })
+
+        expected = ['012ijs9y24', '2183ikos90', '9298wjso89', ]
+
+        articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
+
+        self.assertListEqual(articles, expected)
+
+    def test_get_articles_by_iid_from_regular_issue_with_ex_aop_and_regular_articles(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), deve retorna uma
+        lista de articles.
+        """
+
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01',
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-10',
+            'is_aop': True,
+            'aop_pid': 'S111',
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjso89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-08',
+            'is_aop': True,
+            'aop_pid': 'S111',
+        })
+
+        expected = ['012ijs9y24', '2183ikos90', '9298wjso89', ]
+
+        articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
+
+        self.assertListEqual(articles, expected)
+
+    def test_get_articles_by_iid_from_continuous_publication_issue(self):
+        """
+        Testando a função controllers.get_articles_by_iid(), deve retorna uma
+        lista de articles.
+        """
+
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-01',
+        })
+
+        self._make_one(attrib={
+            '_id': '2183ikos90',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-10',
+        })
+
+        self._make_one(attrib={
+            '_id': '9298wjso89',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'publication_date': '2018-01-08',
+        })
+
+        expected = ['2183ikos90', '9298wjso89', '012ijs9y24', ]
+
+        articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
+
+        self.assertListEqual(articles, expected)
+
     def test_get_articles_by_iid_without_iid(self):
         """
         Testando a função controllers.get_articles_by_iid(), sem param iid deve
