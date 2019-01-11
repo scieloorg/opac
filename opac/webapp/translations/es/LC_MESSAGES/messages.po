@@ -1724,7 +1724,7 @@ msgstr "Lea"
 
 #: opac/webapp/templates/includes/footer.html:38
 msgid "a Declaração de Acesso Aberto"
-msgstr "a Declaración de Acceso abierto"
+msgstr "la Declaración de Acceso abierto"
 
 #: opac/webapp/templates/issue/grid.html:4
 msgid "Fascículos"
