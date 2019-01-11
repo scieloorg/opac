@@ -784,26 +784,27 @@ class ArticleControllerTestCase(BaseTestCase):
         self._make_one(attrib={
             '_id': '012ijs9y24',
             'issue': '90210j83',
+            'order': '14',
             'journal': 'oak,ajimn1'
         })
-
         self._make_one(attrib={
             '_id': '2183ikos90',
             'issue': '90210j83',
+            'order': '12',
             'journal': 'oak,ajimn1'
         })
-
         self._make_one(attrib={
             '_id': '9298wjso89',
             'issue': '90210j82',
+            'order': '13',
             'journal': 'oak,ajimn1'
         })
 
-        expected = ['012ijs9y24', '2183ikos90']
+        expected = ['2183ikos90', '012ijs9y24', ]
 
         articles = [article.id for article in controllers.get_articles_by_iid('90210j83')]
 
-        self.assertListEqual(sorted(articles), sorted(expected))
+        self.assertListEqual(articles, expected)
 
     def test_get_articles_by_iid_from_aop_issue(self):
         """
