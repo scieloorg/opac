@@ -1407,7 +1407,7 @@ msgstr "Thematic"
 
 #: opac/webapp/templates/collection/index.html:93
 msgid "Números <span>mais recentes</span>"
-msgstr ""
+msgstr "<span>Latest</span> issues"
 
 #: opac/webapp/templates/collection/index.html:137
 msgid "em perspectiva"
