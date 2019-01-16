@@ -799,8 +799,7 @@ def get_articles_by_iid(iid, **kwargs):
 
     articles = Article.objects(issue=iid, **kwargs).order_by('order')
     if is_aop_issue(iid) or is_open_publication(articles):
-        ordered = sorted([(article.publication_date, article) for article in articles], reverse=True)
-        return [article for pubdate, article in ordered]
+        return articles.order_by('-publication_date')
     return articles
 
 
