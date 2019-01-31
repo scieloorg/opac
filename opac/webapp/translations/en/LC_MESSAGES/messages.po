@@ -1914,7 +1914,7 @@ msgstr "ISSN online version:"
 
 #: opac/webapp/templates/journal/includes/header.html:75
 msgid "Novo título:"
-msgstr ""
+msgstr "New title:"
 
 #: opac/webapp/templates/journal/includes/header.html:122
 msgid "Siga-nos"

@@ -1916,7 +1916,7 @@ msgstr "Versión on-line ISSN:"
 
 #: opac/webapp/templates/journal/includes/header.html:75
 msgid "Novo título:"
-msgstr ""
+msgstr "Nuevo titulo:"
 
 #: opac/webapp/templates/journal/includes/header.html:122
 msgid "Siga-nos"

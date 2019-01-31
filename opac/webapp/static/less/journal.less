@@ -37,6 +37,7 @@
 		}
 		.theme {
 			color: #7b7469;
+			display:block;
 		}
 		h1 {
 			color: @Blue;
@@ -45,9 +46,18 @@
 		}
 		.publisher {
 			color: @DarkBlue;
+			text-overflow: ellipsis !important;
+    		width: 450px;
+    		white-space: nowrap;
+    		overflow: hidden;
+    		display: block;
 
 			.scielo {
 				color: #d92929;
+			}
+
+			& + br {
+				display:none;
 			}
 		}
 		.issn,
@@ -55,6 +65,14 @@
 			display: block;
 			color: #7b7469;
 			font-size: .9em;
+
+			.issnLabel{
+				display:inline-block;
+
+				& + br{
+					display:none; 
+				}
+			}
 		}
 		.col-md-9 {
 			padding-left: 0;
@@ -683,6 +701,18 @@
 		}
 		p {
 			margin: 0 0 15px 20px;
+
+			a{
+				overflow-wrap: break-word;
+				word-wrap: break-word;
+				-ms-word-break: break-all;
+				word-break: break-all;
+				word-break: break-word;
+				-ms-hyphens: auto;
+				-moz-hyphens: auto;
+				-webkit-hyphens: auto;
+				hyphens: auto;
+			}
 		}
 		ul {
 			margin: 0 0 15px 35px !important;
