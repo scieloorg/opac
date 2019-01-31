@@ -143,6 +143,9 @@ update_catalog:
 compile_messages:
 	pybabel compile -d opac/webapp/translations
 
+build_i18n:
+	@make make_messages && make update_catalog && make compile_messages
+
 #########
 ## test #
 #########

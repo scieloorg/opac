@@ -70,12 +70,14 @@
             </span>
 
             <!-- Ini - Se houver um outro título-->
-            <span class="otherTitle">
-              <span>Novo título:</span>
-              Título teste
-            </span>
+            {% if journal.next_title %}
+              <span class="otherTitle">
+                <span>{% trans %}Novo título:{% endtrans %}</span>
+                {{ journal.next_title }}
+              </span>
+            {% endif %}
             <!-- Fim - Se houver um outro título-->
-            
+
           </div>
         </div>
       </div>

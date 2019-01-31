@@ -39,20 +39,22 @@
       </a>
     <% } %>
 
-    <% if (!journal.is_active) { %>({% trans %}descontinuado{% endtrans %})<% } %>
-
-    <% if (journal.previous_journal_ref) { %>
-      <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}</span><%- journal.previous_journal_ref %>
+    <% if (!journal.is_active) { %>
+      ({% trans %}descontinuado{% endtrans %})
+        <% if (journal.next_title) { %>
+        <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}
+            <% if (journal.url_new_journal) { %>
+              <a href="<%- journal.url_new_journal %>" class="NewCollectionLink">
+                  <%- journal.next_title %>
+              </a>
+            <% } else { %>
+              <span class="NewCollectionLink">
+                <%- journal.next_title %>
+              </span>
+            <% } %>
+        </span>
+        <% } %>
     <% } %>
 
-
-    <!-- ini se tiver um novo título -->
-     ; <span class="journalPreviousTitle">
-          Continua como 
-          <a href="" class="NewCollectionLink">
-              Novo título
-          </a>
-       </span> 
-    <!-- fim se tiver um novo título -->
   </td>
 </tr>
