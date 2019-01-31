@@ -37,6 +37,7 @@
 		}
 		.theme {
 			color: #7b7469;
+			display:block;
 		}
 		h1 {
 			color: @Blue;
@@ -45,15 +46,32 @@
 		}
 		.publisher {
 			color: @DarkBlue;
+			text-overflow: ellipsis !important;
+    		width: 450px;
+    		white-space: nowrap;
+    		overflow: hidden;
+    		display: block;
 
 			.scielo {
 				color: #d92929;
+			}
+
+			& + br {
+				display:none;
 			}
 		}
 		.issn {
 			display: block;
 			color: #7b7469;
 			font-size: .9em;
+
+			.issnLabel{
+				display:inline-block;
+
+				& + br{
+					display:none; 
+				}
+			}
 		}
 		.col-md-9 {
 			padding-left: 0;
