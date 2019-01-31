@@ -1,4 +1,5 @@
 <div class="slide-item release">
+  <a href="toc/{{ journal.url_last_issue }}">
   <div class="col-md-12">
     <span><b>{{ journal }}</b></span>
       <strong>{% trans%}Ano{% endtrans %}: </strong><b>{{ journal.last_issue.year }}</b></br>
@@ -15,9 +16,10 @@
       {% endif %}
       <div class="pull-right">
         <!-- toc/ deve ser alterado -->
-        <a href="toc/{{ journal.url_last_issue }}">
+        
           <strong>{% trans%}Ver{% endtrans %} &raquo;</strong>
-        </a>
+        
       </div>
   </div>
+  </a>
 </div>
