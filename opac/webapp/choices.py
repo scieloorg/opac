@@ -32,3 +32,11 @@ ISO3166_ALPHA2 = {
     'ar': __('Árabe'),
     'zh': __('Chinês'),
 }
+
+JOURNAL_STATUS = {
+    "current": __("corrente"),
+    "deceased": __("terminado"),
+    "suspended": __("indexação interrompida"),
+    "interrupted": __("indexação interrompida pelo Comitê"),
+    "finished": __("publicação finalizada"),
+}

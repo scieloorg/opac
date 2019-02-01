@@ -30,7 +30,7 @@ from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
 from webapp import dbsql
 from .models import User
-from .choices import INDEX_NAME
+from .choices import INDEX_NAME, JOURNAL_STATUS
 from .utils import utils
 from uuid import uuid4
 
@@ -206,6 +206,7 @@ def get_journal_json_data(journal, language='pt'):
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,
         'next_title': journal.next_title,
+        'status_reason' : str(JOURNAL_STATUS.get(journal.current_status, journal.current_status))
     }
 
     if journal.last_issue:
