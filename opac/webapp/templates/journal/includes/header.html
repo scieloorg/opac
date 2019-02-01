@@ -32,7 +32,7 @@
           {% endif %}
           <div class="col-md-9 col-md-offset-0 col-sm-11 col-sm-offset-1">
             <h1>
-              <div style="outline:0px solid red; margin-left:-5px;">
+              <div style="margin-left:-5px;">
                 <span class="sci-ico-openAccess"></span>
                 <span class="openAccess"> Open Access</span>
               </div>
@@ -68,6 +68,16 @@
                 {{ journal.eletronic_issn }}
               {% endif %}
             </span>
+
+            <!-- Ini - Se houver um outro título-->
+            {% if journal.next_title %}
+              <span class="otherTitle">
+                <span>{% trans %}Novo título:{% endtrans %}</span>
+                {{ journal.next_title }}
+              </span>
+            {% endif %}
+            <!-- Fim - Se houver um outro título-->
+
           </div>
         </div>
       </div>

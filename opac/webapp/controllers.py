@@ -205,6 +205,7 @@ def get_journal_json_data(journal, language='pt'):
         },
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,
+        'next_title': journal.next_title,
     }
 
     if journal.last_issue:
@@ -223,6 +224,11 @@ def get_journal_json_data(journal, language='pt'):
             # verificar uma forma mais legal de gerar essa URL o ideal é fazer isso com url_for
             'url_segment': '%s/%s' % ('toc', journal.url_last_issue)
         }
+
+    if journal.next_title:
+        new_journal = get_journal_by_title(title=journal.next_title)
+        if new_journal:
+            j_data['url_new_journal'] = url_for('main.journal_detail', url_seg=new_journal.url_segment)
 
     return j_data
 
@@ -455,6 +461,21 @@ def get_journal_by_issn(issn, **kwargs):
         raise ValueError(__('Obrigatório um issn.'))
 
     return Journal.objects(Q(print_issn=issn) | Q(eletronic_issn=issn), **kwargs).first()
+
+
+def get_journal_by_title(title):
+    """
+    Retorna um periódico considerando os parâmetros ``title``
+
+    - ``title``: string, title do periódico
+
+    Em caso de não existir itens retorna {}.
+    """
+
+    if not title:
+        raise ValueError(__('Obrigatório um title.'))
+
+    return Journal.objects(Q(title=title)).first()
 
 
 def get_journals_by_jid(jids):
