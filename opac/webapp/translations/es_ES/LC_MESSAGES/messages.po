@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-01-31 15:58+0000\n"
+"POT-Creation-Date: 2019-02-01 19:52+0000\n"
 "PO-Revision-Date: 2016-02-09 09:39-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -117,7 +117,7 @@ msgstr ""
 
 #: opac/webapp/__init__.py:120 opac/webapp/admin/views.py:537
 #: opac/webapp/admin/views.py:609 opac/webapp/templates/issue/grid.html:41
-#: opac/webapp/templates/news/includes/issue_last_row.html:10
+#: opac/webapp/templates/news/includes/issue_last_row.html:11
 msgid "Número"
 msgstr ""
 
@@ -206,135 +206,155 @@ msgstr ""
 msgid "Árabe"
 msgstr ""
 
-#: opac/webapp/controllers.py:342
-msgid "Lista Alfabética"
+#: opac/webapp/choices.py:37
+msgid "corrente"
+msgstr ""
+
+#: opac/webapp/choices.py:38
+msgid "terminado"
+msgstr ""
+
+#: opac/webapp/choices.py:39
+msgid "indexação interrompida"
+msgstr ""
+
+#: opac/webapp/choices.py:40
+msgid "indexação interrompida pelo Comitê"
+msgstr ""
+
+#: opac/webapp/choices.py:41
+msgid "publicação finalizada"
 msgstr ""
 
 #: opac/webapp/controllers.py:346
-msgid "Lista Temática"
+msgid "Lista Alfabética"
 msgstr ""
 
 #: opac/webapp/controllers.py:350
-msgid "Lista Web of Science"
+msgid "Lista Temática"
 msgstr ""
 
 #: opac/webapp/controllers.py:354
+msgid "Lista Web of Science"
+msgstr ""
+
+#: opac/webapp/controllers.py:358
 msgid "Lista by Institution"
 msgstr ""
 
-#: opac/webapp/controllers.py:413
+#: opac/webapp/controllers.py:417
 msgid "Obrigatório um jid."
 msgstr ""
 
-#: opac/webapp/controllers.py:429
+#: opac/webapp/controllers.py:433
 msgid "Obrigatório um acronym."
 msgstr ""
 
-#: opac/webapp/controllers.py:445
+#: opac/webapp/controllers.py:449
 msgid "Obrigatório um url_seg."
 msgstr ""
 
-#: opac/webapp/controllers.py:461
+#: opac/webapp/controllers.py:465
 msgid "Obrigatório um issn."
 msgstr ""
 
-#: opac/webapp/controllers.py:476
+#: opac/webapp/controllers.py:480
 msgid "Obrigatório um title."
 msgstr ""
 
-#: opac/webapp/controllers.py:514 opac/webapp/controllers.py:658
-#: opac/webapp/controllers.py:798
+#: opac/webapp/controllers.py:518 opac/webapp/controllers.py:662
+#: opac/webapp/controllers.py:802
 msgid "Obrigatório uma lista de ids."
 msgstr ""
 
-#: opac/webapp/controllers.py:620 opac/webapp/controllers.py:819
+#: opac/webapp/controllers.py:624 opac/webapp/controllers.py:823
 msgid "Obrigatório um iid."
 msgstr ""
 
-#: opac/webapp/controllers.py:677
+#: opac/webapp/controllers.py:681
 msgid "Obrigatório um jacron e issue_label."
 msgstr ""
 
-#: opac/webapp/controllers.py:690
+#: opac/webapp/controllers.py:694
 msgid "Obrigatório um PID."
 msgstr ""
 
-#: opac/webapp/controllers.py:706
+#: opac/webapp/controllers.py:710
 msgid "Obrigatório um url_seg e url_seg_issue."
 msgstr ""
 
-#: opac/webapp/controllers.py:713
+#: opac/webapp/controllers.py:717
 msgid "Obrigatório um assets_code."
 msgstr ""
 
-#: opac/webapp/controllers.py:716
+#: opac/webapp/controllers.py:720
 msgid "Obrigatório um journal."
 msgstr ""
 
-#: opac/webapp/controllers.py:732
+#: opac/webapp/controllers.py:736
 msgid "Obrigatório um aid."
 msgstr ""
 
-#: opac/webapp/controllers.py:746
+#: opac/webapp/controllers.py:750
 msgid "Obrigatório um url_seg_article."
 msgstr ""
 
-#: opac/webapp/controllers.py:761
+#: opac/webapp/controllers.py:765
 msgid "Obrigatório um iid and url_seg_article."
 msgstr ""
 
-#: opac/webapp/controllers.py:857
+#: opac/webapp/controllers.py:861
 msgid "Obrigatório um pid."
 msgstr ""
 
-#: opac/webapp/controllers.py:870
+#: opac/webapp/controllers.py:874
 msgid "Obrigatório um aop_pid."
 msgstr ""
 
-#: opac/webapp/controllers.py:881
+#: opac/webapp/controllers.py:885
 msgid "Parámetro obrigatório: issue_iid."
 msgstr ""
 
-#: opac/webapp/controllers.py:929
+#: opac/webapp/controllers.py:933
 msgid "Parâmetro email deve ser uma string"
 msgstr ""
 
-#: opac/webapp/controllers.py:940
+#: opac/webapp/controllers.py:944
 msgid "Parâmetro email deve ser uma inteiro"
 msgstr ""
 
-#: opac/webapp/controllers.py:952 opac/webapp/controllers.py:966
+#: opac/webapp/controllers.py:956 opac/webapp/controllers.py:970
 #, python-format
 msgid "Usuário deve ser do tipo %s"
 msgstr ""
 
-#: opac/webapp/controllers.py:1022
+#: opac/webapp/controllers.py:1026
 msgid "Compartilhamento de link SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1023
+#: opac/webapp/controllers.py:1027
 #, python-format
 msgid "O usuário %s compartilha este link: %s, da SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1031 opac/webapp/controllers.py:1067
-#: opac/webapp/controllers.py:1089
+#: opac/webapp/controllers.py:1035 opac/webapp/controllers.py:1071
+#: opac/webapp/controllers.py:1093
 msgid "Mensagem enviada!"
 msgstr ""
 
-#: opac/webapp/controllers.py:1048
+#: opac/webapp/controllers.py:1052
 msgid "[Erro] Erro informado pelo usuário no site SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1051
+#: opac/webapp/controllers.py:1055
 msgid "aplicação"
 msgstr ""
 
-#: opac/webapp/controllers.py:1053
+#: opac/webapp/controllers.py:1057
 msgid "conteúdo"
 msgstr ""
 
-#: opac/webapp/controllers.py:1058
+#: opac/webapp/controllers.py:1062
 #, python-format
 msgid ""
 "O usuário <b>%s</b> com e-mail: <b>%s</b>, informa que existe um erro na "
@@ -342,16 +362,16 @@ msgid ""
 " %s"
 msgstr ""
 
-#: opac/webapp/controllers.py:1079
+#: opac/webapp/controllers.py:1083
 msgid "Contato de usuário via site SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1081
+#: opac/webapp/controllers.py:1085
 #, python-format
 msgid "O usuário %s, com e-mail: %s, entra em contato com a seguinte mensagem:"
 msgstr ""
 
-#: opac/webapp/controllers.py:1113
+#: opac/webapp/controllers.py:1117
 msgid "Obrigatório um slug_name."
 msgstr ""
 
@@ -723,7 +743,7 @@ msgstr ""
 #: opac/webapp/admin/views.py:536
 #: opac/webapp/templates/collection/list_feed_content.html:3
 #: opac/webapp/templates/issue/grid.html:40
-#: opac/webapp/templates/news/includes/issue_last_row.html:6
+#: opac/webapp/templates/news/includes/issue_last_row.html:7
 msgid "Volume"
 msgstr ""
 
@@ -751,7 +771,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:25
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:68
 #: opac/webapp/templates/issue/grid.html:39
-#: opac/webapp/templates/news/includes/issue_last_row.html:4
+#: opac/webapp/templates/news/includes/issue_last_row.html:5
 msgid "Ano"
 msgstr ""
 
@@ -1403,7 +1423,6 @@ msgstr ""
 msgid "Nº"
 msgstr ""
 
-#: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:43
 #: opac/webapp/templates/collection/list_feed_content.html:6
 msgid "descontinuado"
 msgstr ""
@@ -1938,11 +1957,11 @@ msgstr ""
 msgid "número especial"
 msgstr ""
 
-#: opac/webapp/templates/news/includes/issue_last_row.html:14
+#: opac/webapp/templates/news/includes/issue_last_row.html:15
 msgid "Suplemento"
 msgstr ""
 
-#: opac/webapp/templates/news/includes/issue_last_row.html:19
+#: opac/webapp/templates/news/includes/issue_last_row.html:20
 msgid "Ver"
 msgstr ""
 
