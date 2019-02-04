@@ -216,7 +216,7 @@ msgstr "current"
 
 #: opac/webapp/choices.py:38
 msgid "terminado"
-msgstr "ceased"
+msgstr "deceased"
 
 #: opac/webapp/choices.py:39
 msgid "indexação interrompida"
