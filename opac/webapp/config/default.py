@@ -400,7 +400,7 @@ PINGDOM_VISITOR_INSIGHTS_JS_SRC = os.environ.get('OPAC_PINGDOM_VISITOR_INSIGHTS_
 
 # Google Recaptcha
 GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('OPAC_GOOGLE_RECAPTCHA_SECRET_KEY', "")
-GOOGLE_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_RECAPTCHA_URL', "https://www.google.com/recaptcha/api.js")
+GOOGLE_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_RECAPTCHA_URL', "//www.google.com/recaptcha/api.js")
 GOOGLE_VERIFY_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_URL', "https://www.google.com/recaptcha/api/siteverify")
 GOOGLE_VERIFY_RECAPTCHA_KEY = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_KEY', "")
 
