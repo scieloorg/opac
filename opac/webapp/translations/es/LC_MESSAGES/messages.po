@@ -1432,6 +1432,10 @@ msgstr "Alfabética"
 msgid "Temática"
 msgstr "Temática"
 
+#: opac/webapp/templates/collection/index.html:77
+msgid "Busca por periódicos"
+msgstr "Búsqueda por periódicos"
+
 #: opac/webapp/templates/collection/index.html:93
 msgid "Números <span>mais recentes</span>"
 msgstr "Números <span>más recientes</span>"

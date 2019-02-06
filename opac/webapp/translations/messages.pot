@@ -1413,6 +1413,10 @@ msgstr ""
 msgid "em perspectiva"
 msgstr ""
 
+#: opac/webapp/templates/collection/index.html:77
+msgid "Busca por periódicos"
+msgstr ""
+
 #: opac/webapp/templates/collection/list_feed_content.html:1
 msgid "Último número"
 msgstr ""
