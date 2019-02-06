@@ -227,9 +227,7 @@ def get_journal_json_data(journal, language='pt'):
         }
 
     if journal.next_title:
-        new_journal = get_journal_by_title(title=journal.next_title)
-        if new_journal:
-            j_data['url_new_journal'] = url_for('main.journal_detail', url_seg=new_journal.url_segment)
+        j_data['url_new_journal'] = journal.url_new_journal
 
     return j_data
 

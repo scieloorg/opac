@@ -73,10 +73,23 @@
             {% if journal.next_title %}
               <span class="otherTitle">
                 <span>{% trans %}Novo título:{% endtrans %}</span>
-                {{ journal.next_title }}
+                  <a href="{{ journal.url_new_journal }}" class="NewCollectionLink">
+                      {{ journal.next_title }}
+                  </a>
               </span>
             {% endif %}
             <!-- Fim - Se houver um outro título-->
+
+            <!-- Ini - Se houver um outro título antigo -->
+            {% if journal.previous_journal_ref %}
+              <span class="otherTitle">
+                <span>{% trans %}Título anterior:{% endtrans %}</span>
+                  <a href="{{ journal.url_previous_journal }}" class="NewCollectionLink">
+                      {{ journal.previous_journal_ref }}
+                  </a>
+              </span>
+            {% endif %}
+             <!-- Fim - Se houver um outro título antigo-->
 
           </div>
         </div>
