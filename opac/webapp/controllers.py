@@ -227,7 +227,7 @@ def get_journal_json_data(journal, language='pt'):
         }
 
     if journal.next_title:
-        j_data['url_new_journal'] = journal.url_new_journal
+        j_data['url_next_journal'] = journal.url_next_journal
 
     return j_data
 
