@@ -68,6 +68,18 @@
               <li>
                 <a href="{{ url_for('.collection_list') }}#theme">{% trans %}Temática{% endtrans %}</a>
               </li>
+              <li class="periodicals-search">
+
+                <!-- Form search periódicos -->
+                <div class="typeahead__container">
+                  <div class="typeahead__field">
+                    <div class="typeahead__query">
+                      <input placeholder="{% trans %}Busca por periódicos{% endtrans %}" type="search" class="form-control" autocomplete="off" name="tst" id="tst">
+                    </div>
+                  </div>
+                </div>
+
+              </li>
 {#               <li>
                 <a href="{{ url_for('.collection_list') }}#publisher">{% trans %}Por instituição{% endtrans %}</a>
               </li>

@@ -352,6 +352,45 @@ var Portal = {
 				var modal = $(this);
 				modal.find('.modal-title').text(title);
 			});
+
+			$('#tst').typeahead({
+				order: "asc",
+				minLength: 3,
+				dynamic: true,
+				delay: 500,
+				emptyTemplate: 'Nenhum periódico encontrado para o temo: "{{query}}"',
+				source: {
+					journals: {
+						display: "title",
+						href: "{{link}}",
+						ajax: function (query) {
+							return {
+								type: "GET",
+								url: "/journals/search/alpha/ajax/",
+								contentType: "application/json",
+								data: {
+									query: "{{query}}",
+									page: "1",
+									query_filter: "current"
+								},
+								callback: {
+									done: function (data) {
+										var rtn = [];
+										for(var i=0, l=data.journals.length;i<l;i++) {
+											rtn.push({
+												title: data.journals[i].title,
+												link: data.journals[i].links.detail
+											});
+										}
+										console.log(rtn);
+										return rtn;
+									}
+								}
+							};
+						}
+					}
+				}
+			});
 		},
 		Slider: function() {
 			var id = $(this).attr("id"),

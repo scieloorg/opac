@@ -31,23 +31,25 @@
 	.levelMenu {
 		background: #fafaf8;
 		padding: 10px 15px;
-	}
-	li {
-		display: inline-block;
-		height: 58px;
-		text-align: center;
-		background: url(../img/dashline.v.png) top right repeat-y;
-		.border-box;
 
-		&:last-child {
-			background: none;
-		}
+		>ul{
+			>li{
+				display: inline-block;
+				text-align: center;
+				background: url(../img/dashline.v.png) top right repeat-y;
+				.border-box;
 
-		a {
-			padding: 0 12px;
-			font-size: 1.1em;
-			font-weight: bold;
-			line-height: 58px;
+				&:last-child {
+					background: none;
+				}
+
+				>a{
+					padding: 0 12px;
+					font-size: 1.1em;
+					font-weight: bold;
+					line-height: 58px;
+				}
+			}
 		}
 	}
 	.search {

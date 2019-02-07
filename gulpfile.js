@@ -57,6 +57,9 @@ var target_src = {
             path.join(paths['static_js'], 'vendor/jquery-1.11.0.min.js'),
             path.join(paths['static_js'], 'vendor/bootstrap.js'),
             path.join(paths['static_js'], 'vendor/jquery-ui.min.js'),
+
+            path.join(paths['static_js'], 'vendor/jquery.typeahead.min.js'),
+
             path.join(paths['static_js'], 'plugins.js'),
             path.join(paths['static_js'], 'main.js'),
             // nossos JS:
@@ -86,7 +89,8 @@ var target_src = {
     'less': {
         'scielo-bundle': [
             path.join(paths['static_less'], 'scielo-bundle.less'),
-            path.join(paths['static_less'], 'style.less')
+            path.join(paths['static_less'], 'style.less'),
+            path.join(paths['static_less'], 'jquery.typeahead.less')
         ],
         'scielo-article': [
             path.join(paths['static_less'], 'scielo-article.less')
