@@ -358,11 +358,11 @@ var Portal = {
 				minLength: 3,
 				dynamic: true,
 				delay: 500,
-				emptyTemplate: 'Sem jornais para "{{query}}"',
+				emptyTemplate: 'Nenhum periódico encontrado para o temo: "{{query}}"',
 				source: {
 					journals: {
 						display: "title",
-						href: "http://www.scielosp.org{{link}}",
+						href: "{{link}}",
 						ajax: function (query) {
 							return {
 								type: "GET",
@@ -386,7 +386,7 @@ var Portal = {
 										return rtn;
 									}
 								}
-							}
+							};
 						}
 					}
 				}
