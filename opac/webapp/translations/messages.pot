@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-01 19:52+0000\n"
+"POT-Creation-Date: 2019-02-06 15:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -224,135 +224,135 @@ msgstr ""
 msgid "publicação finalizada"
 msgstr ""
 
-#: opac/webapp/controllers.py:346
+#: opac/webapp/controllers.py:341
 msgid "Lista Alfabética"
 msgstr ""
 
-#: opac/webapp/controllers.py:350
+#: opac/webapp/controllers.py:345
 msgid "Lista Temática"
 msgstr ""
 
-#: opac/webapp/controllers.py:354
+#: opac/webapp/controllers.py:349
 msgid "Lista Web of Science"
 msgstr ""
 
-#: opac/webapp/controllers.py:358
+#: opac/webapp/controllers.py:353
 msgid "Lista by Institution"
 msgstr ""
 
-#: opac/webapp/controllers.py:417
+#: opac/webapp/controllers.py:412
 msgid "Obrigatório um jid."
 msgstr ""
 
-#: opac/webapp/controllers.py:433
+#: opac/webapp/controllers.py:428
 msgid "Obrigatório um acronym."
 msgstr ""
 
-#: opac/webapp/controllers.py:449
+#: opac/webapp/controllers.py:444
 msgid "Obrigatório um url_seg."
 msgstr ""
 
-#: opac/webapp/controllers.py:465
+#: opac/webapp/controllers.py:460
 msgid "Obrigatório um issn."
 msgstr ""
 
-#: opac/webapp/controllers.py:480
+#: opac/webapp/controllers.py:475
 msgid "Obrigatório um title."
 msgstr ""
 
-#: opac/webapp/controllers.py:518 opac/webapp/controllers.py:662
-#: opac/webapp/controllers.py:802
+#: opac/webapp/controllers.py:513 opac/webapp/controllers.py:657
+#: opac/webapp/controllers.py:797
 msgid "Obrigatório uma lista de ids."
 msgstr ""
 
-#: opac/webapp/controllers.py:624 opac/webapp/controllers.py:823
+#: opac/webapp/controllers.py:619 opac/webapp/controllers.py:818
 msgid "Obrigatório um iid."
 msgstr ""
 
-#: opac/webapp/controllers.py:681
+#: opac/webapp/controllers.py:676
 msgid "Obrigatório um jacron e issue_label."
 msgstr ""
 
-#: opac/webapp/controllers.py:694
+#: opac/webapp/controllers.py:689
 msgid "Obrigatório um PID."
 msgstr ""
 
-#: opac/webapp/controllers.py:710
+#: opac/webapp/controllers.py:705
 msgid "Obrigatório um url_seg e url_seg_issue."
 msgstr ""
 
-#: opac/webapp/controllers.py:717
+#: opac/webapp/controllers.py:712
 msgid "Obrigatório um assets_code."
 msgstr ""
 
-#: opac/webapp/controllers.py:720
+#: opac/webapp/controllers.py:715
 msgid "Obrigatório um journal."
 msgstr ""
 
-#: opac/webapp/controllers.py:736
+#: opac/webapp/controllers.py:731
 msgid "Obrigatório um aid."
 msgstr ""
 
-#: opac/webapp/controllers.py:750
+#: opac/webapp/controllers.py:745
 msgid "Obrigatório um url_seg_article."
 msgstr ""
 
-#: opac/webapp/controllers.py:765
+#: opac/webapp/controllers.py:760
 msgid "Obrigatório um iid and url_seg_article."
 msgstr ""
 
-#: opac/webapp/controllers.py:861
+#: opac/webapp/controllers.py:856
 msgid "Obrigatório um pid."
 msgstr ""
 
-#: opac/webapp/controllers.py:874
+#: opac/webapp/controllers.py:869
 msgid "Obrigatório um aop_pid."
 msgstr ""
 
-#: opac/webapp/controllers.py:885
+#: opac/webapp/controllers.py:880
 msgid "Parámetro obrigatório: issue_iid."
 msgstr ""
 
-#: opac/webapp/controllers.py:933
+#: opac/webapp/controllers.py:928
 msgid "Parâmetro email deve ser uma string"
 msgstr ""
 
-#: opac/webapp/controllers.py:944
+#: opac/webapp/controllers.py:939
 msgid "Parâmetro email deve ser uma inteiro"
 msgstr ""
 
-#: opac/webapp/controllers.py:956 opac/webapp/controllers.py:970
+#: opac/webapp/controllers.py:951 opac/webapp/controllers.py:965
 #, python-format
 msgid "Usuário deve ser do tipo %s"
 msgstr ""
 
-#: opac/webapp/controllers.py:1026
+#: opac/webapp/controllers.py:1021
 msgid "Compartilhamento de link SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1027
+#: opac/webapp/controllers.py:1022
 #, python-format
 msgid "O usuário %s compartilha este link: %s, da SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1035 opac/webapp/controllers.py:1071
-#: opac/webapp/controllers.py:1093
+#: opac/webapp/controllers.py:1030 opac/webapp/controllers.py:1066
+#: opac/webapp/controllers.py:1088
 msgid "Mensagem enviada!"
 msgstr ""
 
-#: opac/webapp/controllers.py:1052
+#: opac/webapp/controllers.py:1047
 msgid "[Erro] Erro informado pelo usuário no site SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1055
+#: opac/webapp/controllers.py:1050
 msgid "aplicação"
 msgstr ""
 
-#: opac/webapp/controllers.py:1057
+#: opac/webapp/controllers.py:1052
 msgid "conteúdo"
 msgstr ""
 
-#: opac/webapp/controllers.py:1062
+#: opac/webapp/controllers.py:1057
 #, python-format
 msgid ""
 "O usuário <b>%s</b> com e-mail: <b>%s</b>, informa que existe um erro na "
@@ -360,16 +360,16 @@ msgid ""
 " %s"
 msgstr ""
 
-#: opac/webapp/controllers.py:1083
+#: opac/webapp/controllers.py:1078
 msgid "Contato de usuário via site SciELO"
 msgstr ""
 
-#: opac/webapp/controllers.py:1085
+#: opac/webapp/controllers.py:1080
 #, python-format
 msgid "O usuário %s, com e-mail: %s, entra em contato com a seguinte mensagem:"
 msgstr ""
 
-#: opac/webapp/controllers.py:1117
+#: opac/webapp/controllers.py:1112
 msgid "Obrigatório um slug_name."
 msgstr ""
 
@@ -1149,7 +1149,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:7
 #: opac/webapp/templates/issue/includes/alternative_header.html:121
 #: opac/webapp/templates/journal/includes/alternative_header.html:117
-#: opac/webapp/templates/journal/includes/header.html:92
+#: opac/webapp/templates/journal/includes/header.html:105
 msgid "Submissão de manuscritos"
 msgstr ""
 
@@ -1157,7 +1157,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:16
 #: opac/webapp/templates/issue/includes/alternative_header.html:127
 #: opac/webapp/templates/journal/includes/alternative_header.html:123
-#: opac/webapp/templates/journal/includes/header.html:98
+#: opac/webapp/templates/journal/includes/header.html:111
 msgid "Sobre o periódico"
 msgstr ""
 
@@ -1165,7 +1165,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:10
 #: opac/webapp/templates/issue/includes/alternative_header.html:132
 #: opac/webapp/templates/journal/includes/alternative_header.html:128
-#: opac/webapp/templates/journal/includes/header.html:103
+#: opac/webapp/templates/journal/includes/header.html:116
 msgid "Corpo Editorial"
 msgstr ""
 
@@ -1173,7 +1173,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:13
 #: opac/webapp/templates/issue/includes/alternative_header.html:137
 #: opac/webapp/templates/journal/includes/alternative_header.html:133
-#: opac/webapp/templates/journal/includes/header.html:108
+#: opac/webapp/templates/journal/includes/header.html:121
 msgid "Instruções aos autores"
 msgstr ""
 
@@ -1181,7 +1181,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:19
 #: opac/webapp/templates/issue/includes/alternative_header.html:142
 #: opac/webapp/templates/journal/includes/alternative_header.html:138
-#: opac/webapp/templates/journal/includes/header.html:114
+#: opac/webapp/templates/journal/includes/header.html:127
 msgid "Contato"
 msgstr ""
 
@@ -1910,7 +1910,11 @@ msgstr ""
 msgid "Novo título:"
 msgstr ""
 
-#: opac/webapp/templates/journal/includes/header.html:122
+#: opac/webapp/templates/journal/includes/header.html:86
+msgid "Título anterior:"
+msgstr ""
+
+#: opac/webapp/templates/journal/includes/header.html:135
 msgid "Siga-nos"
 msgstr ""
 

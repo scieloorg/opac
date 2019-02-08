@@ -43,8 +43,8 @@
       (<%- journal.status_reason %>)
         <% if (journal.next_title) { %>
         <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}
-            <% if (journal.url_new_journal) { %>
-              <a href="<%- journal.url_new_journal %>" class="NewCollectionLink">
+            <% if (journal.url_next_journal) { %>
+              <a href="<%- journal.url_next_journal %>" class="NewCollectionLink">
                   <%- journal.next_title %>
               </a>
             <% } else { %>

@@ -226,10 +226,8 @@ def get_journal_json_data(journal, language='pt'):
             'url_segment': '%s/%s' % ('toc', journal.url_last_issue)
         }
 
-    if journal.next_title:
-        new_journal = get_journal_by_title(title=journal.next_title)
-        if new_journal:
-            j_data['url_new_journal'] = url_for('main.journal_detail', url_seg=new_journal.url_segment)
+    if journal.url_next_journal:
+        j_data['url_next_journal'] = url_for('main.journal_detail', url_seg=journal.url_next_journal)
 
     return j_data
 
