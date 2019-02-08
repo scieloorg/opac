@@ -80,3 +80,7 @@ opac/webapp/media/images/*.*
 
 # nodejs/gulp/etc
 node_modules/
+
+# For dev
+*.yml
+data/resis-cache-data-dev/*
