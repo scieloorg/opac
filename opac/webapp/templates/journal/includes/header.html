@@ -73,9 +73,15 @@
             {% if journal.next_title %}
               <span class="otherTitle">
                 <span>{% trans %}Novo título:{% endtrans %}</span>
-                  <a href="{{ url_for('.journal_detail', url_seg=journal.url_next_journal) }}" class="NewCollectionLink">
+                  {% if journal.url_next_journal %}
+                    <a href="{{ url_for('.journal_detail', url_seg=journal.url_next_journal) }}" class="NewCollectionLink">
+                        {{ journal.next_title }}
+                    </a>
+                  {% else %}
+                    <span class="NewCollectionLink">
                       {{ journal.next_title }}
-                  </a>
+                    </span>
+                  {% endif %}
               </span>
             {% endif %}
             <!-- Fim - Se houver um outro título-->
@@ -84,9 +90,15 @@
             {% if journal.previous_journal_ref %}
               <span class="otherTitle">
                 <span>{% trans %}Título anterior:{% endtrans %}</span>
-                  <a href="{{ url_for('.journal_detail', url_seg=journal.url_previous_journal) }}" class="NewCollectionLink">
+                  {% if journal.url_previous_journal %}
+                    <a href="{{ url_for('.journal_detail', url_seg=journal.url_previous_journal) }}" class="NewCollectionLink">
+                        {{ journal.previous_journal_ref }}
+                    </a>
+                  {% else %}
+                    <span class="NewCollectionLink">
                       {{ journal.previous_journal_ref }}
-                  </a>
+                    </span>
+                  {% endif %}
               </span>
             {% endif %}
              <!-- Fim - Se houver um outro título antigo-->

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-06 15:41+0000\n"
+"POT-Creation-Date: 2019-02-08 14:16-0200\n"
 "PO-Revision-Date: 2018-03-06 19:50+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: en\n"
@@ -1172,7 +1172,7 @@ msgstr "Go to the home page of the collection:"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:7
 #: opac/webapp/templates/issue/includes/alternative_header.html:121
 #: opac/webapp/templates/journal/includes/alternative_header.html:117
-#: opac/webapp/templates/journal/includes/header.html:105
+#: opac/webapp/templates/journal/includes/header.html:117
 msgid "Submissão de manuscritos"
 msgstr "Submission of manuscripts"
 
@@ -1180,7 +1180,7 @@ msgstr "Submission of manuscripts"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:16
 #: opac/webapp/templates/issue/includes/alternative_header.html:127
 #: opac/webapp/templates/journal/includes/alternative_header.html:123
-#: opac/webapp/templates/journal/includes/header.html:111
+#: opac/webapp/templates/journal/includes/header.html:123
 msgid "Sobre o periódico"
 msgstr "About the journal"
 
@@ -1188,7 +1188,7 @@ msgstr "About the journal"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:10
 #: opac/webapp/templates/issue/includes/alternative_header.html:132
 #: opac/webapp/templates/journal/includes/alternative_header.html:128
-#: opac/webapp/templates/journal/includes/header.html:116
+#: opac/webapp/templates/journal/includes/header.html:128
 msgid "Corpo Editorial"
 msgstr "Editorial Board"
 
@@ -1196,7 +1196,7 @@ msgstr "Editorial Board"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:13
 #: opac/webapp/templates/issue/includes/alternative_header.html:137
 #: opac/webapp/templates/journal/includes/alternative_header.html:133
-#: opac/webapp/templates/journal/includes/header.html:121
+#: opac/webapp/templates/journal/includes/header.html:133
 msgid "Instruções aos autores"
 msgstr "Instructions to authors"
 
@@ -1204,7 +1204,7 @@ msgstr "Instructions to authors"
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:19
 #: opac/webapp/templates/issue/includes/alternative_header.html:142
 #: opac/webapp/templates/journal/includes/alternative_header.html:138
-#: opac/webapp/templates/journal/includes/header.html:127
+#: opac/webapp/templates/journal/includes/header.html:139
 msgid "Contato"
 msgstr "Contact"
 
@@ -1935,11 +1935,11 @@ msgstr "ISSN online version:"
 msgid "Novo título:"
 msgstr "New title:"
 
-#: opac/webapp/templates/journal/includes/header.html:86
+#: opac/webapp/templates/journal/includes/header.html:92
 msgid "Título anterior:"
 msgstr "Previous title"
 
-#: opac/webapp/templates/journal/includes/header.html:135
+#: opac/webapp/templates/journal/includes/header.html:147
 msgid "Siga-nos"
 msgstr "Follow us"
 
