@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-06 15:41+0000\n"
+"POT-Creation-Date: 2019-02-08 14:16-0200\n"
 "PO-Revision-Date: 2016-02-09 09:39-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_MX\n"
@@ -1151,7 +1151,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:7
 #: opac/webapp/templates/issue/includes/alternative_header.html:121
 #: opac/webapp/templates/journal/includes/alternative_header.html:117
-#: opac/webapp/templates/journal/includes/header.html:105
+#: opac/webapp/templates/journal/includes/header.html:117
 msgid "Submissão de manuscritos"
 msgstr ""
 
@@ -1159,7 +1159,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:16
 #: opac/webapp/templates/issue/includes/alternative_header.html:127
 #: opac/webapp/templates/journal/includes/alternative_header.html:123
-#: opac/webapp/templates/journal/includes/header.html:111
+#: opac/webapp/templates/journal/includes/header.html:123
 msgid "Sobre o periódico"
 msgstr ""
 
@@ -1167,7 +1167,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:10
 #: opac/webapp/templates/issue/includes/alternative_header.html:132
 #: opac/webapp/templates/journal/includes/alternative_header.html:128
-#: opac/webapp/templates/journal/includes/header.html:116
+#: opac/webapp/templates/journal/includes/header.html:128
 msgid "Corpo Editorial"
 msgstr ""
 
@@ -1175,7 +1175,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:13
 #: opac/webapp/templates/issue/includes/alternative_header.html:137
 #: opac/webapp/templates/journal/includes/alternative_header.html:133
-#: opac/webapp/templates/journal/includes/header.html:121
+#: opac/webapp/templates/journal/includes/header.html:133
 msgid "Instruções aos autores"
 msgstr ""
 
@@ -1183,7 +1183,7 @@ msgstr ""
 #: opac/webapp/templates/collection/includes/tmpl_journal_list_row.html:19
 #: opac/webapp/templates/issue/includes/alternative_header.html:142
 #: opac/webapp/templates/journal/includes/alternative_header.html:138
-#: opac/webapp/templates/journal/includes/header.html:127
+#: opac/webapp/templates/journal/includes/header.html:139
 msgid "Contato"
 msgstr ""
 
@@ -1912,11 +1912,11 @@ msgstr ""
 msgid "Novo título:"
 msgstr ""
 
-#: opac/webapp/templates/journal/includes/header.html:86
+#: opac/webapp/templates/journal/includes/header.html:92
 msgid "Título anterior:"
 msgstr ""
 
-#: opac/webapp/templates/journal/includes/header.html:135
+#: opac/webapp/templates/journal/includes/header.html:147
 msgid "Siga-nos"
 msgstr ""
 
