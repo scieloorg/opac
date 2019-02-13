@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-08 14:16-0200\n"
+"POT-Creation-Date: 2019-02-12 20:09+0000\n"
 "PO-Revision-Date: 2018-03-07 00:47+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: es\n"
@@ -1402,8 +1402,8 @@ msgid "artigos"
 msgstr "artículos"
 
 #: opac/webapp/templates/collection/index.html:39
-msgid "citações"
-msgstr "citaciones"
+msgid "referências"
+msgstr "referencias"
 
 #: opac/webapp/templates/collection/index.html:45
 msgid "Downloads"
@@ -1436,11 +1436,11 @@ msgstr "Temática"
 msgid "Busca por periódicos"
 msgstr "Búsqueda por periódicos"
 
-#: opac/webapp/templates/collection/index.html:93
+#: opac/webapp/templates/collection/index.html:105
 msgid "Números <span>mais recentes</span>"
 msgstr "Números <span>más recientes</span>"
 
-#: opac/webapp/templates/collection/index.html:137
+#: opac/webapp/templates/collection/index.html:149
 msgid "em perspectiva"
 msgstr "en perspectiva"
 
@@ -2028,4 +2028,10 @@ msgstr "Continúe leyendo"
 
 #~ msgid "Citados no"
 #~ msgstr "Citados en"
+
+#~ msgid "referências"
+#~ msgstr "referencias"
+
+#~ msgid "citações"
+#~ msgstr ""
 
