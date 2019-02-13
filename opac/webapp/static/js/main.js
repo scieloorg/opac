@@ -1106,6 +1106,15 @@ var Portal = {
 					});
 				}
 			}
+		},
+		publicatorName: function(){
+			var nome = $(".namePlublisher").text();
+			var qtdname = nome.length;
+
+			if (qtdname >= 56){
+				$(".namePlublisher").attr( "data-toggle", "tooltip" );
+				$(".namePlublisher").attr( "title", nome );
+			}	
 		}
 	};
 
@@ -1165,6 +1174,7 @@ var Cookie = {
 
 $(function() {
 
+
 	Portal.Init();
 
 	if($(".searchForm").length)
@@ -1188,5 +1198,8 @@ $(function() {
 	if($(".portal .collectionList").length)
 		var hash = window.location.hash;
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
+
+	if($(".namePlublisher").length)
+		Journal.publicatorName();
 
 });
