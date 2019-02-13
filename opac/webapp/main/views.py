@@ -193,10 +193,10 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None, lang=None):
-    language = lang or session.get('lang', get_locale())
+def about_collection(slug_name=None):
+    language = session.get('lang', get_locale())
 
     context = {}
     page = None
@@ -204,7 +204,7 @@ def about_collection(slug_name=None, lang=None):
         # caso seja uma página
         page = controllers.get_page_by_slug_name(slug_name, language)
         if not page:
-            abort(404, _('Página não encontrada'))
+            return redirect(url_for('main.about_collection'))
         context['page'] = page
     else:
         # caso não seja uma página é uma lista
