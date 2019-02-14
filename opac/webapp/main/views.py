@@ -193,10 +193,10 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None, lang=None):
-    language = lang or session.get('lang', get_locale())
+def about_collection(slug_name=None):
+    language = session.get('lang', get_locale())
 
     context = {}
     page = None
