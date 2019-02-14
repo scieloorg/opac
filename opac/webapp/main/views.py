@@ -204,7 +204,7 @@ def about_collection(slug_name=None):
         # caso seja uma página
         page = controllers.get_page_by_slug_name(slug_name, language)
         if not page:
-            return redirect(url_for('main.about_collection'))
+            abort(404, _('Página não encontrada'))
         context['page'] = page
     else:
         # caso não seja uma página é uma lista

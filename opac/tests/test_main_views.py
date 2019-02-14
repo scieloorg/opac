@@ -1298,4 +1298,4 @@ class PageTestCase(BaseTestCase):
             unknown_page_name = 'xxjfsfadfa0k2qhs8slwnui8'
             response = self.client.get(url_for('main.about_collection',
                                        slug_name=unknown_page_name))
-            self.assertStatus(response, 302)
+            self.assertStatus(response, 404)
