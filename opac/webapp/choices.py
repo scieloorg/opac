@@ -40,3 +40,15 @@ JOURNAL_STATUS = {
     "interrupted": __("indexação interrompida pelo Comitê"),
     "finished": __("publicação finalizada"),
 }
+
+STUDY_AREAS = {
+    "AGRICULTURAL SCIENCES": __("Ciências Agrárias"),
+    "APPLIED SOCIAL SCIENCES": __("Ciências Sociais Aplicadas"),
+    "BIOLOGICAL SCIENCES": __("Ciências Biológicas"),
+    "ENGINEERING": __("Engenharias"),
+    "EXACT AND EARTH SCIENCES": __("Ciências Exatas e da Terra"),
+    "HEALTH SCIENCES": __("Ciências da Saúde"),
+    "HUMAN SCIENCES": __("Ciências Humanas"),
+    "LINGUISTICS, LETTERS AND ARTS": __("Lingüística, Letras e Artes"),
+    "LINGUISTICS, LITERATURE AND ARTS": __("Lingüística, Letras e Artes"),
+}
