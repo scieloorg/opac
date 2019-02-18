@@ -762,6 +762,27 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
 
 
+def get_article_by_aop_url_segs(jid, url_seg_issue, url_seg_article, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``jid``, ``url_seg_issue``,
+    ``url_seg_article`` e ``kwargs``.
+
+    - ``jid``: string, id do journal;
+    - ``url_seg_issue``: string, segmento do url do fascículo;
+    - ``url_seg_article``: string, segmento do url do artigo;
+    - ``kwargs``: parâmetros de filtragem.
+    """
+    if not (jid and url_seg_issue and url_seg_article):
+        raise ValueError(__('Obrigatório um jid, url_seg_issue and url_seg_article.'))
+
+    aop_url_segs = {
+        "url_seg_article": url_seg_article,
+        "url_seg_issue": url_seg_issue
+    }
+
+    return Article.objects(journal=jid, aop_url_segs=aop_url_segs, **kwargs).first()
+
+
 def get_articles_by_aid(aids):
     """
     Retorna um dicionário de artigos aonde o atributo ``aid`` de cada um deles
