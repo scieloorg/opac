@@ -752,6 +752,9 @@ def article_detail_pid(pid):
     article = controllers.get_article_by_pid(pid)
 
     if not article:
+        article = controllers.get_article_by_oap_pid(pid)
+
+    if not article:
         abort(404, _('Artigo não encontrado'))
 
     return redirect(url_for('main.article_detail',
@@ -779,7 +782,15 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _('Artigo não encontrado'))
+        article = controllers.get_article_by_aop_url_segs(
+            issue.journal, url_seg_issue, url_seg_article
+        )
+        if not article:
+            abort(404, _('Artigo não encontrado'))
+        return redirect(url_for('main.article_detail',
+                                url_seg=article.journal.acronym,
+                                url_seg_issue=article.issue.url_segment,
+                                url_seg_article=article.url_segment))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.
