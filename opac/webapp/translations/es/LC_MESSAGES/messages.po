@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-02-08 14:16-0200\n"
+"POT-Creation-Date: 2019-02-15 17:24-0200\n"
 "PO-Revision-Date: 2018-03-07 00:47+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: es\n"
@@ -230,6 +230,38 @@ msgstr "indización interrumpida por el comité"
 #: opac/webapp/choices.py:41
 msgid "publicação finalizada"
 msgstr "publicación finalizada"
+
+#: opac/webapp/choices.py:45
+msgid "Ciências Agrárias"
+msgstr "Ciencias Agrícolas"
+
+#: opac/webapp/choices.py:46
+msgid "Ciências Sociais Aplicadas"
+msgstr "Ciencias Sociales Aplicadas"
+
+#: opac/webapp/choices.py:47
+msgid "Ciências Biológicas"
+msgstr "Ciencias Biológicas"
+
+#: opac/webapp/choices.py:48
+msgid "Engenharias"
+msgstr "Ingeniería"
+
+#: opac/webapp/choices.py:49
+msgid "Ciências Exatas e da Terra"
+msgstr "Ciencias Exactas y de la Tierra"
+
+#: opac/webapp/choices.py:50
+msgid "Ciências da Saúde"
+msgstr "Ciencias de la Salud"
+
+#: opac/webapp/choices.py:51
+msgid "Ciências Humanas"
+msgstr "Humanidades"
+
+#: opac/webapp/choices.py:52 opac/webapp/choices.py:53
+msgid "Lingüística, Letras e Artes"
+msgstr "Linguística, Letras y Artes"
 
 #: opac/webapp/controllers.py:341
 msgid "Lista Alfabética"
@@ -906,68 +938,68 @@ msgstr ""
 msgid "Dados dos campos"
 msgstr ""
 
-#: opac/webapp/main/views.py:28
+#: opac/webapp/main/views.py:29
 msgid "O periódico está indisponível por motivo de: "
 msgstr "La revista no está disponible debido a:"
 
-#: opac/webapp/main/views.py:29
+#: opac/webapp/main/views.py:30
 msgid "O número está indisponível por motivo de: "
 msgstr "O fascículo esta indisponible por motivo de:"
 
-#: opac/webapp/main/views.py:30
+#: opac/webapp/main/views.py:31
 msgid "O artigo está indisponível por motivo de: "
 msgstr "El artículo no está disponible debido a:"
 
-#: opac/webapp/main/views.py:77
+#: opac/webapp/main/views.py:78
 msgid "Código de idioma inválido"
 msgstr "Código de idioma inválido"
 
-#: opac/webapp/main/views.py:147
+#: opac/webapp/main/views.py:148
 msgid "Últimos periódicos inseridos na coleção"
 msgstr "Últimas revistas incluidas en la colección"
 
-#: opac/webapp/main/views.py:148
+#: opac/webapp/main/views.py:149
 #, python-format
 msgid "10 últimos periódicos inseridos na coleção %s"
 msgstr "10 últimas revistas incluidas en la colección %s"
 
-#: opac/webapp/main/views.py:207
+#: opac/webapp/main/views.py:208
 msgid "Página não encontrada"
 msgstr "Página no encontrada"
 
-#: opac/webapp/main/views.py:231 opac/webapp/main/views.py:321
+#: opac/webapp/main/views.py:232 opac/webapp/main/views.py:322
 #, python-format
 msgid "Requsição inválida ao tentar acessar o artigo com pid: %s"
 msgstr "Requiere no válida al intentar tener acceso al artículo con pid:% s"
 
-#: opac/webapp/main/views.py:239 opac/webapp/main/views.py:289
-#: opac/webapp/main/views.py:333 opac/webapp/main/views.py:399
-#: opac/webapp/main/views.py:446 opac/webapp/main/views.py:584
-#: opac/webapp/main/views.py:601 opac/webapp/main/views.py:1028
+#: opac/webapp/main/views.py:240 opac/webapp/main/views.py:290
+#: opac/webapp/main/views.py:334 opac/webapp/main/views.py:403
+#: opac/webapp/main/views.py:450 opac/webapp/main/views.py:588
+#: opac/webapp/main/views.py:605 opac/webapp/main/views.py:1032
 msgid "Periódico não encontrado"
 msgstr "Revista no encontrada"
 
-#: opac/webapp/main/views.py:251 opac/webapp/main/views.py:651
-#: opac/webapp/main/views.py:707 opac/webapp/main/views.py:1037
+#: opac/webapp/main/views.py:252 opac/webapp/main/views.py:655
+#: opac/webapp/main/views.py:711 opac/webapp/main/views.py:1041
 msgid "Número não encontrado"
 msgstr "Fascículo no encontrado"
 
-#: opac/webapp/main/views.py:269 opac/webapp/main/views.py:304
-#: opac/webapp/main/views.py:755 opac/webapp/main/views.py:782
-#: opac/webapp/main/views.py:854 opac/webapp/main/views.py:857
-#: opac/webapp/main/views.py:961
+#: opac/webapp/main/views.py:270 opac/webapp/main/views.py:305
+#: opac/webapp/main/views.py:759 opac/webapp/main/views.py:786
+#: opac/webapp/main/views.py:858 opac/webapp/main/views.py:861
+#: opac/webapp/main/views.py:965
 msgid "Artigo não encontrado"
 msgstr "Artículo no encontrado"
 
-#: opac/webapp/main/views.py:423
+#: opac/webapp/main/views.py:427
 msgid "Artigo sem título"
 msgstr "Artículo sin título"
 
-#: opac/webapp/main/views.py:485 opac/webapp/main/views.py:502
+#: opac/webapp/main/views.py:489 opac/webapp/main/views.py:506
 msgid "Requisição inválida. Deve ser por ajax"
 msgstr "Solicitud no válida. Debe ser por ajax"
 
-#: opac/webapp/main/views.py:518
+#: opac/webapp/main/views.py:522
 msgid ""
 "Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou "
 "\"publisher\"."
@@ -975,11 +1007,11 @@ msgstr ""
 "Parámetro \"filter\" no es válido, debe ser \"areas\", \"wos\" o "
 "\"publisher\"."
 
-#: opac/webapp/main/views.py:527
+#: opac/webapp/main/views.py:531
 msgid "Parámetro \"extension\" é inválido, deve ser \"csv\" ou \"xls\"."
 msgstr "Parámetro \"extension\" no es válido, debe ser \"csv\" o \"xls\"."
 
-#: opac/webapp/main/views.py:529
+#: opac/webapp/main/views.py:533
 msgid ""
 "Parámetro \"list_type\" é inválido, deve ser: \"alpha\", \"areas\", "
 "\"wos\" ou \"publisher\"."
@@ -987,57 +1019,57 @@ msgstr ""
 "Parámetro \"list_type\" no es válido, debe ser:  \"alpha\", \"areas\", "
 "\"wos\" o \"publisher\"."
 
-#: opac/webapp/main/views.py:550
+#: opac/webapp/main/views.py:554
 msgid "Requisição inválida, deve ser ajax."
 msgstr ""
 
-#: opac/webapp/main/views.py:559
+#: opac/webapp/main/views.py:563
 msgid "Periódico não permite envio de email."
 msgstr "La revista no permite envío de correo electrónico"
 
-#: opac/webapp/main/views.py:577
+#: opac/webapp/main/views.py:581
 msgid "Requisição inválida, captcha inválido."
 msgstr "Solicitud no válida, captcha inválida."
 
-#: opac/webapp/main/views.py:777 opac/webapp/main/views.py:956
+#: opac/webapp/main/views.py:781 opac/webapp/main/views.py:960
 msgid "Issue não encontrado"
 msgstr "Fascículo no encontrado"
 
-#: opac/webapp/main/views.py:814 opac/webapp/main/views.py:820
-#: opac/webapp/main/views.py:993 opac/webapp/main/views.py:1001
-#: opac/webapp/main/views.py:1003
+#: opac/webapp/main/views.py:818 opac/webapp/main/views.py:824
+#: opac/webapp/main/views.py:997 opac/webapp/main/views.py:1005
+#: opac/webapp/main/views.py:1007
 msgid "PDF do Artigo não encontrado"
 msgstr "PDF del artículo no encontrado"
 
-#: opac/webapp/main/views.py:830
+#: opac/webapp/main/views.py:834
 msgid "HTML do Artigo não encontrado"
 msgstr "HTML del artículo no encontrado"
 
-#: opac/webapp/main/views.py:844
+#: opac/webapp/main/views.py:848
 msgid "HTML do Artigo não encontrado ou indisponível"
 msgstr ""
 
-#: opac/webapp/main/views.py:903
+#: opac/webapp/main/views.py:907
 msgid "Parâmetros insuficientes para obter o EPDF do artigo"
 msgstr "Parámetros insuficientes para obtener el EPDF del artículo"
 
-#: opac/webapp/main/views.py:920
+#: opac/webapp/main/views.py:924
 msgid "Recruso não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:925
+#: opac/webapp/main/views.py:929
 msgid "Recurso não encontrado"
 msgstr "Recurso no encontrado"
 
-#: opac/webapp/main/views.py:942
+#: opac/webapp/main/views.py:946
 msgid "Recurso do Artigo não encontrado. Caminho inválido!"
 msgstr "Recurso del Artículo no encontrado. Camino inválido!"
 
-#: opac/webapp/main/views.py:1055
+#: opac/webapp/main/views.py:1059
 msgid "PDF do artigo não foi encontrado"
 msgstr "PDF del artículo no encontrado"
 
-#: opac/webapp/main/views.py:1083 opac/webapp/main/views.py:1114
+#: opac/webapp/main/views.py:1087 opac/webapp/main/views.py:1118
 msgid "Requisição inválida."
 msgstr "Petición inválida."
 
@@ -1374,11 +1406,13 @@ msgid "Versão original do texto"
 msgstr "Versión original del texto"
 
 #: opac/webapp/templates/collection/about.html:23
+#: opac/webapp/templates/collection/pages.html:21
 #, python-format
 msgid " %(page)s "
 msgstr " %(page)s"
 
 #: opac/webapp/templates/collection/about.html:38
+#: opac/webapp/templates/collection/pages.html:36
 msgid " Conteúdo não cadastrado "
 msgstr "Contenido no registrado"
 
@@ -1436,11 +1470,11 @@ msgstr "Temática"
 msgid "Busca por periódicos"
 msgstr "Búsqueda por periódicos"
 
-#: opac/webapp/templates/collection/index.html:93
+#: opac/webapp/templates/collection/index.html:105
 msgid "Números <span>mais recentes</span>"
 msgstr "Números <span>más recientes</span>"
 
-#: opac/webapp/templates/collection/index.html:137
+#: opac/webapp/templates/collection/index.html:149
 msgid "em perspectiva"
 msgstr "en perspectiva"
 
@@ -2028,4 +2062,28 @@ msgstr "Continúe leyendo"
 
 #~ msgid "Citados no"
 #~ msgstr "Citados en"
+
+#~ msgid "AGRICULTURAL SCIENCES"
+#~ msgstr ""
+
+#~ msgid "APPLIED SOCIAL SCIENCES"
+#~ msgstr ""
+
+#~ msgid "BIOLOGICAL SCIENCES"
+#~ msgstr ""
+
+#~ msgid "ENGINEERING"
+#~ msgstr ""
+
+#~ msgid "EXACT AND EARTH SCIENCES"
+#~ msgstr ""
+
+#~ msgid "HEALTH SCIENCES"
+#~ msgstr ""
+
+#~ msgid "HUMAN SCIENCES"
+#~ msgstr ""
+
+#~ msgid "LINGUISTICS, LITERATURE AND ARTS"
+#~ msgstr ""
 

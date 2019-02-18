@@ -16,6 +16,7 @@ from . import main
 from webapp import babel
 from webapp import cache
 from webapp import controllers
+from webapp.choices import STUDY_AREAS
 from webapp.utils import utils
 from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
@@ -379,6 +380,9 @@ def journal_detail(url_seg):
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': latest_issue,
