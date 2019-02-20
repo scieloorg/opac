@@ -1258,7 +1258,7 @@ class PageTestCase(BaseTestCase):
         for page in pages:
             if page.language == 'pt_BR':
                 self.assertIn(
-                    '/about/%s/%s' % (page.slug_name, page.language),
+                    '/about/%s' % (page.slug_name),
                     response.data.decode('utf-8'))
 
         self.assertListEqual(
@@ -1276,10 +1276,9 @@ class PageTestCase(BaseTestCase):
             utils.makeOneCollection()
 
             page = utils.makeOnePage({'name': 'Critérios SciELO',
-                                      'language': 'es_ES'})
+                                      'language': 'pt_BR'})
             response = self.client.get(url_for('main.about_collection',
-                                               slug_name=page.slug_name,
-                                               lang=page.language))
+                                               slug_name=page.slug_name))
 
             self.assertEqual(200, response.status_code)
             self.assertTemplateUsed('collection/about.html')
@@ -1298,6 +1297,5 @@ class PageTestCase(BaseTestCase):
             utils.makeOneCollection()
             unknown_page_name = 'xxjfsfadfa0k2qhs8slwnui8'
             response = self.client.get(url_for('main.about_collection',
-                                       slug_name=unknown_page_name,
-                                       lang='ab_cd'))
+                                       slug_name=unknown_page_name))
             self.assertStatus(response, 404)

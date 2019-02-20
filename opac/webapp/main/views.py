@@ -16,6 +16,7 @@ from . import main
 from webapp import babel
 from webapp import cache
 from webapp import controllers
+from webapp.choices import STUDY_AREAS
 from webapp.utils import utils
 from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
@@ -193,10 +194,10 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None, lang=None):
-    language = lang or session.get('lang', get_locale())
+def about_collection(slug_name=None):
+    language = session.get('lang', get_locale())
 
     context = {}
     page = None
@@ -379,6 +380,9 @@ def journal_detail(url_seg):
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': latest_issue,
@@ -752,6 +756,9 @@ def article_detail_pid(pid):
     article = controllers.get_article_by_pid(pid)
 
     if not article:
+        article = controllers.get_article_by_oap_pid(pid)
+
+    if not article:
         abort(404, _('Artigo não encontrado'))
 
     return redirect(url_for('main.article_detail',
@@ -779,7 +786,15 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _('Artigo não encontrado'))
+        article = controllers.get_article_by_aop_url_segs(
+            issue.journal, url_seg_issue, url_seg_article
+        )
+        if not article:
+            abort(404, _('Artigo não encontrado'))
+        return redirect(url_for('main.article_detail',
+                                url_seg=article.journal.acronym,
+                                url_seg_issue=article.issue.url_segment,
+                                url_seg_article=article.url_segment))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.

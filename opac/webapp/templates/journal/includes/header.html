@@ -46,11 +46,8 @@
               <span class="area">
                 {% trans %}Área:{% endtrans %}
               </span>
-              {% if journal.subject_categories %}
-                {{ journal.subject_categories|join(', ')|title|truncate(60) }}
-              {% endif %}
-              {% if journal.study_areas %}
-                {{ journal.study_areas|join(', ')|title|truncate(60) }}
+              {% if journal_study_areas %}
+                {{ journal_study_areas|join(', ')|title|truncate(60) }}
               {% endif %}
             </span>
             <span class="issn">
