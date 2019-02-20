@@ -308,6 +308,10 @@ DIMENSIONS_METRICS_URL = os.environ.get(
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
 
+
+USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
+ALTMETRIC_METRICS_URL = os.environ.get('OPAC_ALTMETRIC_METRICS_URL', 'https://www.altmetric.com/details.php')
+
 NEWS_LIST_LIMIT = 10
 
 # paineis do flask-debug-toolbar somente ativos quando DEBUG = True
