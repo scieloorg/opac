@@ -359,7 +359,7 @@ var Portal = {
 					minLength: 3,
 					dynamic: true,
 					delay: 500,
-					emptyTemplate: 'Nenhum periódico encontrado para o temo: "{{query}}"',
+					emptyTemplate: 'Nenhum periódico encontrado para o termo: "{{query}}"',
 					source: {
 						journals: {
 							display: "title",
