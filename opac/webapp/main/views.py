@@ -511,9 +511,9 @@ def journals_search_by_theme_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter, lang=lang)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
     elif filter == 'publisher':
         objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter, lang=lang)
     else:
