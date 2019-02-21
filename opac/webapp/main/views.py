@@ -357,7 +357,7 @@ def journal_detail(url_seg):
 
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
-    if journal.last_issue:
+    if journal.last_issue and journal.current_status == "current":
         sections = [section for section in journal.last_issue.sections if section.language == 'en']
         recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
     else:
