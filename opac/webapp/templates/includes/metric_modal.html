@@ -53,6 +53,23 @@
                             </a>
                         </div>
                         {% endif %}
+
+                        {% if config.USE_ALTMETRIC %}
+                        <div class="badge-link col-center">
+                            <div class="logo-statistc logo-statistc-altmetric">
+                                <div class="badge-logo">
+                                    <div class='altmetric-embed'
+                                         data-badge-type='donut'
+                                         data-doi="{{ article.doi }}"
+                                         data-link-target='_blank'>
+                                    </div>
+                                </div>
+                            </div>
+                            <a target="_blank" href="{{ config.ALTMETRIC_METRICS_URL }}?&doi={{ article.doi }}">
+                                <div>Altmetric</div>
+                            </a>
+                        </div>
+                        {% endif %}
                     {% endif %}
                 {% elif config.USE_METRICS %}
                     <div class="badge-link col-center">
