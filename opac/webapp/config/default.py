@@ -308,6 +308,10 @@ DIMENSIONS_METRICS_URL = os.environ.get(
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
 
+
+USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
+ALTMETRIC_METRICS_URL = os.environ.get('OPAC_ALTMETRIC_METRICS_URL', 'https://www.altmetric.com/details.php')
+
 NEWS_LIST_LIMIT = 10
 
 # paineis do flask-debug-toolbar somente ativos quando DEBUG = True
@@ -430,7 +434,7 @@ MAILING_CRON_STRING = os.environ.get(
 DEFAULT_SCHEDULER_TIMEOUT = int(
     os.environ.get('OPAC_DEFAULT_SCHEDULER_TIMEOUT', 1000))
 
-DEFAULT_MATHJAX_CDN_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"
+DEFAULT_MATHJAX_CDN_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_SVG"
 MATHJAX_CDN_URL = os.environ.get('OPAC_MATHJAX_CDN_URL', DEFAULT_MATHJAX_CDN_URL)
 
 

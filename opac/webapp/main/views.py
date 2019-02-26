@@ -357,7 +357,7 @@ def journal_detail(url_seg):
 
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
-    if journal.last_issue:
+    if journal.last_issue and journal.current_status == "current":
         sections = [section for section in journal.last_issue.sections if section.language == 'en']
         recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
     else:
@@ -511,9 +511,9 @@ def journals_search_by_theme_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter, lang=lang)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
     elif filter == 'publisher':
         objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter, lang=lang)
     else:

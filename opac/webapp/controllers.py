@@ -30,7 +30,7 @@ from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
 from webapp import dbsql
 from .models import User
-from .choices import INDEX_NAME, JOURNAL_STATUS
+from .choices import INDEX_NAME, JOURNAL_STATUS, STUDY_AREAS
 from .utils import utils
 from uuid import uuid4
 
@@ -282,18 +282,14 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
         if grouper_field_iterable:
             if isinstance(grouper_field_iterable, str):
                 grouper_field_iterable = [grouper_field_iterable]
-        else:
-            continue
-
-        for grouper in grouper_field_iterable:
-
-            if grouper_field == 'index_at':
-                # tentavida de pegar o nome e não a sigla do index
-                # se não achar o nome (KeyError), ficamos com o nome da sigla
-                grouper = INDEX_NAME.get(grouper, grouper)
-
+            grouper_choices = {
+                'index_at': INDEX_NAME,
+                'study_areas': STUDY_AREAS,
+            }
             j_data = get_journal_json_data(journal, lang)
-            groups_dict.setdefault(grouper, []).append(j_data)
+            for grouper in grouper_field_iterable:
+                grouper = grouper_choices.get(grouper_field, {}).get(grouper.upper(), grouper)
+                groups_dict.setdefault(str(grouper), []).append(j_data)
 
     meta = {
         'total': journals.count(),
