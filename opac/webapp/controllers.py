@@ -78,8 +78,24 @@ def get_collection_tweets():
         except:
             return []
         else:
-            tweets = [tweet for tweet in public_tweets]
-        return tweets
+            try:
+                return [
+                    {
+                        "id": tweet.id,
+                        "screen_name": tweet.user.screen_name,
+                        "full_text": tweet.full_text,
+                        "media_url_https": tweet.entities["media"][0][
+                            "media_url_https"
+                        ]
+                        if "media" in tweet.entities
+                        else "",
+                    }
+                    for tweet in public_tweets
+                ]
+
+            except AttributeError:
+                return []
+
     else:
         # falta pelo menos uma credencial do twitter
         return []
