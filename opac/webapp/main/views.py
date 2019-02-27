@@ -455,6 +455,16 @@ def about_journal(url_seg):
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
+    latest_issue = issues[0] if issues else None
+
+    if latest_issue:
+        latest_issue_legend = descriptive_short_format(
+            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+            suppl=latest_issue.suppl_text, language=language[:2].lower())
+    else:
+        latest_issue_legend = None
+
     # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
@@ -468,9 +478,8 @@ def about_journal(url_seg):
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
-        # o primiero item da lista é o último número.
-        # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None,
+        'latest_issue_legend': latest_issue_legend,
+        'last_issue': latest_issue,
     }
 
     if page:
