@@ -74,7 +74,7 @@ def get_collection_tweets():
             auth.set_access_token(access_token, access_token_secret)
 
             api = tweepy.API(auth, timeout=2)
-            public_tweets = api.user_timeline(count=10)
+            public_tweets = api.user_timeline(tweet_mode='extended', count=10)
         except:
             return []
         else:

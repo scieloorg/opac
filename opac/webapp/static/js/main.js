@@ -402,12 +402,22 @@ var Portal = {
 				wrapper = $(".slide-wrapper", container),
 				prev = $(".slide-back", container),
 				next = $(".slide-next", container),
-				itemProps = {
-					w: itens.eq(0).outerWidth(),
-					h: itens.eq(0).outerHeight()
-				},
-				wrapperWidth = (itens.length*itemProps.w)+100,
+
 				containerWidth = $(".slide-container", container).outerWidth();
+
+				warray = [];
+				harray = [];
+				itens.each(function(){
+					harray.push($(this).outerHeight());
+					warray.push($(this).outerWidth());
+				});
+
+				itemProps = {
+					w: Math.max.apply(null, warray),
+					h: Math.max.apply(null, harray)
+				};
+
+				wrapperWidth = (itens.length*itemProps.w)+100;
 
 			wrapper.width(wrapperWidth);
 			$(".slide-container", container).height(itemProps.h);
@@ -1114,7 +1124,7 @@ var Portal = {
 			if (qtdname >= 56){
 				$(".namePlublisher").attr( "data-toggle", "tooltip" );
 				$(".namePlublisher").attr( "title", nome );
-			}	
+			}
 		}
 	};
 
