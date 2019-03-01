@@ -8,7 +8,7 @@
       {% endif %}
       <div class="info">
         {% autoescape false %}
-          {{ tweet.full_text }}
+          {{ tweet.full_text|truncate(150) }}
         {% endautoescape %}
       </div>
     </a>
