@@ -13,7 +13,7 @@
 	}
 	.sectionTitle {
 		padding: 10px 15px 10px;
-		background: url(../img/dashline.png) bottom left repeat-x; 
+		background: url(../img/dashline.png) bottom left repeat-x;
 
 		h1 {
 			margin: 0;
@@ -72,7 +72,34 @@
 	.twitter {
 		.slide-item {
 			.col-md-12 {
-				min-height: 160px;
+
+ 			}
+			.slide-header{
+				height:140px;
+				width:100%;
+				margin-bottom:5px;
+				display: block;
+				background-size: cover;
+				background-position: center;
+			}
+		}
+	}
+
+ 	.twitter{
+		.slide-item{
+			.col-md-12{
+				height: 310px;
+			}
+		}
+	}
+
+ 	.last_issues{
+		.slide-item {
+			&.release {
+				.col-md-12 {
+					min-height: 120px;
+					//outline:1px solid blue;
+				}
 			}
 		}
 	}
@@ -150,7 +177,7 @@
 			border-collapse: collapse;
 		}
 		th,td {
-			background: url(../img/dashline.png) top left repeat-x; 
+			background: url(../img/dashline.png) top left repeat-x;
 			border-spacing: 0;
 			font-size: .9em;
 			padding: 5px 15px;
@@ -220,7 +247,7 @@
 				font-weight: bold;
 				background: url(../img/button.glyphs.png) -10px -2525px no-repeat;
 				border-top: 1px solid #f0f0f0;
-				
+
 
 				strong {
 					font-weight: normal;
@@ -280,7 +307,7 @@
 				font-size: 1em;
 			}
 		}
-		
+
 		.collectionLink {
 			padding-left: 20px;
 
@@ -321,16 +348,16 @@
 	}
 }
 .collectionAbout {
-	
+
 	p {
 		margin: 15px 0;
 	}
-	
+
 	h2 {
 		font-size: 1.3em;
 		color: @Gray;
 		padding-bottom: 10px;
-		background: url(../img/dashline.png) bottom left repeat-x; 
+		background: url(../img/dashline.png) bottom left repeat-x;
 	}
 
 	.row {
@@ -383,9 +410,9 @@
 	.about {
 		margin-bottom: 40px;
 	}
-} 
+}
 @media (max-width: 991px) {
 	.col-sm-mt-15{
 		margin-top:15px;
-	} 
+	}
 }

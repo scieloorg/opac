@@ -74,12 +74,28 @@ def get_collection_tweets():
             auth.set_access_token(access_token, access_token_secret)
 
             api = tweepy.API(auth, timeout=2)
-            public_tweets = api.user_timeline(count=10)
+            public_tweets = api.user_timeline(tweet_mode='extended', count=10)
         except:
             return []
         else:
-            tweets = [tweet for tweet in public_tweets]
-        return tweets
+            try:
+                return [
+                    {
+                        "id": tweet.id,
+                        "screen_name": tweet.user.screen_name,
+                        "full_text": tweet.full_text,
+                        "media_url_https": tweet.entities["media"][0][
+                            "media_url_https"
+                        ]
+                        if "media" in tweet.entities
+                        else "",
+                    }
+                    for tweet in public_tweets
+                ]
+
+            except AttributeError:
+                return []
+
     else:
         # falta pelo menos uma credencial do twitter
         return []
