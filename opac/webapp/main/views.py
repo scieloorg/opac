@@ -704,6 +704,9 @@ def issue_toc(url_seg, url_seg_issue):
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
     }
