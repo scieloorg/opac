@@ -350,7 +350,9 @@ class MainTestCase(BaseTestCase):
             issue = utils.makeOneIssue({'journal': journal})
             utils.makeAnyArticle(
                 issue=issue,
-                attrib={'journal': journal.id, 'issue': issue.id}
+                attrib={
+                        'journal': journal.id,
+                        'issue': issue.id}
             )
 
             response = self.client.get(url_for('main.journal_feed',
@@ -358,6 +360,32 @@ class MainTestCase(BaseTestCase):
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('issue/feed_content.html')
+
+    def test_journal_feed_has_doi(self):
+        """
+        Teste da ``view function`` ``journal_feed``, deve retornar um rss
+        que usa o template ``issue/feed_content.html`` e os respectivos artigo com DOI.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+            issue = utils.makeOneIssue({'journal': journal})
+            utils.makeAnyArticle(
+                issue=issue,
+                attrib={
+                        'journal': journal.id,
+                        'issue': issue.id,
+                        'doi': '10.2105/AJPH.2009.160184'
+                       }
+            )
+
+            response = self.client.get(url_for('main.journal_feed',
+                                               url_seg=journal.url_segment))
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('issue/feed_content.html')
+            self.assertIn('<id>10.2105/AJPH.2009.160184</id>', response.data.decode('utf-8'))
 
     def test_journal_feed_with_unknow_id(self):
         """
@@ -595,6 +623,36 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/feed_content.html')
             self.assertIn('Vol. 10 No. 31', response.data.decode('utf-8'))
+
+    def test_issue_feed_has_doi(self):
+        """
+        Teste da ``view function`` ``issue_feed``, deve retornar um rss
+        que usa o template ``issue/feed_content.html`` e os respectivos artigo com DOI.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10',
+                                        'journal': journal})
+            utils.makeAnyArticle(
+                issue=issue,
+                attrib={
+                        'journal': issue.journal.id,
+                        'issue': issue.id,
+                        'doi': '10.2105/AJPH.2009.160184'}
+            )
+
+            response = self.client.get(url_for('main.issue_feed',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/feed_content.html')
+            self.assertIn('<id>10.2105/AJPH.2009.160184</id>', response.data.decode('utf-8'))
 
     def test_issue_feed_unknow_issue_id(self):
         """
