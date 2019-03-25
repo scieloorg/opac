@@ -67,21 +67,37 @@ class MenuTestCase(BaseTestCase):
                 expected_anchor9 = """<a href="#">\n        <strong>SciELO.org - %s</strong>\n      </a>""" % __('Rede SciELO')
                 self.assertIn(expected_anchor9, response_data)
                 # rede/scielo org
-                expected_anchor10 = """<li>\n          <a href="http://www.scielo.org/php/index.php">\n            %s\n          </a>\n        </li>""" % __('Coleções nacionais e temáticas')
+                expected_anchor10 = """<li>\n          <a target="_blank" href="%s">\n            %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Coleções nacionais e temáticas')
+                )
                 self.assertIn(expected_anchor10, response_data)
-                expected_anchor11 = """<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">\n            %s\n          </a>\n        </li>""" % __('Lista alfabética de periódicos')
+                expected_anchor11 = """<li>\n          <a target="_blank" href="%s/pt/periodicos/listar-por-ordem-alfabetica/">\n              %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Lista alfabética de periódicos')
+                )
                 self.assertIn(expected_anchor11, response_data)
-                expected_anchor12 = """<li>\n          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">\n            %s\n          </a>\n        </li>""" % __('Lista de periódicos por assunto')
+                expected_anchor12 = """<li>\n          <a target="_blank" href="%s/pt/periodicos/listar-por-assunto/">\n              %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Lista de periódicos por assunto')
+                )
                 self.assertIn(expected_anchor12, response_data)
-                expected_anchor13 = """<li>\n          <a href="%s">\n            %s\n          </a>\n        </li>""" % (current_app.config['URL_SEARCH'], 'Busca')
+                expected_anchor13 = """<li>\n          <a target="_blank" href="%s">\n            %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SEARCH'], 'Busca'
+                )
                 self.assertIn(expected_anchor13, response_data)
-                expected_anchor14 = """<li>\n            <a target="_blank" href="%s/?collection=%s">\n              %s\n            </a>\n          </li>""" % (current_app.config['METRICS_URL'], current_app.config['OPAC_COLLECTION'], 'Métricas')
+                expected_anchor14 = """<li>\n            <a target="_blank" href="%s/?collection=%s">\n              %s\n            </a>\n          </li>""" % (
+                    current_app.config['METRICS_URL'], current_app.config['OPAC_COLLECTION'], 'Métricas'
+                )
                 self.assertIn(expected_anchor14, response_data)
-                expected_anchor15 = """<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">\n            %s\n          </a>\n        </li>""" % __('Acesso OAI e RSS')
+                expected_anchor15 = """<li>\n          <a target="_blank" href="%s/pt/sobre-o-scielo/acesso-via-oai-e-rss/">\n              %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Acesso OAI e RSS')
+                )
                 self.assertIn(expected_anchor15, response_data)
-                expected_anchor16 = """<li>\n          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">\n            %s\n          </a>\n        </li>""" % __('Sobre a Rede SciELO')
+                expected_anchor16 = """<li>\n          <a target="_blank" href="%s/pt/sobre-o-scielo/">\n              %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Sobre a Rede SciELO')
+                )
                 self.assertIn(expected_anchor16, response_data)
-                expected_anchor17 = """<li>\n          <a href="#">\n            %s\n          </a>\n        </li>""" % __('Contatos')
+                expected_anchor17 = """<li>\n          <a target="_blank" href="%s/pt/sobre-o-scielo/contato/">\n            %s\n          </a>\n        </li>""" % (
+                    current_app.config['URL_SCIELO_ORG'], __('Contatos')
+                )
                 self.assertIn(expected_anchor17, response_data)
 
     def test_blog_link_in_hamburger_menu(self):
@@ -104,7 +120,10 @@ class MenuTestCase(BaseTestCase):
                     follow_redirects=True)
 
                 self.assertStatus(response, 200)
-                expected_anchor = '<a href="http://blog.scielo.org/">'
+                expected_anchor_tag = '<a target="_blank" href="%s">'
+                expected_anchor = expected_anchor_tag % (
+                    current_app.config['URL_BLOG_SCIELO']
+                )
                 self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
                 # idioma em 'en'
@@ -114,7 +133,9 @@ class MenuTestCase(BaseTestCase):
                     follow_redirects=True)
 
                 self.assertStatus(response, 200)
-                expected_anchor = '<a href="http://blog.scielo.org/en/">'
+                expected_anchor = expected_anchor_tag % (
+                    current_app.config['URL_BLOG_SCIELO'] + '/en/'
+                )
                 self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
                 # idioma em 'es'
@@ -124,7 +145,9 @@ class MenuTestCase(BaseTestCase):
                     follow_redirects=True)
 
                 self.assertStatus(response, 200)
-                expected_anchor = '<a href="http://blog.scielo.org/es/">'
+                expected_anchor = expected_anchor_tag % (
+                    current_app.config['URL_BLOG_SCIELO'] + '/es/'
+                )
                 self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Journal Menu
