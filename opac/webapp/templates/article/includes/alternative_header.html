@@ -1,7 +1,7 @@
 {% import 'macros/images.html' as cimages %}
 {% import 'macros/collection.html' as coll_macro %}
 
-<div class="alternativeHeader">
+<div class="alternativeHeader hidden-xs">
   <div class="container">
     <div class="col-md-2 col-sm-3 mainNav">
       <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">{% trans %}Abrir menu{% endtrans %}</a>
@@ -76,3 +76,112 @@
     </div>
   </div>
 </div>
+
+
+
+<div class="alternativeHeader hidden-sm hidden-md hidden-lg">
+  <div class="container">
+    <div class="row no-gutter">
+      
+      <div class="col-xs-2 mainNav">
+        <a href="" class="menu" data-rel="#alternativeMainMenu" title="{% trans %}Abrir menu{% endtrans %}">  {% trans %}Abrir menu{% endtrans %}
+        </a>
+        <div class="mainMenu" id="alternativeMainMenu">
+          <div class="row">
+            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo logo-svg"></div>
+          </div>
+          <nav>
+            <ul>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <div class="col-xs-6 text-center">
+        
+        <h2 class="logo-svg-mini">
+          <a href="/" title="{% trans %}Ir para a homepage da coleção: {% endtrans %}{{ coll_macro.get_collection_name() }}">
+            <span class="logo-collection logo-collection-svg-mini"><strong>{{ coll_macro.get_collection_name() }}</strong></span>
+          </a>
+        </h2>
+
+      </div>
+      <div class="col-xs-4 language">
+        {% include "includes/language.html" %}
+      </div>
+
+    </div>
+    <div class="row">
+      
+      <div class="col-xs-12 text-center journalNameMobile">
+        
+        <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="text"><span class="truncate">{{ journal.title }} </span><span class="sci-ico-arrowDown"></span></a>
+
+        <ul class="dropdown-menu" role="menu">
+            <div class="col-md-9 col-sm-8 brandLogo">
+              <div class="row">
+                <div class="col-xs-12">
+                  <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}">
+                    {% if journal.logo_url %}
+                      <img src="{{ cimages.proxy_ssm_resource_url(journal.logo_url) }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="col-xs-12">
+                  
+                  <ul class="JournalMenuMobile">
+                    {% if journal.online_submission_url and journal.current_status == 'current' %}
+                      <li>
+                        <a href="{{ journal.online_submission_url|default('', true) }}" target="_blank">
+                          <span class="glyphBtn submission"></span> {% trans %}Submissão de manuscritos{% endtrans %}
+                        </a>
+                      </li>
+                    {% endif %}
+                    <li>
+                      <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about">
+                        <span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#editors">
+                        <span class="glyphBtn editorial"></span> {% trans %}Corpo Editorial{% endtrans %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions">
+                        <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#contact">
+                        <span class="glyphBtn contact"></span> {% trans %}Contato{% endtrans %}
+                      </a>
+                    </li>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+        </ul>
+        <!--
+        <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}">
+          {% if journal.logo_url %}
+            <img src="{{ cimages.proxy_ssm_resource_url(journal.logo_url) }}" class="image" alt="Logomarca do periódico: {{ journal.title }}" />
+          {% endif %}
+        </a>
+        -->
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+

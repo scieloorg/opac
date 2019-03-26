@@ -1,4 +1,4 @@
-<section class="levelMenu">
+<section class="levelMenu hidden-xs">
     <div class="container">
 
         <!-- exibe somente no lg -->
@@ -356,6 +356,136 @@
               </li>
             </ul>
         </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<section class="levelMenu hidden-sm hidden-md hidden-lg">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-xs-12 text-center">
+          <div class="btn-group levelMenuMobileTop" role="group">
+            
+            <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn">
+                <span class="sci-ico-home"></span>
+            </a>
+            
+            <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn no-ico-util">
+                {% trans %}Sumário{% endtrans %}
+            </a>
+
+            {% if article and article.pdfs|length == 1 %}
+              <a href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn">
+                <span class="sci-ico-filePDF"></span> PDF
+              </a>
+            {% endif%}
+
+            <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
+                <span class="sci-ico-socialOther"></span><span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu menu-share-mobile" role="menu">
+              <li class="dropdown-header">
+                {% trans %}Compartilhe{% endtrans %}
+              </li>
+              <li>
+                <a href="#" class="share_modal_id">
+                  <span class="sci-ico-socialEmail"></span> E-mail
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareFacebook">
+                  <span class="sci-ico-socialFacebook"></span> Facebook
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareTwitter">
+                  <span class="sci-ico-socialTwitterSingle"></span> Twitter
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareGooglePlus">
+                  <span class="glyphBtn googlePlus"></span> Google+
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareLinkedIn">
+                  <span class="glyphBtn linkedIn"></span> LinkedIn
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareReddit">
+                  <span class="glyphBtn reddit"></span> Reddit
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareStambleUpon">
+                  <span class="glyphBtn stambleUpon"></span> StambleUpon
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareCiteULike">
+                  <span class="glyphBtn citeULike"></span> CiteULike
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareMendeley">
+                  <span class="glyphBtn mendeley"></span> Mendeley
+                </a>
+              </li>
+            </ul>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="btn-group levelMenuMobileBottom" role="group">
+          
+            {# Anterior #}
+            {% if not previous_article %}
+                <a href="#" class="btn group disabled">
+            {% else %}
+              {% if is_pdf_page -%}
+                <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+              {%- else -%}
+                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+              {% endif %}
+            {%- endif %}
+              <span class="sci-ico-arrowLeft"></span>
+            </a>
+
+            {# Atual #}
+            <a href="#" class="btn group disabled">
+                {% trans %}Atual{% endtrans %}
+            </a>
+
+            {# Próximo #}
+            {% if not next_article %}
+                <a href="#" class="btn group disabled">
+            {% else %}
+              {%- if is_pdf_page -%}
+                <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+              {%- else -%}
+                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+              {%- endif %}
+            {%- endif %}
+                <span class="sci-ico-arrowRight"></span>
+            </a>
+
+
+          </div>
+        </div>
+      </div>
 
     </div>
 </section>

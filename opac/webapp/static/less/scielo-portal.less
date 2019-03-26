@@ -1717,6 +1717,13 @@ button.btn:active {
 			&.fm-slidein[data-fm-toogle="hover"]:hover .fm-list li:nth-child(@{i}) {
 				-webkit-transform: translateY((@i * -50px));
 				transform: translateY((@i * -50px)); 
+
+				
+				@media (max-width : 768px) and (orientation : landscape) {
+
+					transform: translateY((@i * -35px)) scale(0.7); 
+
+				}
 			 }
 			.generate-li-child-mobile(@n, (@i + 1));
 		}
