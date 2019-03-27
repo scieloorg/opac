@@ -54,6 +54,16 @@ def add_forms_to_g():
     setattr(g, 'error', forms.ErrorForm())
 
 
+@main.before_app_request
+def add_scielo_org_config_to_g():
+    language = session.get('lang', get_locale())
+    scielo_org_links = {
+        key: url[language]
+        for key, url in current_app.config.get('SCIELO_ORG_URIS', {}).items()
+    }
+    setattr(g, 'scielo_org', scielo_org_links)
+
+
 @babel.localeselector
 def get_locale():
     langs = current_app.config.get('LANGUAGES')
