@@ -982,6 +982,17 @@ def article_ssm_content_raw():
     else:
         return get_content_from_ssm(resource_ssm_path)
 
+@main.route('/pdf-js/viewer/')
+@cache.cached(key_prefix=cache_key_with_lang_with_qs)
+def pdf_js_viewer():
+    resource_ssm_path = request.args.get('resource_ssm_path', None)
+    if not resource_ssm_path:
+        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+    else:
+        context = {
+            "resource_ssm_path": resource_ssm_path
+        }
+        return render_template("pdf_js/viewer.html", **context)
 
 @main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
 @main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
