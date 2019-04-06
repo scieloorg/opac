@@ -26,7 +26,7 @@ beautifulsoup4==4.6.3
 Flask-WTF==0.14.2
 Flask-Caching==1.4.0
 redis==2.10.6
-rq==0.9.2
+rq==1.0
 rq-dashboard==0.3.10
 rq-scheduler==0.8.2
 rq-scheduler-dashboard==0.0.2
