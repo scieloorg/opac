@@ -1413,8 +1413,8 @@ msgid "artigos"
 msgstr ""
 
 #: opac/webapp/templates/collection/index.html:39
-msgid "citações"
-msgstr ""
+msgid "referências"
+msgstr "referencias"
 
 #: opac/webapp/templates/collection/index.html:45
 msgid "Downloads"
@@ -2228,6 +2228,12 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Citados no"
+#~ msgstr ""
+
+#~ msgid "referências"
+#~ msgstr ""
+
+#~ msgid "citações"
 #~ msgstr ""
 
 #~ msgid "AGRICULTURAL SCIENCES"

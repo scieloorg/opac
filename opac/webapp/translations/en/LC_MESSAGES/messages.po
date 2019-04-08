@@ -1434,8 +1434,8 @@ msgid "artigos"
 msgstr "articles"
 
 #: opac/webapp/templates/collection/index.html:39
-msgid "citações"
-msgstr "citations"
+msgid "referências"
+msgstr "references"
 
 #: opac/webapp/templates/collection/index.html:45
 msgid "Downloads"
@@ -2052,6 +2052,12 @@ msgstr "Open"
 
 #~ msgid "Citados no"
 #~ msgstr "Cited in"
+
+#~ msgid "referências"
+#~ msgstr "references"
+
+#~ msgid "citações"
+#~ msgstr ""
 
 #~ msgid "AGRICULTURAL SCIENCES"
 #~ msgstr ""

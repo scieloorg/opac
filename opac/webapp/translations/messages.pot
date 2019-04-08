@@ -1411,7 +1411,7 @@ msgid "artigos"
 msgstr ""
 
 #: opac/webapp/templates/collection/index.html:39
-msgid "citações"
+msgid "referências"
 msgstr ""
 
 #: opac/webapp/templates/collection/index.html:45
