@@ -1,9 +1,14 @@
 <div class="slide-item release">
   <div class="col-md-12">
-    <a href="https://twitter.com/{{ tweet.user.screen_name }}/status/{{ tweet.id }}" target="_blank">
+    <a href="https://twitter.com/{{ tweet.screen_name }}/status/{{ tweet.id }}" target="_blank">
+      {% if tweet.media_url_https %}
+          <img src="{{ tweet.media_url_https }}">
+      {% else %}
+          <img src="{{ url_for('static', filename='img/placeholder.jpg') }}">
+      {% endif %}
       <div class="info">
         {% autoescape false %}
-          {{ tweet.text }}
+          {{ tweet.full_text|truncate(150) }}
         {% endautoescape %}
       </div>
     </a>

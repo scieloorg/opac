@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import os
 import flask
 from flask import url_for, current_app
 
@@ -10,6 +9,134 @@ from . import utils
 
 
 class JournalHomeTestCase(BaseTestCase):
+
+    def test_journal_detail_subject_areas_with_pt_language(self):
+        """
+        Teste para verificar se na interface inicial da revista esta retornando
+        o texto no idioma Português.
+        """
+        areas = [
+            "Applied Social Sciences",
+            "Agricultural Sciences",
+        ]
+        journal = utils.makeOneJournal({'study_areas': areas})
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            header = {'Referer': url_for('main.journal_detail',
+                                         url_seg=journal.url_segment)}
+
+            response = c.get(url_for('main.set_locale',
+                                     lang_code='pt_BR'),
+                             headers=header,
+                             follow_redirects=True)
+
+            self.assertEqual(200, response.status_code)
+
+            self.assertEqual(flask.session['lang'], 'pt_BR')
+            content = response.data.decode('utf-8')
+            expected = "Ciências Sociais Aplicadas, Ciências Agrárias"
+            self.assertIn(expected, content)
+
+    def test_journal_detail_subject_areas_with_es_language(self):
+        """
+        Teste para verificar se na interface inicial da revista esta retornando o texto no
+        idioma Espanhol.
+        """
+        areas = [
+            "Applied Social Sciences",
+            "Agricultural Sciences",
+        ]
+        journal = utils.makeOneJournal({'study_areas': areas})
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            header = {'Referer': url_for('main.journal_detail',
+                                         url_seg=journal.url_segment)}
+
+            response = c.get(url_for('main.set_locale',
+                                     lang_code='es'),
+                             headers=header,
+                             follow_redirects=True)
+
+            self.assertEqual(200, response.status_code)
+
+            self.assertEqual(flask.session['lang'], 'es')
+
+            content = response.data.decode('utf-8')
+            expected = "Ciencias Sociales Aplicadas, Ciencias Agrícolas"
+            self.assertIn(expected, content)
+
+    def test_journal_detail_subject_areas_with_en_language(self):
+        """
+        Teste para verificar se na interface inicial da revista esta retornando
+        o texto no idioma Inglês.
+        """
+        areas = [
+            "Applied Social Sciences",
+            "Agricultural Sciences",
+        ]
+        journal = utils.makeOneJournal({'study_areas': areas})
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            header = {'Referer': url_for('main.journal_detail',
+                                         url_seg=journal.url_segment)}
+
+            response = c.get(
+                url_for('main.set_locale', lang_code='en'),
+                headers=header,
+                follow_redirects=True)
+
+            self.assertEqual(200, response.status_code)
+
+            self.assertEqual(flask.session['lang'], 'en')
+
+            content = response.data.decode('utf-8')
+            expected = "Applied Social Sciences, Agricultural Sciences"
+
+            self.assertIn(expected, content)
+
+    def test_journal_detail_subject_areas_more_than_three(self):
+        """
+        Teste para verificar se na interface retorna ``Multidiciplinar`` quando a quantidade de areas é maior que 3.
+        """
+        areas = [
+            "Applied Social Sciences",
+            "Agricultural Sciences",
+            "Exact and Earth Sciences",
+            "Health Sciences",
+            "Human Sciences",
+            "Linguistics, Letters and Arts",
+        ]
+        journal = utils.makeOneJournal({'study_areas': areas})
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            header = {'Referer': url_for('main.journal_detail',
+                                         url_seg=journal.url_segment)}
+
+            response = c.get(
+                url_for('main.set_locale', lang_code='en'),
+                headers=header,
+                follow_redirects=True)
+
+            self.assertEqual(200, response.status_code)
+
+            self.assertEqual(flask.session['lang'], 'en')
+
+            content = response.data.decode('utf-8')
+            expected = "Multidisciplinary"
+
+            self.assertIn(expected, content)
 
     # Mission
     def test_journal_detail_mission_with_pt_language(self):
@@ -342,7 +469,7 @@ class JournalHomeTestCase(BaseTestCase):
                     url_for('main.journal_detail',
                             url_seg=journal.url_segment))
                 response_data = response.data.decode('utf-8')
-                
+
                 expected = 'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q='
                 if '&amp;' in response_data:
                     expected = expected.replace('&', '&amp;')

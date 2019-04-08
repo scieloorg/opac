@@ -151,6 +151,12 @@ import os
 
       - MathJax:
         - OPAC_MATHJAX_CDN_URL: string com a URL do mathjax padrão; ex: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"
+
+      - Links SciELO:
+        - URL_SCIELO_ORG: URL para o SciELO.org (default: '//www.scielo.org')
+        - SCIELO_ORG_URIS: URIs em SciELO.org para sessões específicas
+        - URL_BLOG_SCIELO: URL para o Blog SciELO em Perspectiva (default: '//blog.scielo.org')
+        - URL_SEARCH: URL para o Search SciELO (default: '//search.scielo.org/')
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -292,6 +298,40 @@ IMAGES_ALLOWED_EXTENSIONS_RE = tuple('*.' + ext for ext in IMAGES_ALLOWED_EXTENS
 THUMBNAIL_HEIGHT = 100
 THUMBNAIL_WIDTH = 100
 
+# scielo.org
+URL_SCIELO_ORG = os.environ.get('OPAC_URL_SCIELO_ORG', '//www.scielo.org')
+
+SCIELO_ORG_URIS = {
+    'journals_by_title': {
+        'pt_BR': '/pt/periodicos/listar-por-ordem-alfabetica/',
+        'en': '/en/journals/list-by-alphabetical-order/',
+        'es': '/es/revistas/listar-por-orden-alfabetico/',
+    },
+    'journals_by_subject': {
+        'pt_BR': '/pt/periodicos/listar-por-assunto/',
+        'en': '/en/journals/list-by-subject-area/',
+        'es': '/es/revistas/listar-por-tema',
+    },
+    'oai_and_rss': {
+        'pt_BR': '/pt/sobre-o-scielo/acesso-via-oai-e-rss/',
+        'en': '/en/about-scielo/access-via-oai-and-rss/',
+        'es': '/es/sobre-el-scielo/acesso-via-oai-y-rss/',
+    },
+    'about_network': {
+        'pt_BR': '/pt/sobre-o-scielo/',
+        'en': '/en/about-scielo/',
+        'es': '/es/sobre-el-scielo',
+    },
+    'contact': {
+        'pt_BR': '/pt/sobre-o-scielo/contato/',
+        'en': '/en/about-scielo/contact/',
+        'es': '/es/sobre-el-scielo/contacto/',
+    },
+}
+
+# scielo.org
+URL_BLOG_SCIELO = os.environ.get('OPAC_URL_BLOG_SCIELO', '//blog.scielo.org')
+
 # search scielo
 URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
 
@@ -307,6 +347,10 @@ DIMENSIONS_METRICS_URL = os.environ.get(
 )
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
+
+
+USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
+ALTMETRIC_METRICS_URL = os.environ.get('OPAC_ALTMETRIC_METRICS_URL', 'https://www.altmetric.com/details.php')
 
 NEWS_LIST_LIMIT = 10
 
@@ -430,7 +474,7 @@ MAILING_CRON_STRING = os.environ.get(
 DEFAULT_SCHEDULER_TIMEOUT = int(
     os.environ.get('OPAC_DEFAULT_SCHEDULER_TIMEOUT', 1000))
 
-DEFAULT_MATHJAX_CDN_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"
+DEFAULT_MATHJAX_CDN_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_SVG"
 MATHJAX_CDN_URL = os.environ.get('OPAC_MATHJAX_CDN_URL', DEFAULT_MATHJAX_CDN_URL)
 
 

@@ -16,6 +16,7 @@ from . import main
 from webapp import babel
 from webapp import cache
 from webapp import controllers
+from webapp.choices import STUDY_AREAS
 from webapp.utils import utils
 from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
@@ -51,6 +52,16 @@ def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
     setattr(g, 'email_contact', forms.ContactForm())
     setattr(g, 'error', forms.ErrorForm())
+
+
+@main.before_app_request
+def add_scielo_org_config_to_g():
+    language = session.get('lang', get_locale())
+    scielo_org_links = {
+        key: url[language]
+        for key, url in current_app.config.get('SCIELO_ORG_URIS', {}).items()
+    }
+    setattr(g, 'scielo_org', scielo_org_links)
 
 
 @babel.localeselector
@@ -193,10 +204,10 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None, lang=None):
-    language = lang or session.get('lang', get_locale())
+def about_collection(slug_name=None):
+    language = session.get('lang', get_locale())
 
     context = {}
     page = None
@@ -356,7 +367,7 @@ def journal_detail(url_seg):
 
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
-    if journal.last_issue:
+    if journal.last_issue and journal.current_status == "current":
         sections = [section for section in journal.last_issue.sections if section.language == 'en']
         recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
     else:
@@ -379,6 +390,9 @@ def journal_detail(url_seg):
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': latest_issue,
@@ -423,6 +437,7 @@ def journal_feed(url_seg):
         feed.add(article.title or _('Artigo sem título'),
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
+                 id=article.doi or article.pid,
                  author=article.authors,
                  url=url_external('main.article_detail',
                                   url_seg=journal.url_segment,
@@ -451,6 +466,16 @@ def about_journal(url_seg):
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
+    latest_issue = issues[0] if issues else None
+
+    if latest_issue:
+        latest_issue_legend = descriptive_short_format(
+            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+            suppl=latest_issue.suppl_text, language=language[:2].lower())
+    else:
+        latest_issue_legend = None
+
     # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
@@ -464,9 +489,8 @@ def about_journal(url_seg):
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
-        # o primiero item da lista é o último número.
-        # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None,
+        'latest_issue_legend': latest_issue_legend,
+        'last_issue': latest_issue,
     }
 
     if page:
@@ -507,9 +531,9 @@ def journals_search_by_theme_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter, lang=lang)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
     elif filter == 'publisher':
         objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter, lang=lang)
     else:
@@ -691,6 +715,9 @@ def issue_toc(url_seg, url_seg_issue):
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
     }
@@ -732,6 +759,7 @@ def issue_feed(url_seg, url_seg_issue):
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
+                 id=article.doi or article.pid,
                  url=url_external('main.article_detail',
                                   url_seg=journal.url_segment,
                                   url_seg_issue=issue.url_segment,
@@ -750,6 +778,9 @@ def issue_feed(url_seg, url_seg_issue):
 def article_detail_pid(pid):
 
     article = controllers.get_article_by_pid(pid)
+
+    if not article:
+        article = controllers.get_article_by_oap_pid(pid)
 
     if not article:
         abort(404, _('Artigo não encontrado'))
@@ -779,7 +810,15 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _('Artigo não encontrado'))
+        article = controllers.get_article_by_aop_url_segs(
+            issue.journal, url_seg_issue, url_seg_article
+        )
+        if not article:
+            abort(404, _('Artigo não encontrado'))
+        return redirect(url_for('main.article_detail',
+                                url_seg=article.journal.acronym,
+                                url_seg_issue=article.issue.url_segment,
+                                url_seg_article=article.url_segment))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.

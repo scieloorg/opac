@@ -30,7 +30,7 @@ from flask_babelex import lazy_gettext as __
 from flask_mongoengine import Pagination
 from webapp import dbsql
 from .models import User
-from .choices import INDEX_NAME, JOURNAL_STATUS
+from .choices import INDEX_NAME, JOURNAL_STATUS, STUDY_AREAS
 from .utils import utils
 from uuid import uuid4
 
@@ -74,12 +74,28 @@ def get_collection_tweets():
             auth.set_access_token(access_token, access_token_secret)
 
             api = tweepy.API(auth, timeout=2)
-            public_tweets = api.user_timeline(count=10)
+            public_tweets = api.user_timeline(tweet_mode='extended', count=10)
         except:
             return []
         else:
-            tweets = [tweet for tweet in public_tweets]
-        return tweets
+            try:
+                return [
+                    {
+                        "id": tweet.id,
+                        "screen_name": tweet.user.screen_name,
+                        "full_text": tweet.full_text,
+                        "media_url_https": tweet.entities["media"][0][
+                            "media_url_https"
+                        ]
+                        if "media" in tweet.entities
+                        else "",
+                    }
+                    for tweet in public_tweets
+                ]
+
+            except AttributeError:
+                return []
+
     else:
         # falta pelo menos uma credencial do twitter
         return []
@@ -282,18 +298,14 @@ def get_journals_grouped_by(grouper_field, title_query='', query_filter='', is_p
         if grouper_field_iterable:
             if isinstance(grouper_field_iterable, str):
                 grouper_field_iterable = [grouper_field_iterable]
-        else:
-            continue
-
-        for grouper in grouper_field_iterable:
-
-            if grouper_field == 'index_at':
-                # tentavida de pegar o nome e não a sigla do index
-                # se não achar o nome (KeyError), ficamos com o nome da sigla
-                grouper = INDEX_NAME.get(grouper, grouper)
-
+            grouper_choices = {
+                'index_at': INDEX_NAME,
+                'study_areas': STUDY_AREAS,
+            }
             j_data = get_journal_json_data(journal, lang)
-            groups_dict.setdefault(grouper, []).append(j_data)
+            for grouper in grouper_field_iterable:
+                grouper = grouper_choices.get(grouper_field, {}).get(grouper.upper(), grouper)
+                groups_dict.setdefault(str(grouper), []).append(j_data)
 
     meta = {
         'total': journals.count(),
@@ -760,6 +772,27 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
         raise ValueError(__('Obrigatório um iid and url_seg_article.'))
 
     return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
+
+
+def get_article_by_aop_url_segs(jid, url_seg_issue, url_seg_article, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``jid``, ``url_seg_issue``,
+    ``url_seg_article`` e ``kwargs``.
+
+    - ``jid``: string, id do journal;
+    - ``url_seg_issue``: string, segmento do url do fascículo;
+    - ``url_seg_article``: string, segmento do url do artigo;
+    - ``kwargs``: parâmetros de filtragem.
+    """
+    if not (jid and url_seg_issue and url_seg_article):
+        raise ValueError(__('Obrigatório um jid, url_seg_issue and url_seg_article.'))
+
+    aop_url_segs = {
+        "url_seg_article": url_seg_article,
+        "url_seg_issue": url_seg_issue
+    }
+
+    return Article.objects(journal=jid, aop_url_segs=aop_url_segs, **kwargs).first()
 
 
 def get_articles_by_aid(aids):

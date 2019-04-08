@@ -39,18 +39,19 @@
               {{ journal.title }}
             </h1>
             <span class="publisher">
-              {% trans %}Publicação de:{% endtrans %} <strong>{{ journal.publisher_name}}</strong>
+              {% trans %}Publicação de:{% endtrans %} <strong class="namePlublisher">{{ journal.publisher_name}}</strong>
             </span>
             </br>
             <span class="theme">
               <span class="area">
                 {% trans %}Área:{% endtrans %}
               </span>
-              {% if journal.subject_categories %}
-                {{ journal.subject_categories|join(', ')|title|truncate(60) }}
-              {% endif %}
-              {% if journal.study_areas %}
-                {{ journal.study_areas|join(', ')|title|truncate(60) }}
+              {% if journal_study_areas %}
+                {% if journal_study_areas|length > 3 %}
+                  {% trans %}Multidiciplinar{% endtrans %}
+                {% else %}
+                  {{ journal_study_areas|join(', ')|title|truncate(60) }}
+                {% endif %}
               {% endif %}
             </span>
             <span class="issn">

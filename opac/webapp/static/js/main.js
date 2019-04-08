@@ -359,7 +359,7 @@ var Portal = {
 					minLength: 3,
 					dynamic: true,
 					delay: 500,
-					emptyTemplate: 'Nenhum periódico encontrado para o temo: "{{query}}"',
+					emptyTemplate: 'Nenhum periódico encontrado para o termo: "{{query}}"',
 					source: {
 						journals: {
 							display: "title",
@@ -402,12 +402,22 @@ var Portal = {
 				wrapper = $(".slide-wrapper", container),
 				prev = $(".slide-back", container),
 				next = $(".slide-next", container),
-				itemProps = {
-					w: itens.eq(0).outerWidth(),
-					h: itens.eq(0).outerHeight()
-				},
-				wrapperWidth = (itens.length*itemProps.w)+100,
+
 				containerWidth = $(".slide-container", container).outerWidth();
+
+				warray = [];
+				harray = [];
+				itens.each(function(){
+					harray.push($(this).outerHeight());
+					warray.push($(this).outerWidth());
+				});
+
+				itemProps = {
+					w: Math.max.apply(null, warray),
+					h: Math.max.apply(null, harray)
+				};
+
+				wrapperWidth = (itens.length*itemProps.w)+100;
 
 			wrapper.width(wrapperWidth);
 			$(".slide-container", container).height(itemProps.h);
@@ -1106,6 +1116,15 @@ var Portal = {
 					});
 				}
 			}
+		},
+		publicatorName: function(){
+			var nome = $(".namePlublisher").text();
+			var qtdname = nome.length;
+
+			if (qtdname >= 56){
+				$(".namePlublisher").attr( "data-toggle", "tooltip" );
+				$(".namePlublisher").attr( "title", nome );
+			}
 		}
 	};
 
@@ -1165,6 +1184,7 @@ var Cookie = {
 
 $(function() {
 
+
 	Portal.Init();
 
 	if($(".searchForm").length)
@@ -1188,5 +1208,8 @@ $(function() {
 	if($(".portal .collectionList").length)
 		var hash = window.location.hash;
 		$('.portal .collection .nav-tabs a[href="' + hash + '"]').tab('show');
+
+	if($(".namePlublisher").length)
+		Journal.publicatorName();
 
 });
