@@ -2,6 +2,7 @@
 
 import logging
 import requests
+from io import BytesIO
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
@@ -23,6 +24,9 @@ from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_q
 from webapp import forms
 
 from webapp.config.lang_names import display_original_lang_name
+
+from lxml import etree
+from packtools import HTMLGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -791,6 +795,62 @@ def article_detail_pid(pid):
                             url_seg_article=article.url_segment))
 
 
+def render_html_from_xml(article, lang):
+    result = requests.get(normalize_ssm_url(article.xml))
+
+    xml = etree.parse(BytesIO(result.content))
+
+    generator = HTMLGenerator.parse(xml, valid_only=False)
+
+    # Criamos um objeto do tip soup
+    soup = BeautifulSoup(etree.tostring(generator.generate(lang), encoding="UTF-8", method="html"), 'html.parser')
+
+    # Fatiamos o HTML pelo div com class: articleTxt
+    return soup.find('div', {'id': 'standalonearticle'}), generator.languages
+
+
+def render_html_from_html(article, lang):
+    html_url = [html
+                for html in article.htmls
+                if html['lang'] == lang]
+
+    try:
+        html_url = html_url[0]['url']
+    except IndexError:
+        raise ValueError('Artigo não encontrado') from None
+
+    result = requests.get(normalize_ssm_url(html_url))
+    if result.status_code == 200:
+        html = result.content.decode('utf8')
+    else:
+        raise ValueError('Artigo não encontrado') from None
+
+    text_languages = [html['lang'] for html in article.htmls]
+
+    return html, text_languages
+
+
+def render_html(article, lang):
+    if article.xml:
+        return render_html_from_xml(article, lang)
+    elif article.htmls:
+        return render_html_from_html(article, lang)
+    else:
+        # TODO: Corrigir os teste que esperam ter o atributo ``htmls``
+        # O ideal seria levantar um ValueError.
+        return '', []
+
+
+# TODO: Remover assim que o valor Article.xml estiver consistente na base de
+# dados
+def normalize_ssm_url(url):
+    if url.startswith("http"):
+        parsed_url = urlparse(url)
+        return current_app.config["SSM_BASE_URI"] + parsed_url.path
+    else:
+        return current_app.config["SSM_BASE_URI"] + url
+
+
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
@@ -833,9 +893,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-    journal = article.journal
-    issue = article.issue
-
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
     article_list = [_article for _article in articles]
@@ -858,66 +915,35 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         except Exception:
             abort(404, _('PDF do Artigo não encontrado'))
 
-    html_article = None
+    try:
+        html, text_languages = render_html(article, lang_code)
+    except (ValueError, requests.exceptions.RequestException):
+        abort(404, _('HTML do Artigo não encontrado ou indisponível'))
 
-    text_versions = None
-    if article.htmls:
-        try:
-            html_url = [html for html in article.htmls if html['lang'] == lang_code]
-
-            if len(html_url) != 1:
-                abort(404, _('HTML do Artigo não encontrado'))
-            else:
-                html_url = html_url[0]['url']
-
-            if html_url.startswith('http'):  # http:// ou https://
-                html_url_parsed = urlparse(html_url)
-                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url_parsed.path
-            else:
-                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url
-
-            # Obtemos o html do SSM
-            try:
-                result = requests.get(html_full_ssm_url)
-            except requests.exceptions.RequestException:
-                abort(404, _('HTML do Artigo não encontrado ou indisponível'))
-            else:
-                if result.status_code == 200 and len(result.content) > 0:
-
-                    # Criamos um objeto do tip soup
-                    soup = BeautifulSoup(result.content.decode('utf-8'), 'html.parser')
-
-                    # Fatiamos o HTML pelo div com class: articleTxt
-                    html_article = soup.find('div', {'id': 'standalonearticle'})
-                else:
-                    abort(404, _('Artigo não encontrado'))
-
-        except IndexError:
-            abort(404, _('Artigo não encontrado'))
-        text_versions = sorted(
-            [
-                (
-                    html['lang'],
-                    display_original_lang_name(html['lang']),
-                    url_for(
-                       'main.article_detail',
-                       url_seg=journal.url_segment,
-                       url_seg_issue=issue.url_segment,
-                       url_seg_article=article.url_segment,
-                       lang_code=html['lang']
-                    )
-                )
-                for html in article.htmls
-            ]
-        )
+    text_versions = sorted(
+           [
+               (
+                   lang,
+                   display_original_lang_name(lang),
+                   url_for(
+                      'main.article_detail',
+                      url_seg=article.journal.url_segment,
+                      url_seg_issue=article.issue.url_segment,
+                      url_seg_article=article.url_segment,
+                      lang_code=lang
+                   )
+               )
+               for lang in text_languages
+           ]
+       )
 
     context = {
         'next_article': next_article,
         'previous_article': previous_article,
         'article': article,
-        'journal': journal,
+        'journal': article.journal,
         'issue': issue,
-        'html': html_article,
+        'html': html,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
         'article_lang': lang_code,
