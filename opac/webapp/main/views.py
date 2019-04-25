@@ -1158,19 +1158,6 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
             url_seg_issue=issue.url_segment,
             url_seg_article=article_match.url_segment, lang_code=pdf_lang)
 
-# ##################################Search#######################################
-
-
-@main.route("/metasearch/", methods=['GET'])
-@cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def metasearch():
-    url = request.args.get('url', current_app.config['URL_SEARCH'], type=str)
-    params = {}
-    for k, v in list(request.args.items()):
-        if k != 'url':
-            params[k] = v
-    xml = utils.do_request(url, request.args)
-    return Response(xml, mimetype='text/xml')
 
 # ###############################E-mail share####################################
 
