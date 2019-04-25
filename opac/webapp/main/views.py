@@ -2,6 +2,7 @@
 
 import logging
 import requests
+import mimetypes
 from io import BytesIO
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
@@ -38,6 +39,40 @@ ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
+
+
+class RetryableError(Exception):
+    """Erro recuperável sem que seja necessário modificar o estado dos dados
+    na parte cliente, e.g., timeouts, erros advindos de particionamento de rede
+    etc.
+    """
+
+
+class NonRetryableError(Exception):
+    """Erro do qual não pode ser recuperado sem modificar o estado dos dados
+    na parte cliente, e.g., recurso solicitado não exite, URI inválida etc.
+    """
+
+
+def fetch_data(url: str, timeout: float = 2) -> bytes:
+    try:
+        response = requests.get(url, timeout=timeout)
+    except (requests.ConnectionError, requests.Timeout) as exc:
+        raise RetryableError(exc) from exc
+    except (requests.InvalidSchema, requests.MissingSchema, requests.InvalidURL) as exc:
+        raise NonRetryableError(exc) from exc
+    else:
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            if 400 <= exc.response.status_code < 500:
+                raise NonRetryableError(exc) from exc
+            elif 500 <= exc.response.status_code < 600:
+                raise RetryableError(exc) from exc
+            else:
+                raise
+
+    return response.content
 
 
 @main.before_app_request
@@ -796,9 +831,9 @@ def article_detail_pid(pid):
 
 
 def render_html_from_xml(article, lang):
-    result = requests.get(normalize_ssm_url(article.xml))
+    result = fetch_data(normalize_ssm_url(article.xml))
 
-    xml = etree.parse(BytesIO(result.content))
+    xml = etree.parse(BytesIO(result))
 
     generator = HTMLGenerator.parse(xml, valid_only=False)
 
@@ -819,11 +854,9 @@ def render_html_from_html(article, lang):
     except IndexError:
         raise ValueError('Artigo não encontrado') from None
 
-    result = requests.get(normalize_ssm_url(html_url))
-    if result.status_code == 200:
-        html = result.content.decode('utf8')
-    else:
-        raise ValueError('Artigo não encontrado') from None
+    result = fetch_data(normalize_ssm_url(html_url))
+
+    html = result.decode('utf8')
 
     text_languages = [html['lang'] for html in article.htmls]
 
@@ -917,7 +950,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     try:
         html, text_languages = render_html(article, lang_code)
-    except (ValueError, requests.exceptions.RequestException):
+    except (ValueError, NonRetryableError, RetryableError):
         abort(404, _('HTML do Artigo não encontrado ou indisponível'))
 
     text_versions = sorted(
@@ -979,15 +1012,16 @@ def article_epdf():
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def get_content_from_ssm(resource_ssm_media_path):
     resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
+
+    url = resource_ssm_full_url.strip()
+    mimetype, __ = mimetypes.guess_type(url)
+
     try:
-        ssm_response = requests.get(resource_ssm_full_url.strip())
-    except Exception:
+        ssm_response = fetch_data(url)
+    except (NonRetryableError, RetryableError):
         abort(404, _('Recruso não encontrado'))
     else:
-        if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
-            return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
-        else:
-            abort(404, _('Recurso não encontrado'))
+        return Response(ssm_response, mimetype=mimetype)
 
 
 @main.route('/media/assets/<regex("(.*)"):relative_media_path>')
