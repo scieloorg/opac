@@ -32,3 +32,4 @@ rq-scheduler==0.8.2
 rq-scheduler-dashboard==0.0.2
 lxml==4.2.4
 Werkzeug==0.14.1
+packtools==2.4.3
