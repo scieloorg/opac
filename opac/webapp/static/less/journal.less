@@ -78,6 +78,11 @@
 			padding-left: 0;
 			margin-top: 15px;
 		}
+
+		.tooltip-inner {
+			max-width: 1000px;
+		}
+		
 	}
 
 	.journalContent {
@@ -347,13 +352,15 @@
 			.ellipsis {
 				.multiLineEllipsis(@lineHeight: 1.2em, @lineToShow: 9, @font: 11px);
 			}
+			strong{
+				margin-top:3px;
+			}
 		}
 		h3 {
 			color: @DarkBlue;
 			font-size: 1.3em;
 			margin: 0;
 			margin-bottom: 10px;
-			//height: 80px;
 
 			&.ellipsis {
 				.multiLineEllipsis(@lineHeight: 1.4em, @lineToShow: 5, @font: 14.56px);
@@ -361,37 +368,60 @@
 		}
 		a {
 			color: #0000ee;
+
+			&:link,
+			&:visited,
+			&:hover,
+			&:active{
+				text-decoration: none;
+			}
 		}
 	}
 	.news {
+
 		.col-md-2 {
 			padding-left: 0;
 		}
 		img {
 			width: 100%;
 			.radius(4px);
+			margin: 5px 0;
 		}
+		
 		a {
 			display: block;
-			margin-bottom: 30px;
-			color: #7f7a71;
-			font-size: .9em;
+			color: #7b7469;
+			font-weight: normal;
 
-			&:hover {
-				h3 {
-					color: @Blue;
-				}
+			&:link,
+			&:visited,
+			&:hover,
+			&:active{
+				text-decoration: none;
 			}
 		}
+		
 		h3 {
 			color: @DarkBlue;
-			margin: 0 0 5px;
-			font-size: 1.5em;
+			margin: 3px 0 10px;
+			font-size: 1.3em;
+
+			&.ellipsis {
+				.multiLineEllipsis(@lineHeight: 1.4em, @lineToShow: 5, @font: 14.56px);
+				
+			}
 		}
+
+		div.ellipsis{
+			max-height:116.8px;
+		}
+
 		strong {
 			white-space: nowrap;
-			color: #0000ee;
-			font-weight: normal;
+			color: #6789d3;
+			font-weight: 700;
+			margin-top:3px;
+			display:block;
 		}
 	}
 	.issueNav {

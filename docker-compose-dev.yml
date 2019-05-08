@@ -67,6 +67,8 @@ services:
             - OPAC_DIMENSIONS_URL=https://badge.dimensions.ai/details/doi
             - OPAC_USE_PLUMX=True
             - OPAC_PLUMX_METRICS_URL=https://plu.mx/scielo/a
+            - OPAC_USE_ALTMETRIC=True
+            - OPAC_ALTMETRIC_METRICS_URL=https://www.altmetric.com/details.php
             # - OPAC_CACHE_ENABLED=True
             # - OPAC_CACHE_DEFAULT_TIMEOUT=3600
             # - OPAC_CACHE_REDIS_HOST=redis-cache

@@ -39,18 +39,19 @@
               {{ journal.title }}
             </h1>
             <span class="publisher">
-              {% trans %}Publicação de:{% endtrans %} <strong>{{ journal.publisher_name}}</strong>
+              {% trans %}Publicação de:{% endtrans %} <strong class="namePlublisher">{{ journal.publisher_name}}</strong>
             </span>
             </br>
             <span class="theme">
               <span class="area">
                 {% trans %}Área:{% endtrans %}
               </span>
-              {% if journal.subject_categories %}
-                {{ journal.subject_categories|join(', ')|title|truncate(60) }}
-              {% endif %}
-              {% if journal.study_areas %}
-                {{ journal.study_areas|join(', ')|title|truncate(60) }}
+              {% if journal_study_areas %}
+                {% if journal_study_areas|length > 3 %}
+                  {% trans %}Multidiciplinar{% endtrans %}
+                {% else %}
+                  {{ journal_study_areas|join(', ')|title|truncate(60) }}
+                {% endif %}
               {% endif %}
             </span>
             <span class="issn">
@@ -73,10 +74,35 @@
             {% if journal.next_title %}
               <span class="otherTitle">
                 <span>{% trans %}Novo título:{% endtrans %}</span>
-                {{ journal.next_title }}
+                  {% if journal.url_next_journal %}
+                    <a href="{{ url_for('.journal_detail', url_seg=journal.url_next_journal) }}" class="NewCollectionLink">
+                        {{ journal.next_title }}
+                    </a>
+                  {% else %}
+                    <span class="NewCollectionLink">
+                      {{ journal.next_title }}
+                    </span>
+                  {% endif %}
               </span>
             {% endif %}
             <!-- Fim - Se houver um outro título-->
+
+            <!-- Ini - Se houver um outro título antigo -->
+            {% if journal.previous_journal_ref %}
+              <span class="otherTitle">
+                <span>{% trans %}Título anterior:{% endtrans %}</span>
+                  {% if journal.url_previous_journal %}
+                    <a href="{{ url_for('.journal_detail', url_seg=journal.url_previous_journal) }}" class="NewCollectionLink">
+                        {{ journal.previous_journal_ref }}
+                    </a>
+                  {% else %}
+                    <span class="NewCollectionLink">
+                      {{ journal.previous_journal_ref }}
+                    </span>
+                  {% endif %}
+              </span>
+            {% endif %}
+             <!-- Fim - Se houver um outro título antigo-->
 
           </div>
         </div>

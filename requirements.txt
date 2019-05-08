@@ -14,13 +14,13 @@ Flask-Migrate==2.2.1
 unicodecsv==0.14.1
 feedparser==5.2.1
 legendarium==2.0.2
--e git+https://git@github.com/scieloorg/opac_schema@v2.49#egg=opac_schema
+-e git+https://git@github.com/scieloorg/opac_schema@v2.52#egg=opac_schema
 Flask-HTMLmin==1.4.0
 python-slugify==1.2.4
 requests>=2.20.0
 gunicorn==19.8.1
 xlsxwriter==1.1.0
-tweepy==3.6.0
+tweepy==3.7.0
 raven[flask]==6.9.0
 beautifulsoup4==4.6.3
 Flask-WTF==0.14.2
@@ -31,3 +31,5 @@ rq-dashboard==0.3.10
 rq-scheduler==0.8.2
 rq-scheduler-dashboard==0.0.2
 lxml==4.2.4
+Werkzeug==0.14.1
+packtools==2.4.3

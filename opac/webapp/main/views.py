@@ -2,6 +2,8 @@
 
 import logging
 import requests
+import mimetypes
+from io import BytesIO
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
@@ -16,12 +18,16 @@ from . import main
 from webapp import babel
 from webapp import cache
 from webapp import controllers
+from webapp.choices import STUDY_AREAS
 from webapp.utils import utils
 from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
 from webapp import forms
 
 from webapp.config.lang_names import display_original_lang_name
+
+from lxml import etree
+from packtools import HTMLGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +39,40 @@ ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
+
+
+class RetryableError(Exception):
+    """Erro recuperável sem que seja necessário modificar o estado dos dados
+    na parte cliente, e.g., timeouts, erros advindos de particionamento de rede
+    etc.
+    """
+
+
+class NonRetryableError(Exception):
+    """Erro do qual não pode ser recuperado sem modificar o estado dos dados
+    na parte cliente, e.g., recurso solicitado não exite, URI inválida etc.
+    """
+
+
+def fetch_data(url: str, timeout: float = 2) -> bytes:
+    try:
+        response = requests.get(url, timeout=timeout)
+    except (requests.ConnectionError, requests.Timeout) as exc:
+        raise RetryableError(exc) from exc
+    except (requests.InvalidSchema, requests.MissingSchema, requests.InvalidURL) as exc:
+        raise NonRetryableError(exc) from exc
+    else:
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            if 400 <= exc.response.status_code < 500:
+                raise NonRetryableError(exc) from exc
+            elif 500 <= exc.response.status_code < 600:
+                raise RetryableError(exc) from exc
+            else:
+                raise
+
+    return response.content
 
 
 @main.before_app_request
@@ -51,6 +91,16 @@ def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
     setattr(g, 'email_contact', forms.ContactForm())
     setattr(g, 'error', forms.ErrorForm())
+
+
+@main.before_app_request
+def add_scielo_org_config_to_g():
+    language = session.get('lang', get_locale())
+    scielo_org_links = {
+        key: url[language]
+        for key, url in current_app.config.get('SCIELO_ORG_URIS', {}).items()
+    }
+    setattr(g, 'scielo_org', scielo_org_links)
 
 
 @babel.localeselector
@@ -193,10 +243,10 @@ def collection_list_feed():
 
 
 @main.route("/about/", methods=['GET'])
-@main.route('/about/<string:slug_name>/<string:lang>', methods=['GET'])
+@main.route('/about/<string:slug_name>', methods=['GET'])
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def about_collection(slug_name=None, lang=None):
-    language = lang or session.get('lang', get_locale())
+def about_collection(slug_name=None):
+    language = session.get('lang', get_locale())
 
     context = {}
     page = None
@@ -356,7 +406,7 @@ def journal_detail(url_seg):
 
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
-    if journal.last_issue:
+    if journal.last_issue and journal.current_status == "current":
         sections = [section for section in journal.last_issue.sections if section.language == 'en']
         recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
     else:
@@ -379,6 +429,9 @@ def journal_detail(url_seg):
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         # condicional para verificar se issues contém itens
         'last_issue': latest_issue,
@@ -423,6 +476,7 @@ def journal_feed(url_seg):
         feed.add(article.title or _('Artigo sem título'),
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
+                 id=article.doi or article.pid,
                  author=article.authors,
                  url=url_external('main.article_detail',
                                   url_seg=journal.url_segment,
@@ -451,6 +505,16 @@ def about_journal(url_seg):
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
+    latest_issue = issues[0] if issues else None
+
+    if latest_issue:
+        latest_issue_legend = descriptive_short_format(
+            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+            suppl=latest_issue.suppl_text, language=language[:2].lower())
+    else:
+        latest_issue_legend = None
+
     # A lista de números deve ter mais do que 1 item para que possamos tem
     # anterior e próximo
     if len(issues) >= 2:
@@ -464,9 +528,8 @@ def about_journal(url_seg):
         'next_issue': None,
         'previous_issue': previous_issue,
         'journal': journal,
-        # o primiero item da lista é o último número.
-        # condicional para verificar se issues contém itens
-        'last_issue': issues[0] if issues else None,
+        'latest_issue_legend': latest_issue_legend,
+        'last_issue': latest_issue,
     }
 
     if page:
@@ -507,9 +570,9 @@ def journals_search_by_theme_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter, lang=lang)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('index_at', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
     elif filter == 'publisher':
         objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter, lang=lang)
     else:
@@ -691,6 +754,9 @@ def issue_toc(url_seg, url_seg_issue):
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
         # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
     }
@@ -732,6 +798,7 @@ def issue_feed(url_seg, url_seg_issue):
                  render_template("issue/feed_content.html", article=article),
                  content_type='html',
                  author=article.authors,
+                 id=article.doi or article.pid,
                  url=url_external('main.article_detail',
                                   url_seg=journal.url_segment,
                                   url_seg_issue=issue.url_segment,
@@ -752,12 +819,69 @@ def article_detail_pid(pid):
     article = controllers.get_article_by_pid(pid)
 
     if not article:
+        article = controllers.get_article_by_oap_pid(pid)
+
+    if not article:
         abort(404, _('Artigo não encontrado'))
 
     return redirect(url_for('main.article_detail',
                             url_seg=article.journal.acronym,
                             url_seg_issue=article.issue.url_segment,
                             url_seg_article=article.url_segment))
+
+
+def render_html_from_xml(article, lang):
+    result = fetch_data(normalize_ssm_url(article.xml))
+
+    xml = etree.parse(BytesIO(result))
+
+    generator = HTMLGenerator.parse(xml, valid_only=False)
+
+    # Criamos um objeto do tip soup
+    soup = BeautifulSoup(etree.tostring(generator.generate(lang), encoding="UTF-8", method="html"), 'html.parser')
+
+    # Fatiamos o HTML pelo div com class: articleTxt
+    return soup.find('div', {'id': 'standalonearticle'}), generator.languages
+
+
+def render_html_from_html(article, lang):
+    html_url = [html
+                for html in article.htmls
+                if html['lang'] == lang]
+
+    try:
+        html_url = html_url[0]['url']
+    except IndexError:
+        raise ValueError('Artigo não encontrado') from None
+
+    result = fetch_data(normalize_ssm_url(html_url))
+
+    html = result.decode('utf8')
+
+    text_languages = [html['lang'] for html in article.htmls]
+
+    return html, text_languages
+
+
+def render_html(article, lang):
+    if article.xml:
+        return render_html_from_xml(article, lang)
+    elif article.htmls:
+        return render_html_from_html(article, lang)
+    else:
+        # TODO: Corrigir os teste que esperam ter o atributo ``htmls``
+        # O ideal seria levantar um ValueError.
+        return '', []
+
+
+# TODO: Remover assim que o valor Article.xml estiver consistente na base de
+# dados
+def normalize_ssm_url(url):
+    if url.startswith("http"):
+        parsed_url = urlparse(url)
+        return current_app.config["SSM_BASE_URI"] + parsed_url.path
+    else:
+        return current_app.config["SSM_BASE_URI"] + url
 
 
 @main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
@@ -779,7 +903,15 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _('Artigo não encontrado'))
+        article = controllers.get_article_by_aop_url_segs(
+            issue.journal, url_seg_issue, url_seg_article
+        )
+        if not article:
+            abort(404, _('Artigo não encontrado'))
+        return redirect(url_for('main.article_detail',
+                                url_seg=article.journal.acronym,
+                                url_seg_issue=article.issue.url_segment,
+                                url_seg_article=article.url_segment))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.
@@ -793,9 +925,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
-
-    journal = article.journal
-    issue = article.issue
 
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
@@ -819,66 +948,35 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         except Exception:
             abort(404, _('PDF do Artigo não encontrado'))
 
-    html_article = None
+    try:
+        html, text_languages = render_html(article, lang_code)
+    except (ValueError, NonRetryableError, RetryableError):
+        abort(404, _('HTML do Artigo não encontrado ou indisponível'))
 
-    text_versions = None
-    if article.htmls:
-        try:
-            html_url = [html for html in article.htmls if html['lang'] == lang_code]
-
-            if len(html_url) != 1:
-                abort(404, _('HTML do Artigo não encontrado'))
-            else:
-                html_url = html_url[0]['url']
-
-            if html_url.startswith('http'):  # http:// ou https://
-                html_url_parsed = urlparse(html_url)
-                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url_parsed.path
-            else:
-                html_full_ssm_url = current_app.config['SSM_BASE_URI'] + html_url
-
-            # Obtemos o html do SSM
-            try:
-                result = requests.get(html_full_ssm_url)
-            except requests.exceptions.RequestException:
-                abort(404, _('HTML do Artigo não encontrado ou indisponível'))
-            else:
-                if result.status_code == 200 and len(result.content) > 0:
-
-                    # Criamos um objeto do tip soup
-                    soup = BeautifulSoup(result.content.decode('utf-8'), 'html.parser')
-
-                    # Fatiamos o HTML pelo div com class: articleTxt
-                    html_article = soup.find('div', {'id': 'standalonearticle'})
-                else:
-                    abort(404, _('Artigo não encontrado'))
-
-        except IndexError:
-            abort(404, _('Artigo não encontrado'))
-        text_versions = sorted(
-            [
-                (
-                    html['lang'],
-                    display_original_lang_name(html['lang']),
-                    url_for(
-                       'main.article_detail',
-                       url_seg=journal.url_segment,
-                       url_seg_issue=issue.url_segment,
-                       url_seg_article=article.url_segment,
-                       lang_code=html['lang']
-                    )
-                )
-                for html in article.htmls
-            ]
-        )
+    text_versions = sorted(
+           [
+               (
+                   lang,
+                   display_original_lang_name(lang),
+                   url_for(
+                      'main.article_detail',
+                      url_seg=article.journal.url_segment,
+                      url_seg_issue=article.issue.url_segment,
+                      url_seg_article=article.url_segment,
+                      lang_code=lang
+                   )
+               )
+               for lang in text_languages
+           ]
+       )
 
     context = {
         'next_article': next_article,
         'previous_article': previous_article,
         'article': article,
-        'journal': journal,
+        'journal': article.journal,
         'issue': issue,
-        'html': html_article,
+        'html': html,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
         'article_lang': lang_code,
@@ -914,15 +1012,16 @@ def article_epdf():
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def get_content_from_ssm(resource_ssm_media_path):
     resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
+
+    url = resource_ssm_full_url.strip()
+    mimetype, __ = mimetypes.guess_type(url)
+
     try:
-        ssm_response = requests.get(resource_ssm_full_url.strip())
-    except Exception:
+        ssm_response = fetch_data(url)
+    except (NonRetryableError, RetryableError):
         abort(404, _('Recruso não encontrado'))
     else:
-        if ssm_response.status_code == 200 and len(ssm_response.content) > 0:
-            return Response(ssm_response.content, mimetype=ssm_response.headers['Content-Type'])
-        else:
-            abort(404, _('Recurso não encontrado'))
+        return Response(ssm_response, mimetype=mimetype)
 
 
 @main.route('/media/assets/<regex("(.*)"):relative_media_path>')
@@ -1059,19 +1158,6 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
             url_seg_issue=issue.url_segment,
             url_seg_article=article_match.url_segment, lang_code=pdf_lang)
 
-# ##################################Search#######################################
-
-
-@main.route("/metasearch/", methods=['GET'])
-@cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def metasearch():
-    url = request.args.get('url', current_app.config['URL_SEARCH'], type=str)
-    params = {}
-    for k, v in list(request.args.items()):
-        if k != 'url':
-            params[k] = v
-    xml = utils.do_request(url, request.args)
-    return Response(xml, mimetype='text/xml')
 
 # ###############################E-mail share####################################
 
