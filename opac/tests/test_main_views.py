@@ -670,6 +670,274 @@ class MainTestCase(BaseTestCase):
             issue = utils.makeOneIssue({'journal': journal})
 
             article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo en español'},
+                                                {'language': 'pt', 'name': u'Artigo en Português'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='en'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+            content = response.data.decode('utf-8')
+            self.assertIn(
+                '<meta name="citation_title" content="Article Y"></meta>',
+                content
+            )
+            self.assertIn(
+                '<meta name="citation_language" content="en"></meta>',
+                content
+            )
+
+    def test_article_detail_pid_redirect(self):
+        """
+        Teste da ``view function`` ``article_detail_pid``, verifica somente o
+        redirecionamento.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            utils.makeOneArticle({'title': 'Article Y',
+                                  'issue': issue,
+                                  'journal': journal,
+                                  'pid': 'S0102-311X2018000100101',
+                                  'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail_pid',
+                                               pid='S0102-311X2018000100101'))
+
+            self.assertStatus(response, 302)
+
+    def test_article_detail_pid_redirect_follow(self):
+        """
+        Teste da ``view function`` ``article_detail_pid``,
+        deve retornar uma página que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'pid': 'S0102-311X2018000100101',
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail_pid',
+                                               pid='S0102-311X2018000100101'),
+                                       follow_redirects=True)
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    @patch('requests.get')
+    def test_article_detail_translate_version_(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+
+            urls = {html['lang']: url_for(
+                                   'main.article_detail',
+                                   url_seg=journal.url_segment,
+                                   url_seg_issue=issue.url_segment,
+                                   url_seg_article=article.url_segment,
+                                   lang_code=html['lang'])
+                    for html in article.htmls
+                    }
+            self.assertIn('{}">Deutsch<'.format(urls['de']), content)
+            self.assertIn('{}">bla<'.format(urls['bla']), content)
+            self.assertIn('{}">Português<'.format(urls['pt']), content)
+            self.assertEqual(
+                content.count('{}">Deutsch<'.format(urls['de'])), 1)
+            self.assertEqual(
+                content.count('{}">Português<'.format(urls['pt'])), 1)
+            self.assertEqual(
+                content.count('{}">bla<'.format(urls['bla'])), 1)
+
+    @patch('requests.get')
+    def test_article_detail_has_citation_title_in_pt(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo título'},
+                                                {'language': 'pt', 'name': u'Artigo título'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+
+            self.assertIn(
+                '<meta name="citation_language" content="pt"></meta>',
+                content
+            )
+            self.assertIn(
+                u'<meta name="citation_title" content="Artigo título"></meta>',
+                content
+            )
+
+    @patch('requests.get')
+    def test_article_detail_has_citation_title_in_es(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Título del Artículo'},
+                                                {'language': 'pt', 'name': u'Título do Artigo'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='es'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+            self.assertIn(
+                '<meta name="citation_language" content="es"></meta>',
+                content
+            )
+            self.assertIn(
+                u'<meta name="citation_title" content="Título del Artículo"></meta>',
+                content
+            )
+
+    def test_article_detail_links_to_gscholar(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
                                             'issue': issue,
                                             'journal': journal,
                                             'url_segment': '10-11'})
@@ -681,10 +949,142 @@ class MainTestCase(BaseTestCase):
                                                lang_code='pt'))
 
             self.assertStatus(response, 200)
+            page_content = response.data.decode('utf-8')
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            result = self.get_context_variable('related_links')
+            self.assertEqual(result[0][0], 'Google')
+            self.assertEqual(result[1][0], 'Google Scholar')
+            self.assertIn('Article Y', result[0][2])
+            self.assertIn('Article Y', result[1][2])
+            self.assertIn('Google', page_content)
+            self.assertIn('/scholar', page_content)
+
+    def test_legacy_url_aop_article_detail(self):
+        """
+        Teste da ``view function`` ``router_legacy``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            aop_pid = '1111-11111111111111111'
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'aop_pid': aop_pid})
+
+            url = '%s?script=sci_arttext&pid=%s' % (
+                url_for('main.router_legacy'), aop_pid)
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    def test_legacy_url_aop_article_detail_wrong_aop_pid(self):
+        """
+        Teste da ``view function`` ``router_legacy``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            utils.makeOneArticle({'title': 'Article Y',
+                                  'issue': issue,
+                                  'journal': journal,
+                                  'url_segment': '10-11',
+                                  'aop_pid': '1111-11111111111111110'})
+
+            url = '%s?script=sci_arttext&pid=%s' % (
+                url_for('main.router_legacy'), '1111-11111111111111111')
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 404)
+            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+
+    @unittest.skip(u'precisa de integração com SSM para retornar o SSM')
+    def test_legacy_url_pdf_article_detail(self):
+        """
+        Teste da view ``router_legacy``, deve retornar uma página de pdf quando
+        na querystring tem: ?script=sci_pdf&pid={PID VALIDO}
+        e que usa o template ``article/detail_pdf.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            pid = '1111-11111111111111111'
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'pid': pid})
+
+            url = '%s?script=sci_pdf&pid=%s' % (
+                url_for('main.router_legacy'), pid)
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail_pdf.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+    def test_legacy_url_pdf_article_detail_wrong_pid(self):
+        """
+        Teste da view ``router_legacy``, deve retornar uma página de erro (404 not found)
+        na querystring tem: ?script=sci_pdf&pid={PID INVALIDO}
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            valid_pid = '1111-11111111111111111'
+            invalid_pid = 'ABCD-22222222222222222'
+
+            utils.makeOneArticle({
+                'title': 'Article Y',
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11',
+                'pid': valid_pid})
+
+            url = '%s?script=sci_pdf&pid=%s' % (
+                url_for('main.router_legacy'), invalid_pid)
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 404)
+            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
 
     def test_article_detail_without_articles(self):
         """
