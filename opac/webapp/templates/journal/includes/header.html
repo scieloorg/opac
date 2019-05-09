@@ -48,7 +48,7 @@
               </span>
               {% if journal_study_areas %}
                 {% if journal_study_areas|length > 3 %}
-                  {% trans %}Multidiciplinar{% endtrans %}
+                  {% trans %}Multidisciplinar{% endtrans %}
                 {% else %}
                   {{ journal_study_areas|join(', ')|title|truncate(60) }}
                 {% endif %}
