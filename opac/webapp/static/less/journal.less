@@ -627,9 +627,27 @@
 			}
 
 			a {
+				position: relative;
 				color: #0000ee;
 				&:hover {
 					color: @Blue;
+				}
+
+				&:after {
+					content: '|';
+					display: inline-block;
+				}
+
+				&:last-child {
+					&:after {
+						display: none;
+					}
+				}
+			}
+
+			a.collapseAbstractBlock {
+				&:after {
+					display: none;
 				}
 			}
 		}
