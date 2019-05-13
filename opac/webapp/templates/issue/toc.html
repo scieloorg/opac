@@ -169,8 +169,8 @@
                               {% trans %}Resumo{% endtrans %}:
                               {% for lang in article.languages %}
                                 {% if lang in article.abstract_languages %}
-                                    <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}">
-                                      {{ lang|trans_alpha2 }}
+                                    <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                      {{ lang }}
                                     </a>
                                 {% endif %}
                               {% endfor %}

@@ -82,20 +82,30 @@
     width: 14px;
 }
 
-.collapseAbstract{
-    margin-bottom: 5px;
-    padding-top: 12px;
-    padding-left: 20px;
-    font-weight: 400;
-    background: url(../img/button.glyphs.png) -10px -2525px no-repeat;
-}
+// .collapseAbstract{
+//     margin-bottom: 5px;
+//     padding-top: 12px;
+//     padding-left: 20px;
+//     font-weight: 400;
+//     background: url(../img/button.glyphs.png) -10px -2525px no-repeat;
+// }
 
 .collapseAbstractBlock{
     margin-bottom: 5px;
     padding-top: 12px;
     padding-left: 20px;
     font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
     background: url(../img/button.glyphs.png) -10px -2481px no-repeat;
+
+    &:focus {
+        text-decoration: none;
+    }
+
+    &.opened {
+        background-position: -10px -2525px;
+    }
 }
 
 .collapseAbstractContent{
