@@ -182,8 +182,8 @@
                               {% trans %}Texto{% endtrans %}:
                               {% for lang in article.languages %}
                                 {% if lang in article.article_text_languages %}
-                                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">
-                                    {{ lang|trans_alpha2 }}
+                                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                    {{ lang }}
                                   </a>
                                 {% endif %}
                               {% endfor %}
@@ -196,8 +196,8 @@
                               {% for lang in article.languages %}
                                 {% for pdf_lang, url in article.article_pdf_languages %}
                                   {% if lang == pdf_lang %}
-                                    <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}">
-                                        {{ lang|trans_alpha2 }}
+                                    <a href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                        {{ lang }}
                                     </a>
                                   {% endif %}
                                 {% endfor %}
@@ -211,8 +211,8 @@
                               {% for lang in article.languages %}
                                 {% for pdf_lang, url in article.article_pdf_languages %}
                                   {% if lang == pdf_lang %}
-                                    <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=url, lang=lang) }}">
-                                        {{ lang|trans_alpha2 }}
+                                    <a href="{{ url_for('.article_epdf', doi=article.doi, pid=article.pid, pdf_path=url, lang=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                        {{ lang }}
                                       </a>
                                   {% endif %}
                                 {% endfor %}
@@ -227,7 +227,7 @@
 
                         {# Adicionar divs com os resumos #}
                         {% for lang in article.languages|reverse %}
-                          <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}">
+                          <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
                             {% if article.get_abstract_by_lang(lang) %}
                               <p><strong>{% trans %}Resumo em{% endtrans %} {{ lang|trans_alpha2 }}:</strong></p>
                               {{ article.get_abstract_by_lang(lang) }}

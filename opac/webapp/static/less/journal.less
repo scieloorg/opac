@@ -617,37 +617,34 @@
 
 			li {
 				display: inline-block;
-				margin-right: 30px;
+				margin-right: 15px;
 
 				&:before {
 					display: inline-block;
-					content: '\2022';
+					content: '|';
 					color: #a29d96;
+				}
+
+				&:first-child {
+					&:before {
+						display: none;
+					}
 				}
 			}
 
 			a {
 				position: relative;
 				color: #0000ee;
+				text-transform: uppercase;
+				margin: 0 5px;
+				padding-right: 5px;
+
 				&:hover {
 					color: @Blue;
 				}
 
-				&:after {
-					content: '|';
-					display: inline-block;
-				}
-
-				&:last-child {
-					&:after {
-						display: none;
-					}
-				}
-			}
-
-			a.collapseAbstractBlock {
-				&:after {
-					display: none;
+				&:focus {
+					text-decoration: none;
 				}
 			}
 		}
