@@ -77,5 +77,3 @@ target/
 opac/webapp/media/files/*.*
 opac/webapp/media/images/*.*
 .idea
-
-# nodejs/gulp/etc
