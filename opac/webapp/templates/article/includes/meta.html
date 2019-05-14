@@ -67,19 +67,17 @@
     {% if article.title -%}
         <meta name="citation_title" content="{{ article.title|escape }}"></meta>
     {% endif -%}
+{%else -%}
+    {%- if article.translated_titles -%}
+        {%- for title in article.translated_titles -%}
+            {%- if article_lang == title.language -%}
+                <meta name="citation_title" content="{{ title.name|escape }}"></meta>
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
 {% endif -%}
 
-{%- if article.translated_titles -%}
-    {%- for title in article.translated_titles -%}
-        {%- if article_lang == title.language -%}
-            <meta name="citation_title" content="{{ title.name|escape }}"></meta>
-        {%- endif -%}
-    {%- endfor -%}
-{%- endif -%}
-
-{% if article.original_language -%}
-    <meta name="citation_language" content="{{ article.original_language }}"></meta>
-{% endif -%}
+<meta name="citation_language" content="{{ article_lang }}"></meta>
 
 {% if article.abstract -%}
     <meta name="citation_abstract" content="{{ article.abstract|escape }}"></meta>

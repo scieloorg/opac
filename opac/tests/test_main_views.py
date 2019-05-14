@@ -732,6 +732,12 @@ class MainTestCase(BaseTestCase):
             issue = utils.makeOneIssue({'journal': journal})
 
             article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo en español'},
+                                                {'language': 'pt', 'name': u'Artigo en Português'},
+                                            ],
                                             'issue': issue,
                                             'journal': journal,
                                             'url_segment': '10-11'})
@@ -740,13 +746,23 @@ class MainTestCase(BaseTestCase):
                                                url_seg=journal.url_segment,
                                                url_seg_issue=issue.url_segment,
                                                url_seg_article=article.url_segment,
-                                               lang_code='pt'))
+                                               lang_code='en'))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+
+            content = response.data.decode('utf-8')
+            self.assertIn(
+                '<meta name="citation_title" content="Article Y"></meta>',
+                content
+            )
+            self.assertIn(
+                '<meta name="citation_language" content="en"></meta>',
+                content
+            )
 
     def test_article_detail_pid_redirect(self):
         """
@@ -858,6 +874,117 @@ class MainTestCase(BaseTestCase):
                 content.count('{}">Português<'.format(urls['pt'])), 1)
             self.assertEqual(
                 content.count('{}">bla<'.format(urls['bla'])), 1)
+
+    @patch('requests.get')
+    def test_article_detail_has_citation_title_in_pt(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo título'},
+                                                {'language': 'pt', 'name': u'Artigo título'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+
+            self.assertIn(
+                '<meta name="citation_language" content="pt"></meta>',
+                content
+            )
+            self.assertIn(
+                u'<meta name="citation_title" content="Artigo título"></meta>',
+                content
+            )
+
+    @patch('requests.get')
+    def test_article_detail_has_citation_title_in_es(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Título del Artículo'},
+                                                {'language': 'pt', 'name': u'Título do Artigo'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='es'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+            self.assertIn(
+                '<meta name="citation_language" content="es"></meta>',
+                content
+            )
+            self.assertIn(
+                u'<meta name="citation_title" content="Título del Artículo"></meta>',
+                content
+            )
 
     def test_article_detail_links_to_gscholar(self):
         """
