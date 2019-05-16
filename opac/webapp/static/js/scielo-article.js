@@ -371,6 +371,21 @@ var Article = {
 	    	}
 	    });
 
+	    //executa o trigger de click para impressão quando houver mais de 10 autores em um artigo
+	    if($(".contribGroup [data-toggle='tooltip']").length > 0) {
+	    	window.addEventListener("beforeprint", function(event) {
+	    		$(".contribGroup [data-toggle='tooltip']").trigger("click");
+	    	});
+
+	    	//safari
+	    	var mediaArticlePrint = window.matchMedia('print');
+	    	mediaArticlePrint.addListener(function(map) {
+				if(map.matches) {
+					$(".contribGroup [data-toggle='tooltip']").trigger("click");
+				}
+			});
+	    }
+
 	},
 
 	isScrolledIntoView: function(elem){
