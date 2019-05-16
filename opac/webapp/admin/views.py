@@ -414,10 +414,11 @@ class CollectionAdminView(OpacBaseAdminView):
 class JournalAdminView(OpacBaseAdminView):
     can_edit = True
 
-    form_columns = ('enable_contact', 'scimago_id')
+    form_columns = ('enable_contact', 'scimago_id', 'is_public')
 
     form_overrides = {
         "enable_contact": custom_fields.RequiredBooleanField,
+        "is_public": custom_fields.RequiredBooleanField,
     }
 
     column_filters = [

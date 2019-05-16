@@ -124,19 +124,23 @@ class JournalHomeTestCase(BaseTestCase):
             header = {'Referer': url_for('main.journal_detail',
                                          url_seg=journal.url_segment)}
 
-            response = c.get(
-                url_for('main.set_locale', lang_code='en'),
-                headers=header,
-                follow_redirects=True)
+            for lang, expected in zip(['en', 'es', 'pt_BR'],
+                                      ['Multidisciplinary',
+                                       'Multidisciplinaria',
+                                       'Multidisciplinar']):
 
-            self.assertEqual(200, response.status_code)
+                with self.subTest(lang):
+                    response = c.get(
+                        url_for('main.set_locale', lang_code=lang),
+                        headers=header,
+                        follow_redirects=True)
 
-            self.assertEqual(flask.session['lang'], 'en')
+                    self.assertEqual(200, response.status_code)
 
-            content = response.data.decode('utf-8')
-            expected = "Multidisciplinary"
+                    self.assertEqual(flask.session['lang'], lang)
 
-            self.assertIn(expected, content)
+                    content = response.data.decode('utf-8')
+                    self.assertIn(expected, content)
 
     # Mission
     def test_journal_detail_mission_with_pt_language(self):
