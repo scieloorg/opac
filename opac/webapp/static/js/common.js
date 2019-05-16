@@ -9,22 +9,18 @@ $(function() {
       this.src = "/static/img/fallback_image.png"
   });
 
-  collapseAbstract = $(".collapseAbstract,.collapseAbstractBlock");
-
-  collapseAbstract.on("click", function(e) {
+  $(".collapseAbstractBlock").on("click", function(e) {
     e.preventDefault();
-    var t = $(this);
-        id = '#' + $(this).attr("data-id");
-        content = $(id)
+    var t = $(this),
+        id = '#' + t.data("id"),
+        content = $(id);
 
     if(content.is(":visible")) {
-        content.slideUp("show");
-        $(this).addClass("collapseAbstractBlock");
-        $(this).removeClass("collapseAbstract");
+        content.slideUp();
+        t.removeClass("opened");
     } else {
-        content.slideDown("show");
-        $(this).removeClass("collapseAbstractBlock");
-        $(this).addClass("collapseAbstract");
+        content.slideDown();
+        t.addClass("opened");
     }
 
   });
