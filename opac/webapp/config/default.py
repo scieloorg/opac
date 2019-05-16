@@ -157,6 +157,7 @@ import os
         - SCIELO_ORG_URIS: URIs em SciELO.org para sessões específicas
         - URL_BLOG_SCIELO: URL para o Blog SciELO em Perspectiva (default: '//blog.scielo.org')
         - URL_SEARCH: URL para o Search SciELO (default: '//search.scielo.org/')
+        - URL_BLOG_PRESSRELEASE: URL para o Blog SciELO em Perspectiva Press releases (default: '//pressreleases.scielo.org')
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -334,6 +335,9 @@ URL_BLOG_SCIELO = os.environ.get('OPAC_URL_BLOG_SCIELO', '//blog.scielo.org')
 
 # search scielo
 URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
+
+# scielo em perspectiva press releases
+URL_BLOG_PRESSRELEASE = os.environ.get('OPAC_URL_BLOG_PRESSRELEASE ', '//pressreleases.scielo.org')
 
 # analytics scielo
 USE_METRICS = os.environ.get('OPAC_USE_METRICS', 'False') == 'True'
