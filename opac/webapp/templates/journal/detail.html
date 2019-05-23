@@ -113,7 +113,11 @@
             <div class="col-md-12">
               <h2>
                 Press-releases
-                <a href="{{ config.URL_BLOG_PRESSRELEASE }}/blog/category/press-releases/{{ journal.acronym }}/feed/" target="_blank" data-toggle="tooltip" data-original-title="RSS"><span class="glyphBtn rssMini"></span></a>
+                {% if session.lang != "pt_BR" %}
+                  <a href="{{ config.URL_BLOG_PRESSRELEASE }}/{{ session.lang }}/blog/category/press-releases/{{ journal.acronym }}/feed/" target="_blank" data-toggle="tooltip" data-original-title="RSS"><span class="glyphBtn rssMini"></span></a>
+                {% else %}
+                  <a href="{{ config.URL_BLOG_PRESSRELEASE }}/blog/category/press-releases/{{ journal.acronym }}/feed/" target="_blank" data-toggle="tooltip" data-original-title="RSS"><span class="glyphBtn rssMini"></span></a>
+                {% endif %}
               </h2>
               <div class="slider" id="pressrelease">
                 <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
