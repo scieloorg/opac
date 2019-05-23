@@ -4,7 +4,8 @@ a:link:after, a:visited:after {
 }
 
 .mainNav, .language, .newSearchField, .searchFilters, .searchOptions, .searchActions, .highlight, .articleAction, .shLink,
-.journalMenu, .levelMenu, .share, .issueNav, .journalLinks, .collectionListSearch {
+.journalMenu, .levelMenu, .share, .issueNav, .journalLinks, .collectionListSearch, .alternativeHeader, .outlineFadeLink,
+.bugherd, .floatingBtnError {
 	display: none !important;
 }
 .searchForm .resultBlock {
@@ -109,15 +110,22 @@ a:link:after, a:visited:after {
 		display: none;
 	}
 }
-.collectionLicense span {
-	width: 80%;
-}
+
 .brandLogo {
 	width: 100%;
 }
 
 .article {
-	.copyLink, .outlineFadeLink, .glyphFloatMenu, .fig, .table {
+	.copyLink, .glyphFloatMenu, .fig, .table,
+	.sci-ico-openAccess {
 		display: none;
 	}
+}
+
+.partners,
+.collectionLicense {
+	display: flex;
+	vertical-align: middle;
+	flex-direction: row;
+	justify-content: center;
 }

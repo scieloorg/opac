@@ -111,7 +111,10 @@
         {% if press_releases %}
           <div class="block releases">
             <div class="col-md-12">
-              <h2>Press-releases</h2>
+              <h2>
+                Press-releases
+                <a href="{{ config.URL_BLOG_PRESSRELEASE }}/blog/category/press-releases/{{ journal.acronym }}/feed/" target="_blank" data-toggle="tooltip" data-original-title="RSS"><span class="glyphBtn rssMini"></span></a>
+              </h2>
               <div class="slider" id="pressrelease">
                 <a href="javascript:;" class="slide-back" style="top: 85.5px; display: none;"><span class="glyphBtn arrowLeft"></span></a>
                 <a href="javascript:;" class="slide-next" style="top: 85.5px;"><span class="glyphBtn arrowRight"></span></a>
