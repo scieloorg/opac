@@ -221,15 +221,17 @@ var Article = {
 			articleMenuH = $(".articleMenu").height();
 		},200);
 
-
 		if(hbodyText < 750){
-
 			$(".floatingMenu, .floatingMenuItem, .floatingMenuMobile").css({
 				"bottom": "auto",
 				"top": Article.IsTablet ? vbodyTextMobile : vbodyText
 			});
-
 		}
+		window.setTimeout(function() {
+			$(".floatingMenu, .floatingMenuItem, .floatingMenuMobile").css({
+				"opacity": "1"
+			});
+		},200);
 
 		$(window).scroll(function() {
 			var t = $(window).scrollTop();
