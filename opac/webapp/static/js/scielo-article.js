@@ -206,14 +206,31 @@ var Article = {
 			}
 		});
 
+
 		Article.ArticleStructureBuilder();
 
 		articleTextP.top = articleTextP.top - 25;
 		var articleTextH = articleText.outerHeight(),
 			articleMenuH = $(".articleMenu").height();
 
+			hbodyText = $(".articleTxt").height();
+			vbodyText = hbodyText + 100  + "px";
+			vbodyTextMobile = hbodyText + 150  + "px";
+
 		window.setTimeout(function() {
 			articleMenuH = $(".articleMenu").height();
+		},200);
+
+		if(hbodyText < 750){
+			$(".floatingMenu, .floatingMenuItem, .floatingMenuMobile").css({
+				"bottom": "auto",
+				"top": Article.IsTablet ? vbodyTextMobile : vbodyText
+			});
+		}
+		window.setTimeout(function() {
+			$(".floatingMenu, .floatingMenuItem, .floatingMenuMobile").css({
+				"opacity": "1"
+			});
 		},200);
 
 		$(window).scroll(function() {
@@ -247,6 +264,8 @@ var Article = {
 
 			$(".alternativeHeader").stop(false,false);
 		});
+
+		
 
 
 		if(window.location.hash != "") {
