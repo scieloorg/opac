@@ -389,7 +389,6 @@ var Article = {
 	    		$(this).find('.fm-button-main').removeClass('fm-button-main-mobile-open');
 	    	}
 	    });
-
 	},
 
 	isScrolledIntoView: function(elem){
