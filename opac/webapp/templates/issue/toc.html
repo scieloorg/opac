@@ -177,6 +177,25 @@
                             </li>
                             {% endif %}
 
+                            {#% if article.visual_abstract_languages|length > 0 %#}
+                            <li>
+                              {% trans %}Resumo visual{% endtrans %}:
+                              
+                              <!-- INI CONTEÚDO DE EXEMPLO -->
+                              <a class="collapseAbstractBlock" href="#" data-id="visual_{{article.id}}_EN" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                EN
+                              </a>
+                              <a class="collapseAbstractBlock" href="#" data-id="visual_{{article.id}}_ES" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                ES
+                              </a>
+                              <a class="collapseAbstractBlock" href="#" data-id="visual_{{article.id}}_PT" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                PT
+                              </a>
+                              <!-- FIM CONTEÚDO DE EXEMPLO -->
+
+                            </li>
+                            {#% endif %#}
+
                             {% if article.article_text_languages|length > 0 %}
                             <li>
                               {% trans %}Texto{% endtrans %}:
@@ -234,6 +253,21 @@
                             {% endif %}
                           </div>
                         {% endfor %}
+
+                        
+                        <!-- INI CONTEÚDO DE EXEMPLO -->
+                        <div class="collapseAbstractContent" id="visual_{{article.id}}_EN" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                            <img src="../../../static/img/visual_abstract_fake_en.jpg">
+                        </div>
+
+                        <div class="collapseAbstractContent" id="visual_{{article.id}}_ES" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                            <img src="../../../static/img/visual_abstract_fake_es.jpg">
+                        </div>
+                        
+                        <div class="collapseAbstractContent" id="visual_{{article.id}}_PT" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                            <img src="../../../static/img/visual_abstract_fake_pt.jpg">
+                        </div>
+                        <!-- FIM CONTEÚDO DE EXEMPLO -->
 
                       </li>
 
