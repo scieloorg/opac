@@ -143,6 +143,12 @@ class MediaImageUploadField(ImageUploadField):
             endpoint=endpoint,
             **kwargs)
 
+    def _save_image(self, image, path, format='JPEG'):
+        if image.mode not in ('RGB', 'RGBA'):
+            image = image.convert('RGB')
+        with open(path, 'wb') as fp:
+            image.save(fp, format)
+
 
 class MediaFileUploadField(FileUploadField):
 
