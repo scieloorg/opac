@@ -151,6 +151,13 @@ import os
 
       - MathJax:
         - OPAC_MATHJAX_CDN_URL: string com a URL do mathjax padrão; ex: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"
+
+      - Links SciELO:
+        - URL_SCIELO_ORG: URL para o SciELO.org (default: '//www.scielo.org')
+        - SCIELO_ORG_URIS: URIs em SciELO.org para sessões específicas
+        - URL_BLOG_SCIELO: URL para o Blog SciELO em Perspectiva (default: '//blog.scielo.org')
+        - URL_SEARCH: URL para o Search SciELO (default: '//search.scielo.org/')
+        - URL_BLOG_PRESSRELEASE: URL para o Blog SciELO em Perspectiva Press releases (default: '//pressreleases.scielo.org')
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -292,8 +299,45 @@ IMAGES_ALLOWED_EXTENSIONS_RE = tuple('*.' + ext for ext in IMAGES_ALLOWED_EXTENS
 THUMBNAIL_HEIGHT = 100
 THUMBNAIL_WIDTH = 100
 
+# scielo.org
+URL_SCIELO_ORG = os.environ.get('OPAC_URL_SCIELO_ORG', '//www.scielo.org')
+
+SCIELO_ORG_URIS = {
+    'journals_by_title': {
+        'pt_BR': '/pt/periodicos/listar-por-ordem-alfabetica/',
+        'en': '/en/journals/list-by-alphabetical-order/',
+        'es': '/es/revistas/listar-por-orden-alfabetico/',
+    },
+    'journals_by_subject': {
+        'pt_BR': '/pt/periodicos/listar-por-assunto/',
+        'en': '/en/journals/list-by-subject-area/',
+        'es': '/es/revistas/listar-por-tema',
+    },
+    'oai_and_rss': {
+        'pt_BR': '/pt/sobre-o-scielo/acesso-via-oai-e-rss/',
+        'en': '/en/about-scielo/access-via-oai-and-rss/',
+        'es': '/es/sobre-el-scielo/acesso-via-oai-y-rss/',
+    },
+    'about_network': {
+        'pt_BR': '/pt/sobre-o-scielo/',
+        'en': '/en/about-scielo/',
+        'es': '/es/sobre-el-scielo',
+    },
+    'contact': {
+        'pt_BR': '/pt/sobre-o-scielo/contato/',
+        'en': '/en/about-scielo/contact/',
+        'es': '/es/sobre-el-scielo/contacto/',
+    },
+}
+
+# scielo.org
+URL_BLOG_SCIELO = os.environ.get('OPAC_URL_BLOG_SCIELO', '//blog.scielo.org')
+
 # search scielo
 URL_SEARCH = os.environ.get('OPAC_URL_SEARCH', '//search.scielo.org/')
+
+# scielo em perspectiva press releases
+URL_BLOG_PRESSRELEASE = os.environ.get('OPAC_URL_BLOG_PRESSRELEASE ', '//pressreleases.scielo.org')
 
 # analytics scielo
 USE_METRICS = os.environ.get('OPAC_USE_METRICS', 'False') == 'True'

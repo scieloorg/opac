@@ -451,26 +451,6 @@ def get_resources_url(resource_list, type, lang):
     return None
 
 
-def do_request(url, params):
-    try:
-        response = requests.get(url, params=params)
-    except:
-        return None
-    if response.status_code == 200:
-        return response.content
-    return None
-
-
-def do_request_json(url, params):
-    try:
-        response = requests.get(url, params=params)
-    except:
-        return {}
-    if response.status_code == 200:
-        return response.json()
-    return {}
-
-
 def utc_to_local(utc_dt):
     local_tz = pytz.timezone(current_app.config['LOCAL_ZONE'])
 

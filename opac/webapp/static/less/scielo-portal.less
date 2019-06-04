@@ -1282,15 +1282,11 @@ button.btn:active {
 }
 
 .floatingMenuItem {
+	opacity: 0;
 	position: fixed;
 	bottom: 0;
-	//left: 0;
-
 	left: 50%;
 	margin: 40px;
-
-	//outline:1px solid red;
-
 	color: #fff;	
 	background-color: #6786d0;
 	.radius(50%);
@@ -1366,14 +1362,12 @@ button.btn:active {
 	&[data-fm-label]:hover:after {
 		
 		right: 50px; 
-
 		content: '';
 	    left: 0;
 	    margin-left: 14px;
 	    margin-top: -30px;
 	    width: 0;
-	    height: 0;
-	    
+	    height: 0; 
 	    border-top: 6px solid rgba(1, 48, 75, 0.9);
 	    border-right: 6px solid transparent;
 	    border-left: 6px solid transparent;
@@ -1381,6 +1375,8 @@ button.btn:active {
 }
 
 .floatingMenu {
+	transition: all 0.5s; 
+	opacity:0;
 	position: fixed;
 	bottom: 0;
 	left: 50% !important;
@@ -1419,7 +1415,6 @@ button.btn:active {
 		.radius(50%);
 		box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
 		-webkit-user-drag: none;
-
 	}
 
 	.fm-button-main {
@@ -1564,7 +1559,7 @@ button.btn:active {
 	}
 	
 	.floatingMenuMobile {
-		
+		opacity: 0;
 		display: block;
 		position: fixed;
 		bottom: 10px;
