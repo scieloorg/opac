@@ -1604,7 +1604,6 @@
 
 	.formula {
 		text-align: center;
-		font-size: 24px;
 		font-family: "Times New Roman", Times, serif;
 		margin-bottom: 15px;
 
@@ -1616,6 +1615,44 @@
 			width: 100%;
 		}
 
+		.formula-container {
+			width: 100%;
+			display: flex;
+			align-content: center;
+			align-items: center;
+			position: relative;
+
+			.formula-body,
+			.MathJax_SVG_Display,
+			.MathJax_Display,
+			.MathJax_SVG {
+				flex: 99;
+				font-size: 1.4rem !important;
+			}
+
+			& > span {
+				flex: 1
+			}
+
+			.label {
+				flex: 1;
+				color: #000;
+				font-size: 1.4rem;
+				display: block;
+				position: absolute;
+				width: auto;
+			}
+
+			.label:first-child {
+				left: 0;
+			}
+
+			.label:last-child {
+				right: 0;
+			}
+		}
+	
+	
 		svg {
 			display: block;
 			width: 100%;

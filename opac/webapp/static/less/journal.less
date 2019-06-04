@@ -385,6 +385,7 @@
 		img {
 			width: 100%;
 			.radius(4px);
+			margin: 5px 0;
 		}
 		
 		a {
@@ -616,19 +617,34 @@
 
 			li {
 				display: inline-block;
-				margin-right: 30px;
+				margin-right: 15px;
 
 				&:before {
 					display: inline-block;
-					content: '\2022';
+					content: '|';
 					color: #a29d96;
+				}
+
+				&:first-child {
+					&:before {
+						display: none;
+					}
 				}
 			}
 
 			a {
+				position: relative;
 				color: #0000ee;
+				text-transform: uppercase;
+				margin: 0 5px;
+				padding-right: 5px;
+
 				&:hover {
 					color: @Blue;
+				}
+
+				&:focus {
+					text-decoration: none;
 				}
 			}
 		}

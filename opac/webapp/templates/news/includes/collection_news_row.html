@@ -2,6 +2,11 @@
   <div class="col-md-12">
     <a href="{{ item.url }}" target="_blank">
       <span>{{ item.publication_date|datetimefilter }}</span>
+      {% if item.image_url %}
+          <img src="{{ item.image_url }}">
+      {% else %}
+          <img src="../../static/img/img-post-blog-scielo-exemplo.jpg">
+      {% endif %}
       <h3 class="ellipsis">{{ item.title }}</h3>
       <div class="info">
         <div class="ellipsis">

@@ -45,22 +45,22 @@
       </a>
       <ul>
         <li>
-          <a href="http://www.scielo.org/php/index.php">
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}">
             {% trans %}Coleções nacionais e temáticas{% endtrans %}
           </a>
         </li>
         <li>
-          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForAlphabeticList&xsl=secondLevelForAlphabeticList">
-            {% trans %}Lista alfabética de periódicos{% endtrans %}
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}{{ g.scielo_org.journals_by_title }}">
+              {% trans %}Lista alfabética de periódicos{% endtrans %}
           </a>
         </li>
         <li>
-          <a href="http://www.scielo.org/applications/scielo-org/php/secondLevel.php?xml=secondLevelForSubjectByLetter&xsl=secondLevelForSubjectByLetter">
-            {% trans %}Lista de periódicos por assunto{% endtrans %}
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}{{ g.scielo_org.journals_by_subject }}">
+              {% trans %}Lista de periódicos por assunto{% endtrans %}
           </a>
         </li>
         <li>
-          <a href="{{ config.URL_SEARCH }}">
+          <a target="_blank" href="{{ config.URL_SEARCH }}">
             {% trans %}Busca{% endtrans %}
           </a>
         </li>
@@ -70,17 +70,17 @@
           </a>
         </li>
         <li>
-          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=9">
-            {% trans %}Acesso OAI e RSS{% endtrans %}
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}{{ g.scielo_org.oai_and_rss }}">
+              {% trans %}Acesso OAI e RSS{% endtrans %}
           </a>
         </li>
         <li>
-          <a href="http://www.scielo.org/php/level.php?lang=pt&component=56&item=8">
-            {% trans %}Sobre a Rede SciELO{% endtrans %}
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}{{ g.scielo_org.about_network }}">
+              {% trans %}Sobre a Rede SciELO{% endtrans %}
           </a>
         </li>
         <li>
-          <a href="#">
+          <a target="_blank" href="{{ config.URL_SCIELO_ORG }}{{ g.scielo_org.contact }}">
             {% trans %}Contatos{% endtrans %}
           </a>
         </li>
@@ -88,9 +88,9 @@
     </li>
     <li>
       {% if session.lang == 'pt_BR' %}
-        <a href="http://blog.scielo.org/">
+        <a target="_blank" href="{{ config.URL_BLOG_SCIELO }}">
       {% else  %}
-        <a href="http://blog.scielo.org/{{ session.lang }}/">
+        <a target="_blank" href="{{ config.URL_BLOG_SCIELO }}/{{ session.lang }}/">
       {% endif %}
           <strong>{% trans %}Blog SciELO em Perspectiva{% endtrans %}</strong>
         </a>
