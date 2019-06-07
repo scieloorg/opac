@@ -50,7 +50,7 @@
       {% endfor %}
     </div>
     <div class="col-md-3 col-sm-3 journalLinks">
-      <a href="{{ url_for('main.journal_feed', url_seg=journal.url_segment)}}" data-toggle="tooltip" title="Atom" target="_blank">
+      <a href="{{ url_for('main.journal_feed', url_seg=journal.url_segment)}}" data-toggle="tooltip" title="{% trans %}RSS do número mais recente do periódico{% endtrans %}" target="_blank">
         <span class="glyphBtn bigRSS"></span>
       </a>
       <span class="text" style="width: 70%;">
