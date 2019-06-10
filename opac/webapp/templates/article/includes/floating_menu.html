@@ -62,35 +62,35 @@
         </a>
       </li>
       <li>
-        <a class="fm-button-child item-download" data-fm-label="{% trans %}PDFs{% endtrans %}" data-toggle="modal" data-target="#ModalDownloads">
+        <a class="fm-button-child item-download" data-fm-label="{% trans %}PDFs{% endtrans %}" data-toggle="modal" data-target="#ModalDownloads" href="#">
           <span class="sci-ico-download glyphFloatMenu"></span>
         </a>
       </li>
       <li>
-        <a data-toggle="modal" data-target="#metric_modal_id" class="fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" target="_blank">
+        <a data-toggle="modal" data-target="#metric_modal_id" class="fm-button-child item-metrics" data-fm-label="{% trans %}Métricas{% endtrans %}" href="#" target="_blank">
           <span class="sci-ico-metrics glyphFloatMenu"></span>
         </a>
       </li>
       {% if not is_pdf_page and article.xml %}
         {# excluimos este item se é a página do PDF #}
         <li>
-          <a class="fm-button-child" data-fm-label="{% trans %}Figuras e tabelas{% endtrans %}" data-toggle="modal" data-target="#ModalTablesFigures">
+          <a class="fm-button-child" data-fm-label="{% trans %}Figuras e tabelas{% endtrans %}" data-toggle="modal" data-target="#ModalTablesFigures" href="#">
             <span class="sci-ico-figures glyphFloatMenu"></span>
           </a>
         </li>
       {% endif %}
       <li>
-        <a class="fm-button-child" data-fm-label="{% trans %}Versões e traduções{% endtrans %}" data-toggle="modal" data-target="#ModalVersionsTranslations">
+        <a class="fm-button-child" data-fm-label="{% trans %}Versões e traduções{% endtrans %}" data-toggle="modal" data-target="#ModalVersionsTranslations" href="#">
           <span class="sci-ico-translation glyphFloatMenu"></span>
         </a>
       </li>
       <li>
-        <a class="fm-button-child" data-fm-label="{% trans %}Como citar este artigo{% endtrans %}" data-toggle="modal" data-target="#ModalArticles">
+        <a class="fm-button-child" data-fm-label="{% trans %}Como citar este artigo{% endtrans %}" data-toggle="modal" data-target="#ModalArticles" href="#">
           <span class="sci-ico-citation glyphFloatMenu"></span>
         </a>
       </li>
       <li>
-        <a class="fm-button-child" data-fm-label="{% trans %}Artigos e similares{% endtrans %}" data-toggle="modal" data-target="#ModalRelatedArticles">
+        <a class="fm-button-child" data-fm-label="{% trans %}Artigos e similares{% endtrans %}" data-toggle="modal" data-target="#ModalRelatedArticles" href="#">
           <span class="sci-ico-similar glyphFloatMenu"></span>
         </a>
       </li>

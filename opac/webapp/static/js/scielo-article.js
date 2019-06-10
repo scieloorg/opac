@@ -111,6 +111,16 @@ var Article = {
 
 			});
 
+		    $("ul.floatingMenuMobile").on('click', function() {
+
+		    	$(this).find('.fm-button-child').each(function() {
+		    		$(this).addClass('tooltip-mobile-on');
+		    	});
+
+		    });
+
+
+
 		// Desktop
 		} else {
 
@@ -368,7 +378,7 @@ var Article = {
 	    	});
 	    });
 
-	     var isFloatingMenuMobileClosed = true;
+	    var isFloatingMenuMobileClosed = true;
 
 	    $("ul.floatingMenuMobile").on('focusout click', function(e) {
 
@@ -385,8 +395,10 @@ var Article = {
 	    	} else {
 
 	    		isFloatingMenuMobileClosed = true; // Close menu
+	    		
 	    		$(this).find('.fm-list').children('li').css({'opacity': 0});
 	    		$(this).find('.fm-button-main').removeClass('fm-button-main-mobile-open');
+
 	    	}
 	    });
 	},
