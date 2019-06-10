@@ -1,10 +1,13 @@
 # coding: utf-8
+from unittest.mock import patch
 
 from werkzeug.security import check_password_hash
 
 from .base import BaseTestCase
 
 from webapp import controllers, dbsql, utils as ut
+
+from flask_babelex import lazy_gettext as __
 
 from . import utils
 
@@ -526,6 +529,171 @@ class IssueControllerTestCase(BaseTestCase):
         issues = controllers.get_issues_by_jid('02i28wjs92u')
 
         self.assertIsNone(issues)
+
+    def test_get_issue_info_from_assets_code_returns_ahead_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('2019nahead', journal)
+        self.assertEqual(result, {"year": 2019, "number": "ahead", "journal": journal})
+
+    def test_get_issue_info_from_assets_code_returns_volume_info(self):
+        journal = utils.makeOneJournal()
+        expected = {
+            "volume": "58",
+            "number": None,
+            "suppl_text": None,
+            "journal": journal,
+        }
+        result = controllers.get_issue_info_from_assets_code('v58n', journal)
+        self.assertEqual(result, expected)
+        result = controllers.get_issue_info_from_assets_code('v58', journal)
+        self.assertEqual(result, expected)
+
+    def test_get_issue_info_from_assets_code_returns_volume_and_number_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('v58n1', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": "1", "suppl_text": None, "journal": journal}
+        )
+
+    def test_get_issue_info_from_assets_code_returns_volume_and_special_number_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('v58nspe', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": "spe", "suppl_text": None, "journal": journal}
+        )
+        result = controllers.get_issue_info_from_assets_code('v58nspe_1', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": "spe_1", "suppl_text": None, "journal": journal}
+        )
+
+    def test_get_issue_info_from_assets_code_returns_volume_and_supplement_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('v58s1', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": None, "suppl_text": "1", "journal": journal}
+        )
+        result = controllers.get_issue_info_from_assets_code('v58s0', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": None, "suppl_text": "0", "journal": journal}
+        )
+
+    def test_get_issue_info_from_assets_code_returns_volume_number_and_supplement_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('v58n1s2', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": "1", "suppl_text": "2", "journal": journal}
+        )
+        result = controllers.get_issue_info_from_assets_code('v58n2s0', journal)
+        self.assertEqual(
+            result,
+            {"volume": "58", "number": "2", "suppl_text": "0", "journal": journal}
+        )
+
+    def test_get_issue_info_from_assets_code_returns_number_and_supplement_info(self):
+        journal = utils.makeOneJournal()
+        result = controllers.get_issue_info_from_assets_code('n1', journal)
+        self.assertEqual(
+            result,
+            {"volume": None, "number": "1", "suppl_text": None, "journal": journal}
+        )
+        result = controllers.get_issue_info_from_assets_code('nspe-1', journal)
+        self.assertEqual(
+            result,
+            {"volume": None, "number": "spe-1", "suppl_text": None, "journal": journal}
+        )
+
+    def test_get_issue_by_journal_and_assets_code_raises_error_if_no_assets_code(self):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com assets_code
+        vazio lança exceção.
+        """
+        journal = utils.makeOneJournal()
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_issue_by_journal_and_assets_code('', journal)
+        self.assertEqual(str(exc_info.exception), __('Obrigatório um assets_code.'))
+
+    def test_get_issue_by_journal_and_assets_code_raises_error_if_no_journal(self):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com journal
+        vazio lança exceção.
+        """
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_issue_by_journal_and_assets_code('v1n1', {})
+        self.assertEqual(str(exc_info.exception), __('Obrigatório um journal.'))
+
+    @patch('webapp.controllers.get_issue_info_from_assets_code')
+    @patch('webapp.controllers.Issue.objects')
+    def test_get_issue_by_journal_and_assets_code_calls_get_issue_info_from_assets_code_if_issue_not_found(
+        self, mk_issue_objects, mk_get_issue_info_from_assets_code
+    ):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com issue não
+        encontrado com o assets_code e journal informado.
+        """
+        journal = utils.makeOneJournal()
+        mk_issue_objects.filter.return_value.first.return_value = None
+        controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        mk_get_issue_info_from_assets_code.assert_called_once_with('v1n1', journal)
+
+    @patch('webapp.controllers.get_issue_info_from_assets_code')
+    @patch('webapp.controllers.Issue.objects')
+    def test_get_issue_by_journal_and_assets_code_does_not_call_get_issue_info_from_assets_code_if_issue_found(
+        self, mk_issue_objects, mk_get_issue_info_from_assets_code
+    ):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com issue não
+        encontrado com o assets_code e journal informado.
+        """
+        journal = utils.makeOneJournal()
+        issue = utils.makeOneIssue()
+        mk_issue_objects.filter.return_value.first.return_value = issue
+        result = controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        mk_get_issue_info_from_assets_code.assert_not_called()
+        self.assertEqual(result, issue)
+
+    @patch('webapp.controllers.get_issue_info_from_assets_code')
+    @patch('webapp.controllers.Issue.objects')
+    def test_get_issue_by_journal_and_assets_code_calls_Issue_filter_with_issue_info_from_assets_code(
+        self, mk_issue_objects, mk_get_issue_info_from_assets_code
+    ):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com issue não
+        encontrado com o assets_code e journal informado.
+        """
+        journal = utils.makeOneJournal()
+        mk_issue_objects.filter.return_value.first.return_value = None
+        mk_get_issue_info_from_assets_code.return_value = {
+            "volume": "1",
+            "number": "1",
+            "journal": journal
+        }
+        controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        mk_issue_objects.filter.assert_any_call(
+            volume="1",
+            number="1",
+            journal=journal
+        )
+
+    @patch('webapp.controllers.get_issue_info_from_assets_code')
+    @patch('webapp.controllers.Issue.objects')
+    def test_get_issue_by_journal_and_assets_code_returns_issue_with_issue_info(
+        self, mk_issue_objects, mk_get_issue_info_from_assets_code
+    ):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com issue não
+        encontrado com o assets_code e journal informado.
+        """
+        journal = utils.makeOneJournal()
+        issue = utils.makeOneIssue()
+        mk_issue_objects.filter.return_value.first.side_effect = [None, issue]
+        result = controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        self.assertEqual(result, issue)
 
     def test_get_issue_by_iid(self):
         """

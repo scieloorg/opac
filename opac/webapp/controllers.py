@@ -7,6 +7,7 @@
     acessem diretamente a camada inferior de modelos.
 """
 
+import re
 import unicodecsv
 import io
 import xlsxwriter
@@ -719,14 +720,39 @@ def get_issue_by_url_seg(url_seg, url_seg_issue):
     return Issue.objects.filter(journal=journal, url_segment=url_seg_issue, type__ne='pressrelease').first()
 
 
+def get_issue_info_from_assets_code(assets_code, journal):
+    issue_info = {
+        "journal": journal,
+    }
+    result = re.search('^[v]?(\d+)?([ns])?(\d+|.*)([ns])?(\d+)?', assets_code)
+    if result.group(3) == "ahead":
+        issue_info["year"] = int(result.group(1))
+        issue_info["number"] = result.group(3)
+    else:
+        issue_info.update({
+            "volume": result.group(1),
+            "number": None,
+            "suppl_text": None,
+        })
+        if result.group(2) == "n":
+            issue_info["number"] = result.group(3) if result.group(3) else None
+            if result.group(4) == "s":
+                issue_info["suppl_text"] = result.group(5)
+        elif result.group(2) == "s":
+            issue_info["suppl_text"] = result.group(3)
+    return issue_info
+
 def get_issue_by_journal_and_assets_code(assets_code, journal):
     if not assets_code:
         raise ValueError(__('Obrigatório um assets_code.'))
 
     if not journal:
         raise ValueError(__('Obrigatório um journal.'))
-
-    return Issue.objects.filter(assets_code=assets_code, journal=journal).first()
+    issue = Issue.objects.filter(assets_code=assets_code, journal=journal).first()
+    if not issue:
+        issue_info = get_issue_info_from_assets_code(assets_code, journal)
+        issue = Issue.objects.filter(**issue_info).first()
+    return issue
 
 
 # -------- ARTICLE --------
