@@ -53,10 +53,22 @@ HIGHLIGHTED_TYPES = (
 def get_current_collection():
     """
     Retorna o objeto coleção filtrando pela coleção cadastrada no arquivo de
-    configuração ``OPAC_COLLECTION``.
+    configuração ``OPAC_COLLECTION`` e atualiza com os dados da coleção já no site.
+    Isso se mantém ainda para coletar as citações que não são possíveis extrair dos
+    dados já presentes no site.
     """
     current_collection_acronym = current_app.config['OPAC_COLLECTION']
     collection = Collection.objects.get(acronym=current_collection_acronym)
+    number_of_journals = Journal.objects.filter(
+        is_public=True, current_status="current").count()
+    if number_of_journals > 0:
+        collection.metrics.total_journal = number_of_journals
+    number_of_issues = Issue.objects.filter(is_public=True).count()
+    if number_of_issues > 0:
+        collection.metrics.total_issue = number_of_issues
+    number_of_articles = Article.objects.filter(is_public=True).count()
+    if number_of_articles > 0:
+        collection.metrics.total_article = number_of_articles
     return collection
 
 
