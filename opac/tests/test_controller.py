@@ -1289,6 +1289,62 @@ class FunctionsInControllerTestCase(BaseTestCase):
         controller_col = controllers.get_current_collection()
         self.assertEqual(collection, controller_col)
 
+    def test_get_current_collection_get_public_and_current_journals_numbers(self):
+        collection = utils.makeOneCollection({
+            "metrics" : {
+                "total_journal" : 10,
+                "total_issue" : 2000,
+                "total_article" : 30000,
+                "total_citation" : 400000
+            },
+        })
+        utils.makeAnyJournal(
+            items=20, attrib={'is_public': True, 'current_status': 'current'}
+        )
+        utils.makeOneJournal({'is_public': False, 'current_status': 'current'})
+        utils.makeOneJournal({'is_public': False, 'current_status': 'current'})
+        utils.makeOneJournal({'is_public': False, 'current_status': 'current'})
+        utils.makeOneJournal({'current_status': 'deceased'})
+        utils.makeOneJournal({'current_status': 'deceased'})
+        utils.makeOneJournal({'current_status': 'deceased'})
+        utils.makeOneJournal({'current_status': 'suspended'})
+        controller_col = controllers.get_current_collection()
+        self.assertEqual(controller_col.metrics.total_journal, 20)
+
+    def test_get_current_collection_get_public_issues_numbers(self):
+        collection = utils.makeOneCollection({
+            "metrics" : {
+                "total_journal" : 10,
+                "total_issue" : 2000,
+                "total_article" : 30000,
+                "total_citation" : 400000
+            },
+        })
+        utils.makeAnyIssue(items=50, attrib={'is_public': True})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        utils.makeOneIssue({'is_public': False})
+        controller_col = controllers.get_current_collection()
+        self.assertEqual(controller_col.metrics.total_issue, 50)
+
+    def test_get_current_collection_get_public_articles_numbers(self):
+        collection = utils.makeOneCollection({
+            "metrics" : {
+                "total_journal" : 10,
+                "total_issue" : 2000,
+                "total_article" : 30000,
+                "total_citation" : 400000
+            },
+        })
+        utils.makeAnyArticle(items=101, attrib={'is_public': True})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        utils.makeOneArticle({'is_public': False})
+        controller_col = controllers.get_current_collection()
+        self.assertEqual(controller_col.metrics.total_article, 101)
+
     def test_count_elements_by_type_and_visibility_type_journal(self):
         """
         Testando a função count_elements_by_type_and_visibility() com 20
