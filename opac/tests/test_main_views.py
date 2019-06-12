@@ -3,6 +3,7 @@ import unittest
 import flask
 import warnings
 from flask import url_for, g, current_app
+from unittest.mock import patch, Mock
 
 from .base import BaseTestCase
 
@@ -702,6 +703,7 @@ class MainTestCase(BaseTestCase):
                 content
             )
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_article_detail_pid_redirect(self):
         """
         Teste da ``view function`` ``article_detail_pid``, verifica somente o
@@ -726,6 +728,7 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 302)
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_article_detail_pid_redirect_follow(self):
         """
         Teste da ``view function`` ``article_detail_pid``,
@@ -755,6 +758,7 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     @patch('requests.get')
     def test_article_detail_translate_version_(self, mocked_requests_get):
         """
@@ -923,7 +927,7 @@ class MainTestCase(BaseTestCase):
                 u'<meta name="citation_title" content="Título del Artículo"></meta>',
                 content
             )
-
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_article_detail_links_to_gscholar(self):
         """
         Teste da ``view function`` ``article_detail``, deve retornar uma página
@@ -962,6 +966,7 @@ class MainTestCase(BaseTestCase):
             self.assertIn('Google', page_content)
             self.assertIn('/scholar', page_content)
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_legacy_url_aop_article_detail(self):
         """
         Teste da ``view function`` ``router_legacy``, deve retornar uma página
@@ -994,6 +999,7 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_legacy_url_aop_article_detail_wrong_aop_pid(self):
         """
         Teste da ``view function`` ``router_legacy``, deve retornar uma página
@@ -1055,6 +1061,7 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
+    @unittest.skip(u'Teste Presente no master mas nao se aplica ao SP')
     def test_legacy_url_pdf_article_detail_wrong_pid(self):
         """
         Teste da view ``router_legacy``, deve retornar uma página de erro (404 not found)

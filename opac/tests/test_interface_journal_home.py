@@ -37,7 +37,7 @@ class JournalHomeTestCase(BaseTestCase):
 
             self.assertEqual(flask.session['lang'], 'pt_BR')
             content = response.data.decode('utf-8')
-            expected = "Ciências Sociais Aplicadas, Ciências Agrárias"
+            expected = "Applied Social Sciences, Agricultural Sciences"
             self.assertIn(expected, content)
 
     def test_journal_detail_subject_areas_with_es_language(self):
@@ -68,7 +68,7 @@ class JournalHomeTestCase(BaseTestCase):
             self.assertEqual(flask.session['lang'], 'es')
 
             content = response.data.decode('utf-8')
-            expected = "Ciencias Sociales Aplicadas, Ciencias Agrícolas"
+            expected = "Applied Social Sciences, Agricultural Sciences"
             self.assertIn(expected, content)
 
     def test_journal_detail_subject_areas_with_en_language(self):
