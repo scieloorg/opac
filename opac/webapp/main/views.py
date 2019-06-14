@@ -1072,16 +1072,6 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-    journal = article.journal
-    issue = article.issue
-
-    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
-
-    article_list = [_article for _article in articles]
-
-    previous_article = utils.get_prev_article(article_list, article)
-    next_article = utils.get_next_article(article_list, article)
-
     pdf_ssm_path = None
 
     if article.pdfs:
@@ -1101,18 +1091,10 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     else:
         abort(404, _('PDF do Artigo não encontrado'))
 
-    context = {
-        'next_article': next_article,
-        'previous_article': previous_article,
-        'article': article,
-        'journal': journal,
-        'issue': issue,
-        'pdf_ssm_path': pdf_ssm_path,
-        'pdfs': article.pdfs,
-        'article_lang': lang_code
-    }
-
-    return render_template("article/detail_pdf.html", **context)
+    if not pdf_ssm_path:
+        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+    else:
+        return get_content_from_ssm(pdf_ssm_path)
 
 
 @main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')
