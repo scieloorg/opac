@@ -1,5 +1,5 @@
 # coding: utf-8
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 from werkzeug.security import check_password_hash
 
@@ -8,6 +8,8 @@ from .base import BaseTestCase
 from webapp import controllers, dbsql, utils as ut
 
 from flask_babelex import lazy_gettext as __
+
+from mongoengine import Q
 
 from . import utils
 
@@ -530,83 +532,138 @@ class IssueControllerTestCase(BaseTestCase):
 
         self.assertIsNone(issues)
 
-    def test_get_issue_info_from_assets_code_returns_ahead_info(self):
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_ahead_info(self, MockedQuery):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('2019nahead', journal)
-        self.assertEqual(result, {"year": 2019, "number": "ahead", "journal": journal})
+        calls = [
+            call(journal=journal),
+            call(year=2019),
+            call(number="ahead"),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_volume_info(self):
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_volume_info(self, MockedQuery):
         journal = utils.makeOneJournal()
-        expected = {
-            "volume": "58",
-            "number": None,
-            "suppl_text": None,
-            "journal": journal,
-        }
         result = controllers.get_issue_info_from_assets_code('v58n', journal)
-        self.assertEqual(result, expected)
-        result = controllers.get_issue_info_from_assets_code('v58', journal)
-        self.assertEqual(result, expected)
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number=None),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_volume_and_number_info(self):
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_volume_and_number_info(self, MockedQuery):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('v58n1', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": "1", "suppl_text": None, "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number="1"),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_volume_and_special_number_info(self):
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_volume_and_special_number_info(
+        self, MockedQuery
+    ):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('v58nspe', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": "spe", "suppl_text": None, "journal": journal}
-        )
-        result = controllers.get_issue_info_from_assets_code('v58nspe_1', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": "spe_1", "suppl_text": None, "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number="spe"),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_volume_and_supplement_info(self):
+        result = controllers.get_issue_info_from_assets_code('v58nspe_1', journal)
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number="spe_1"),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
+
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_volume_and_supplement_info(
+        self, MockedQuery
+    ):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('v58s1', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": None, "suppl_text": "1", "journal": journal}
-        )
-        result = controllers.get_issue_info_from_assets_code('v58s0', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": None, "suppl_text": "0", "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number=None),
+            call(suppl_text="1"),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_volume_number_and_supplement_info(self):
+        result = controllers.get_issue_info_from_assets_code('v58s0', journal)
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number=None),
+            call(suppl_text="0"),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
+
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_volume_number_and_supplement_info(
+        self, MockedQuery
+    ):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('v58n1s2', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": "1", "suppl_text": "2", "journal": journal}
-        )
-        result = controllers.get_issue_info_from_assets_code('v58n2s0', journal)
-        self.assertEqual(
-            result,
-            {"volume": "58", "number": "2", "suppl_text": "0", "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number="1"),
+            call(suppl_text="2"),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
-    def test_get_issue_info_from_assets_code_returns_number_and_supplement_info(self):
+        result = controllers.get_issue_info_from_assets_code('v58n2s0', journal)
+        calls = [
+            call(journal=journal),
+            call(volume="58"),
+            call(number="2"),
+            call(suppl_text="0"),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
+
+    @patch('webapp.controllers.Q')
+    def test_get_issue_info_from_assets_code_returns_number_and_supplement_info(
+        self, MockedQuery
+    ):
         journal = utils.makeOneJournal()
         result = controllers.get_issue_info_from_assets_code('n1', journal)
-        self.assertEqual(
-            result,
-            {"volume": None, "number": "1", "suppl_text": None, "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume=None),
+            call(number="1"),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
+
         result = controllers.get_issue_info_from_assets_code('nspe-1', journal)
-        self.assertEqual(
-            result,
-            {"volume": None, "number": "spe-1", "suppl_text": None, "journal": journal}
-        )
+        calls = [
+            call(journal=journal),
+            call(volume=None),
+            call(number="spe-1"),
+            call(suppl_text=None),
+            call(suppl_text=""),
+        ]
+        MockedQuery.assert_has_calls(calls, any_order=True)
 
     def test_get_issue_by_journal_and_assets_code_raises_error_if_no_assets_code(self):
         """
@@ -668,17 +725,12 @@ class IssueControllerTestCase(BaseTestCase):
         """
         journal = utils.makeOneJournal()
         mk_issue_objects.filter.return_value.first.return_value = None
-        mk_get_issue_info_from_assets_code.return_value = {
-            "volume": "1",
-            "number": "1",
-            "journal": journal
-        }
-        controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
-        mk_issue_objects.filter.assert_any_call(
-            volume="1",
-            number="1",
-            journal=journal
+        issue_query = Q(journal=journal) & Q(volume="1") & Q(number="1") & (
+            Q(suppl_text=None) | Q(suppl_text="")
         )
+        mk_get_issue_info_from_assets_code.return_value = issue_query
+        controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        mk_issue_objects.filter.assert_any_call(issue_query)
 
     @patch('webapp.controllers.get_issue_info_from_assets_code')
     @patch('webapp.controllers.Issue.objects')
