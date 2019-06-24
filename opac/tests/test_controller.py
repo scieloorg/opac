@@ -1,10 +1,13 @@
 # coding: utf-8
+from unittest.mock import patch
 
 from werkzeug.security import check_password_hash
 
 from .base import BaseTestCase
 
 from webapp import controllers, dbsql, utils as ut
+
+from flask_babelex import lazy_gettext as __
 
 from . import utils
 
@@ -527,6 +530,39 @@ class IssueControllerTestCase(BaseTestCase):
 
         self.assertIsNone(issues)
 
+    def test_get_issue_by_journal_and_assets_code_raises_error_if_no_assets_code(self):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com assets_code
+        vazio lança exceção.
+        """
+        journal = utils.makeOneJournal()
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_issue_by_journal_and_assets_code('', journal)
+        self.assertEqual(str(exc_info.exception), __('Obrigatório um assets_code.'))
+
+    def test_get_issue_by_journal_and_assets_code_raises_error_if_no_journal(self):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com journal
+        vazio lança exceção.
+        """
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_issue_by_journal_and_assets_code('v1n1', {})
+        self.assertEqual(str(exc_info.exception), __('Obrigatório um journal.'))
+
+    @patch('webapp.controllers.Issue.objects')
+    def test_get_issue_by_journal_and_assets_code_returns_filter_first_result(
+        self, mk_issue_objects
+    ):
+        """
+        Teste da função controllers.get_issue_by_journal_and_issue_info() com issue não
+        encontrado com o assets_code e journal informado.
+        """
+        journal = utils.makeOneJournal()
+        issue = utils.makeOneIssue()
+        mk_issue_objects.filter.return_value.first.return_value = issue
+        result = controllers.get_issue_by_journal_and_assets_code('v1n1', journal)
+        self.assertEqual(result, issue)
+
     def test_get_issue_by_iid(self):
         """
         Teste da função controllers.get_issue_by_iid() para retornar um objeto:
@@ -811,6 +847,94 @@ class ArticleControllerTestCase(BaseTestCase):
         retorna um ValueError.
         """
         self.assertRaises(ValueError, controllers.get_articles_by_iid, [])
+
+    @patch('webapp.controllers.Article.objects')
+    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_file_path(
+        self, mk_article_objects
+    ):
+        controllers.get_article_by_pdf_filename("abc", "v1n3s2", "article.pdf")
+        mk_article_objects.only.assert_called_once_with(
+            "pdfs"
+        )
+        mk_article_objects.only.return_value.filter.assert_called_once_with(
+            pdfs__url__endswith="abc/v1n3s2/article.pdf", is_public=True
+        )
+
+    @patch('webapp.controllers.Article.objects')
+    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_file_path(
+        self, mk_article_objects
+    ):
+        controllers.get_article_by_pdf_filename("abc", "v1n3s2", "en tomo53(f2-3-4) 273-277.pdf")
+        mk_article_objects.only.assert_called_once_with(
+            "pdfs"
+        )
+        mk_article_objects.only.return_value.filter.assert_called_once_with(
+            pdfs__url__endswith="abc/v1n3s2/en_tomo53f2-3-4_273-277.pdf", is_public=True
+        )
+
+    def test_get_article_by_pdf_filename_raises_error_if_no_journal_acronym(self):
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_article_by_pdf_filename("", "v1n3s2", "article.pdf")
+        self.assertEqual(
+            str(exc_info.exception), __('Obrigatório o acrônimo do periódico.')
+        )
+
+    def test_get_article_by_pdf_filename_raises_error_if_no_issue_info(self):
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_article_by_pdf_filename("abc", "", "article.pdf")
+        self.assertEqual(
+            str(exc_info.exception), __('Obrigatório o campo issue_info.')
+        )
+
+    def test_get_article_by_pdf_filename_raises_error_if_no_pdf_filename(self):
+        with self.assertRaises(ValueError) as exc_info:
+            controllers.get_article_by_pdf_filename("abc", "v1n3s2", "")
+        self.assertEqual(
+            str(exc_info.exception), __('Obrigatório o nome do arquivo PDF.')
+        )
+
+    @patch('webapp.controllers.Article.objects')
+    def test_get_article_by_pdf_filename_raises_error_if_article_filter_error(
+        self, mk_article_objects
+    ):
+        mk_article_objects.only.return_value.filter.return_value.first.side_effect = Exception
+        self.assertRaises(
+            Exception,
+            controllers.get_article_by_pdf_filename,
+            "abc",
+            "v1n3s2",
+            "article.pdf"
+        )
+
+    @patch('webapp.controllers.Article.objects')
+    def test_get_article_by_pdf_filename_returns_article_filter_result(
+        self, mk_article_objects
+    ):
+        attrib = {
+            "pdfs" : [
+                {
+                    "lang" : "pt",
+                    "url" : "https://ssm.scielo.br/media/assets/abc/v1n3s2/article.pdf",
+                    "type" : "pdf"
+                },
+                {
+                    "lang" : "en",
+                    "url" : "https://ssm.scielo.br/media/assets/abc/v1n3s2/en_article.pdf",
+                    "type" : "pdf"
+                },
+            ]
+        }
+        article = utils.makeOneArticle(attrib)
+        mk_article_objects.only.return_value.filter.return_value.first.side_effect = [
+            None, article
+        ]
+        article_filter_results = [None, attrib['pdfs'][0]["url"]]
+        for filter_result in article_filter_results:
+            with self.subTest(filter_result=filter_result):
+                result = controllers.get_article_by_pdf_filename(
+                    "abc", "v1n3s2", "article.pdf"
+                )
+                self.assertEqual(result, filter_result)
 
 
 class UserControllerTestCase(BaseTestCase):
