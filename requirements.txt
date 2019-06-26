@@ -1,5 +1,5 @@
 Flask==0.12.4
-mongoengine==0.15.3
+mongoengine==0.18.2
 flask-mongoengine==0.9.5
 Flask-Admin==1.5.2
 Flask-SQLAlchemy==2.3.2
