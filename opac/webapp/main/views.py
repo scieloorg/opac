@@ -29,6 +29,8 @@ from webapp.config.lang_names import display_original_lang_name
 from lxml import etree
 from packtools import HTMLGenerator
 
+from user_agents import parse
+
 logger = logging.getLogger(__name__)
 
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
@@ -185,7 +187,23 @@ def index():
 @main.route('/journals/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list():
-    return render_template("collection/list_journal.html")
+    """
+        A lista de periódico é exibida para o browser com paginação infinita, "infinite scroll", porém isso é um problema para os crawlers!.
+
+        Os crawlers enxergam os link como ruas e a paginação infinita não exibi todas as ruas, o que impedi dos crawlers seguir "caminho" e realize as indexações das páginas, no nosso caso páginas de periódicos.
+
+        Para contornar esse problema, resolvemos avaliar se estamos sendo acessados por um browser ou por um crawler, para isso avaliamos o cabeçalho da requisição verificando o parâmetro "User-Agent" e no caso dos crawlers exibimos todos os links da página.
+    """
+
+    journals_list = None
+
+    user_agent = parse(request.headers.get("User-Agent"))
+
+    if user_agent.is_bot:
+        journals_list = [controllers.get_journal_json_data(journal) for journal in controllers.get_journals()]
+
+    return render_template("collection/list_journal.html",
+                           **{'journals_list': journals_list})
 
 
 @main.route('/journals/feed/')
@@ -551,8 +569,12 @@ def journals_search_alpha_ajax():
     query_filter = request.args.get('query_filter', '', type=str)
     page = request.args.get('page', 1, type=int)
     lang = get_lang_from_session()[:2].lower()
+
     response_data = controllers.get_alpha_list_from_paginated_journals(
-        title_query=query, query_filter=query_filter, page=page, lang=lang)
+                        title_query=query,
+                        query_filter=query_filter,
+                        page=page,
+                        lang=lang)
 
     return jsonify(response_data)
 

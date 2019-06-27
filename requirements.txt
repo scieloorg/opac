@@ -33,3 +33,6 @@ rq-scheduler-dashboard==0.0.2
 lxml==4.2.4
 Werkzeug==0.14.1
 packtools==2.5.1
+PyYAML==5.1.1
+ua-parser==0.8.0
+user-agents==2.0

@@ -62,6 +62,11 @@
                     </thead>
                     <tbody id="journals_table_body">
                       {# preenchido com a lista de periódicos com js #}
+
+                      {% if journals_list %}
+                          {% include 'collection/includes/journal_list_row.html' %}
+                      {% endif %}
+
                     </tbody>
                   </table>
                 </div>
@@ -362,7 +367,9 @@
               listThemeAreas();
               break;
           default:
-              listAlpha();
+              {% if not journals_list %}
+                listAlpha();
+              {% endif %}
       }
 
       // tab ativa
@@ -386,7 +393,7 @@
                 listThemeAreas();
                 break;
             default:
-                listAlpha()
+                listAlpha();
         }
         window.location.hash = target;
 
