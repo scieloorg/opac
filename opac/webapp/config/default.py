@@ -80,7 +80,7 @@ import os
         - OPAC_DIMENSIONS_METRICS_URL:   URL para o Dimensions (default: https://badge.dimensions.ai/details/doi)
         - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
         - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a)
-        - OPAC_USE_SCIENCEOPEN:  ativa/desativa a integração de métricas com o OpenScience. Se sim, definir como 'True' (default: 'False')
+        - OPAC_USE_SCIENCEOPEN:  ativa/desativa a integração de métricas com o ScienceOpen. Se sim, definir como 'True' (default: 'False')
 
       - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
