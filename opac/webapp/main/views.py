@@ -694,7 +694,7 @@ def issue_grid(url_seg):
     return render_template("issue/grid.html", **context)
 
 
-@main.route('/toc/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route('/toc/<string:url_seg>/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
@@ -764,7 +764,7 @@ def issue_toc(url_seg, url_seg_issue):
     return render_template("issue/toc.html", **context)
 
 
-@main.route('/feed/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/')
+@main.route('/feed/<string:url_seg>/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def issue_feed(url_seg, url_seg_issue):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -884,10 +884,10 @@ def normalize_ssm_url(url):
         return current_app.config["SSM_BASE_URI"] + url
 
 
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/')
-@main.route('/article/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     article_url = url_for('main.article_detail',
@@ -1043,10 +1043,10 @@ def article_ssm_content_raw():
         return get_content_from_ssm(resource_ssm_path)
 
 
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<regex("\d{4}\.(\w+[-\.]?\w+[-\.]?)"):url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
