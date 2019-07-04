@@ -20,7 +20,6 @@ from webapp import cache
 from webapp import controllers
 from webapp.choices import STUDY_AREAS
 from webapp.utils import utils
-from webapp.utils import related_articles_urls
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
 from webapp import forms
 
@@ -969,7 +968,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
                for lang in text_languages
            ]
        )
-
     context = {
         'next_article': next_article,
         'previous_article': previous_article,
@@ -981,8 +979,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'pdf_urls_path': pdf_urls_path,
         'article_lang': lang_code,
         'text_versions': text_versions,
-        'related_links': related_articles_urls.related_links(
-            article_url, [article.title]),
+        'related_links': controllers.related_links(article),
     }
 
     return render_template("article/detail.html", **context)

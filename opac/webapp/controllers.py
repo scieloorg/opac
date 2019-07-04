@@ -1213,3 +1213,30 @@ def get_page_by_slug_name(slug_name, lang=None):
     if not lang:
         return Pages.objects(slug_name=slug_name)
     return Pages.objects(language=lang, slug_name=slug_name).first()
+
+
+def related_links(article):
+    expr = []
+    if article.title or article.section:
+        expr.append(article.title or article.section)
+    if article.authors:
+        expr.extend(article.authors)
+    if article.publication_date:
+        expr.append(article.publication_date[:4])
+    if article.journal.title:
+        expr.append(article.journal.title)
+    search_expr = " ".join(['"{}"'.format(item) for item in expr])
+
+    return [
+        (
+            "Google",
+            "Similares no",
+            current_app.config.get("OPAC_GOOGLE_LINK") + search_expr,
+        ),
+        (
+            "Google Scholar",
+            "Citados e Similares no",
+            current_app.config.get("OPAC_GOOGLE_SCHOLAR_LINK") + search_expr,
+        ),
+    ]
+
