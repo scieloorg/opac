@@ -80,6 +80,7 @@ import os
         - OPAC_DIMENSIONS_METRICS_URL:   URL para o Dimensions (default: https://badge.dimensions.ai/details/doi)
         - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
         - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a)
+        - OPAC_USE_SCIENCEOPEN:  ativa/desativa a integração de métricas com o ScienceOpen. Se sim, definir como 'True' (default: 'False')
 
       - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
@@ -355,6 +356,8 @@ PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/sci
 
 USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
 ALTMETRIC_METRICS_URL = os.environ.get('OPAC_ALTMETRIC_METRICS_URL', 'https://www.altmetric.com/details.php')
+
+USE_SCIENCEOPEN = os.environ.get('OPAC_USE_SCIENCEOPEN', 'False') == 'True'
 
 NEWS_LIST_LIMIT = 10
 

@@ -47,6 +47,12 @@
   <script type="text/javascript" src="//cdn.plu.mx/widget-popup.js"></script>
 
   {% if config.USE_ALTMETRIC %}
-    <script ype="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+    <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
   {% endif %}
+
+  {% if config.USE_SCIENCEOPEN %}
+    <script id="9cf9cf8f-3a99-fe86-4013-f630edbf80ac" src="https://www.scienceopen.com/script/badge2.js" async defer></script>
+      <script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
+  {% endif %}
+
 {% endblock %}
