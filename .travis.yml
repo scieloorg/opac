@@ -19,13 +19,5 @@ script:
 - make travis_compose_make_test
 - make travis_run_audit
 
-after_success:
-- if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
-  docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
-  make release_docker_build;
-  make release_docker_tag;
-  make release_docker_push;
-  fi
-
 notifications:
   slack: scielo:6YcYDMh1STDOQT8H7umVuD0R

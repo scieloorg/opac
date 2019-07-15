@@ -28,11 +28,23 @@ gulp.task('default', function() {
   console.log('\t- watch-all: cada mudança de arquivos *.less e *.js (da pasta /static/) e chama: "process-all-less" e "process-all-js" respectivamente');
 });
 
+// caminho da pasta 'node_modules/bootstrap'
+var node_folder_path = path.join(__dirname, 'node_modules/');
+console.info('[INFO] [gulpfile.js] path da pasta node_modules:\t', node_folder_path);
+
 // caminho da pasta 'opac/webapp/static/'
 var static_folder_path = path.join(__dirname, 'opac/webapp/static/');
 console.info('[INFO] [gulpfile.js] path da pasta static:\t', static_folder_path);
 
 var paths = {
+
+    // caminho relativo da pasta 'bootstrap/js/ dentro do node_modules, fora do projeto'
+    'bootstrap_js': path.join(node_folder_path, 'bootstrap/dist/js/'),
+    // caminho relativo da pasta 'jquery/dist/ dentro do node_modules, fora do projeto'
+    'jquery_js': path.join(node_folder_path, 'jquery/dist/'),
+    // caminho relativo da pasta 'jquery-typeahead/dist/ dentro do node_modules, fora do projeto'
+    'jquery-typeahead_js': path.join(node_folder_path, 'jquery-typeahead/dist/'),
+
     // caminho relativo da pasta 'static/js/'
     'static_js': path.join(static_folder_path, 'js/'),
     // caminho relativo da pasta 'static/less/'
@@ -41,6 +53,10 @@ var paths = {
     'static_css': path.join(static_folder_path, 'css/'),
 };
 
+console.info('[INFO] [gulpfile.js] path da pasta bootstrap/js:\t', paths['bootstrap_js']);
+console.info('[INFO] [gulpfile.js] path da pasta bootstrap/less:\t', paths['bootstrap_less']);
+console.info('[INFO] [gulpfile.js] path da pasta bootstrap/css:\t', paths['bootstrap_css']);
+
 console.info('[INFO] [gulpfile.js] path da pasta static/js:\t', paths['static_js']);
 console.info('[INFO] [gulpfile.js] path da pasta static/less:\t', paths['static_less']);
 console.info('[INFO] [gulpfile.js] path da pasta static/css:\t', paths['static_css']);
@@ -48,21 +64,14 @@ console.info('[INFO] [gulpfile.js] path da pasta static/css:\t', paths['static_c
 var target_src = {
     'js': {
         'scielo-bundle': [
-            // instruções do CodeKit (designer) no arquivo: scielo-bundle.js
-            // @codekit-prepend "./vendor/jquery-1.11.0.min.js";
-            // @codekit-prepend "./vendor/bootstrap.js";
-            // @codekit-prepend "./vendor/jquery-ui.min.js";
-            // @codekit-prepend "./plugins.js";
-            // @codekit-prepend "./main.js";
-            path.join(paths['static_js'], 'vendor/jquery-1.11.0.min.js'),
-            path.join(paths['static_js'], 'vendor/bootstrap.js'),
-            path.join(paths['static_js'], 'vendor/jquery-ui.min.js'),
-
-            path.join(paths['static_js'], 'vendor/jquery.typeahead.min.js'),
-
+            // instruções JS (designer)
+            path.join(paths['jquery_js'], 'jquery.js'),
+            path.join(paths['bootstrap_js'], 'bootstrap.js'),
+            path.join(paths['jquery-typeahead_js'], 'jquery.typeahead.min.js'),
             path.join(paths['static_js'], 'plugins.js'),
             path.join(paths['static_js'], 'main.js'),
-            // nossos JS:
+            
+            // instruções JS (equipe scielo)
             path.join(paths['static_js'], 'common.js'),
             path.join(paths['static_js'], 'moment.js'),
             path.join(paths['static_js'], 'moment_locale_pt_br.js'),
@@ -70,18 +79,12 @@ var target_src = {
             path.join(paths['static_js'], 'modal_forms.js'),
         ],
         'scielo-article': [
-            path.join(paths['static_js'], 'scielo-article.js'),
+            path.join(paths['static_js'], 'scielo-article.js')
+
         ],
         'scielo-article-standalone': [
-            // instruções do CodeKit (designer) no arquivo: scielo-article-standalone.js
-            // @codekit-prepend "./vendor/jquery-1.11.0.min.js";
-            // @codekit-prepend "./vendor/bootstrap.js";
-            // @codekit-prepend "./vendor/jquery-ui.min.js";
-            // @codekit-prepend "./plugins.js";
-            // @codekit-prepend "./scielo-article.js";
-            path.join(paths['static_js'], 'vendor/jquery-1.11.0.min.js'),
-            path.join(paths['static_js'], 'vendor/bootstrap.js'),
-            path.join(paths['static_js'], 'vendor/jquery-ui.min.js'),
+            path.join(paths['jquery_js'], 'jquery.js'),
+            path.join(paths['bootstrap_js'], 'bootstrap.js'),
             path.join(paths['static_js'], 'plugins.js'),
             path.join(paths['static_js'], 'scielo-article.js'),
         ],
@@ -94,6 +97,9 @@ var target_src = {
         ],
         'scielo-article': [
             path.join(paths['static_less'], 'scielo-article.less')
+        ],
+        'bootstrap': [
+            path.join(paths['static_less'], 'bootstrap.less')
         ],
         'scielo-article-standalone': [
             path.join(paths['static_less'], 'scielo-article-standalone.less')
@@ -175,7 +181,7 @@ gulp.task('process-scielo-article-standalone-js', function() {
     );
 });
 
-// Task para rodar as tasks: "process-scielo-*-js" num paso só
+// Task para rodar as tasks: "process-scielo-*-js" num passo só
 gulp.task('process-all-js',
     [
         'process-scielo-bundle-js',

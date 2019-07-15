@@ -995,7 +995,7 @@ class MainTestCase(BaseTestCase):
 
             utils.makeOneCollection()
 
-            journal = utils.makeOneJournal()
+            journal = utils.makeOneJournal({"title":"Título do periódico"})
 
             issue = utils.makeOneIssue({'journal': journal})
 
@@ -1021,6 +1021,43 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(result[1][0], 'Google Scholar')
             self.assertIn('Article Y', result[0][2])
             self.assertIn('Article Y', result[1][2])
+            self.assertIn('Google', page_content)
+            self.assertIn('/scholar', page_content)
+
+    def test_article_detail_links_to_gscholar_for_article_without_title(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({"title":"Título do periódico"})
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='pt'))
+
+            self.assertStatus(response, 200)
+            page_content = response.data.decode('utf-8')
+            self.assertTemplateUsed('article/detail.html')
+            self.assertEqual(self.get_context_variable('article').id, article.id)
+            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            result = self.get_context_variable('related_links')
+            self.assertEqual(result[0][0], 'Google')
+            self.assertEqual(result[1][0], 'Google Scholar')
+            self.assertIn(journal.title, result[0][2])
+            self.assertIn(journal.title, result[1][2])
             self.assertIn('Google', page_content)
             self.assertIn('/scholar', page_content)
 
