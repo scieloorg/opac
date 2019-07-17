@@ -187,12 +187,20 @@
 	sup.xref {
 		padding: 4px 0 3px;
 		font-size: 11px;
+
+		@media @maxTablet2 {
+			padding: 10px;
+		}
 	}
 
 	.ref {
 		position: relative;
 		display: inline;
 		font-size: 13px;
+
+		@media @maxTablet {
+			position: static;
+		}
 
 		.refCtt {
 			.cssAnimations .slideInUp(.3s);
@@ -219,6 +227,12 @@
 			.radius(4px);
 			.border-box;
 			z-index: 99;
+
+			@media @maxTablet {
+				width: 100%;
+				display: inline-block;
+				left:0 !important;
+			}
 
 			&:before {
 				content: '';
@@ -476,13 +490,22 @@
 				margin: -2px 0 0 1%;
 				font-size: 1.2em;
 
+				//quebra linha de link
+				overflow-wrap: break-word;
+				word-wrap: break-word;
+				-ms-word-break: break-all;
+				word-break: break-all;
+				word-break: break-word;
+				-ms-hyphens: auto;
+				-moz-hyphens: auto;
+				-webkit-hyphens: auto;
+
 				strong {
 					display: inline;
 				}
 			}
 			a {
 				color: #00e;
-				margin-right: 20px;
 			}			
 		}
 
@@ -876,7 +899,6 @@
 				cursor: pointer;
 
 				[class^="sci-ico-"] {
-					//font-size: 24px;
 					color: @Blue;
 				} 
 
@@ -911,6 +933,10 @@
 			.ref {
 				.opened {
 					margin-top: 2.4em;
+
+					@media @onlyMobile {
+						margin: 0;
+					}
 				}
 				
 				&.footnote {
@@ -1054,6 +1080,17 @@
 		p {
 			margin: 0 0 15px;
 			padding: 0;
+
+			//quebra linha de link
+			overflow-wrap: break-word;
+			word-wrap: break-word;
+			-ms-word-break: break-all;
+			word-break: break-all;
+			word-break: break-word;
+			-ms-hyphens: auto;
+			-moz-hyphens: auto;
+			-webkit-hyphens: auto;
+			//hyphens: auto;
 		}
 
 		.articleReferral {
@@ -1943,6 +1980,9 @@
 }
 
 .ModalFigs {
+	.modal-title{
+		width: ~"calc(100% - 70px)";
+	}
 	img {
 		width: 100%;
 	}
@@ -2082,8 +2122,7 @@
 Ajustes para mobile
 */
 
-@media only screen and (max-width : 767px) {
-
+@media @onlyMobile {
 
 	.article{
 
@@ -2111,7 +2150,6 @@ Ajustes para mobile
 
 			&.levelMenu-xs{
 				display: block !important;
-
 			}
 
 			margin-top: 50px !important;
@@ -2167,23 +2205,12 @@ Ajustes para mobile
 		.articleCtt .contribGroup .dropdown .dropdown-toggle{
 			white-space: normal;
 		}
-
-
-		.articleCtt .articleTxt .article-title,
-		.articleCtt .articleTxt .articleSectionTitle, 
-		.articleCtt .articleTxt .article-title,
-
-		.articleCtt .articleTxt h2.article-title,
-		.articleCtt .articleTxt .article-title,
-		.articleCtt .articleTxt .article-title,
-		.articleCtt .articleTxt .article-title, 
 		.articleCtt .articleTxt .articleSectionTitle,
 		.articleCtt .articleTxt h2,
 		.articleCtt .contribGroup
 		{
 			font-size: auto; 
 		}
-
 		.articleCtt .contribGroup {
 			font-size: 1em !important; 
 			
@@ -2191,7 +2218,6 @@ Ajustes para mobile
 				display: block;
 			}
 		}
-
 		.articleCtt .articleTimeline li{
 			width: auto;
 			display: block;
@@ -2206,12 +2232,9 @@ Ajustes para mobile
 			bottom: 40px;
 
 			@media (orientation : landscape) {
-			
 				bottom: 5px;
-
 			}
 		}
-
 
 		.partners img{
 			margin: 10px;
@@ -2245,7 +2268,10 @@ Ajustes para mobile
 		}
 
 		h1.article-title{
-			font-size:2.2em !important;
+			font-size:1.8em !important;
+		}
+		h2.article-title{
+			font-size:1.5em !important;
 		}
 
 		.journalAddress{
@@ -2304,6 +2330,7 @@ Ajustes para mobile
 			    display: block;
 			    background: url(../img/logo-scielo-svg.svg) center center no-repeat;
 			    background-size: 95%;
+			    background-position-y: -5px;
 			}
 		}
 
