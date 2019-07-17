@@ -93,10 +93,12 @@ var Article = {
 						RefToolTip.open(t);
 		  			    isTooltipOpen = true;
 
+		  			/*
 					} else if(isTooltipOpen) {
-
+						//Fecha tooltip ao clicar sobre ele
 						RefToolTip.close(t);
 						isTooltipOpen = false;
+					*/
 					}
 
 			  	} else {
