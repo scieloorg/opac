@@ -183,26 +183,22 @@ def index():
 # ##################################Collection###################################
 
 
-@main.route('/journals/')
+@main.route('/journals/alpha')
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list():
-    """
-        A lista de periódico é exibida para o browser com paginação infinita, "infinite scroll", porém isso é um problema para os crawlers!.
-
-        Os crawlers enxergam os link como ruas e a paginação infinita não exibi todas as ruas, o que impedi dos crawlers seguir "caminho" e realize as indexações das páginas, no nosso caso páginas de periódicos.
-
-        Para contornar esse problema, resolvemos avaliar se estamos sendo acessados por um browser ou por um crawler, para isso avaliamos o cabeçalho da requisição verificando o parâmetro "User-Agent" e no caso dos crawlers exibimos todos os links da página.
-    """
-
     journals_list = None
 
-    user_agent = parse(request.headers.get("User-Agent"))
-
-    if user_agent.is_bot:
-        journals_list = [controllers.get_journal_json_data(journal) for journal in controllers.get_journals()]
+    if not request.is_xhr:
+        journals_list = [controllers.get_journal_json_data(journal) for journal in controllers.get_journals(query_filter="current")]
 
     return render_template("collection/list_journal.html",
                            **{'journals_list': journals_list})
+
+
+@main.route('/journals/theme')
+@cache.cached(key_prefix=cache_key_with_lang)
+def collection_list_theme():
+    return render_template("collection/list_journal.html")
 
 
 @main.route('/journals/feed/')

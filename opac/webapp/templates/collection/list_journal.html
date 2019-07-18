@@ -252,7 +252,7 @@
         "#template_empty_msg",
         "{% trans %}Editoras{% endtrans %}",
         "{% trans %}editoras{% endtrans %}"
-    )
+    );
 
     function listAlpha(){
 
@@ -393,7 +393,10 @@
                 listThemeAreas();
                 break;
             default:
-                listAlpha();
+                {% if not journals_list %}
+                  listAlpha();
+                {% endif %}
+
         }
         window.location.hash = target;
 
