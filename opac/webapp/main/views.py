@@ -28,8 +28,6 @@ from webapp.config.lang_names import display_original_lang_name
 from lxml import etree
 from packtools import HTMLGenerator
 
-from user_agents import parse
-
 logger = logging.getLogger(__name__)
 
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
@@ -195,9 +193,9 @@ def collection_list():
                            **{'journals_list': journals_list})
 
 
-@main.route('/journals/theme')
+@main.route('/journals/thematic')
 @cache.cached(key_prefix=cache_key_with_lang)
-def collection_list_theme():
+def collection_list_thematic():
     return render_template("collection/list_journal.html")
 
 
