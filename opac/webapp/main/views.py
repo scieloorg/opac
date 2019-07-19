@@ -181,9 +181,21 @@ def index():
 # ##################################Collection###################################
 
 
-@main.route('/journals/')
+@main.route('/journals/alpha')
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list():
+    journals_list = None
+
+    if not request.is_xhr:
+        journals_list = [controllers.get_journal_json_data(journal) for journal in controllers.get_journals(query_filter="current")]
+
+    return render_template("collection/list_journal.html",
+                           **{'journals_list': journals_list})
+
+
+@main.route('/journals/thematic')
+@cache.cached(key_prefix=cache_key_with_lang)
+def collection_list_thematic():
     return render_template("collection/list_journal.html")
 
 
@@ -550,8 +562,12 @@ def journals_search_alpha_ajax():
     query_filter = request.args.get('query_filter', '', type=str)
     page = request.args.get('page', 1, type=int)
     lang = get_lang_from_session()[:2].lower()
+
     response_data = controllers.get_alpha_list_from_paginated_journals(
-        title_query=query, query_filter=query_filter, page=page, lang=lang)
+                        title_query=query,
+                        query_filter=query_filter,
+                        page=page,
+                        lang=lang)
 
     return jsonify(response_data)
 

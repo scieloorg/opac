@@ -20,7 +20,7 @@ class MenuTestCase(BaseTestCase):
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
-        expected_anchor = '<a href="/journals/#alpha" class="tab_link">\n              Lista alfab\xe9tica de peri\xf3dicos\n            </a>'
+        expected_anchor = '<a href="/journals/alpha#alpha" class="tab_link">\n              Lista alfab\xe9tica de peri\xf3dicos\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     def test_theme_link_is_selected_for_list_theme(self):
@@ -28,11 +28,11 @@ class MenuTestCase(BaseTestCase):
         Verficamos que o link do menú "Temática" tem o css:
         "selected" quando acessamos a view "collection_list_theme"
         """
-        response = self.client.get(url_for('main.collection_list'))
+        response = self.client.get(url_for('main.collection_list_thematic'))
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
-        expected_anchor = '<a href="/journals/#theme" class="tab_link">\n              Lista temática de periódicos\n            </a>'
+        expected_anchor = '<a href="/journals/thematic#theme" class="tab_link">\n              Lista temática de periódicos\n            </a>'
         self.assertIn(expected_anchor, response.data.decode('utf-8'))
 
     # Hamburger Menu
@@ -52,7 +52,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(expected_anchor1, response_data)
                 expected_anchor2 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#alpha', __('Lista alfabética de periódicos'))
                 self.assertIn(expected_anchor2, response_data)
-                expected_anchor3 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#theme', __('Lista temática de periódicos'))
+                expected_anchor3 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list_thematic') + '#theme', __('Lista temática de periódicos'))
                 self.assertIn(expected_anchor3, response_data)
                 # expected_anchor4 = """<li>\n            <a href="%s" class="tab_link">\n              %s\n            </a>\n          </li>""" % (url_for('.collection_list') + '#publisher', __('Lista de periódicos por editoras'))
                 # self.assertIn(expected_anchor4, response_data)

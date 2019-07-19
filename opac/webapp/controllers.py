@@ -235,7 +235,7 @@ def get_journal_json_data(journal, language='pt'):
         'is_active': journal.current_status == 'current',
         'issues_count': journal.issue_count,
         'next_title': journal.next_title,
-        'status_reason' : str(JOURNAL_STATUS.get(journal.current_status, journal.current_status))
+        'status_reason': str(JOURNAL_STATUS.get(journal.current_status,  journal.current_status))
     }
 
     if journal.last_issue:
