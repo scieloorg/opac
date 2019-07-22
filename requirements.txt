@@ -20,7 +20,7 @@ python-slugify==1.2.4
 requests>=2.20.0
 gunicorn==19.8.1
 xlsxwriter==1.1.0
-tweepy==3.7.0
+tweepy==3.8.0
 raven[flask]==6.9.0
 beautifulsoup4==4.6.3
 Flask-WTF==0.14.2
