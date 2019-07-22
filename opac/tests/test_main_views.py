@@ -71,7 +71,7 @@ class MainTestCase(BaseTestCase):
 
         with self.client as c:
             response = c.get(url_for('main.set_locale', lang_code='es'),
-                             headers={'Referer': '/journals'},
+                             headers={'Referer': '/journals/alpha'},
                              follow_redirects=True)
             self.assertStatus(response, 200)
 
