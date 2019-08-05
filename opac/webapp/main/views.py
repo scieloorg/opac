@@ -199,11 +199,38 @@ def collection_list():
                            **{'journals_list': journals_list, 'query_filter': query_filter})
 
 
-@main.route('/journals/thematic')
+@main.route("/journals/thematic")
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list_thematic():
-    return render_template("collection/list_journal.html")
+    allowed_query_filters = ["current", "no-current", ""]
+    allowed_thematic_filters = ["areas", "wos", "publisher"]
+    thematic_table = {
+        "areas": "study_areas",
+        "wos": "subject_categories",
+        "publisher": "publisher_name",
+    }
+    query_filter = request.args.get("status", "")
+    title_query = request.args.get("query", "")
+    thematic_filter = request.args.get("filter", "areas")
 
+    if not query_filter in allowed_query_filters:
+        query_filter = ""
+
+    if not thematic_filter in allowed_thematic_filters:
+        thematic_filter = "areas"
+
+    lang = get_lang_from_session()[:2].lower()
+    objects = controllers.get_journals_grouped_by(
+        thematic_table[thematic_filter],
+        title_query,
+        query_filter=query_filter,
+        lang=lang,
+    )
+
+    return render_template(
+        "collection/list_thematic.html",
+        **{"objects": objects, "query_filter": query_filter, "filter": thematic_filter}
+    )
 
 @main.route('/journals/feed/')
 @cache.cached(key_prefix=cache_key_with_lang)

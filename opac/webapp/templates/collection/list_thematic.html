@@ -1,0 +1,202 @@
+{% extends "collection/base.html" %}
+
+{% block title %}{% trans %}Lista de periódicos{% endtrans %}{% endblock %}
+
+{% block level_menu %}
+{% include "collection/includes/levelMenu.html" %}
+{% endblock %}
+
+{% block main_content %}
+
+<section class="collection collectionList">
+    <div class="container">
+        <ul class="nav nav-pills">
+            <li class="home-tab">
+                <a href="{{ url_for('main.index') }}">
+                    <span class="glyphBtn home" style="height: 20px;"></span> {% trans %}Home{% endtrans %}
+                </a>
+            </li>
+            <li role="presentation" {% if 'alpha' in request.url_rule.rule %}class="active" {% endif %}>
+                <a href="{{ url_for('.collection_list') }}?status=current">
+                    {% trans %}Alfabética{% endtrans %}
+                </a>
+            </li>
+            <li role="presentation" {% if 'thematic' in request.url_rule.rule %}class="active" {% endif %}>
+                <a
+                    href="{{ url_for('.collection_list_thematic') }}?status=current">{% trans %}Temática{% endtrans %}</a>
+            </li>
+        </ul>
+
+        <div class="row collectionListSearch">
+            <div class="col-md-4">
+                <select class="form-control collection-areas-filter" onchange="changeAreaFilter(this)">
+                    <option value="areas" {% if filter == "areas" %} selected {% endif %}>{% trans %}Grandes áreas do
+                        conhecimento{% endtrans %}</option>
+                    <option value="wos" {% if filter == "wos" %} selected {% endif %}>{% trans %}Áreas temáticas do Web
+                        of Science{% endtrans %}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane active collectionListStart" id="areasConhecimento">
+                <div class="row collectionListSearch">
+                    <div class="col-md-5 col-sm-12">
+                        <ul class="nav nav-pills">
+                            <li role="presentation" {% if query_filter == "" %}class="active" {% endif %}>
+                                <a href="{{ url_for('.collection_list_thematic') }}">
+                                    {% trans %}Todos{% endtrans %}
+                                </a>
+                            </li>
+                            <li role="presentation" {% if query_filter == "current" %}class="active" {% endif %}>
+                                <a href="{{ url_for('.collection_list_thematic') }}?status=current">
+                                    <span class="lbl-corrente">{% trans %}Periódicos ativos{% endtrans %}</span>
+                                </a>
+                            </li>
+                            <li role="presentation" {% if query_filter == "no-current" %}class="active" {% endif %}>
+                                <a href="{{ url_for('.collection_list_thematic') }}?status=no-current">
+                                    <span class="lbl-nao-corrente">{% trans %}Periódicos
+                                        descontinuados{% endtrans %}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-5 col-md-offset-2 col-sm-12 col-sm-offset-0 col-sm-mt-15">
+                        <input type="text" class="form-control collectionSearch"
+                            placeholder="{% trans %}Digite uma ou mais palavras para filtrar a lista{% endtrans %}" />
+                    </div>
+                </div>
+
+                <div class="collectionListTable">
+                    <table class="table-journal-list">
+                        <thead>
+                            <tr>
+                                <th class="actions"></th>
+                                <th>
+                                    <div class="col-xs-6">
+                                        {% trans %}Periódico{% endtrans %}
+                                        {% if filter == "areas" %}
+                                        <small class="collectionListTotalInfo">(total {{ objects.meta.themes_count }}
+                                            {% trans %}grandes áreas{% endtrans %} {{ objects.meta.total }}
+                                            {% trans %}periódicos{% endtrans %}) </small>
+                                        {% elif filter == "wos"%}
+                                        <small class="collectionListTotalInfo">(total {{ objects.meta.themes_count }}
+                                            {% trans %}áreas WOS{% endtrans %} {{ objects.meta.total }}
+                                            {% trans %}periódicos{% endtrans %}) </small>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-xs-6 right download">
+                                        {% trans %}download da lista{% endtrans %}
+                                        <a data-toggle="tooltip" href="#" class="collectionListDownloadXLS"
+                                            title="{% trans %}Lista em arquivo para Excel{% endtrans %}">
+                                            <span class="glyphBtn downloadXLS"></span>
+                                        </a>
+                                        <a data-toggle="tooltip" href="#" class="collectionListDownloadCSV"
+                                            title="{% trans %}Lista em arquivo CSV{% endtrans %}">
+                                            <span class="glyphBtn downloadCSV"></span>
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="journals_table_body">
+                            {# preenchido com a lista de periódicos com js #}
+
+                            {% if objects %}
+
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                {% for group in objects.objects|sort %}
+                                <tr>
+                                    <td colspan="2" class="td-thematic">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading" role="tab" id="heading-{{ loop.index }}">
+                                                <h4 class="panel-title">
+                                                    <a class="collapsed" role="button" data-toggle="collapse"
+                                                        data-parent="#accordion"
+                                                        href="#collapseContent-{{ loop.index }}" aria-expanded="true"
+                                                        aria-controls="collapseContent-{{ loop.index }}">
+                                                        {{ group }}
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapseContent-{{ loop.index }}" class="panel-collapse collapse"
+                                                role="tabpanel" aria-labelledby="heading-{{ loop.index }}">
+                                                <div class="panel-body">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="actions"></th>
+                                                                <th>{% trans %}Periódico{% endtrans %}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% with journals_list=objects.objects[group]%}
+                                                            {% include 'collection/includes/journal_list_row.html' %}
+                                                            {% endwith %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</section>
+
+<script id="template_collection_list_table" type="text/template">
+    {% with template_collection_list_table_body_id='template_collection_list_table_body' %}
+      {% include "collection/includes/tmpl_journal_list_grouper_table_container.html" %}
+    {% endwith %}
+</script>
+
+<script id="template_collection_list_table_body" type="text/template">
+    {% with template_journal_row_id='template_journal_row' %}
+      {% include "collection/includes/tmpl_journal_list_grouper_table_row.html" %}
+    {% endwith %}
+</script>
+
+<script id="template_journal_row" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_row.html" %}
+</script>
+
+<script id="template_empty_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_empty.html" %}
+</script>
+
+<script id="template_error_msg" type="text/template">
+    {% include "collection/includes/tmpl_journal_list_error.html" %}
+</script>
+
+<script>
+    function changeAreaFilter(event) {
+        var currentPage = window.location.href.split('?')[0];
+        window.location = currentPage + "?status=" + "{{ query_filter }}" + "&filter=" + event.value;
+    }
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
+<script>
+    $('.collectionListDownloadXLS').click(function (event) {
+        event.preventDefault();
+        var target_url = "{{ url_for('.download_journal_list', list_type=filter, extension='xls') }}";
+        open_download_url(target_url, '.collectionSearch');
+    });
+    $('.collectionListDownloadCSV').click(function (event) {
+        event.preventDefault();
+        var target_url = "{{ url_for('.download_journal_list', list_type=filter, extension='csv') }}";
+        open_download_url(target_url, '.collectionSearch');
+    });
+
+</script>
+
+{% endblock %}
