@@ -10,18 +10,20 @@
 
   <section class="collection collectionList">
     <div class="container">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-pills">
         <li class="home-tab">
           <a href="{{ url_for('main.index') }}">
             <span class="glyphBtn home" style="height: 20px;"></span> {% trans %}Home{% endtrans %}
           </a>
         </li>
-        <li role="presentation" class="active">
-          <a href="#alpha" data-toggle="tab">
+        <li role="presentation" {% if 'alpha' in request.url_rule.rule %}class="active" {% endif %}>
+          <a href="{{ url_for('.collection_list') }}?status=current">
             {% trans %}Alfabética{% endtrans %}
           </a>
         </li>
-        <li role="presentation"><a href="#theme" data-toggle="tab">{% trans %}Temática{% endtrans %}</a></li>
+        <li role="presentation" {% if 'thematic' in request.url_rule.rule %}class="active" {% endif %}>
+          <a href="{{ url_for('.collection_list_thematic') }}?status=current">{% trans %}Temática{% endtrans %}</a>
+        </li>
         {# <li role="presentation"><a href="#publisher" data-toggle="tab">Por instituição</a></li> #}
         {# <li role="presentation"><a href="#newIssue" data-toggle="tab">Novos números</a></li>
         <li role="presentation"><a href="#newJournals" data-toggle="tab">Novos periódicos</a></li>
@@ -32,15 +34,35 @@
 
         <!-- Alpha -->
         <div class="tab-pane active collectionListStart" id="alpha">
-
             <!-- Alpha content -->
+                <div class="row collectionListSearch">
+                  <div class="col-md-5 col-sm-12">
+                    <ul class="nav nav-pills">
+                      <li role="presentation" {% if query_filter == "" %}class="active" {% endif %}>
+                        <a href="{{ url_for('.collection_list') }}">
+                            {% trans %}Todos{% endtrans %}
+                        </a>
+                      </li>
+                      <li role="presentation" {% if query_filter == "current" %}class="active" {% endif %}>
+                        <a href="{{ url_for('.collection_list') }}?status=current">
+                          <span class="lbl-corrente">{% trans %}Periódicos ativos{% endtrans %}</span>
+                        </a>
+                      </li>
+                      <li role="presentation" {% if query_filter == "no-current" %}class="active" {% endif %} >
+                        <a href="{{ url_for('.collection_list') }}?status=no-current">
+                          <span class="lbl-nao-corrente">{% trans %}Periódicos descontinuados{% endtrans %}</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
 
-                {% with input_id='query' %}
-                  {% include "collection/includes/list_journals_search_input.html" %}
-                {% endwith %}
+                  <div class="col-md-5 col-md-offset-2 col-sm-12 col-sm-offset-0 col-sm-mt-15">
+                    <input type="text" class="form-control collectionSearch" placeholder="{% trans %}Digite uma ou mais palavras para filtrar a lista{% endtrans %}"/>
+                  </div>
+                </div>
 
                 <div class="collectionListTable">
-                  <table>
+                  <table class="table-journal-list">
                     <thead>
                       <tr>
                         <th class="actions"></th>
@@ -66,89 +88,12 @@
                       {% if journals_list %}
                           {% include 'collection/includes/journal_list_row.html' %}
                       {% endif %}
-
                     </tbody>
                   </table>
                 </div>
             <!-- Alpha content -->
         </div>
         <!-- Alfa -->
-
-        <!-- Theme -->
-        <div class="tab-pane collectionListStart" id="theme">
-
-          <div class="row collectionListSearch">
-
-            <div class="col-md-6">
-              <div class="btn-group dropdown" role="group">
-                <button type="button" class="btn btn-default btn-dropdown-group dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {% trans %}Grandes áreas do conhecimento{% endtrans %}
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li class="active"><a href="#areasConhecimento" data-toggle="tab">{% trans %}Grandes áreas do conhecimento{% endtrans %}</a></li>
-                  <li><a href="#temasWoS" data-toggle="tab">{% trans %}Áreas temáticas do Web of Science{% endtrans %}</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-            <!-- Theme content -->
-              {# <div class="container"> #}
-
-                <div class="tab-content">
-
-                  <!-- first tab -->
-                  <div class="tab-pane active collectionListStart" id="areasConhecimento">
-
-                    {% with input_id='query_areas', filter_id='query_filter_areas' %}
-                      {% include "collection/includes/list_journals_search_input.html" %}
-                    {% endwith %}
-
-                    <div id="areas_list_table_container"></div>
-
-                  </div>
-                  <!-- /first tab -->
-
-                  <!-- second tab -->
-                  <div class="tab-pane collectionListStart" id="temasWoS">
-
-                    {% with input_id='query_wos', filter_id='query_filter_wos' %}
-                      {% include "collection/includes/list_journals_search_input.html" %}
-                    {% endwith %}
-
-                    <div id="wos_list_table_container"></div>
-
-                  </div>
-                  <!-- /second tab -->
-
-                </div>
-              {# </div> #}
-            <!-- Theme content -->
-
-        </div>
-        <!-- Theme -->
-
-        <!-- Publisher -->
-        <div class="tab-pane collectionListStart" id="publisher">
-
-          {% with input_id='query_publisher', filter_id='query_filter_publisher'  %}
-            {% include "collection/includes/list_journals_search_input.html" %}
-          {% endwith %}
-
-            <div class="container">
-
-              <div id="list_table_container" class="collectionListTable">
-              </div>
-
-            </div>
-
-        </div>
-
-      </div>
-
-      <div style="display: none;" class="collectionListLoadingAreas collectionListLoading"></div>
-
     </div>
   </section>
 
@@ -179,222 +124,19 @@
 {% endblock %}
 
 {% block extra_js %}
-
-  <script src="{{ url_for('static', filename='js/underscore.js') }}"></script>
   <script src="{{ url_for('static', filename='js/journal_lists.js') }}"></script>
 
   <script>
+    $('.collectionListDownloadXLS').click(function(event) {
+      event.preventDefault();
+      var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
+      open_download_url(target_url, '.collectionSearch');
+    });
 
-    var listAplhaInit = JournalListAlpha.initialize(
-      "{{ url_for('main.journals_search_alpha_ajax') }}",
-      "#template_journal_row",
-      "#journals_table_body",
-      "#query",
-      "query_filter",
-      ".collectionListLoading",
-      "#template_error_msg",
-      "#template_empty_msg"
-    );
-    /* Grandes áreas do conhecimento */
-    var listThemeInit = Object.create(JournalCategorizedList);
-    listThemeInit.initialize(
-        '#areas_list_table_container',
-        '#query_areas',
-        "query_filter_areas",
-        '.collectionListLoadingAreas',
-        'areas',
-        "{{ url_for('main.journals_search_by_theme_ajax') }}",
-        "#template_error_msg",
-        "#template_empty_msg",
-        "{% trans %}Periódico{% endtrans %}",
-        "{% trans %}grandes áreas{% endtrans %}"
-    );
-    /* Áreas temáticas do Web of Science */
-    var listWosInit = Object.create(JournalCategorizedList);
-    listWosInit.initialize(
-        '#wos_list_table_container',
-        '#query_wos',
-        "query_filter_wos",
-        '.collectionListLoadingWos',
-        'wos',
-        "{{ url_for('main.journals_search_by_theme_ajax') }}",
-        "#template_error_msg",
-        "#template_empty_msg",
-        "{% trans %}Periódico{% endtrans %}",
-        "{% trans %}áreas WOS{% endtrans %}"
-    );
-    var listPublisherInit = Object.create(JournalCategorizedList);
-    listPublisherInit.initialize(
-        '#list_table_container',
-        '#query_publisher',
-        "query_filter_publisher",
-        '.collectionListLoading',
-        'publisher',
-        "{{ url_for('main.journals_search_by_theme_ajax') }}",
-        "#template_error_msg",
-        "#template_empty_msg",
-        "{% trans %}Editoras{% endtrans %}",
-        "{% trans %}editoras{% endtrans %}"
-    );
-
-    function listAlpha(){
-
-      var list = listAplhaInit.search(true);
-
-        /* download links */
-        $('.collectionListDownloadXLS').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='xls') }}";
-          open_download_url(target_url, '#query');
-        });
-        $('.collectionListDownloadCSV').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
-          open_download_url(target_url, '#query');
-        });
-
-    }
-
-    function listThemeAreas(){
-
-      var areas_list = listThemeInit.search();
-
-      /* download links */
-      $('#areas_list_table_container').on('results_loaded', function(event) {
-        $('#areasConhecimento .collectionListDownloadXLS').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='xls') }}";
-          open_download_url(target_url, '#query_areas');
-        });
-        $('#areasConhecimento .collectionListDownloadCSV').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='areas', extension='csv') }}";
-          open_download_url(target_url, '#query_areas');
-        });
-      });
-
-    }
-
-    function listThemeWos(){
-
-      var wos_list = listWosInit.search();
-
-      $('#temasWoS').on('results_loaded', function(event) {
-        $('#temasWoS .collectionListDownloadXLS').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='xls') }}";
-          open_download_url(target_url, '#query_wos');
-        });
-        $('#temasWoS .collectionListDownloadCSV').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='wos', extension='csv') }}";
-          open_download_url(target_url, '#query_wos');
-        });
-      });
-
-    }
-
-    function listPublisher(){
-
-      var list = listPublisherInit.search();
-
-      /* download links */
-      $('#list_table_container').on('results_loaded', function(event) {
-        $('.collectionListDownloadXLS').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='xls') }}";
-          open_download_url(target_url, '#query_publisher');
-        });
-        $('.collectionListDownloadCSV').click(function(event) {
-          event.preventDefault();
-          var target_url = "{{ url_for('.download_journal_list', list_type='publisher', extension='csv') }}";
-          open_download_url(target_url, '#query_publisher');
-        });
-      });
-
-    }
-
-    $(function() {
-
-      $(".dropdown .dropdown-menu li a").click(function(){
-        $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
-
-        $(".dropdown .dropdown-menu li").removeClass('active');
-          $(this).addClass('active');
-      });
-
-
-      $('.tab_link').each(function(){
-          $(this).click(function(event){
-              event.preventDefault();
-              hash = $(this).attr('href').replace(/^.*?#/,'');
-              $('[href=#' + hash + ']').tab('show');
-          });
-      });
-
-      // hash switch
-      switch(window.location.hash) {
-          case '#alpha':
-              listAlpha();
-              break;
-          case '#theme':
-              listThemeAreas();
-              break;
-          case '#publisher':
-              listPublisher();
-              break;
-          case '#temasWoS':
-              listThemeWos();
-              break;
-          case '#areasConhecimento':
-              listThemeAreas();
-              break;
-          default:
-              {% if not journals_list %}
-                listAlpha();
-              {% endif %}
-      }
-
-      // tab ativa
-      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).attr("href");
-
-        switch(target) {
-            case '#alpha':
-                listAlpha();
-                break;
-            case '#theme':
-                listThemeAreas();
-                break;
-            case '#publisher':
-                listPublisher();
-                break;
-             case '#temasWoS':
-                listThemeWos();
-                break;
-            case '#areasConhecimento':
-                listThemeAreas();
-                break;
-            default:
-                {% if not journals_list %}
-                  listAlpha();
-                {% endif %}
-
-        }
-        window.location.hash = target;
-
-      });
-      $('.home-tab').click(function(){
-        window.location.href = "{{ url_for('main.index') }}";
-      });
-
-      $("a[lang][class^='lang']").click(function (e) {
-  		  e.preventDefault();
-          var hash = window.location.hash;
-          window.location = $(this).attr("href") + '?hash=' + hash;
-      });
-
+    $('.collectionListDownloadCSV').click(function(event) {
+      event.preventDefault();
+      var target_url = "{{ url_for('.download_journal_list', list_type='alpha', extension='csv') }}";
+      open_download_url(target_url, '.collectionSearch');
     });
   </script>
-
 {% endblock %}
