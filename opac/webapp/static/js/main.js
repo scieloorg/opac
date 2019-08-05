@@ -671,58 +671,25 @@ var Portal = {
 	},
 	Collection = {
 		Init: function() {
-			var start = $(".collectionListStart");
+			var trs = $(".collectionListStart .table-journal-list tbody tr");
+			var tds = $(".collectionListStart .table-journal-list tr td");
+			var searchInput = $(".collectionListStart .collectionSearch");
 
-			start.each(function() {
-				var t = $(this),
-					method = t.data("method"),
-					rp = t.data("perpage"),
-					labels = t.data("labels"),
-					search = $(".collectionSearch",t),
-					//download = $(".collectionListDownloadXLS,.collectionListDownloadCSV",t),
-					loading = $(".collectionListLoading",t),
-					scroll = false,
-					param = "";
+			$('#alpha .collectionListTotalInfo').text('(total ' + trs.length + ')');
 
-				window.timer;
+			searchInput.on("keyup", function (event) {
+				var searchTerm = event.target.value.toUpperCase();
+				for (var i = 0; i < tds.length; i++) {
+					var td = tds[i];
+					var tdText = td.textContent || td.innerText;
 
-				if(typeof t.data("action") !== "undefined") {
-					labels = labels.split(";");
-					search.val("");
-
-					$(".collectionCurrentPage",t).val("1");
-
-					if(method == "alphabetic") {
-						param = "method=alphabetic&rp="+rp;
-						scroll = true;
-					} else if(method == "theme") {
-						var param = "method=theme";
-					} else if(method == "publisher") {
-						var param = "method=publisher";
-					} else if(method == "collection") {
-						var param = "method=collection";
+					if (!!tdText && tdText.toUpperCase().indexOf(searchTerm) > -1) {
+						td.parentElement.style.display = "";
+					} else {
+						td.parentElement.style.display = "none";
 					}
-
-					Collection.JournalListFinder(param,loading,t,labels,true,scroll);
-
 				}
-
-				search.on("keyup change",function() {
-					var tt = $(this),
-						param = "method="+method+"&rp="+rp,
-						duringKeyChange = true;
-
-					clearTimeout(window.timer);
-					window.timer = setTimeout(function() {
-						var v = tt.val();
-						param += "&query="+v
-						$(".collectionCurrentPage",t).val("1");
-
-						Collection.JournalListFinder(param,loading,t,labels,true,true);
-						duringKeyChange = false;
-
-					},300);
-				});
+			});
 
 				/*
 				download.on("click",function(e) {
@@ -735,7 +702,6 @@ var Portal = {
 					window.open(action+param);
 				});
 				*/
-			});
 		},
 		JournalListFinder: function(param,loading,container,labels,empty,scroll,callback,htmlFill) {
 			var currentPage = $(".collectionCurrentPage",container),
