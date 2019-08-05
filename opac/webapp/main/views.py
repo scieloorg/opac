@@ -184,13 +184,19 @@ def index():
 @main.route('/journals/alpha')
 @cache.cached(key_prefix=cache_key_with_lang)
 def collection_list():
-    journals_list = None
+    allowed_filters = ["current", "no-current", ""]
+    query_filter = request.args.get("status", "")
 
-    if not request.is_xhr:
-        journals_list = [controllers.get_journal_json_data(journal) for journal in controllers.get_journals(query_filter="current")]
+    if not query_filter in allowed_filters:
+        query_filter = ""
+
+    journals_list = [
+        controllers.get_journal_json_data(journal)
+        for journal in controllers.get_journals(query_filter=query_filter)
+    ]
 
     return render_template("collection/list_journal.html",
-                           **{'journals_list': journals_list})
+                           **{'journals_list': journals_list, 'query_filter': query_filter})
 
 
 @main.route('/journals/thematic')
