@@ -2,7 +2,7 @@
 name: Tarefa de desenvolvimento
 about: Tarefas definidas pelo próprio time de desenvolvimento
 title: ''
-labels: ''
+labels: task
 assignees: ''
 
 ---
