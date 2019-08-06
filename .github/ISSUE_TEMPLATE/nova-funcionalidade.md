@@ -2,7 +2,7 @@
 name: Nova funcionalidade
 about: Contribua com novas idéias e necessidades
 title: ''
-labels: feature-request
+labels: enhancement
 assignees: ''
 
 ---

@@ -2,7 +2,7 @@
 name: Reportar problema
 about: Reporte um erro ou problema e nos ajude a melhorar nossos produtos
 title: ''
-labels: Bug
+labels: ''
 assignees: ''
 
 ---
