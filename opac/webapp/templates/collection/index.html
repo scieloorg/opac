@@ -63,10 +63,10 @@
           <div class="levelMenu">
             <ul>
               <li>
-                <a href="{{ url_for('.collection_list') }}">{% trans %}Alfabética{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list') }}?status=current">{% trans %}Alfabética{% endtrans %}</a>
               </li>
               <li>
-                <a href="{{ url_for('.collection_list_thematic') }}#theme">{% trans %}Temática{% endtrans %}</a>
+                <a href="{{ url_for('.collection_list_thematic') }}?status=current">{% trans %}Temática{% endtrans %}</a>
               </li>
               <li class="periodicals-search">
 
