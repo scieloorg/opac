@@ -163,13 +163,14 @@ def get_journals(title_query='', is_public=True, query_filter="", order_by="titl
             "current_status__ne": "current",
         }
 
+    if is_public:
+        filters["is_public"] = is_public
+
     if not title_query or title_query.strip() == "":
-        journals = Journal.objects(
-            is_public=is_public, **filters).order_by(order_by)
+        journals = Journal.objects(**filters).order_by(order_by)
     else:
         title_query_slug = slugify(title_query)
         journals = Journal.objects(
-            is_public=is_public,
             title_slug__icontains=title_query_slug,
             **filters).order_by(order_by)
 
