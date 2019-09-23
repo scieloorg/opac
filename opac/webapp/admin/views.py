@@ -697,14 +697,14 @@ class PagesAdminView(OpacBaseAdminView):
 
     form_overrides = dict(
         language=Select2Field,
-        journal=SelectField,
+        journal=Select2Field,
         content=CKEditorField
     )
 
     form_args = dict(
         language=dict(choices=choices.LANGUAGES_CHOICES),
         journal=dict(choices=[('', '------')] +
-                     [(journal.acronym, journal.title) for journal in controllers.get_journals()]),
+                     [(journal.acronym, journal.title) for journal in Journal.objects.all()]),
     )
 
     form_excluded_columns = ('created_at', 'updated_at')
