@@ -15,10 +15,6 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async/>
-  {% if config.MATHJAX_CDN_URL %}
-    {# recomendação da doc do mathjax: "(It can also go in the <body> if necessary, but the head is to be preferred.)" #}
-    <script type="text/javascript" async src="{{ config.MATHJAX_CDN_URL }}"></script>
-  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -43,7 +39,6 @@
 
 {% block extra_js %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/scielo-article-min.js') }}"></script>
-  <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
   <script type="text/javascript" src="//cdn.plu.mx/widget-popup.js"></script>
 
   {% if config.USE_ALTMETRIC %}
@@ -53,6 +48,23 @@
   {% if config.USE_SCIENCEOPEN %}
     <script id="9cf9cf8f-3a99-fe86-4013-f630edbf80ac" src="https://www.scienceopen.com/script/badge2.js" async defer></script>
       <script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
+  {% endif %}
+
+  {% if config.MATHJAX_CDN_URL %}
+    <script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
+
+    <script>
+      var insertScript = function(url, callback, parentNode) {
+        var scriptNode = document.createElement("script");
+        scriptNode.src = url;
+        scriptNode.onload = callback;
+        parentNode.appendChild(scriptNode)
+      }
+      var headNode = document.getElementsByTagName("head")[0];
+      setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
+    </script>
+  {% else %}
+    <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
   {% endif %}
 
 {% endblock %}
