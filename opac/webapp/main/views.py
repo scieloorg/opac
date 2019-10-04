@@ -85,6 +85,13 @@ def add_collection_to_g():
             setattr(g, 'collection', {})
 
 
+@main.after_request
+def add_language_code(response):
+    language = session.get('lang', get_locale())
+    response.set_cookie('language', language)
+    return response
+
+
 @main.before_app_request
 def add_forms_to_g():
     setattr(g, 'email_share', forms.EmailShareForm())
