@@ -932,6 +932,10 @@ def render_html(article, lang):
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
 def normalize_ssm_url(url):
+
+    if not current_app.config["SSM_ASSET_REWRITE"]:
+        return url
+
     if url.startswith("http"):
         parsed_url = urlparse(url)
         return current_app.config["SSM_BASE_URI"] + parsed_url.path
