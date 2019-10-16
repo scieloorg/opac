@@ -106,6 +106,7 @@ import os
         - OPAC_SSM_DOMAIN: Dominio/FQDN do conexão com SSM. Ex: 'homolog.ssm.scielo.org - (default: 'ssm.scielo.org')
         - OPAC_SSM_PORT: Porta de conexão com o SSM. Ex. '8000'. (default: '80')
         - OPAC_SSM_MEDIA_PATH: Path da pasta media do assests no SSM. Ex. '/media/assets/' -  (default: '/media/assets/')
+        - OPAC_SSM_XML_URL_REWRITE: Troca o scheme + authority da URL armazenada em Article.xml por `OPAC_SSM_SCHEME + '://' + OPAC_SSM_DOMAIN + ':' + OPAC_SSM_PORT`. Variável booleana: 'False' (default: 'True')
 
       - Cookie de Sessão: (http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values)
         - OPAC_SERVER_NAME: Nome:IP do servidor - (default: None)
@@ -409,6 +410,7 @@ SSM_SCHEME = os.environ.get('OPAC_SSM_SCHEME', 'https')
 SSM_DOMAIN = os.environ.get('OPAC_SSM_DOMAIN', 'homolog.ssm.scielo.org')
 SSM_PORT = os.environ.get('OPAC_SSM_PORT', '443')
 SSM_MEDIA_PATH = os.environ.get('OPAC_SSM_MEDIA_PATH', '/media/assets/')
+SSM_XML_URL_REWRITE = os.environ.get('OPAC_SSM_XML_URL_REWRITE', 'True') == 'True'
 
 # SSM_BASE_URI ex: 'https://homolog.ssm.scielo.org:80/'
 SSM_BASE_URI = "{scheme}://{domain}:{port}".format(

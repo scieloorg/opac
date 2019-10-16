@@ -886,7 +886,10 @@ def article_detail_pid(pid):
 
 
 def render_html_from_xml(article, lang):
-    result = fetch_data(normalize_ssm_url(article.xml))
+    if current_app.config["SSM_XML_URL_REWRITE"]:
+        result = fetch_data(normalize_ssm_url(article.xml))
+    else:
+        result = fetch_data(article.xml)
 
     xml = etree.parse(BytesIO(result))
 
@@ -932,6 +935,16 @@ def render_html(article, lang):
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
 def normalize_ssm_url(url):
+    """Normaliza a string `url` de acordo com os valores das diretivas de 
+    configuração OPAC_SSM_SCHEME, OPAC_SSM_DOMAIN e OPAC_SSM_PORT.
+
+    A normalização busca obter uma URL absoluta em função de uma relativa, ou
+    uma absoluta em função de uma absoluta, mas com as partes *scheme* e 
+    *authority* trocadas pelas definidas nas diretivas citadas anteriormente.
+
+    Este código deve ser removido assim que o valor de Article.xml estiver
+    consistente, i.e., todos os registros possuirem apenas URLs absolutas.
+    """
     if url.startswith("http"):
         parsed_url = urlparse(url)
         return current_app.config["SSM_BASE_URI"] + parsed_url.path
