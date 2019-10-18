@@ -178,12 +178,10 @@
                             {% if article.article_text_languages|length > 0 %}
                             <li>
                               {% trans %}Texto{% endtrans %}:
-                              {% for lang in article.languages %}
-                                {% if lang in article.article_text_languages %}
-                                  <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
-                                    {{ lang }}
-                                  </a>
-                                {% endif %}
+                              {% for lang in article.article_text_languages|sort %}
+                                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                  {{ lang }}
+                                </a>
                               {% endfor %}
                             </li>
                             {% endif %}
