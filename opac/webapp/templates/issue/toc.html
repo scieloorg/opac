@@ -189,14 +189,10 @@
                             {% if article.article_pdf_languages|length > 0 %}
                             <li>
                               {% trans %}PDF{% endtrans %}:
-                              {% for lang in article.languages %}
-                                {% for pdf_lang, url in article.article_pdf_languages %}
-                                  {% if lang == pdf_lang %}
-                                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
-                                        {{ lang }}
-                                    </a>
-                                  {% endif %}
-                                {% endfor %}
+                              {% for lang, url in article.article_pdf_languages|sort(attribute='0') %}
+                                <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                  {{ lang }}
+                                </a>
                               {% endfor %}
                             </li>
                             {% endif %}
