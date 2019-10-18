@@ -167,12 +167,10 @@
                             {% if article.abstract_languages|length > 0 %}
                             <li>
                               {% trans %}Resumo{% endtrans %}:
-                              {% for lang in article.languages %}
-                                {% if lang in article.abstract_languages %}
-                                    <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
-                                      {{ lang }}
-                                    </a>
-                                {% endif %}
+                              {% for lang in article.abstract_languages|sort %}
+                                <a class="collapseAbstractBlock" href="#" data-id="{{article.id}}_{{lang}}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                  {{ lang }}
+                                </a>
                               {% endfor %}
                             </li>
                             {% endif %}
@@ -226,7 +224,7 @@
                         </ul>
 
                         {# Adicionar divs com os resumos #}
-                        {% for lang in article.languages|reverse %}
+                        {% for lang in article.abstract_languages|sort|reverse %}
                           <div class="collapseAbstractContent" id="{{article.id}}_{{lang}}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
                             {% if article.get_abstract_by_lang(lang) %}
                               <p><strong>{% trans %}Resumo em{% endtrans %} {{ lang|trans_alpha2 }}:</strong></p>
