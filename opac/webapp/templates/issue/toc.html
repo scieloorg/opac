@@ -132,17 +132,6 @@
                 <ul class="articles">
                   {% for article in articles %}
 
-                    {# Item comentado se caso precisarmos reverter
-                     {% if article.section %}
-                      <a name="{{ article.section|upper }}"></a>
-                      <h1>
-                        <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ article.section|upper }}">
-                          {{ article.section }}
-                        </a>
-                      </h1>
-                    {% endif %}
-                    #}
-
                       <li data-date="{% if article.publication_date %}{{ article.publication_date.replace('-', "") }}{% endif %}">
 
                         {% if session.lang %}
