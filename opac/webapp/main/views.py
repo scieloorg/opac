@@ -886,7 +886,8 @@ def article_detail_pid(pid):
 
 
 def render_html_from_xml(article, lang):
-    result = fetch_data(normalize_ssm_url(article.xml))
+    result = fetch_data(maybe_normalize_ssm_url(article.xml,
+                                                current_app.config["SSM_URL_REWRITE"]))
 
     xml = etree.parse(BytesIO(result))
 
@@ -909,7 +910,8 @@ def render_html_from_html(article, lang):
     except IndexError:
         raise ValueError('Artigo não encontrado') from None
 
-    result = fetch_data(normalize_ssm_url(html_url))
+    result = fetch_data(maybe_normalize_ssm_url(html_url,
+                                                current_app.config["SSM_URL_REWRITE"]))
 
     html = result.decode('utf8')
 
@@ -931,9 +933,9 @@ def render_html(article, lang):
 
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
-def normalize_ssm_url(url):
+def maybe_normalize_ssm_url(url, normalized_url=False):
 
-    if not current_app.config["SSM_ASSET_REWRITE"]:
+    if not normalized_url:
         return url
 
     if url.startswith("http"):
