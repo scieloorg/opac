@@ -92,6 +92,10 @@
 
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
 
+    {% if config.COOKIE_POLICY_ENABLED %}
+      <script src="{{ config.COOKIE_POLICY_URL }}"></script>
+    {% endif %}
+
     <script src="{{ config.GOOGLE_RECAPTCHA_URL }}"></script>
 
     {% block extra_js %}{% endblock %}

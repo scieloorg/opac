@@ -160,6 +160,11 @@ import os
         - URL_BLOG_SCIELO: URL para o Blog SciELO em Perspectiva (default: '//blog.scielo.org')
         - URL_SEARCH: URL para o Search SciELO (default: '//search.scielo.org/')
         - URL_BLOG_PRESSRELEASE: URL para o Blog SciELO em Perspectiva Press releases (default: '//pressreleases.scielo.org')
+
+      - Cookie Policy
+        - OPAC_COOKIE_POLICY_ENABLED: ativa/desativa o javascript de política de cookie, se sim definir como: 'True' caso contrário 'False' (default: 'True')
+        - OPAC_COOKIE_POLICY_URL: URL do script de política de cookie (default: https://static.scielo.org/js/cookiePolicy.min.js)
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -487,6 +492,11 @@ DEFAULT_MATHJAX_CDN_URL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/
 MATHJAX_CDN_URL = os.environ.get('OPAC_MATHJAX_CDN_URL', DEFAULT_MATHJAX_CDN_URL)
 
 
-#  RELATED ARTICLES
+# RELATED ARTICLES
 OPAC_GOOGLE_SCHOLAR_LINK = os.environ.get('OPAC_GOOGLE_SCHOLAR', "https://scholar.google.com/scholar?q=")
 OPAC_GOOGLE_LINK = os.environ.get('OPAC_GOOGLE', "https://www.google.com/search?q=")
+
+
+# COOKIE POLICY
+COOKIE_POLICY_ENABLED = os.environ.get('OPAC_COOKIE_POLICY_ENABLED', 'True') == 'True'
+COOKIE_POLICY_URL = os.environ.get('OPAC_COOKIE_POLICY_URL', "https://static.scielo.org/js/cookiePolicy.min.js")
