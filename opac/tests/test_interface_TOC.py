@@ -257,3 +257,21 @@ class TOCTestCase(BaseTestCase):
             self.assertIn("Article Y", response.data.decode('utf-8'))
 
             self.assertIn("Título Del Artículo En Portugués", response.data.decode('utf-8'))
+
+    def test_sumary_text_change_when_issue_is_ahead(self):
+        """
+        Teste para verificar se caso o issue for um ahead o valor da legenda bibliográfica é alterada para 'ahead of print'.
+        """
+        journal = utils.makeOneJournal()
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'journal': journal, 'type': 'ahead'})
+
+            response = c.get(url_for('main.issue_toc',
+                                     url_seg=journal.url_segment,
+                                     url_seg_issue=issue.url_segment))
+
+            self.assertIn("ahead of print", response.data.decode('utf-8'))
