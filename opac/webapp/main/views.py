@@ -744,6 +744,9 @@ def issue_grid(url_seg):
         'volume_issue': issues_data['volume_issue'],
         'ahead': issues_data['ahead'],
         'result_dict': issues_data['ordered_for_grid'],
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+        ],
     }
 
     return render_template("issue/grid.html", **context)
@@ -935,11 +938,11 @@ def render_html(article, lang):
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
 def normalize_ssm_url(url):
-    """Normaliza a string `url` de acordo com os valores das diretivas de 
+    """Normaliza a string `url` de acordo com os valores das diretivas de
     configuração OPAC_SSM_SCHEME, OPAC_SSM_DOMAIN e OPAC_SSM_PORT.
 
     A normalização busca obter uma URL absoluta em função de uma relativa, ou
-    uma absoluta em função de uma absoluta, mas com as partes *scheme* e 
+    uma absoluta em função de uma absoluta, mas com as partes *scheme* e
     *authority* trocadas pelas definidas nas diretivas citadas anteriormente.
 
     Este código deve ser removido assim que o valor de Article.xml estiver
