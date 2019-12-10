@@ -1085,7 +1085,7 @@ class MainTestCase(BaseTestCase):
             url = '%s?script=sci_arttext&pid=%s' % (
                 url_for('main.router_legacy'), aop_pid)
 
-            response = self.client.get(url)
+            response = self.client.get(url, follow_redirects=True)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')

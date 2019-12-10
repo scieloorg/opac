@@ -106,6 +106,70 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('article/detail.html')
 
+    def test_article_text_with_lng(self):
+        """
+        Testa o acesso ao artigo pela URL antiga.
+        URL testa: scielo.php?script=sci_arttext&pid=ISSN + ID DO número + ID  + idioma DO ARTIGO
+        Exemplo: scielo.php?script=sci_arttext&pid=0000-000020160001&tlng=en
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'pid': '0000-00002016000100251',
+
+            })
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_arttext&pid=%s&tlng=%s' % (article.pid, 'en')
+
+                response = c.get(url, follow_redirects=True)
+
+                self.assertStatus(response, 200)
+
+                self.assertTemplateUsed('article/detail.html')
+
+    def test_article_text_return_redirect_from_legacy_urls(self):
+        """
+        Testa o acesso ao artigo pela URL antiga.
+        URL testa: scielo.php?script=sci_arttext&pid=ISSN + ID DO número + ID  + idioma DO ARTIGO
+        Exemplo: scielo.php?script=sci_arttext&pid=0000-000020160001&tlng=en
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'pid': '0000-00002016000100251',
+
+            })
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_arttext&pid=%s&tlng=%s' % (article.pid, 'en')
+
+                response = c.get(url)
+
+                self.assertStatus(response, 301)
+
     def test_article_abstract(self):
         """
         Testa o acesso ao abstract do artigo pela URL antiga.
