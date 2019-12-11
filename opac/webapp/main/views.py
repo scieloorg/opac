@@ -324,6 +324,7 @@ def router_legacy():
 
     script_php = request.args.get('script', None)
     pid = request.args.get('pid', None)
+    tlng = request.args.get('tlng', None)
     allowed_scripts = [
         'sci_serial', 'sci_issuetoc', 'sci_arttext', 'sci_abstract', 'sci_issues', 'sci_pdf'
     ]
@@ -378,9 +379,11 @@ def router_legacy():
             if not article.journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-            return article_detail(article.journal.url_segment,
-                                  article.issue.url_segment,
-                                  article.url_segment)
+            return redirect(url_for('main.article_detail',
+                                    url_seg=article.journal.url_segment,
+                                    url_seg_issue=article.issue.url_segment,
+                                    url_seg_article=article.url_segment,
+                                    lang_code=tlng), code=301)
 
         elif script_php == 'sci_issues':
 
