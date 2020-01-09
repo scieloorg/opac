@@ -938,6 +938,22 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     return Article.objects(aop_pid=aop_pid, **kwargs).first()
 
 
+def get_article_by_scielo_pid(scielo_pid, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``scielo_pid``.
+
+    - ``scielo_pid``: string, contendo o PID do artigo versão 1, 2 ou 3
+    """
+
+    if not scielo_pid:
+        raise ValueError(__('Obrigatório um pid.'))
+
+    return Article.objects(
+        (Q(scielo_pids__v1=scielo_pid) | Q(scielo_pids__v2=scielo_pid) | Q(scielo_pids__v3=scielo_pid)),
+        **kwargs
+    ).first()
+
+
 def get_recent_articles_of_issue(issue_iid, is_public=True):
     """
     Retorna a lista de artigos de um issue/

@@ -993,6 +993,48 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         self.assertRaises(ValueError, controllers.get_articles_by_iid, [])
 
+    def test_get_article_by_scielo_pid_with_no_pid(self):
+        """
+        Testando a função controllers.get_article_by_scielo_pid(), sem pid
+        retorna um ValueError.
+        """
+        self.assertRaises(ValueError, controllers.get_article_by_scielo_pid, scielo_pid="")
+
+    def test_get_article_by_scielo_pid_returns_none_if_no_pid_in_scielo_pids(self):
+        """
+        Testando a função controllers.get_article_by_scielo_pid(), sem pid
+        retorna um ValueError.
+        """
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'scielo_pids': {
+                'v1': 'S0101-0202(99)12345',
+                'v2': 'S0101-02021998123456',
+                'v3': 'cS2o3kdx93emd902m',
+            },
+        })
+        self.assertIsNone(controllers.get_article_by_scielo_pid("S0101-0202(99)12344"))
+
+    def test_get_article_by_scielo_pid_returns_article(self):
+        """
+        Testando a função controllers.get_article_by_scielo_pid(), retorna artigo com sucesso.
+        """
+        self._make_one(attrib={
+            '_id': '012ijs9y24',
+            'issue': '90210j83',
+            'journal': 'oak,ajimn1',
+            'scielo_pids': {
+                'v1': 'S0101-0202(99)12345',
+                'v2': 'S0101-02021998123456',
+                'v3': 'cS2o3kdx93emd902m',
+            },
+        })
+        article = controllers.get_article_by_scielo_pid("S0101-0202(99)12345")
+        self.assertEqual(article._id, '012ijs9y24')
+        self.assertEqual(article.scielo_pids["v1"], 'S0101-0202(99)12345')
+
     def test_get_recent_articles_of_issue(self):
         self._make_one(attrib={
             '_id': '012ijs9y24',

@@ -1184,6 +1184,37 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
         return get_content_from_ssm(pdf_url_parsed.path)
 
 
+@main.route('/cgi-bin/fbpe/<string:text_or_abstract>/')
+@cache.cached(key_prefix=cache_key_with_lang_with_qs)
+def router_legacy_article(text_or_abstract):
+    pid = request.args.get('pid', None)
+    lng = request.args.get('lng', None)
+    if not (text_or_abstract in ['fbtext', 'fbabs'] and pid):
+        # se tem pid
+        abort(400, _('Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+
+    article = controllers.get_article_by_scielo_pid(pid, is_public=True)
+    if not article:
+        abort(404, _('Artigo não encontrado'))
+
+    if not article.issue.is_public:
+        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+    if not article.journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+    return redirect(
+        url_for(
+            'main.article_detail',
+            url_seg=article.journal.url_segment,
+            url_seg_issue=article.issue.url_segment,
+            url_seg_article=article.url_segment,
+            lang_code=lng
+        ),
+        code=301
+    )
+
+
 # ###############################E-mail share####################################
 
 
