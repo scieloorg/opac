@@ -1185,6 +1185,105 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 404)
             self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
 
+    def test_legacy_url_article_detail_pid_not_found(self):
+        """
+        Teste da view ``router_legacy_article``, deve retornar uma página de erro (404 not found)
+        na querystring tem: ?pid={PID INVALIDO}
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            valid_pid = '1111-11111111111111111'
+            invalid_pid = 'ABCD-22222222222222222'
+
+            utils.makeOneArticle({
+                'title': 'Article Y',
+                'issue': issue,
+                'journal': journal,
+                'pid': valid_pid})
+
+            url = '%s?pid=%s&lng=en' % (
+                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                invalid_pid
+            )
+
+            response = self.client.get(url)
+
+            self.assertStatus(response, 404)
+            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+
+    def test_legacy_url_article_detail_no_public_article(self):
+        """
+        Teste da view ``router_legacy_article``, deve retornar uma página de erro (404 not found)
+        para artigo não público
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            v1_pid = '0101-0101(99)123456'
+            v2_pid = '1111-11111111111111111'
+            utils.makeOneArticle({
+                'title': 'Article Y',
+                'issue': issue,
+                'journal': journal,
+                'is_public': False,
+                'pid': v2_pid,
+                'scielo_pids': {
+                    'v1': v1_pid,
+                    'v2': v2_pid,
+                }
+            })
+
+            url = '%s?pid=%s&lng=en' % (
+                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                v1_pid
+            )
+            response = self.client.get(url)
+
+            self.assertStatus(response, 404)
+            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+
+    def test_legacy_url_redirects_to_article_detail(self):
+        """
+        Teste da view ``router_legacy_article``, deve retornar redirecionar
+        para os detalhes do artigo (main.article_detail)
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            v1_pid = '0101-0101(99)123456'
+            v2_pid = '1111-11111111111111111'
+            article = utils.makeOneArticle({
+                'title': 'Article Y',
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11',
+                'pid': v2_pid,
+                'scielo_pids': {
+                    'v1': v1_pid,
+                    'v2': v2_pid,
+                }
+            })
+
+            url = '%s?pid=%s&lng=en' % (
+                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                v1_pid
+            )
+            response = self.client.get(url)
+            self.assertRedirects(
+                response,
+                url_for(
+                    'main.article_detail',
+                    url_seg=journal.url_segment,
+                    url_seg_issue=issue.url_segment,
+                    url_seg_article=article.url_segment,
+                    lang_code='en'
+                ),
+            )
+
     def test_article_detail_without_articles(self):
         """
         Teste para avaliar o retorno da ``view function`` ``article_detail``
