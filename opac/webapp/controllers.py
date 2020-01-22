@@ -754,6 +754,7 @@ def get_issue_info_from_assets_code(assets_code, journal):
                 issue_info &= (Q(suppl_text=None) | Q(suppl_text=""))
     return issue_info
 
+
 def get_issue_by_journal_and_assets_code(assets_code, journal):
     if not assets_code:
         raise ValueError(__('Obrigatório um assets_code.'))
@@ -991,13 +992,29 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
     if not pdf_filename:
         raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
     pdf_path = "/".join([journal_acron, issue_info, get_valid_name(pdf_filename)])
+
     article = Article.objects.only("pdfs").filter(
         pdfs__url__endswith=pdf_path, is_public=True).first()
+
     if article:
         for pdf in article.pdfs:
             if pdf["url"].endswith(pdf_path):
                 return pdf["url"]
+    else:
 
+        journal = get_journal_by_acron(journal_acron)
+
+        issue = Issue.objects.get(journal=journal, label=issue_info)
+
+        # Caso não seja encontrado pelo nome no final da chave ``url``, passamos a buscar na chave filename.
+        article = Article.objects.filter(
+            pdfs__filename=pdf_filename, is_public=True, journal=journal, issue=issue).first()
+
+        if article:
+            for pdf in article.pdfs:
+                if "filename" in pdf:
+                    if pdf["filename"] == pdf_filename:
+                        return pdf["url"]
 
 # -------- NEWS --------
 
@@ -1255,4 +1272,3 @@ def related_links(article):
             current_app.config.get("OPAC_GOOGLE_SCHOLAR_LINK") + search_expr,
         ),
     ]
-

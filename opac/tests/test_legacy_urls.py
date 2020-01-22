@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from unittest.mock import patch, Mock
+
 from flask import current_app, url_for
 from .base import BaseTestCase
 
@@ -105,6 +107,49 @@ class LegacyURLTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('article/detail.html')
+
+    @patch('requests.get')
+    def test_router_legacy_pdf(self, mocked_requests_get):
+        """
+        Testa o acesso à URL antiga do PDF quando existe a chave filename no campo pdf.
+        URL testada: /pdf/<JOURNAL_ACRON>/<ISSUE_LABEL>/<PDF_FILENAME>
+            Exemplo: /pdf/cta/v39s2/0101-2061-cta-fst22918.pdf
+        """
+
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<pdf>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'filename': '0101-2061-cta-fst30618.pdf',
+                        'type': 'pdf'
+                    }
+                ]
+            })
+
+            with self.client as c:
+
+                url = '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf'
+
+                response = c.get(url, follow_redirects=True)
+
+                self.assertStatus(response, 200)
 
     def test_article_text_with_lng(self):
         """
