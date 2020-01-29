@@ -990,14 +990,28 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
         raise ValueError(__('Obrigatório o campo issue_info.'))
     if not pdf_filename:
         raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
+
     pdf_path = "/".join([journal_acron, issue_info, get_valid_name(pdf_filename)])
+
     article = Article.objects.only("pdfs").filter(
         pdfs__url__endswith=pdf_path, is_public=True).first()
+
     if article:
         for pdf in article.pdfs:
             if pdf["url"].endswith(pdf_path):
                 return pdf["url"]
+    else:
 
+        file_path = "%s%s" % ("/pdf/", pdf_path)
+
+        article = Article.objects.only("pdfs").filter(
+            pdfs__file_path=file_path, is_public=True).first()
+
+        if article:
+            for pdf in article.pdfs:
+                if "file_path" in pdf:
+                    if pdf["file_path"] == file_path:
+                        return pdf["url"]
 
 # -------- NEWS --------
 
