@@ -6,14 +6,21 @@ $(function() {
   // Caso exista erro ao tentar carregar a imagem subistitui por uma imagem de
   // fallback para as tags imgs que estão com o class="image".
   $(".image" ).on("error", function() {
-      this.src = "/static/img/fallback_image.png"
+      this.src = "/static/img/fallback_image.png";
   });
 
   $(".collapseAbstractBlock").on("click", function(e) {
     e.preventDefault();
+
+    // Fecha todos os resumos abertos
+    $(".collapseAbstractBlock").each(function(e){
+      var t = $(this);
+      $('#' + t.data("id")).slideUp();
+      t.removeClass("opened");
+    });
+
     var t = $(this),
-        id = '#' + t.data("id"),
-        content = $(id);
+    content = $('#' + t.data("id"));
 
     if(content.is(":visible")) {
         content.slideUp();
