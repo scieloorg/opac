@@ -1160,36 +1160,6 @@ class ArticleControllerTestCase(BaseTestCase):
             "article.pdf"
         )
 
-    @patch('webapp.controllers.Article.objects')
-    def test_get_article_by_pdf_filename_returns_article_filter_result(
-        self, mk_article_objects
-    ):
-        attrib = {
-            "pdfs" : [
-                {
-                    "lang" : "pt",
-                    "url" : "https://ssm.scielo.br/media/assets/abc/v1n3s2/article.pdf",
-                    "type" : "pdf"
-                },
-                {
-                    "lang" : "en",
-                    "url" : "https://ssm.scielo.br/media/assets/abc/v1n3s2/en_article.pdf",
-                    "type" : "pdf"
-                },
-            ]
-        }
-        article = utils.makeOneArticle(attrib)
-        mk_article_objects.only.return_value.filter.return_value.first.side_effect = [
-            None, article
-        ]
-        article_filter_results = [None, attrib['pdfs'][0]["url"]]
-        for filter_result in article_filter_results:
-            with self.subTest(filter_result=filter_result):
-                result = controllers.get_article_by_pdf_filename(
-                    "abc", "v1n3s2", "article.pdf"
-                )
-                self.assertEqual(result, filter_result)
-
 
 class UserControllerTestCase(BaseTestCase):
 
@@ -1467,7 +1437,7 @@ class PageControllerTestCase(BaseTestCase):
         """
         page = self._make_one()
         self.assertEqual(
-            [page.language for page in controllers.get_pages()], 
+            [page.language for page in controllers.get_pages()],
             [page['language']])
         self.assertEqual(
             [page.language for page in controllers.get_pages_by_lang(
