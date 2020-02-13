@@ -302,6 +302,47 @@ class MainTestCase(BaseTestCase):
                           response.data.decode('utf-8'))
             self.assertEqual(self.get_context_variable('journal').id, journal.id)
 
+    def test_journal_detail_legacy_url(self):
+        """
+        Teste da ``view function`` ``journal_detail_legacy_url``, deve retorna status_code 301
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(url_for(
+                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment)
+                                       )
+
+            self.assertTrue(301, response.status_code)
+
+    def test_journal_detail_legacy_url_follow_redirect(self):
+        """
+        Teste da ``view function`` ``journal_detail_legacy_url``, deve retornar uma página
+        que usa o template ``journal/detail.html`` e o título do periódico no
+        corpo da página.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(
+                                    url_for(
+                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment),
+                                    follow_redirects=True)
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('journal/detail.html')
+            self.assertIn('Revista X',
+                          response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('journal').id, journal.id)
+
     def test_journal_detail_with_unknow_id(self):
         """
         Teste da ``view function`` ``journal_detail`` com um id desconhecido

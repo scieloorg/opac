@@ -428,6 +428,13 @@ def router_legacy():
         return redirect('/')
 
 
+@main.route('/<string:journal_seg>')
+def journal_detail_legacy_url(journal_seg):
+
+    return redirect(url_for('main.journal_detail',
+                            url_seg=journal_seg), code=301)
+
+
 @main.route('/journal/<string:url_seg>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def journal_detail(url_seg):
