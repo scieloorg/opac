@@ -19,7 +19,7 @@ Flask-HTMLmin==1.4.0
 python-slugify==1.2.4
 requests>=2.20.0
 gunicorn==19.8.1
-xlsxwriter==1.1.0
+xlsxwriter==1.2.8
 tweepy==3.7.0
 raven[flask]==6.9.0
 beautifulsoup4==4.6.3
