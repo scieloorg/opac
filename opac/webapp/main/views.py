@@ -1222,7 +1222,7 @@ def router_legacy_article(text_or_abstract):
     )
 
 
-# ###############################E-mail share####################################
+# ###############################E-mail share##################################
 
 
 @main.route("/email_share_ajax/", methods=['POST'])
@@ -1290,7 +1290,7 @@ def error_form():
     return render_template("includes/error_form.html", **context)
 
 
-# ##################################Others#######################################
+# ###############################Others########################################
 
 
 @main.route("/media/<path:filename>/", methods=['GET'])
@@ -1308,3 +1308,33 @@ def full_text_image():
 @main.route("/robots.txt", methods=['GET'])
 def get_robots_txt_file():
     return send_from_directory('static', 'robots.txt')
+
+
+@main.route("/revistas/<path:journal_seg>/<string:page>.htm", methods=['GET'])
+def router_legacy_info_pages(journal_seg, page):
+    """
+    Essa view function realiza o redirecionamento das URLs antigas para as novas URLs.
+
+    Mantém um dicionário como uma tabela relacionamento entre o nome das páginas que pode ser:
+
+       Página      âncora
+
+    [iaboutj.htm, eaboutj.htm, paboutj.htm] -> #about
+    [iedboard.htm, eedboard.htm, pedboard.htm] -> #editors
+    [iinstruc.htm einstruc.htm, pinstruc.htm]-> #instructions
+    isubscrp.htm -> Sem âncora
+    """
+
+    page_anchor = {
+        'iaboutj': '#about',
+        'eaboutj': '#about',
+        'paboutj': '#about',
+        'eedboard': '#editors',
+        'iedboard': '#editors',
+        'pedboard': '#editors',
+        'iinstruc': '#instructions',
+        'pinstruc': '#instructions',
+        'einstruc': '#instructions'
+        }
+    return redirect('%s%s' % (url_for('main.about_journal',
+                                      url_seg=journal_seg), page_anchor.get(page, '')), code=301)

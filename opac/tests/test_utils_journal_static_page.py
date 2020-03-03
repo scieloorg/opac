@@ -4,6 +4,9 @@ import os
 import unittest
 from .base import BaseTestCase
 
+from flask import current_app, url_for
+
+from . import utils
 from webapp.utils.journal_static_page import (
     OldJournalPageFile,
 )
@@ -268,3 +271,63 @@ class OldJournalPageTestCase(BaseTestCase):
     def _count_antes_e_depois(self, file_content, body, text, antes=0, depois=0):
         self.assertEqual(file_content.count(text), antes)
         self.assertEqual(body.count(text), depois)
+
+    def test_legacy_info_page_iaboutj(self):
+        """
+        Teste da ``view function`` ``router_legacy_info_pages``, deve retorna status_code 301 para a página iaboutj
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X', 'acronym': 'acron_ia'})
+
+            response = self.client.get("/revistas/%s/iaboutj.htm" % journal.url_segment)
+
+            self.assertTrue(301, response.status_code)
+
+    def test_legacy_info_page_edboard(self):
+        """
+        Teste da ``view function`` ``router_legacy_info_pages``, deve retorna status_code 301 para a página edboard
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X', 'acronym': 'acron_ed'})
+
+            response = self.client.get("/revistas/%s/edboard.htm" % journal.url_segment)
+
+            self.assertTrue(301, response.status_code)
+
+    def test_legacy_info_page_iinstruc(self):
+        """
+        Teste da ``view function`` ``router_legacy_info_pages``, deve retorna status_code 301 para a página iinstruc
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X', 'acronym': 'acron_ii'})
+
+            response = self.client.get("/revistas/%s/iinstruc.htm" % journal.url_segment)
+
+            self.assertTrue(301, response.status_code)
+
+    def test_legacy_info_page_isubscrp(self):
+        """
+        Teste da ``view function`` ``router_legacy_info_pages``, deve retorna status_code 301 para a página isubscrp
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X', 'acronym': 'acron_isu'})
+
+            response = self.client.get("/revistas/%s/isubscrp.htm" % journal.url_segment)
+
+            self.assertTrue(301, response.status_code)
