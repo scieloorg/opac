@@ -1428,6 +1428,75 @@ class MainTestCase(BaseTestCase):
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
+    def test_pdf_url(self):
+        """
+        Testa se as URLs para os PDFs estão sendo montados com seus respectivos idiomas.
+
+        Exemplo de URL para o PDF: ``/pdf/ssp/2001.v78/e937749/en``
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+                'year': '2009',
+                'volume': '39',
+                'number': '1',
+                'suppl_text': '',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'elocation': 'e1',
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aen.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'pt',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651apt.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-pt.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'es',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aes.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                        'type': 'pdf'
+                    }
+                ]
+            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='en'), follow_redirects=False)
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+
+            content = response.data.decode('utf-8')
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/en',
+                content
+            )
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/pt',
+                content
+            )
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/pt',
+                content
+            )
+
     # HOMEPAGE
 
     def test_collection_sponsors_at_homepage(self):
