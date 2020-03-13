@@ -22,7 +22,7 @@
                     <a href="#" class="btn group disabled">
                 {% else %}
                   {% if is_pdf_page -%}
-                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+                    <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
                   {%- else -%}
                     <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
                   {% endif %}
@@ -40,7 +40,7 @@
                   <a href="#" class="btn group disabled">
               {% else %}
                 {%- if is_pdf_page -%}
-                  <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                  <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- else -%}
                   <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- endif %}
@@ -75,7 +75,7 @@
                     <a href="#" class="btn group disabled">
                 {% else %}
                   {% if is_pdf_page -%}
-                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group ">
+                    <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group ">
                   {%- else -%}
                     <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
                   {% endif %}
@@ -93,7 +93,7 @@
                   <a href="#" class="btn group disabled">
               {% else %}
                 {%- if is_pdf_page -%}
-                  <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                  <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- else -%}
                   <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- endif %}
@@ -128,7 +128,7 @@
                     <a href="#" class="btn group disabled">
                 {% else %}
                   {% if is_pdf_page -%}
-                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group ">
+                    <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group ">
                   {%- else -%}
                     <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
                   {% endif %}
@@ -146,7 +146,7 @@
                   <a href="#" class="btn group disabled">
               {% else %}
                 {%- if is_pdf_page -%}
-                  <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                  <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- else -%}
                   <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
                 {%- endif %}
@@ -164,7 +164,7 @@
         <div class="col-lg-3 col-md-2 col-sm-4 hidden-md">
 
           {% if article and article.pdfs|length == 1 %}
-            <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn">
+            <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang_code=article.pdfs[0].lang) }}" class="btn">
               <span class="sci-ico-filePDF"></span> PDF
             </a>
           {% endif%}
@@ -188,7 +188,7 @@
               <ul class="dropdown-menu">
                 {% for pdf in article.pdfs  %}
                   <li>
-                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=pdf.lang) }}">
+                    <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang_code=pdf.lang) }}">
                       {% if pdf.lang == 'es' %}
                         {% trans %}Download PDF (Espanhol){% endtrans %}
                       {% elif pdf.lang == 'en' %}
@@ -239,7 +239,7 @@
         <div class="col-lg-3 col-md-3 col-sm-4 hidden-sm hidden-lg">
 
           {% if article and article.pdfs|length == 1 %}
-            <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn"><span class="sci-ico-filePDF"></span> PDF</a>
+            <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang_code=article.pdfs[0].lang) }}" class="btn"><span class="sci-ico-filePDF"></span> PDF</a>
           {% endif%}
 
           {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
@@ -259,7 +259,7 @@
               <ul class="dropdown-menu">
                 {% for pdf in article.pdfs  %}
                   <li>
-                    <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=pdf.lang) }}">
+                    <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang_code=pdf.lang) }}">
                       {% if pdf.lang == 'es' %}
                         {% trans %}Download PDF (Espanhol){% endtrans %}
                       {% elif pdf.lang == 'en' %}
@@ -384,7 +384,7 @@
             </a>
 
             {% if article and article.pdfs|length == 1 %}
-              <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}" class="btn">
+              <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang_code=article.pdfs[0].lang) }}" class="btn">
                 <span class="sci-ico-filePDF"></span> PDF
               </a>
             {% endif%}
@@ -456,7 +456,7 @@
                 <a href="#" class="btn group disabled">
             {% else %}
               {% if is_pdf_page -%}
-                <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=previous_article.url_segment) }}" class="btn group">
+                <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
               {%- else -%}
                 <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=previous_article.aid) }}" class="btn group">
               {% endif %}
@@ -474,7 +474,7 @@
                 <a href="#" class="btn group disabled">
             {% else %}
               {%- if is_pdf_page -%}
-                <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=next_article.url_segment) }}" class="btn group">
+                <a target='_blank' href="{{ url_for('.article_detail_pdf_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
               {%- else -%}
                 <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=next_article.aid) }}" class="btn group">
               {%- endif %}
