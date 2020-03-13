@@ -361,23 +361,10 @@ def router_legacy():
             return issue_toc(issue.journal.url_segment, issue.url_segment)
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
-
-            article = controllers.get_article_by_pid(pid)
-
-            if not article:
-                article = controllers.get_article_by_oap_pid(pid)
-
+            article = controllers.get_article_by_pid(pid) or \
+                controllers.get_article_by_oap_pid(pid)
             if not article:
                 abort(404, _('Artigo não encontrado'))
-
-            if not article.is_public:
-                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-            if not article.issue.is_public:
-                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-            if not article.journal.is_public:
-                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
             return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
@@ -1210,12 +1197,6 @@ def router_legacy_article(text_or_abstract):
     article = controllers.get_article_by_scielo_pid(pid, is_public=True)
     if not article:
         abort(404, _('Artigo não encontrado'))
-
-    if not article.issue.is_public:
-        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-    if not article.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
     return redirect(
         url_for(
