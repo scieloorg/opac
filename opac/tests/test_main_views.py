@@ -1471,10 +1471,18 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('article/detail.html')
 
             content = response.data.decode('utf-8')
-            base_resource = '/pdf/%s/%s' % (journal.url_segment, article.aid)
-            self.assertIn(base_resource + '/en', content)
-            self.assertIn(base_resource + '/es', content)
-            self.assertIn(base_resource + '/pt', content)
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/en',
+                content
+            )
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/pt',
+                content
+            )
+            self.assertIn(
+                '/pdf/cta/2009.v39n1/e1/pt',
+                content
+            )
 
     # HOMEPAGE
 

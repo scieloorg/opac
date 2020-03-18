@@ -397,14 +397,28 @@ def router_legacy():
             return issue_grid(journal.url_segment)
 
         elif script_php == 'sci_pdf':
+            # accesso ao pdf do artigo:
             article = controllers.get_article_by_pid(pid)
+
+            if not article:
+                article = controllers.get_article_by_oap_pid(pid)
+
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
-            return redirect(url_for('main.article_detail_pdf_v3',
-                                    url_seg=article.journal.url_segment,
-                                    article_pid_v3=article.aid,
-                                    lang_code=tlng), code=301)
+            if not article.is_public:
+                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
+
+            if not article.issue.is_public:
+                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
+
+            if not article.journal.is_public:
+                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+
+            return article_detail_pdf(
+                article.journal.url_segment,
+                article.issue.url_segment,
+                article.url_segment)
 
         else:
             abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
@@ -1115,11 +1129,18 @@ def article_ssm_content_raw():
         return get_content_from_ssm(resource_ssm_path)
 
 
-@main.route('/pdf/<string:url_seg>/<string:article_pid_v3>')
-@main.route('/pdf/<string:url_seg>/<string:article_pid_v3>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>')
+@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @cache.cached(key_prefix=cache_key_with_lang)
-def article_detail_pdf_v3(url_seg, article_pid_v3, lang_code=''):
-    article = controllers.get_article_by_aid(article_pid_v3)
+def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
+
+    if not issue:
+        abort(404, _('Issue não encontrado'))
+
+    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
         abort(404, _('Artigo não encontrado'))
@@ -1160,30 +1181,6 @@ def article_detail_pdf_v3(url_seg, article_pid_v3, lang_code=''):
         raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
     else:
         return get_content_from_ssm(pdf_ssm_path)
-
-
-@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>')
-@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>')
-@main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
-@cache.cached(key_prefix=cache_key_with_lang)
-def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
-    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-    if not issue:
-        abort(404, _('Issue não encontrado'))
-
-    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
-    if not article:
-        abort(404, _('Artigo não encontrado'))
-
-    req_params = {
-            "url_seg": article.journal.acronym,
-            "article_pid_v3": article.aid,
-    }
-    if lang_code:
-        req_params["lang_code"] = lang_code
-
-    return redirect(url_for('main.article_detail_pdf_v3', **req_params))
 
 
 @main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')
