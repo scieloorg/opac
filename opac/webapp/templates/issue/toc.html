@@ -177,7 +177,7 @@
                             <li>
                               {% trans %}Texto{% endtrans %}:
                               {% for lang in article.article_text_languages|sort %}
-                                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                <a href="{{ url_for('.article_detail', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
                                   {{ lang }}
                                 </a>
                               {% endfor %}

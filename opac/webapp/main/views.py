@@ -379,9 +379,10 @@ def router_legacy():
             if not article.journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-            return redirect(url_for('main.article_detail_v3',
+            return redirect(url_for('main.article_detail',
                                     url_seg=article.journal.url_segment,
-                                    article_pid_v3=article.aid,
+                                    url_seg_issue=article.issue.url_segment,
+                                    url_seg_article=article.url_segment,
                                     lang_code=tlng), code=301)
 
         elif script_php == 'sci_issues':
@@ -538,9 +539,10 @@ def journal_feed(url_seg):
                  content_type='html',
                  id=article.doi or article.pid,
                  author=article.authors,
-                 url=url_external('main.article_detail_v3',
+                 url=url_external('main.article_detail',
                                   url_seg=journal.url_segment,
-                                  article_pid_v3=article.aid,
+                                  url_seg_issue=last_issue.url_segment,
+                                  url_seg_article=article.url_segment,
                                   lang_code=article_lang),
                  updated=journal.updated,
                  published=journal.created)
@@ -893,9 +895,10 @@ def article_detail_pid(pid):
     if not article:
         abort(404, _('Artigo não encontrado'))
 
-    return redirect(url_for('main.article_detail_v3',
+    return redirect(url_for('main.article_detail',
                             url_seg=article.journal.acronym,
-                            article_pid_v3=article.aid))
+                            url_seg_issue=article.issue.url_segment,
+                            url_seg_article=article.url_segment))
 
 
 def render_html_from_xml(article, lang):
@@ -965,14 +968,34 @@ def normalize_ssm_url(url):
         return current_app.config["SSM_BASE_URI"] + url
 
 
-@main.route('/article/<string:url_seg>/<string:article_pid_v3>/')
-@main.route('/article/<string:url_seg>/<string:article_pid_v3>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/')
+@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
-def article_detail_v3(url_seg, article_pid_v3, lang_code=''):
-    article = controllers.get_article_by_aid(article_pid_v3)
+def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+    article_url = url_for('main.article_detail',
+                          url_seg=url_seg,
+                          url_seg_issue=url_seg_issue,
+                          url_seg_article=url_seg_article)
+
+    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
+
+    if not issue:
+        abort(404, _('Issue não encontrado'))
+
+    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
 
     if not article:
-        abort(404, _('Artigo não encontrado'))
+        article = controllers.get_article_by_aop_url_segs(
+            issue.journal, url_seg_issue, url_seg_article
+        )
+        if not article:
+            abort(404, _('Artigo não encontrado'))
+        return redirect(url_for('main.article_detail',
+                                url_seg=article.journal.acronym,
+                                url_seg_issue=article.issue.url_segment,
+                                url_seg_article=article.url_segment))
 
     if lang_code not in article.languages:
         # Se não tem idioma na URL mostra o artigo no idioma original.
@@ -987,9 +1010,9 @@ def article_detail_v3(url_seg, article_pid_v3, lang_code=''):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-    article_list = list(
-        controllers.get_articles_by_iid(article.issue.iid, is_public=True)
-    )
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+
+    article_list = [_article for _article in articles]
 
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
@@ -1020,9 +1043,10 @@ def article_detail_v3(url_seg, article_pid_v3, lang_code=''):
                    lang,
                    display_original_lang_name(lang),
                    url_for(
-                      'main.article_detail_v3',
+                      'main.article_detail',
                       url_seg=article.journal.url_segment,
-                      article_pid_v3=article_pid_v3,
+                      url_seg_issue=article.issue.url_segment,
+                      url_seg_article=article.url_segment,
                       lang_code=lang
                    )
                )
@@ -1034,7 +1058,7 @@ def article_detail_v3(url_seg, article_pid_v3, lang_code=''):
         'previous_article': previous_article,
         'article': article,
         'journal': article.journal,
-        'issue': article.issue,
+        'issue': issue,
         'html': html,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
@@ -1044,34 +1068,6 @@ def article_detail_v3(url_seg, article_pid_v3, lang_code=''):
     }
 
     return render_template("article/detail.html", **context)
-
-
-@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/')
-@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<string:url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/')
-@main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
-@cache.cached(key_prefix=cache_key_with_lang)
-def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
-    issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-    if not issue:
-        abort(404, _('Issue não encontrado'))
-
-    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
-    if article is None:
-        article = controllers.get_article_by_aop_url_segs(
-            issue.journal, url_seg_issue, url_seg_article
-        )
-    if article is None:
-        abort(404, _('Artigo não encontrado'))
-
-    req_params = {
-            "url_seg": article.journal.acronym,
-            "article_pid_v3": article.aid,
-    }
-    if lang_code:
-        req_params["lang_code"] = lang_code
-
-    return redirect(url_for('main.article_detail_v3', **req_params))
 
 
 @main.route('/readcube/epdf/')
@@ -1216,9 +1212,10 @@ def router_legacy_article(text_or_abstract):
 
     return redirect(
         url_for(
-            'main.article_detail_v3',
+            'main.article_detail',
             url_seg=article.journal.url_segment,
-            article_pid_v3=article.aid,
+            url_seg_issue=article.issue.url_segment,
+            url_seg_article=article.url_segment,
             lang_code=lng
         ),
         code=301
