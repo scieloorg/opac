@@ -990,16 +990,22 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         article = controllers.get_article_by_aop_url_segs(
             issue.journal, url_seg_issue, url_seg_article
         )
-        if not article:
-            abort(404, _('Artigo não encontrado'))
-        return redirect(url_for('main.article_detail',
-                                url_seg=article.journal.acronym,
-                                url_seg_issue=article.issue.url_segment,
-                                url_seg_article=article.url_segment))
+    if not article:
+        abort(404, _('Artigo não encontrado'))
 
+    lang_code = lang_code or article.original_language
     if lang_code not in article.languages:
-        # Se não tem idioma na URL mostra o artigo no idioma original.
-        lang_code = article.original_language
+        # Se não é idioma válido, redireciona
+        redirect(
+            url_for(
+                'main.article_detail',
+                url_seg=article.journal.url_segment,
+                url_seg_issue=article.issue.url_segment,
+                url_seg_article=article.url_segment,
+                lang_code=article.original_language
+            ),
+            code=301
+        )
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -1143,7 +1149,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
     lang_code = lang_code or article.original_language
     if lang_code not in article.languages:
-        # Se não tem idioma válido redireciona
+        # Se não é idioma válido, redireciona
         redirect(
             url_for(
                 'main.article_detail_pdf',
