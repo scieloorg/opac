@@ -789,7 +789,7 @@ class MainTestCase(BaseTestCase):
                                                url_seg_article=article.url_segment,
                                                lang_code='en'))
 
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 301)
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
@@ -1480,7 +1480,7 @@ class MainTestCase(BaseTestCase):
                                                url_seg_article=article.url_segment,
                                                lang_code='en'), follow_redirects=False)
 
-            self.assertStatus(response, 200)
+            self.assertStatus(response, 301)
             self.assertTemplateUsed('article/detail.html')
 
             content = response.data.decode('utf-8')

@@ -996,7 +996,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     lang_code = lang_code or article.original_language
     if lang_code not in article.languages:
         # Se não é idioma válido, redireciona
-        redirect(
+        return redirect(
             url_for(
                 'main.article_detail',
                 url_seg=article.journal.url_segment,
@@ -1150,7 +1150,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     lang_code = lang_code or article.original_language
     if lang_code not in article.languages:
         # Se não é idioma válido, redireciona
-        redirect(
+        return redirect(
             url_for(
                 'main.article_detail_pdf',
                 url_seg=article.journal.url_segment,
