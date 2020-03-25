@@ -789,7 +789,7 @@ class MainTestCase(BaseTestCase):
                                                url_seg_article=article.url_segment,
                                                lang_code='en'))
 
-            self.assertStatus(response, 301)
+            self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             self.assertEqual(self.get_context_variable('article').id, article.id)
             self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
@@ -804,6 +804,38 @@ class MainTestCase(BaseTestCase):
                 '<meta name="citation_language" content="en"></meta>',
                 content
             )
+
+    def test_article_detail_redirects_to_original_language(self):
+        """
+        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        que usa o template ``article/detail.html``.
+        """
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo en español'},
+                                                {'language': 'pt', 'name': u'Artigo en Português'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11'})
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='ru'))
+
+            self.assertStatus(response, 301)
 
     def test_article_detail_pid_redirect(self):
         """
@@ -1452,6 +1484,8 @@ class MainTestCase(BaseTestCase):
                 'journal': journal.id,
                 'issue': issue.id,
                 'elocation': 'e1',
+                'original_language': 'pt',
+                'languages': ["es", "en"],
                 'pdfs': [
                     {
                         'lang': 'en',
@@ -1480,7 +1514,7 @@ class MainTestCase(BaseTestCase):
                                                url_seg_article=article.url_segment,
                                                lang_code='en'), follow_redirects=False)
 
-            self.assertStatus(response, 301)
+            self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
             content = response.data.decode('utf-8')
@@ -1496,6 +1530,61 @@ class MainTestCase(BaseTestCase):
                 '/pdf/cta/2009.v39n1/e1/pt',
                 content
             )
+
+    def test_pdf_url_redirects_to_original_language(self):
+        """
+        Testa se as URLs para os PDFs estão sendo montados com seus respectivos idiomas.
+
+        Exemplo de URL para o PDF: ``/pdf/ssp/2001.v78/e937749/en``
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+                'year': '2009',
+                'volume': '39',
+                'number': '1',
+                'suppl_text': '',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'elocation': 'e1',
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aen.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'pt',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651apt.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-pt.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'es',
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aes.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                        'type': 'pdf'
+                    }
+                ]
+            })
+
+            response = self.client.get(url_for('main.article_detail',
+                                               url_seg=journal.url_segment,
+                                               url_seg_issue=issue.url_segment,
+                                               url_seg_article=article.url_segment,
+                                               lang_code='ru'), follow_redirects=False)
+
+            self.assertStatus(response, 301)
+
 
     # HOMEPAGE
 

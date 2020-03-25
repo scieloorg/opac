@@ -974,11 +974,6 @@ def normalize_ssm_url(url):
 @main.route('/article/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
-    article_url = url_for('main.article_detail',
-                          url_seg=url_seg,
-                          url_seg_issue=url_seg_issue,
-                          url_seg_article=url_seg_article)
-
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
     if not issue:
@@ -994,7 +989,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         abort(404, _('Artigo não encontrado'))
 
     lang_code = lang_code or article.original_language
-    if lang_code not in article.languages:
+    if lang_code not in article.languages + [article.original_language]:
         # Se não é idioma válido, redireciona
         return redirect(
             url_for(
@@ -1148,7 +1143,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         abort(404, _('Artigo não encontrado'))
 
     lang_code = lang_code or article.original_language
-    if lang_code not in article.languages:
+    if lang_code not in article.languages + [article.original_language]:
         # Se não é idioma válido, redireciona
         return redirect(
             url_for(
