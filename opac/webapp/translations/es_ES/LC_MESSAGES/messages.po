@@ -1263,7 +1263,7 @@ msgstr ""
 #: opac/webapp/templates/article/includes/levelMenu.html:70
 #: opac/webapp/templates/article/includes/levelMenu.html:123
 msgid "sumário"
-msgstr ""
+msgstr "tabla de contenido"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:30
 #: opac/webapp/templates/issue/includes/alternative_header.html:75
