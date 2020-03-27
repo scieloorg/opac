@@ -1284,7 +1284,7 @@ msgstr "Home of journal"
 #: opac/webapp/templates/article/includes/levelMenu.html:70
 #: opac/webapp/templates/article/includes/levelMenu.html:123
 msgid "sumário"
-msgstr "summary"
+msgstr "table of contents"
 
 #: opac/webapp/templates/article/includes/levelMenu.html:30
 #: opac/webapp/templates/issue/includes/alternative_header.html:75
