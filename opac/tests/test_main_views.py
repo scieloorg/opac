@@ -278,106 +278,6 @@ class MainTestCase(BaseTestCase):
                 self.assertIn('%s' % journal.url_segment,
                               response.data.decode('utf-8'))
 
-    # JOURNAL
-
-    def test_journal_detail(self):
-        """
-        Teste da ``view function`` ``journal_detail``, deve retornar uma página
-        que usa o template ``journal/detail.html`` e o título do periódico no
-        corpo da página.
-        """
-
-        with current_app.app_context():
-
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal({'title': 'Revista X'})
-
-            response = self.client.get(url_for('main.journal_detail',
-                                               url_seg=journal.url_segment))
-
-            self.assertTrue(200, response.status_code)
-            self.assertTemplateUsed('journal/detail.html')
-            self.assertIn('Revista X',
-                          response.data.decode('utf-8'))
-            self.assertEqual(self.get_context_variable('journal').id, journal.id)
-
-    def test_journal_detail_legacy_url(self):
-        """
-        Teste da ``view function`` ``journal_detail_legacy_url``, deve retorna status_code 301
-        """
-
-        with current_app.app_context():
-
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal({'title': 'Revista X'})
-
-            response = self.client.get(url_for(
-                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment)
-                                       )
-
-            self.assertTrue(301, response.status_code)
-
-    def test_journal_detail_legacy_url_follow_redirect(self):
-        """
-        Teste da ``view function`` ``journal_detail_legacy_url``, deve retornar uma página
-        que usa o template ``journal/detail.html`` e o título do periódico no
-        corpo da página.
-        """
-
-        with current_app.app_context():
-
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal({'title': 'Revista X'})
-
-            response = self.client.get(
-                                    url_for(
-                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment),
-                                    follow_redirects=True)
-
-            self.assertTrue(200, response.status_code)
-            self.assertTemplateUsed('journal/detail.html')
-            self.assertIn('Revista X',
-                          response.data.decode('utf-8'))
-            self.assertEqual(self.get_context_variable('journal').id, journal.id)
-
-    def test_journal_detail_with_unknow_id(self):
-        """
-        Teste da ``view function`` ``journal_detail`` com um id desconhecido
-        deve retornar uma página com ``status_code`` 404 e msg
-        ``Periódico não encontrado``.
-        """
-
-        utils.makeAnyJournal(items=6)
-
-        unknow_url_seg = '0k2qhs8slwnui8'
-
-        response = self.client.get(url_for('main.journal_detail',
-                                   url_seg=unknow_url_seg))
-
-        self.assertStatus(response, 404)
-        self.assertIn('Periódico não encontrado',
-                      response.data.decode('utf-8'))
-
-    def test_journal_detail_with_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``journal_detail`` acessando um periódico
-        com atributo is_public=False, deve retorna uma página com ``status_code``
-        404 e msg cadastrada no atributo ``reason``.
-        """
-        unpublish_reason = 'plágio'
-        journal = utils.makeOneJournal({
-            'is_public': False,
-            'unpublish_reason': unpublish_reason})
-
-        response = self.client.get(url_for('main.journal_detail',
-                                           url_seg=journal.url_segment))
-
-        self.assertStatus(response, 404)
-        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
-
     def test_journal_feed(self):
         """
         Teste da ``view function`` ``journal_feed``, deve retornar um rss
@@ -1819,3 +1719,107 @@ class PageTestCase(BaseTestCase):
             response = self.client.get(url_for('main.about_collection',
                                        slug_name=unknown_page_name))
             self.assertStatus(response, 404)
+
+
+class TestJournaDetail(BaseTestCase):
+
+        # JOURNAL
+
+    def test_journal_detail(self):
+        """
+        Teste da ``view function`` ``journal_detail``, deve retornar uma página
+        que usa o template ``journal/detail.html`` e o título do periódico no
+        corpo da página.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(url_for('main.journal_detail',
+                                               url_seg=journal.url_segment))
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('journal/detail.html')
+            self.assertIn('Revista X',
+                          response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('journal').id, journal.id)
+
+    def test_journal_detail_legacy_url(self):
+        """
+        Teste da ``view function`` ``journal_detail_legacy_url``, deve retorna status_code 301
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(url_for(
+                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment)
+                                       )
+
+            self.assertTrue(301, response.status_code)
+
+    def test_journal_detail_legacy_url_follow_redirect(self):
+        """
+        Teste da ``view function`` ``journal_detail_legacy_url``, deve retornar uma página
+        que usa o template ``journal/detail.html`` e o título do periódico no
+        corpo da página.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+
+            response = self.client.get(
+                                    url_for(
+                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment),
+                                    follow_redirects=True)
+
+            self.assertTrue(200, response.status_code)
+            self.assertTemplateUsed('journal/detail.html')
+            self.assertIn('Revista X',
+                          response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('journal').id, journal.id)
+
+    def test_journal_detail_with_unknow_id(self):
+        """
+        Teste da ``view function`` ``journal_detail`` com um id desconhecido
+        deve retornar uma página com ``status_code`` 404 e msg
+        ``Periódico não encontrado``.
+        """
+
+        utils.makeAnyJournal(items=6)
+
+        unknow_url_seg = '0k2qhs8slwnui8'
+
+        response = self.client.get(url_for('main.journal_detail',
+                                   url_seg=unknow_url_seg))
+
+        self.assertStatus(response, 404)
+        self.assertIn('Periódico não encontrado',
+                      response.data.decode('utf-8'))
+
+    def test_journal_detail_with_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``journal_detail`` acessando um periódico
+        com atributo is_public=False, deve retorna uma página com ``status_code``
+        404 e msg cadastrada no atributo ``reason``.
+        """
+        unpublish_reason = 'plágio'
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': unpublish_reason})
+
+        response = self.client.get(url_for('main.journal_detail',
+                                           url_seg=journal.url_segment))
+
+        self.assertStatus(response, 404)
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
+        
