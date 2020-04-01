@@ -1758,10 +1758,18 @@ class TestJournaDetail(BaseTestCase):
 
             journal = utils.makeOneJournal({'title': 'Revista X'})
 
-            response = self.client.get(url_for(
-                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment)
-                                       )
+            response = self.client.get("/journal/acron")
 
+            self.assertTrue(301, response.status_code)
+
+    def test_journal_detail_url_journal_acron(self):
+        """
+        Teste da ``view function`` ``journal_detail_url_journal_acron``, deve retorna status_code 301
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal({'title': 'Revista X'})
+            response = self.client.get("/acron")
             self.assertTrue(301, response.status_code)
 
     def test_journal_detail_legacy_url_follow_redirect(self):
