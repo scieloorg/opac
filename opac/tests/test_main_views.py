@@ -365,89 +365,6 @@ class MainTestCase(BaseTestCase):
 
     # ISSUE
 
-    def test_issue_grid(self):
-        """
-        Teste da ``view function`` ``issue_grid`` acessando a grade de números
-        de um periódico, nesse teste deve ser retornado todos os números com
-        o atributo is_public=True de um número, sendo que o template deve ser
-        ``issue/grid.html``.
-        """
-
-        with current_app.app_context():
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal()
-
-            issues = utils.makeAnyIssue(attrib={'journal': journal.id})
-
-            response = self.client.get(url_for('main.issue_grid',
-                                       url_seg=journal.url_segment))
-
-            self.assertStatus(response, 200)
-            self.assertTemplateUsed('issue/grid.html')
-
-            for issue in issues:
-                self.assertIn('/journal_acron', response.data.decode('utf-8'))
-
-    def test_issue_grid_without_issues(self):
-        """
-        Teste para avaliar o retorno da ``view function`` ``issue_grid``
-        quando não existe número cadastrado deve retornar ``status_code`` 200
-        e a msg ``Nenhum número encontrado para esse perióico``
-        """
-
-        with current_app.app_context():
-
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal()
-
-            response = self.client.get(
-                url_for('main.issue_grid', url_seg=journal.url_segment))
-
-            self.assertStatus(response, 200)
-            self.assertTemplateUsed('issue/grid.html')
-
-            self.assertIn('Nenhum número encontrado para esse periódico',
-                          response.data.decode('utf-8'))
-
-    def test_issue_grid_with_unknow_journal_id(self):
-        """
-        Teste para avaliar o retorno da ``view function`` ``issue_grid``
-        quando é acessado utilizando um identificador do periódico desconhecido,
-        deve retornar status_code 404 com a msg ```Periódico não encontrado``.
-        """
-
-        journal = utils.makeOneJournal()
-
-        utils.makeAnyIssue(attrib={'journal': journal.id})
-
-        unknow_url_seg = '9km2g78o2mnu7'
-
-        response = self.client.get(
-            url_for('main.issue_grid', url_seg=unknow_url_seg))
-
-        self.assertStatus(response, 404)
-
-        self.assertIn('Periódico não encontrado',
-                      response.data.decode('utf-8'))
-
-    def test_issue_grid_with_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``issue_grid`` acessando um periódico
-        com atributo is_public=False, deve retorna uma página com ``status_code``
-        404 e msg cadastrada no atributo ``reason``.
-        """
-        unpublish_reason = 'Problema de Direito Autoral'
-        journal = utils.makeOneJournal({'is_public': False,
-                                       'unpublish_reason': unpublish_reason})
-
-        response = self.client.get(url_for('main.issue_grid',
-                                           url_seg=journal.url_segment))
-
-        self.assertStatus(response, 404)
-        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
-
     def test_issue_toc(self):
         """
         Teste da ``view function`` ``issue_toc`` acessando a página do número,
@@ -1830,4 +1747,101 @@ class TestJournaDetail(BaseTestCase):
 
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
-        
+
+
+class TestJournalGrid(BaseTestCase):
+
+    def test_issue_grid(self):
+        """
+        Teste da ``view function`` ``issue_grid`` acessando a grade de números
+        de um periódico, nesse teste deve ser retornado todos os números com
+        o atributo is_public=True de um número, sendo que o template deve ser
+        ``issue/grid.html``.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issues = utils.makeAnyIssue(attrib={'journal': journal.id})
+
+            response = self.client.get(url_for('main.issue_grid',
+                                       url_seg=journal.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+
+            for issue in issues:
+                self.assertIn('/journal_acron', response.data.decode('utf-8'))
+
+    def test_issue_grid_without_issues(self):
+        """
+        Teste para avaliar o retorno da ``view function`` ``issue_grid``
+        quando não existe número cadastrado deve retornar ``status_code`` 200
+        e a msg ``Nenhum número encontrado para esse perióico``
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            response = self.client.get(
+                url_for('main.issue_grid', url_seg=journal.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+
+            self.assertIn('Nenhum número encontrado para esse periódico',
+                          response.data.decode('utf-8'))
+
+    def test_issue_grid_with_unknow_journal_id(self):
+        """
+        Teste para avaliar o retorno da ``view function`` ``issue_grid``
+        quando é acessado utilizando um identificador do periódico desconhecido,
+        deve retornar status_code 404 com a msg ```Periódico não encontrado``.
+        """
+
+        journal = utils.makeOneJournal()
+
+        utils.makeAnyIssue(attrib={'journal': journal.id})
+
+        unknow_url_seg = '9km2g78o2mnu7'
+
+        response = self.client.get(
+            url_for('main.issue_grid', url_seg=unknow_url_seg))
+
+        self.assertStatus(response, 404)
+
+        self.assertIn('Periódico não encontrado',
+                      response.data.decode('utf-8'))
+
+    def test_issue_grid_with_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``issue_grid`` acessando um periódico
+        com atributo is_public=False, deve retorna uma página com ``status_code``
+        404 e msg cadastrada no atributo ``reason``.
+        """
+        unpublish_reason = 'Problema de Direito Autoral'
+        journal = utils.makeOneJournal({'is_public': False,
+                                       'unpublish_reason': unpublish_reason})
+
+        response = self.client.get(url_for('main.issue_grid',
+                                           url_seg=journal.url_segment))
+
+        self.assertStatus(response, 404)
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
+
+    def test_issue_grid_legacy_redirects(self):
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issues = utils.makeAnyIssue(attrib={'journal': journal.id})
+
+            response = self.client.get('/grid/{}'.format(journal.url_segment))
+
+            self.assertStatus(response, 301)
