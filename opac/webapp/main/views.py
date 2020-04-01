@@ -723,7 +723,8 @@ def form_contact(url_seg):
 # ###################################Issue#######################################
 
 
-@main.route('/grid/<string:url_seg>/')
+#@main.route('/grid/<string:url_seg>/')
+@main.route('/j/<string:url_seg>/grid')
 @cache.cached(key_prefix=cache_key_with_lang)
 def issue_grid(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
