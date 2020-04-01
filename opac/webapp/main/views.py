@@ -723,7 +723,11 @@ def form_contact(url_seg):
 # ###################################Issue#######################################
 
 
-#@main.route('/grid/<string:url_seg>/')
+@main.route('/grid/<string:url_seg>/')
+def issue_grid_legacy(url_seg):
+    return redirect(url_for('main.issue_grid', url_seg=url_seg), 301)
+
+
 @main.route('/j/<string:url_seg>/grid')
 @cache.cached(key_prefix=cache_key_with_lang)
 def issue_grid(url_seg):
