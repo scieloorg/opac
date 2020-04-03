@@ -56,6 +56,11 @@ services:
             - OPAC_ALTMETRIC_METRICS_URL=https://www.altmetric.com/details.php
             - OPAC_JOURNAL_PAGES_SOURCE_PATH=/app/data/pages
             - OPAC_JOURNAL_IMAGES_SOURCE_PATH=/app/data/img
+            - OPAC_APM_ENABLED=False
+            - OPAC_APM_SERVER_URL=
+            - OPAC_APM_SERVICE_NAME=Website
+            - OPAC_APM_ENVIRONMENT=production
+            - OPAC_APM_SECRET_TOKEN=
 
     opac-rq-worker-1:
         image: scieloorg/opac
