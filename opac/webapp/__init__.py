@@ -18,6 +18,7 @@ from flask_babelex import lazy_gettext
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.routing import BaseConverter
 from flask_caching import Cache
+from elasticapm.contrib.flask import ElasticAPM
 
 from opac_schema.v1.models import (
     Collection,
@@ -42,11 +43,75 @@ cache = Cache()
 from .main import custom_filters  # noqa
 
 
+logger = logging.getLogger(__name__)
+
+
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
         super(RegexConverter, self).__init__(url_map)
         self.regex = items[0]
 
+
+
+def configure_apm_agent(app):
+    """Configura e inicia o agente de introspecção do APM."""
+    from .utils import asbool
+
+    if not app.config.get("APM_ENABLED"):
+        logger.debug(
+            "APM Agent is disabled. To enable it configure the APM_ENABLED option."
+        )
+        return
+
+    APM_CONFIG_KEYS_INFO = (
+        ("SERVER_URL", True, str),
+        ("SERVICE_NAME", False, str),
+        ("SECRET_TOKEN", False, str),
+        ("ENVIRONMENT", False, str),
+        ("SERVICE_VERSION", False, str),
+        ("FILTER_EXCEPTION_TYPES", False, str),
+        ("TRANSACTIONS_IGNORE_PATTERNS", False, str),
+        ("SERVER_TIMEOUT", False, str),
+        ("HOSTNAME", False, str),
+        ("COLLECT_LOCAL_VARIABLES", False, str),
+        ("LOCAL_VAR_MAX_LENGTH", False, int),
+        ("CAPTURE_BODY", False, str),
+        ("CAPTURE_HEADERS", False, asbool),
+        ("TRANSACTION_MAX_SPANS", False, int),
+        ("STACK_TRACE_LIMIT", False, int),
+        ("DEBUG", False, asbool),
+        ("DISABLE_SEND", False, asbool),
+        ("INSTRUMENT", False, asbool),
+        ("VERIFY_SERVER_CERT", False, asbool),
+    )
+    apm_config = {}
+
+    for apm_key, required, cast in APM_CONFIG_KEYS_INFO:
+        key = "APM_%s" % apm_key
+        value = app.config.get(key)
+
+        if value is None or (isinstance(value, str) and len(value) == 0):
+            if required:
+                raise ValueError(
+                    "Could not setup APM Agent. The key '%s' is required, "
+                    "please configure it." % key
+                ) from None
+            continue
+
+        try:
+            _value = cast(value)
+        except (ValueError, TypeError) as exc:
+            raise ValueError(
+                "Could not set the key '%s' with value '%s'. "
+                "The cast function raise the exception '%s'." % (key, value, exc)
+            )
+
+        apm_config[apm_key] = _value
+
+    app.config["ELASTIC_APM"] = apm_config
+    logger.debug("APM Agent enabled.")
+
+    return ElasticAPM(app)
 
 def create_app():
     app = Flask(__name__,
@@ -64,6 +129,8 @@ def create_app():
     app.config.from_object(rq_scheduler_dashboard.default_settings)
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+
+    configure_apm_agent(app)
 
     # Sentry:
     if app.config['USE_SENTRY']:
