@@ -543,3 +543,16 @@ def send_audit_log_daily_report():
                 print("não encontramos registros modificados hoje.")
         else:
             print('O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED')
+
+def asbool(s):
+    """ Return the boolean value ``True`` if the case-lowered value of string
+    input ``s`` is a :term:`truthy string`. If ``s`` is already one of the
+    boolean values ``True`` or ``False``, return it."""
+    truthy = ('t', 'true', 'y', 'yes', 'on', '1')
+
+    if s is None:
+        return False
+    if isinstance(s, bool):
+        return s
+    s = str(s).strip()
+    return s.lower() in truthy
