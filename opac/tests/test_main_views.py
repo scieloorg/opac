@@ -365,95 +365,6 @@ class MainTestCase(BaseTestCase):
 
     # ISSUE
 
-    def test_issue_toc(self):
-        """
-        Teste da ``view function`` ``issue_toc`` acessando a página do número,
-        deve retorna status_code 200 e o template ``issue/toc.html``.
-        """
-
-        with current_app.app_context():
-
-            utils.makeOneCollection()
-
-            journal = utils.makeOneJournal()
-
-            issue = utils.makeOneIssue({'number': '31',
-                                        'volume': '10',
-                                        'journal': journal})
-
-            response = self.client.get(url_for('main.issue_toc',
-                                       url_seg=journal.url_segment,
-                                       url_seg_issue=issue.url_segment))
-
-            self.assertStatus(response, 200)
-            self.assertTemplateUsed('issue/toc.html')
-            # self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
-            self.assertEqual(self.get_context_variable('issue').id, issue.id)
-
-    def test_issue_toc_unknow_issue_id(self):
-        """
-        Teste para avaliar o retorno da ``view function`` ``issue_toc``
-        quando é acessado utilizando um identificador do issue desconhecido,
-        deve retorna status_code 404 com a msg ``Número não encontrado``.
-        """
-        journal = utils.makeOneJournal()
-
-        utils.makeOneIssue({'journal': journal})
-
-        unknow_url_seg = '2014.v3n2'
-
-        unknow_url = url_for(
-            'main.issue_toc',
-            url_seg=journal.url_segment,
-            url_seg_issue=unknow_url_seg)
-
-        response = self.client.get(unknow_url)
-
-        self.assertStatus(response, 404)
-        self.assertIn('Número não encontrado', response.data.decode('utf-8'))
-
-    def test_issue_toc_with_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``issue_toc`` acessando um número
-        com atributo is_public=False, deve retorna uma página com ``status_code``
-        404 e msg cadastrada no atributo ``reason``.
-        """
-        unpublish_reason = 'Número incorreto'
-        journal = utils.makeOneJournal()
-        issue = utils.makeOneIssue({
-            'is_public': False,
-            'unpublish_reason': unpublish_reason,
-            'journal': journal})
-
-        response = self.client.get(url_for('main.issue_toc',
-                                           url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment))
-
-        self.assertStatus(response, 404)
-        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
-
-    def test_issue_toc_with_journal_attrib_is_public_false(self):
-        """
-        Teste da ``view function`` ``issue_toc`` acessando um número
-        com atributo is_public=True, porém com um periódico com atributo
-        is_public=False deve retorna uma página com ``status_code`` 404 e msg
-        cadastrada no atributo ``reason`` do periódico.
-        """
-        unpublish_reason = 'Revista removida da coleção'
-        journal = utils.makeOneJournal({
-            'is_public': False,
-            'unpublish_reason': unpublish_reason})
-        issue = utils.makeOneIssue({
-            'is_public': True,
-            'journal': journal.id})
-
-        response = self.client.get(url_for('main.issue_toc',
-                                           url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment))
-
-        self.assertStatus(response, 404)
-        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
-
     def test_issue_feed(self):
         """
         Teste da ``view function`` ``issue_feed``, deve retornar um rss
@@ -1845,3 +1756,95 @@ class TestJournalGrid(BaseTestCase):
             response = self.client.get('/grid/{}'.format(journal.url_segment))
 
             self.assertStatus(response, 301)
+
+
+class TestIssueToc(BaseTestCase):
+
+    def test_issue_toc(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando a página do número,
+        deve retorna status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.issue_toc',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/toc.html')
+            # self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('issue').id, issue.id)
+
+    def test_issue_toc_unknow_issue_id(self):
+        """
+        Teste para avaliar o retorno da ``view function`` ``issue_toc``
+        quando é acessado utilizando um identificador do issue desconhecido,
+        deve retorna status_code 404 com a msg ``Número não encontrado``.
+        """
+        journal = utils.makeOneJournal()
+
+        utils.makeOneIssue({'journal': journal})
+
+        unknow_url_seg = '2014.v3n2'
+
+        unknow_url = url_for(
+            'main.issue_toc',
+            url_seg=journal.url_segment,
+            url_seg_issue=unknow_url_seg)
+
+        response = self.client.get(unknow_url)
+
+        self.assertStatus(response, 404)
+        self.assertIn('Número não encontrado', response.data.decode('utf-8'))
+
+    def test_issue_toc_with_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando um número
+        com atributo is_public=False, deve retorna uma página com ``status_code``
+        404 e msg cadastrada no atributo ``reason``.
+        """
+        unpublish_reason = 'Número incorreto'
+        journal = utils.makeOneJournal()
+        issue = utils.makeOneIssue({
+            'is_public': False,
+            'unpublish_reason': unpublish_reason,
+            'journal': journal})
+
+        response = self.client.get(url_for('main.issue_toc',
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
+
+        self.assertStatus(response, 404)
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
+
+    def test_issue_toc_with_journal_attrib_is_public_false(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando um número
+        com atributo is_public=True, porém com um periódico com atributo
+        is_public=False deve retorna uma página com ``status_code`` 404 e msg
+        cadastrada no atributo ``reason`` do periódico.
+        """
+        unpublish_reason = 'Revista removida da coleção'
+        journal = utils.makeOneJournal({
+            'is_public': False,
+            'unpublish_reason': unpublish_reason})
+        issue = utils.makeOneIssue({
+            'is_public': True,
+            'journal': journal.id})
+
+        response = self.client.get(url_for('main.issue_toc',
+                                           url_seg=journal.url_segment,
+                                           url_seg_issue=issue.url_segment))
+
+        self.assertStatus(response, 404)
+        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
