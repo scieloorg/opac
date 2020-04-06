@@ -358,7 +358,13 @@ def router_legacy():
             if not issue.journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
-            return issue_toc(issue.journal.url_segment, issue.url_segment)
+            return redirect(
+                url_for(
+                    "main.issue_toc",
+                    url_seg=issue.journal.url_segment,
+                    url_seg_issue=issue.url_segment),
+                301
+            )
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
 
@@ -789,12 +795,6 @@ def issue_toc(url_seg, url_seg_issue):
 
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
 
-    if issue and issue.journal:
-        issue_legend = descriptive_short_format(
-            title=issue.journal.title, short_title=issue.journal.short_title,
-            pubdate=str(issue.year), volume=issue.volume, number=issue.number,
-            suppl=issue.suppl_text, language=language[:2].lower())
-
     if not issue:
         abort(404, _('Número não encontrado'))
 
@@ -829,6 +829,11 @@ def issue_toc(url_seg, url_seg_issue):
 
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
+
+    issue_legend = descriptive_short_format(
+        title=issue.journal.title, short_title=issue.journal.short_title,
+        pubdate=str(issue.year), volume=issue.volume, number=issue.number,
+        suppl=issue.suppl_text, language=language[:2].lower())
 
     context = {
         'next_issue': next_issue,
