@@ -801,10 +801,11 @@ def issue_toc(url_seg, url_seg_issue):
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
-    if not issue.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
-
     journal = issue.journal
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
 
     if articles:
@@ -831,7 +832,7 @@ def issue_toc(url_seg, url_seg_issue):
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
     issue_legend = descriptive_short_format(
-        title=issue.journal.title, short_title=issue.journal.short_title,
+        title=journal.title, short_title=journal.short_title,
         pubdate=str(issue.year), volume=issue.volume, number=issue.number,
         suppl=issue.suppl_text, language=language[:2].lower())
 
