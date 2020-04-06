@@ -1848,3 +1848,25 @@ class TestIssueToc(BaseTestCase):
 
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
+
+    def test_issue_toc_legacy_redirects_to_issue_toc(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando a página do número,
+        deve retorna status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.issue_toc_legacy',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 301)

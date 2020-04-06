@@ -771,6 +771,14 @@ def issue_grid(url_seg):
 
 
 @main.route('/toc/<string:url_seg>/<string:url_seg_issue>/')
+def issue_toc_legacy(url_seg, url_seg_issue):
+    return redirect(
+        url_for('main.issue_toc',
+                url_seg=url_seg,
+                url_seg_issue=url_seg_issue),
+        code=301)
+
+
 @main.route('/j/<string:url_seg>/i/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
