@@ -1870,3 +1870,29 @@ class TestIssueToc(BaseTestCase):
                                        url_seg_issue=issue.url_segment))
 
             self.assertStatus(response, 301)
+
+
+class TestAOPToc(BaseTestCase):
+
+    def test_aop_toc(self):
+        """
+        Teste da ``view function`` ``ahead_toc`` acessando a página do número,
+        deve retorna status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': 'ahead',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.aop_toc',
+                                       url_seg=journal.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/toc.html')
+            # self.assertIn(u'Vol. 10 No. 31', response.data.decode('utf-8'))
+            self.assertEqual(self.get_context_variable('issue').id, issue.id)
