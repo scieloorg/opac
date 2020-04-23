@@ -26,9 +26,9 @@ RUN apk --update add --no-cache \
 COPY . /app
 WORKDIR /app
 
-RUN pip --no-cache-dir install -r requirements.txt && \
+RUN pip --no-cache-dir install -U pip \
+    pip --no-cache-dir install -r requirements.txt && \
     pip --no-cache-dir install -r /app/requirements.dev.txt
-
 
 RUN sed -i 's/\r//' start_worker.sh \
     && sed -i 's/\r//' start_scheduler.sh \

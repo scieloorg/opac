@@ -37,3 +37,4 @@ blinker==1.4
 certifi==2019.11.28
 elastic-apm==5.5.2
 urllib3==1.25.8
+email_validator==1.0.5
