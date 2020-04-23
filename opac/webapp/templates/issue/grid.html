@@ -49,8 +49,7 @@
                 <th> - </th>
                 <td class="left">
                   <span class="rigth">
-                    <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment,
-                  url_seg_issue=ahead.url_segment) }}" class="btn ahead">ahead of print</a>
+                    <a href="{{ url_for('.aop_toc', url_seg=journal.url_segment) }}" class="btn ahead">ahead of print</a>
                   </span>
                 </td>
               {% endif %}
