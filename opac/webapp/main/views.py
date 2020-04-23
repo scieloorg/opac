@@ -850,7 +850,7 @@ def issue_toc(url_seg, url_seg_issue):
         'this_page_url': url_for(
                             'main.issue_toc',
                             url_seg=url_seg,
-                            url_seg_issue=, url_seg_issue),
+                            url_seg_issue=url_seg_issue),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
@@ -917,7 +917,7 @@ def aop_toc(url_seg):
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
     context = {
-        'this_page_url': url_for("main.aop_toc", url_seg),
+        'this_page_url': url_for("main.aop_toc", url_seg=url_seg),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
