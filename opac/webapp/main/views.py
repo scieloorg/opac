@@ -358,6 +358,10 @@ def router_legacy():
             if not issue.journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
 
+            if issue.url_segment and "ahead" in issue.url_segment:
+                return redirect(
+                    url_for('main.aop_toc', url_seg=url_seg), code=301)
+
             return redirect(
                 url_for(
                     "main.issue_toc",
@@ -778,6 +782,9 @@ def issue_grid(url_seg):
 
 @main.route('/toc/<string:url_seg>/<string:url_seg_issue>/')
 def issue_toc_legacy(url_seg, url_seg_issue):
+    if url_seg_issue and "ahead" in url_seg_issue:
+        return redirect(url_for('main.aop_toc', url_seg=url_seg), code=301)
+
     return redirect(
         url_for('main.issue_toc',
                 url_seg=url_seg,
@@ -788,6 +795,9 @@ def issue_toc_legacy(url_seg, url_seg_issue):
 @main.route('/j/<string:url_seg>/i/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
+    if url_seg_issue and "ahead" in url_seg_issue:
+        return redirect(url_for('main.aop_toc', url_seg=url_seg), code=301)
+
     # idioma da sessão
     language = session.get('lang', get_locale())
 
