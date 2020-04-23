@@ -1,6 +1,6 @@
 {% extends "issue/base.html" %}
 
-{% block title %}{{ issue_legend|default('--', True) }}{% endblock %}
+{% block title %}{{ issue_bibliographic_strip|default('--', True) }}{% endblock %}
 
 {% block main_content %}
 
@@ -32,7 +32,7 @@
               <div class="issueInfo">
                 {% if issue.cover_url %}
                   <div class="cover">
-                      <img src="{{ issue.cover_url }}" class="image" alt="Capa: {{issue_legend}}" />
+                      <img src="{{ issue.cover_url }}" class="image" alt="Capa: {{issue_bibliographic_strip}}" />
                   </div>
                 {% endif %}
                 <div class="editor">
@@ -92,13 +92,7 @@
 
                     <div class="collapse-content issueIndent">
                     <strong>
-
-                      {% if issue.type == 'ahead' %}
-                        {{ journal.title }} ahead of print
-                      {% else %}
-                        {{ issue_legend|default('--', True) }}
-                      {% endif %}
-
+                      {{ issue_bibliographic_strip|default('--', True) }}
                     </strong>
                     <!-- Cabeçalho do Issue Toc -->
 

@@ -831,7 +831,7 @@ def issue_toc(url_seg, url_seg_issue):
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
-    issue_legend = descriptive_short_format(
+    issue_bibliographic_strip = descriptive_short_format(
         title=journal.title, short_title=journal.short_title,
         pubdate=str(issue.year), volume=issue.volume, number=issue.number,
         suppl=issue.suppl_text, language=language[:2].lower())
@@ -842,7 +842,7 @@ def issue_toc(url_seg, url_seg_issue):
         'previous_issue': previous_issue,
         'journal': journal,
         'issue': issue,
-        'issue_legend': issue_legend,
+        'issue_bibliographic_strip': issue_bibliographic_strip,
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
@@ -888,14 +888,17 @@ def aop_toc(url_seg):
             if section_filter != '':
                 _articles = _articles.filter(section__iexact=section_filter)
             articles.extend(_articles)
+    if not articles:
+        abort(404, _('Artigos ahead of print não encontrados'))
 
     if sections:
         sections = sorted([k for k in sections if k is not None])
 
+    previous_issue = None
     next_issue = None
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True) or []
     for i in issues:
-        if i.number != "ahead":
+        if i not in aop_issues:
             previous_issue = i
             break
 
@@ -906,18 +909,13 @@ def aop_toc(url_seg):
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
-    issue_legend = descriptive_short_format(
-        title=journal.title, short_title=journal.short_title,
-        pubdate=datetime.now().isoformat()[:4], number="ahead",
-        language=language[:2].lower())
-
     context = {
         'this_page_url': '/j/{}/aop'.format(url_seg),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
-        'issue': issue,
-        'issue_legend': issue_legend,
+        'issue': aop_issues[0],
+        'issue_bibliographic_strip': "ahead of print",
         'articles': articles,
         'sections': sections,
         'section_filter': section_filter,
