@@ -837,6 +837,7 @@ def issue_toc(url_seg, url_seg_issue):
         suppl=issue.suppl_text, language=language[:2].lower())
 
     context = {
+        'this_page_url': '/j/{}/i/{}/'.format(url_seg, url_seg_issue),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
@@ -850,6 +851,82 @@ def issue_toc(url_seg, url_seg_issue):
         ],
         # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
+    }
+
+    return render_template("issue/toc.html", **context)
+
+
+@main.route('/j/<string:url_seg>/aop')
+@cache.cached(key_prefix=cache_key_with_lang_with_qs)
+def aop_toc(url_seg):
+    # idioma da sessão
+    language = session.get('lang', get_locale())
+
+    section_filter = request.args.get('section', '', type=str)
+
+    aop_issues = controllers.get_aop_issues(url_seg)
+
+    if not aop_issues:
+        abort(404, _('Artigos ahead of print não encontrados'))
+
+    aop_issues = [aop_issue for aop_issue in aop_issues if aop_issue.is_public]
+    if not aop_issues:
+        abort(404, _('Artigos ahead of print não encontrados'))
+
+    journal = aop_issues[0].journal
+
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    articles = []
+    sections = []
+    for aop_issue in aop_issues:
+        _articles = controllers.get_articles_by_iid(
+            aop_issue.iid, is_public=True)
+        if _articles:
+            sections.extend(list(_articles.item_frequencies('section').keys()))
+            if section_filter != '':
+                _articles = _articles.filter(section__iexact=section_filter)
+            articles.extend(_articles)
+
+    if sections:
+        sections = sorted([k for k in sections if k is not None])
+
+    next_issue = None
+    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
+    for i in issues:
+        if i.number != "ahead":
+            previous_issue = i
+            break
+
+    for article in articles:
+        article_text_languages = [doc['lang'] for doc in article.htmls]
+        article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
+
+        setattr(article, "article_text_languages", article_text_languages)
+        setattr(article, "article_pdf_languages", article_pdf_languages)
+
+    issue_legend = descriptive_short_format(
+        title=journal.title, short_title=journal.short_title,
+        pubdate=datetime.now().isoformat()[:4], number="ahead",
+        language=language[:2].lower())
+
+    context = {
+        'this_page_url': '/j/{}/aop'.format(url_seg),
+        'next_issue': next_issue,
+        'previous_issue': previous_issue,
+        'journal': journal,
+        'issue': issue,
+        'issue_legend': issue_legend,
+        'articles': articles,
+        'sections': sections,
+        'section_filter': section_filter,
+        'journal_study_areas': [
+            STUDY_AREAS.get(study_area.upper())
+            for study_area in journal.study_areas
+        ],
+        # o primeiro item da lista é o último número.
+        'last_issue': previous_issue
     }
 
     return render_template("issue/toc.html", **context)
