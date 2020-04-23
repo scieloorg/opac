@@ -847,7 +847,10 @@ def issue_toc(url_seg, url_seg_issue):
         suppl=issue.suppl_text, language=language[:2].lower())
 
     context = {
-        'this_page_url': '/j/{}/i/{}/'.format(url_seg, url_seg_issue),
+        'this_page_url': url_for(
+                            'main.issue_toc',
+                            url_seg=url_seg,
+                            url_seg_issue=, url_seg_issue),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
@@ -869,17 +872,11 @@ def issue_toc(url_seg, url_seg_issue):
 @main.route('/j/<string:url_seg>/aop')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def aop_toc(url_seg):
-    # idioma da sessão
-    language = session.get('lang', get_locale())
 
     section_filter = request.args.get('section', '', type=str)
 
-    aop_issues = controllers.get_aop_issues(url_seg)
-
-    if not aop_issues:
-        abort(404, _('Artigos ahead of print não encontrados'))
-
-    aop_issues = [aop_issue for aop_issue in aop_issues if aop_issue.is_public]
+    aop_issues = controllers.get_aop_issues(url_seg) or []
+    aop_issues = [i for i in aop_issues if i.is_public]
     if not aop_issues:
         abort(404, _('Artigos ahead of print não encontrados'))
 
@@ -920,7 +917,7 @@ def aop_toc(url_seg):
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
     context = {
-        'this_page_url': '/j/{}/aop'.format(url_seg),
+        'this_page_url': url_for("main.aop_toc", url_seg),
         'next_issue': next_issue,
         'previous_issue': previous_issue,
         'journal': journal,
