@@ -32,7 +32,7 @@
               <div class="issueInfo">
                 {% if issue.cover_url %}
                   <div class="cover">
-                      <img src="{{ issue.cover_url }}" class="image" alt="Capa: Vol. {{ issue.volume }} No. {{ issue.number }}" />
+                      <img src="{{ issue.cover_url }}" class="image" alt="Capa: {{issue_legend}}" />
                   </div>
                 {% endif %}
                 <div class="editor">
@@ -106,7 +106,7 @@
 
                       {% if sections %}
                         <li>
-                          <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}">
+                          <a href="{{this_page_url}}">
                             {% if section_filter|length == 0 %}
                               {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
                             {% else %}
@@ -119,7 +119,7 @@
                       {% for section in sections %}
                         {% if section %}
                           <li>
-                            <a href="{{ url_for('.issue_toc', url_seg=issue.journal.url_segment, url_seg_issue=issue.url_segment) }}?section={{ section|upper }}">
+                            <a href="{{this_page_url}}?section={{ section|upper }}">
                               {% if section_filter|upper == section|upper %}
                                 {{ section }} <span style="color: #6789d3;">&laquo;</span>
                               {% else %}
