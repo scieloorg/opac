@@ -108,6 +108,8 @@ def makeOneJournal(attrib=None):  # noqa
             ]
         )
     }
+    if not journal.get("is_public") and not journal.get("unpublish_reason"):
+        journal["unpublish_reason"] = "<unpublish_reason>"
     journal.update(attrib)
     return models.Journal(**journal).save()
 

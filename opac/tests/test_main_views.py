@@ -1870,3 +1870,297 @@ class TestIssueToc(BaseTestCase):
                                        url_seg_issue=issue.url_segment))
 
             self.assertStatus(response, 301)
+
+    def test_issue_toc_legacy_redirects_to_aop_toc(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando a página do número,
+        deve retorna status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': 'ahead',
+                                        'type': 'ahead',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.issue_toc_legacy',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 301)
+            self.assertRedirects(
+                response,
+                url_for(
+                    'main.aop_toc',
+                    url_seg=journal.url_segment
+                ),
+            )
+
+    def test_issue_toc_redirects_to_aop_toc(self):
+        """
+        Teste da ``view function`` ``issue_toc`` acessando a página do número,
+        deve retorna status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'number': 'ahead',
+                                        'type': 'ahead',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.issue_toc',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 301)
+            self.assertRedirects(
+                response,
+                url_for(
+                    'main.aop_toc',
+                    url_seg=journal.url_segment
+                ),
+            )
+
+
+class TestAOPToc(BaseTestCase):
+
+    def test_aop_toc_returns_one_aop_with_one_article(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 200 e o template ``issue/toc.html``.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                }
+            )
+            article = utils.makeOneArticle(
+                {
+                    'title': 'Article Y',
+                    'original_language': 'en',
+                    'languages': ['es', 'pt'],
+                    'translated_titles': [
+                        {'language': 'es', 'name': u'Artículo en español'},
+                        {'language': 'pt', 'name': u'Artigo en Português'},
+                    ],
+                    'issue': issue,
+                    'journal': journal,
+                    'url_segment': 'ahead'
+                }
+            )
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+
+            self.assertStatus(response, 200)
+            self.assertEqual(
+                len(self.get_context_variable('articles')),
+                1
+            )
+            self.assertTemplateUsed('issue/toc.html')
+
+    def test_aop_toc_returns_not_found_because_of_there_is_no_aop(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertStatus(response, 404)
+
+    def test_aop_toc_returns_not_found_because_of_not_published_articles(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                }
+            )
+            article = utils.makeOneArticle(
+                {
+                    'issue': issue,
+                    'journal': journal,
+                    'is_public': False,
+                }
+            )
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertStatus(response, 404)
+
+    def test_aop_toc_returns_not_found_because_of_not_published_aop(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                    'is_public': False,
+                }
+            )
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertStatus(response, 404)
+
+    def test_aop_toc_returns_not_found_because_of_aop_has_no_article(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                }
+            )
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertStatus(response, 404)
+
+    def test_aop_toc_returns_not_found_because_of_journal_is_not_public(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'is_public': False})
+
+            issue = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                }
+            )
+
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertStatus(response, 404)
+
+    def test_aop_toc_has_previous_issue(self):
+        """
+        Teste da ``view function`` ``aop_toc`` acessando a página do número,
+        deve retornar status_code 404.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            aop = utils.makeOneIssue(
+                {
+                    'number': 'ahead',
+                    'journal': journal,
+                    'type': 'ahead',
+                    'year': 2015,
+                }
+            )
+            article = utils.makeOneArticle(
+                {
+                    'title': 'Article Y',
+                    'original_language': 'en',
+                    'languages': ['es', 'pt'],
+                    'translated_titles': [
+                        {'language': 'es', 'name': u'Artículo en español'},
+                        {'language': 'pt', 'name': u'Artigo en Português'},
+                    ],
+                    'issue': aop,
+                    'journal': journal,
+                    'url_segment': 'ahead'
+                }
+            )
+            issue = utils.makeOneIssue(
+                {
+                    'number': '40',
+                    'journal': journal,
+                    'year': 2020,
+                }
+            )
+            issue = utils.makeOneIssue(
+                {
+                    'number': '39',
+                    'journal': journal,
+                    'year': 2019,
+                }
+            )
+
+            article = utils.makeOneArticle(
+                {
+                    'title': 'Article Y',
+                    'original_language': 'en',
+                    'languages': ['es', 'pt'],
+                    'translated_titles': [
+                        {'language': 'es', 'name': u'Artículo en español'},
+                        {'language': 'pt', 'name': u'Artigo en Português'},
+                    ],
+                    'issue': issue,
+                    'journal': journal,
+                }
+            )
+            url = url_for('main.aop_toc', url_seg=journal.url_segment)
+            response = self.client.get(url)
+            self.assertEqual(
+                self.get_context_variable('previous_issue').year,
+                2020
+            )
