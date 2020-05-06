@@ -35,6 +35,6 @@ Werkzeug==0.14.1
 https://github.com/scieloorg/packtools/archive/2.5.6.tar.gz#egg=packtools
 blinker==1.4
 certifi==2019.11.28
-elastic-apm==5.5.2
+elastic-apm==5.6.0
 urllib3==1.25.8
 email_validator==1.0.5
