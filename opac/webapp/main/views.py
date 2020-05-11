@@ -343,7 +343,8 @@ def router_legacy():
             if not journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-            return journal_detail(journal.url_segment)
+            return redirect(url_for('main.journal_detail',
+                            url_seg=journal.url_segment), code=301)
 
         elif script_php == 'sci_issuetoc':
 
@@ -405,7 +406,8 @@ def router_legacy():
             if not journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-            return issue_grid(journal.url_segment)
+            return redirect(url_for('main.issue_grid',
+                                    url_seg=journal.url_segment), 301)
 
         elif script_php == 'sci_pdf':
             # accesso ao pdf do artigo:
@@ -426,10 +428,15 @@ def router_legacy():
             if not article.journal.is_public:
                 abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-            return article_detail_pdf(
-                article.journal.url_segment,
-                article.issue.url_segment,
-                article.url_segment)
+            return redirect(
+                url_for(
+                    'main.article_detail_pdf',
+                    url_seg=article.journal.url_segment,
+                    url_seg_issue=article.issue.url_segment,
+                    url_seg_article=article.url_segment,
+                ),
+                code=301
+            )
 
         else:
             abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
@@ -1204,7 +1211,7 @@ def get_content_from_ssm(resource_ssm_media_path):
     try:
         ssm_response = fetch_data(url)
     except (NonRetryableError, RetryableError):
-        abort(404, _('Recruso não encontrado'))
+        abort(404, _('Recurso não encontrado'))
     else:
         return Response(ssm_response, mimetype=mimetype)
 
