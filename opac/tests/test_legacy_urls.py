@@ -30,6 +30,24 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertTemplateUsed('journal/detail.html')
 
+    def test_journal_home_check_redirect(self):
+        """
+        Testa o acesso a home da revista pela URL antiga.
+        URL testa: scielo.php?script=sci_serial&pid=ISSN
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_serial&pid=%s' % journal.print_issn
+
+                response = c.get(url)
+
+                self.assertStatus(response, 301)
+
     def test_issue_grid(self):
         """
         Testa o acesso a grade de números da revista pela URL antiga.
@@ -51,6 +69,26 @@ class LegacyURLTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('issue/grid.html')
+
+    def test_issue_grid_check_redirect(self):
+        """
+        Testa o acesso a grade de números da revista pela URL antiga.
+        URL testa: scielo.php?script=sci_issues&pid=ISSN
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({'journal': journal.id, 'pid': '0000-0000'})
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_issues&pid=%s' % issue.pid
+
+                response = c.get(url)
+
+                self.assertStatus(response, 301)
 
     def test_issue_toc(self):
         """
@@ -76,6 +114,29 @@ class LegacyURLTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('issue/toc.html')
+
+    def test_issue_toc_check_redirect(self):
+        """
+        Testa o acesso ao toc de um números pela URL antiga.
+        URL testa: scielo.php?script=sci_issuetoc&pid=ISSN + ID DO número
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_issuetoc&pid=%s' % issue.pid
+
+                response = c.get(url)
+
+                self.assertStatus(response, 301)
 
     def test_article_text(self):
         """
@@ -107,6 +168,35 @@ class LegacyURLTestCase(BaseTestCase):
                 self.assertStatus(response, 200)
 
                 self.assertTemplateUsed('article/detail.html')
+
+    def test_article_text_check_redirect(self):
+        """
+        Testa o acesso ao artigo pela URL antiga.
+        URL testa: scielo.php?script=sci_serial&pid=ISSN + ID DO número + ID DO ARTIGO
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000020160001'
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'pid': '0000-00002016000100251'
+            })
+
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_arttext&pid=%s' % article.pid
+
+                response = c.get(url)
+
+                self.assertStatus(response, 301)
 
     @patch('requests.get')
     def test_router_legacy_pdf(self, mocked_requests_get):
