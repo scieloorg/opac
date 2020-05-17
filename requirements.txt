@@ -22,7 +22,7 @@ gunicorn==19.8.1
 xlsxwriter==1.1.0
 tweepy==3.7.0
 raven[flask]==6.9.0
-beautifulsoup4==4.6.3
+beautifulsoup4==4.9.1
 Flask-WTF==0.14.2
 Flask-Caching==1.4.0
 redis==2.10.6
