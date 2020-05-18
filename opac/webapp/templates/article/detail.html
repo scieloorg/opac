@@ -15,6 +15,8 @@
                 {{ html|safe }}
             </div>
           </section>
+        {% elif not article.display_full_text %}
+          {% include "article/includes/_dont_display_full_text.html" %}
         {% else %}
           {{ html|safe }}
         {% endif %}

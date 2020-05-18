@@ -1,0 +1,30 @@
+<div id="standalonearticle">
+  <section class="articleCtt">
+    <div class="container">
+      <div class="articleTxt">
+        <article id="articleText" class="col-md-12">
+          <div class="only-renditions-available">
+            <div class="jumbotron">
+              <h1 class="article-title page-header-title">
+                {{ article.title }}
+              </h1>
+              <p>
+                {% trans %}Texto completo temporariamente disponível apenas nas versões{% endtrans %}:
+              </p>
+              {% if article and article.pdfs|length == 1 %}
+              <p>
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  href="{{ url_for('.article_detail_pdf', url_seg=article.journal.url_segment, url_seg_issue=article.issue.url_segment, url_seg_article=article.url_segment, lang_code=article.pdfs[0].lang) }}">
+                  {% trans %}Texto completo em{% endtrans %} PDF
+                </a>
+              </p>
+              {% endif%}
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</div>
