@@ -29,6 +29,8 @@ ACTION_PUBLISH_CONFIRMATION_MSG = _('Tem certeza que quer publicar os itens sele
 ACTION_UNPUBLISH_CONFIRMATION_MSG = _('Tem certeza que quer despublicar os itens selecionados?')
 ACTION_REBUILD_CONFIRMATION_MSG = _('Tem certeza que quer reconstruir os artigos selecionados?')
 ACTION_SEND_EMAIL_CONFIRMATION_MSG = _('Tem certeza que quer enviar email de confirmação aos usuários selecionados?')
+ACTION_UNHIDE_FULL_TEXT_CONFIRMATION_MSG = _('Tem certeza que deseja disponibilizar o texto completo?')
+ACTION_HIDE_FULL_TEXT_CONFIRMATION_MSG = _('Tem certeza que deseja indisponibilizar o texto completo?')
 
 logger = logging.getLogger(__name__)
 
@@ -582,7 +584,7 @@ class IssueAdminView(OpacBaseAdminView):
 class ArticleAdminView(OpacBaseAdminView):
 
     column_filters = [
-        'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason'
+        'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason', 'display_full_text'
     ]
 
     column_searchable_list = [
@@ -629,7 +631,32 @@ class ArticleAdminView(OpacBaseAdminView):
         doi=__('DOI'),
         languages=__('Idiomas'),
         abstract_languages=__('Idiomas dos resumos'),
+        display_full_text=__('Texto completo disponível?')
     )
+
+
+    @action('set_full_text_unavailable', _('Indisponibilizar texto completo'), ACTION_HIDE_FULL_TEXT_CONFIRMATION_MSG)
+    def set_full_text_unavailable(self, ids):
+        try:
+            controllers.set_article_display_full_text_bulk(ids, display=False)
+            flash(_('Texto completo foi indisponibilizado'))
+
+        except Exception as ex:
+            flash(_('Ocorreu um erro ao tentar indisponibilizar completo. Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
+
+    @action('set_full_text_available', _('Disponibilizar texto completo'), ACTION_UNHIDE_FULL_TEXT_CONFIRMATION_MSG)
+    def set_full_text_available(self, ids):
+        try:
+            controllers.set_article_display_full_text_bulk(ids, display=True)
+            flash(_('Texto completo foi disponibilizado'))
+
+        except Exception as ex:
+            flash(_('Ocorreu um erro ao tentar disponibilizar completo Erro: %(ex)s',
+                    ex=str(ex)),
+                  'error')
+
 
     @action('publish', _('Publicar'), ACTION_PUBLISH_CONFIRMATION_MSG)
     def publish(self, ids):
