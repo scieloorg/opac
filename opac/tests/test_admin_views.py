@@ -3202,8 +3202,8 @@ class ArticleAdminViewTests(BaseTestCase):
         login_url = url_for('admin.login_view')
         article_index_url = url_for('article.index_view')
         expected_col_filters = [
-            'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason'
-        ]
+                'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason', 'display_full_text'
+            ]
         # when
         with self.client as client:
             # login do usuario admin
@@ -3385,6 +3385,7 @@ class ArticleAdminViewTests(BaseTestCase):
             'doi',
             'languages',
             'abstract_languages',
+            'display_full_text'
         ]
 
         # when
@@ -3636,6 +3637,8 @@ class ArticleAdminViewTests(BaseTestCase):
         expected_actions = [
             'publish',
             'unpublish_default',
+            'set_full_text_unavailable',
+            'set_full_text_available',
         ]
 
         # when
