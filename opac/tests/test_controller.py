@@ -1160,6 +1160,29 @@ class ArticleControllerTestCase(BaseTestCase):
             "article.pdf"
         )
 
+    def test_set_articles_full_text_unavailable(self):
+        ids = ['1', '2', '3']
+
+        for id in ids:
+            self._make_one(attrib={'_id': id, 'display_full_text': True})
+
+        controllers.set_article_display_full_text_bulk(ids, display=False)
+        articles = controllers.get_articles_by_aid(ids)
+
+        for article in articles.values():
+            self.assertFalse(article.display_full_text)
+
+    def test_set_articles_full_text_available(self):
+        ids = ['1', '2', '3']
+
+        for id in ids:
+            self._make_one(attrib={'_id': id, 'display_full_text': False})
+
+        controllers.set_article_display_full_text_bulk(ids, display=True)
+        articles = controllers.get_articles_by_aid(ids)
+
+        for article in articles.values():
+            self.assertTrue(article.display_full_text)
 
 class UserControllerTestCase(BaseTestCase):
 
