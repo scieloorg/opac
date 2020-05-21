@@ -868,6 +868,16 @@ def set_article_is_public_bulk(aids, is_public=True, reason=''):
         article.unpublish_reason = reason
         article.save()
 
+def set_article_display_full_text_bulk(aids = [], display=True):
+    """Altera o status de exibição do texto completo de uma lista de artigos"""
+
+    if aids is None or len(aids) == 0:
+        raise ValueError(__('Obrigatório uma lista de ids.'))
+
+    for article in list(get_articles_by_aid(aids).values()):
+        article.display_full_text = display
+        article.save()
+
 
 def get_articles_by_iid(iid, **kwargs):
     """
