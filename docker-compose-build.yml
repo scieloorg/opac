@@ -11,7 +11,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
 
     opac_mongo:
-        image: mongo:latest
+        image: mongo:4.2
         restart: always
         user: mongodb
         hostname: opac-mongo
