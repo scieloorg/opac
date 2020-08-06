@@ -10,7 +10,7 @@ coverage==4.5.1
 croniter==0.3.34
 dnspython==1.16.0
 elastic-apm==5.5.2
-email-validator==1.0.5
+email-validator==1.1.1
 feedparser==5.2.1
 Flask==0.12.4
 Flask-Admin==1.5.2
