@@ -414,7 +414,7 @@ class MenuTestCase(BaseTestCase):
                 self.assertIn(btn, response.data.decode('utf-8'))
 
     # Article Menu
-    def test_article_detail_menu(self):
+    def test_article_detail_v3_menu(self):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``article/detail.html``.
@@ -453,10 +453,9 @@ class MenuTestCase(BaseTestCase):
             })
 
             article_detail_url = url_for(
-                'main.article_detail',
+                'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment)
+                article_pid_v3=article2.aid)
 
             response = self.client.get(article_detail_url)
 
@@ -464,18 +463,16 @@ class MenuTestCase(BaseTestCase):
             self.assertTemplateUsed('article/detail.html')
 
             expect_btn_anterior = '<a href="%s" class="btn group">' % url_for(
-                '.article_detail',
+                '.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article1.url_segment)  # artigo anterior
+                article_pid_v3=article1.aid)  # artigo anterior
 
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
 
             expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
-                '.article_detail',
+                '.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article3.url_segment)  # artigo seguinte
+                article_pid_v3=article3.aid)  # artigo seguinte
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -483,7 +480,7 @@ class MenuTestCase(BaseTestCase):
             for btn in expected_btns:
                 self.assertIn(btn, response.data.decode('utf-8'))
 
-    def test_article_detail_menu_when_last_article(self):
+    def test_article_detail_v3_menu_when_last_article(self):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``article/detail.html`` quando é o
@@ -523,10 +520,9 @@ class MenuTestCase(BaseTestCase):
             })
 
             article_detail_url = url_for(
-                'main.article_detail',
+                'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article3.url_segment)
+                article_pid_v3=article3.aid)
 
             response = self.client.get(article_detail_url)
 
@@ -538,10 +534,9 @@ class MenuTestCase(BaseTestCase):
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
 
             expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
-                '.article_detail',
+                '.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment)  # artigo seguinte
+                article_pid_v3=article2.aid)  # artigo seguinte
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -549,7 +544,7 @@ class MenuTestCase(BaseTestCase):
             for btn in expected_btns:
                 self.assertIn(btn, response.data.decode('utf-8'))
 
-    def test_article_detail_menu_when_first_article(self):
+    def test_article_detail_v3_menu_when_first_article(self):
         """
         Teste para verificar se os botões estão ``anterior``, ``atual``,
         ``próximo`` estão disponíveis no ``article/detail.html`` quando é o
@@ -587,10 +582,9 @@ class MenuTestCase(BaseTestCase):
             })
 
             article_detail_url = url_for(
-                'main.article_detail',
+                'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article1.url_segment)
+                article_pid_v3=article1.aid)
 
             response = self.client.get(article_detail_url)
 
@@ -602,10 +596,9 @@ class MenuTestCase(BaseTestCase):
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
 
             expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
-                '.article_detail',
+                '.article_detail_v3',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue.url_segment,
-                url_seg_article=article2.url_segment)  # artigo seguinte
+                article_pid_v3=article2.aid)  # artigo seguinte
 
             expected_btns = [
                 expect_btn_anterior,
