@@ -1084,32 +1084,42 @@ def normalize_ssm_url(url):
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-
     if not issue:
         abort(404, _('Issue não encontrado'))
 
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
-
-    if not article:
+    if article is None:
         article = controllers.get_article_by_aop_url_segs(
             issue.journal, url_seg_issue, url_seg_article
         )
-    if not article:
+    if article is None:
         abort(404, _('Artigo não encontrado'))
 
-    lang_code = lang_code or article.original_language
-    if lang_code not in article.languages + [article.original_language]:
-        # Se não é idioma válido, redireciona
-        return redirect(
-            url_for(
-                'main.article_detail',
-                url_seg=article.journal.url_segment,
-                url_seg_issue=article.issue.url_segment,
-                url_seg_article=article.url_segment,
-                lang_code=article.original_language
-            ),
-            code=301
-        )
+    req_params = {
+            "url_seg": article.journal.acronym,
+            "article_pid_v3": article.aid,
+    }
+    if lang_code:
+        req_params["lang"] = lang_code
+
+    return redirect(url_for('main.article_detail_v3', **req_params))
+
+
+@main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
+@cache.cached(key_prefix=cache_key_with_lang)
+def article_detail_v3(url_seg, article_pid_v3):
+    qs_lang = request.args.get('lang', None, type=str)
+    qs_format = request.args.get('format', 'html', type=str)
+
+    article = controllers.get_article_by_aid(article_pid_v3)
+
+    if not article or article.journal.url_segment != url_seg:
+        abort(404, _('Artigo não encontrado'))
+
+    if qs_lang not in article.languages:
+        lang_code = article.original_language
+    else:
+        lang_code = qs_lang
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -1120,9 +1130,9 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
-
-    article_list = [_article for _article in articles]
+    article_list = list(
+        controllers.get_articles_by_iid(article.issue.iid, is_public=True)
+    )
 
     previous_article = utils.get_prev_article(article_list, article)
     next_article = utils.get_next_article(article_list, article)
@@ -1146,18 +1156,17 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         html, text_languages = render_html(article, lang_code)
     except (ValueError, NonRetryableError, RetryableError):
         abort(404, _('HTML do Artigo não encontrado ou indisponível'))
-
+    
     text_versions = sorted(
            [
                (
                    lang,
                    display_original_lang_name(lang),
                    url_for(
-                      'main.article_detail',
+                      'main.article_detail_v3',
                       url_seg=article.journal.url_segment,
-                      url_seg_issue=article.issue.url_segment,
-                      url_seg_article=article.url_segment,
-                      lang_code=lang
+                      article_pid_v3=article_pid_v3,
+                      lang=lang
                    )
                )
                for lang in text_languages
@@ -1168,7 +1177,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         'previous_article': previous_article,
         'article': article,
         'journal': article.journal,
-        'issue': issue,
+        'issue': article.issue,
         'html': html,
         'pdfs': article.pdfs,
         'pdf_urls_path': pdf_urls_path,
@@ -1324,19 +1333,12 @@ def router_legacy_article(text_or_abstract):
     if not article:
         abort(404, _('Artigo não encontrado'))
 
-    if not article.issue.is_public:
-        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-    if not article.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
-
     return redirect(
         url_for(
-            'main.article_detail',
+            'main.article_detail_v3',
             url_seg=article.journal.url_segment,
-            url_seg_issue=article.issue.url_segment,
-            url_seg_article=article.url_segment,
-            lang_code=lng
+            article_pid_v3=article.aid,
+            lang=lng
         ),
         code=301
     )

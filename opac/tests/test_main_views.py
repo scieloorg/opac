@@ -487,9 +487,9 @@ class MainTestCase(BaseTestCase):
 
     # ARTICLE
 
-    def test_article_detail(self):
+    def test_article_detail_v3(self):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         with current_app.app_context():
@@ -511,11 +511,9 @@ class MainTestCase(BaseTestCase):
                                             'journal': journal,
                                             'url_segment': '10-11'})
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='en'))
+                                               article_pid_v3=article.aid))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -533,9 +531,9 @@ class MainTestCase(BaseTestCase):
                 content
             )
 
-    def test_article_detail_redirects_to_original_language(self):
+    def test_article_detail_v3_redirects_to_original_language(self):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         with current_app.app_context():
@@ -557,11 +555,10 @@ class MainTestCase(BaseTestCase):
                                             'journal': journal,
                                             'url_segment': '10-11'})
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='ru'))
+                                               article_pid_v3=article.aid,
+                                               lang='ru'))
 
             self.assertStatus(response, 301)
 
@@ -619,9 +616,9 @@ class MainTestCase(BaseTestCase):
             self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
 
     @patch('requests.get')
-    def test_article_detail_translate_version_(self, mocked_requests_get):
+    def test_article_detail_v3_translate_version_(self, mocked_requests_get):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         mocked_response = Mock()
@@ -648,22 +645,20 @@ class MainTestCase(BaseTestCase):
                                                 ]
                                             })
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='pt'))
+                                               article_pid_v3=article.aid,
+                                               lang='pt'))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
             content = response.data.decode('utf-8')
 
             urls = {html['lang']: url_for(
-                                   'main.article_detail',
+                                   'main.article_detail_v3',
                                    url_seg=journal.url_segment,
-                                   url_seg_issue=issue.url_segment,
-                                   url_seg_article=article.url_segment,
-                                   lang_code=html['lang'])
+                                   article_pid_v3=article.aid,
+                                   lang=html['lang'])
                     for html in article.htmls
                     }
             self.assertIn('{}">Deutsch<'.format(urls['de']), content)
@@ -677,9 +672,9 @@ class MainTestCase(BaseTestCase):
                 content.count('{}">bla<'.format(urls['bla'])), 1)
 
     @patch('requests.get')
-    def test_article_detail_has_citation_title_in_pt(self, mocked_requests_get):
+    def test_article_detail_v3_has_citation_title_in_pt(self, mocked_requests_get):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         mocked_response = Mock()
@@ -713,11 +708,10 @@ class MainTestCase(BaseTestCase):
                                                 ]
                                             })
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='pt'))
+                                               article_pid_v3=article.aid,
+                                               lang='pt'))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -733,9 +727,9 @@ class MainTestCase(BaseTestCase):
             )
 
     @patch('requests.get')
-    def test_article_detail_has_citation_title_in_es(self, mocked_requests_get):
+    def test_article_detail_v3_has_citation_title_in_es(self, mocked_requests_get):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         mocked_response = Mock()
@@ -769,11 +763,10 @@ class MainTestCase(BaseTestCase):
                                                 ]
                                             })
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='es'))
+                                               article_pid_v3=article.aid,
+                                               lang='es'))
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -787,9 +780,9 @@ class MainTestCase(BaseTestCase):
                 content
             )
 
-    def test_article_detail_links_to_gscholar(self):
+    def test_article_detail_v3_links_to_gscholar(self):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         with current_app.app_context():
@@ -805,11 +798,10 @@ class MainTestCase(BaseTestCase):
                                             'journal': journal,
                                             'url_segment': '10-11'})
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='pt'))
+                                               article_pid_v3=article.aid,
+                                               lang='pt'))
 
             self.assertStatus(response, 200)
             page_content = response.data.decode('utf-8')
@@ -825,9 +817,9 @@ class MainTestCase(BaseTestCase):
             self.assertIn('Google', page_content)
             self.assertIn('/scholar', page_content)
 
-    def test_article_detail_links_to_gscholar_for_article_without_title(self):
+    def test_article_detail_v3_links_to_gscholar_for_article_without_title(self):
         """
-        Teste da ``view function`` ``article_detail``, deve retornar uma página
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
         que usa o template ``article/detail.html``.
         """
         with current_app.app_context():
@@ -842,11 +834,10 @@ class MainTestCase(BaseTestCase):
                                             'journal': journal,
                                             'url_segment': '10-11'})
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='pt'))
+                                               article_pid_v3=article.aid,
+                                               lang='pt'))
 
             self.assertStatus(response, 200)
             page_content = response.data.decode('utf-8')
@@ -1046,10 +1037,10 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 404)
             self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
 
-    def test_legacy_url_redirects_to_article_detail(self):
+    def test_legacy_url_redirects_to_article_detail_v3(self):
         """
         Teste da view ``router_legacy_article``, deve retornar redirecionar
-        para os detalhes do artigo (main.article_detail)
+        para os detalhes do artigo (main.article_detail_v3)
         """
         with current_app.app_context():
             utils.makeOneCollection()
@@ -1077,17 +1068,16 @@ class MainTestCase(BaseTestCase):
             self.assertRedirects(
                 response,
                 url_for(
-                    'main.article_detail',
+                    'main.article_detail_v3',
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment,
-                    url_seg_article=article.url_segment,
-                    lang_code='en'
+                    article_pid_v3=article.aid,
+                    lang='en'
                 ),
             )
 
-    def test_article_detail_without_articles(self):
+    def test_article_detail_v3_without_articles(self):
         """
-        Teste para avaliar o retorno da ``view function`` ``article_detail``
+        Teste para avaliar o retorno da ``view function`` ``article_detail_v3``
         quando não existe artigos cadastrados deve retornar ``status_code`` 404
         e a msg ``Artigo não encontrado``
         """
@@ -1096,18 +1086,17 @@ class MainTestCase(BaseTestCase):
 
         issue = utils.makeOneIssue({'journal': journal})
 
-        response = self.client.get(url_for('main.article_detail',
+        response = self.client.get(url_for('main.article_detail_v3',
                                            url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment,
-                                           url_seg_article='9827-817',
-                                           lang_code='pt'))
+                                           article_pid_v3='unknown-article',
+                                           lang='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
 
-    def test_article_detail_with_journal_attrib_is_public_false(self):
+    def test_article_detail_v3_with_journal_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``article_detail`` acessando um artigo
+        Teste da ``view function`` ``article_detail_v3`` acessando um artigo
         com atributo is_public=True, porém com um periódico com atributo
         is_public=False deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do periódico.
@@ -1125,18 +1114,17 @@ class MainTestCase(BaseTestCase):
             'issue': issue,
             'journal': journal})
 
-        response = self.client.get(url_for('main.article_detail',
+        response = self.client.get(url_for('main.article_detail_v3',
                                            url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment,
-                                           url_seg_article=article.url_segment,
-                                           lang_code='pt'))
+                                           article_pid_v3=article.aid,
+                                           lang='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_article_detail_with_issue_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``article_detail`` acessando um artigo
+        Teste da ``view function`` ``article_detail_v3`` acessando um artigo
         com atributo is_public=False, porém com um periódico com atributo
         is_public=True deve retorna uma página com ``status_code`` 404 e msg
         cadastrada no atributo ``reason`` do número.
@@ -1153,18 +1141,17 @@ class MainTestCase(BaseTestCase):
             'issue': issue.id,
             'journal': journal.id})
 
-        response = self.client.get(url_for('main.article_detail',
+        response = self.client.get(url_for('main.article_detail_v3',
                                            url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment,
-                                           url_seg_article=article.url_segment,
-                                           lang_code='pt'))
+                                           article_pid_v3=article.aid,
+                                           lang='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_article_detail_with_article_attrib_is_public_false(self):
         """
-        Teste da ``view function`` ``article_detail`` acessando um artigo
+        Teste da ``view function`` ``article_detail_v3`` acessando um artigo
         com atributo is_public=False, deve retorna uma página com
          ``status_code`` 404 e msg cadastrada no atributo ``reason`` do artigo.
         """
@@ -1179,11 +1166,10 @@ class MainTestCase(BaseTestCase):
             'issue': issue,
             'journal': journal})
 
-        response = self.client.get(url_for('main.article_detail',
+        response = self.client.get(url_for('main.article_detail_v3',
                                            url_seg=journal.url_segment,
-                                           url_seg_issue=issue.url_segment,
-                                           url_seg_article=article.url_segment,
-                                           lang_code='pt'))
+                                           article_pid_v3=article.aid,
+                                           lang='pt'))
 
         self.assertStatus(response, 404)
         self.assertIn(unpublish_reason, response.data.decode('utf-8'))
@@ -1236,11 +1222,10 @@ class MainTestCase(BaseTestCase):
                 ]
             })
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
-                                               lang_code='en'), follow_redirects=False)
+                                               article_pid_v3=article.aid,
+                                               lang='en'), follow_redirects=False)
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
@@ -1309,7 +1294,7 @@ class MainTestCase(BaseTestCase):
                                                url_seg=journal.url_segment,
                                                url_seg_issue=issue.url_segment,
                                                url_seg_article=article.url_segment,
-                                               lang_code='ru'), follow_redirects=False)
+                                               lang='ru'), follow_redirects=False)
 
             self.assertStatus(response, 301)
 
