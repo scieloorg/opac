@@ -182,7 +182,7 @@
                             <li>
                               {% trans %}PDF{% endtrans %}:
                               {% for lang, url in article.article_pdf_languages|sort(attribute='0') %}
-                                <a target='_blank' href="{{ url_for('.article_detail_pdf', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, url_seg_article=article.url_segment, lang_code=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
+                                <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, format='pdf', lang=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
                                   {{ lang }}
                                 </a>
                               {% endfor %}
