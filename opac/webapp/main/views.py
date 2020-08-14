@@ -381,20 +381,10 @@ def router_legacy():
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
-            if not article.is_public:
-                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-            if not article.issue.is_public:
-                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-            if not article.journal.is_public:
-                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
-
-            return redirect(url_for('main.article_detail',
+            return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
-                                    url_seg_issue=article.issue.url_segment,
-                                    url_seg_article=article.url_segment,
-                                    lang_code=tlng), code=301)
+                                    article_pid_v3=article.aid,
+                                    lang=tlng), code=301)
 
         elif script_php == 'sci_issues':
 
@@ -419,21 +409,12 @@ def router_legacy():
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
-            if not article.is_public:
-                abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-            if not article.issue.is_public:
-                abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-            if not article.journal.is_public:
-                abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
-
             return redirect(
                 url_for(
-                    'main.article_detail_pdf',
+                    'main.article_detail_v3',
                     url_seg=article.journal.url_segment,
-                    url_seg_issue=article.issue.url_segment,
-                    url_seg_article=article.url_segment,
+                    article_pid_v3=article.aid,
+                    format='pdf',
                 ),
                 code=301
             )
@@ -556,11 +537,10 @@ def journal_feed(url_seg):
                  content_type='html',
                  id=article.doi or article.pid,
                  author=article.authors,
-                 url=url_external('main.article_detail',
+                 url=url_external('main.article_detail_v3',
                                   url_seg=journal.url_segment,
-                                  url_seg_issue=last_issue.url_segment,
-                                  url_seg_article=article.url_segment,
-                                  lang_code=article_lang),
+                                  article_pid_v3=article.aid,
+                                  lang=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
@@ -979,11 +959,10 @@ def issue_feed(url_seg, url_seg_issue):
                  content_type='html',
                  author=article.authors,
                  id=article.doi or article.pid,
-                 url=url_external('main.article_detail',
+                 url=url_external('main.article_detail_v3',
                                   url_seg=journal.url_segment,
-                                  url_seg_issue=issue.url_segment,
-                                  url_seg_article=article.url_segment,
-                                  lang_code=article_lang),
+                                  article_pid_v3=article.aid,
+                                  lang=article_lang),
                  updated=journal.updated,
                  published=journal.created)
 
@@ -1004,10 +983,9 @@ def article_detail_pid(pid):
     if not article:
         abort(404, _('Artigo não encontrado'))
 
-    return redirect(url_for('main.article_detail',
+    return redirect(url_for('main.article_detail_v3',
                             url_seg=article.journal.acronym,
-                            url_seg_issue=article.issue.url_segment,
-                            url_seg_article=article.url_segment))
+                            article_pid_v3=article.aid))
 
 
 def render_html_from_xml(article, lang):
@@ -1108,18 +1086,25 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3):
-    qs_lang = request.args.get('lang', None, type=str)
-    qs_format = request.args.get('format', 'html', type=str)
-
     article = controllers.get_article_by_aid(article_pid_v3)
 
     if not article or article.journal.url_segment != url_seg:
         abort(404, _('Artigo não encontrado'))
 
-    if qs_lang not in article.languages:
-        lang_code = article.original_language
-    else:
-        lang_code = qs_lang
+    qs_lang = request.args.get('lang', article.original_language, type=str)
+    qs_format = request.args.get('format', 'html', type=str)
+
+    if qs_lang not in article.languages + [article.original_language]:
+        return redirect(
+            url_for(
+                'main.article_detail_v3',
+                url_seg=url_seg, 
+                article_pid_v3=article_pid_v3, 
+                format=qs_format, 
+                lang=article.original_language,
+            ),
+            code=301
+        )
 
     if not article.is_public:
         abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
@@ -1130,63 +1115,96 @@ def article_detail_v3(url_seg, article_pid_v3):
     if not article.journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
 
-    article_list = list(
-        controllers.get_articles_by_iid(article.issue.iid, is_public=True)
-    )
+    def _handle_html():
+        article_list = list(
+            controllers.get_articles_by_iid(article.issue.iid, is_public=True)
+        )
 
-    previous_article = utils.get_prev_article(article_list, article)
-    next_article = utils.get_next_article(article_list, article)
+        previous_article = utils.get_prev_article(article_list, article)
+        next_article = utils.get_next_article(article_list, article)
 
-    pdf_urls_path = []
+        pdf_urls_path = []
 
-    if article.pdfs:
-        try:
-            pdf_urls = [pdf['url'] for pdf in article.pdfs]
+        if article.pdfs:
+            try:
+                pdf_urls = [pdf['url'] for pdf in article.pdfs]
 
-            if not pdf_urls:
+                if not pdf_urls:
+                    abort(404, _('PDF do Artigo não encontrado'))
+                else:
+                    pdf_urls_parsed = list(map(urlparse, pdf_urls))
+                    pdf_urls_path = [pdf.path for pdf in pdf_urls_parsed]
+
+            except Exception:
                 abort(404, _('PDF do Artigo não encontrado'))
-            else:
-                pdf_urls_parsed = list(map(urlparse, pdf_urls))
-                pdf_urls_path = [pdf.path for pdf in pdf_urls_parsed]
 
-        except Exception:
+        try:
+            html, text_languages = render_html(article, qs_lang)
+        except (ValueError, NonRetryableError, RetryableError):
+            abort(404, _('HTML do Artigo não encontrado ou indisponível'))
+        
+        text_versions = sorted(
+               [
+                   (
+                       lang,
+                       display_original_lang_name(lang),
+                       url_for(
+                          'main.article_detail_v3',
+                          url_seg=article.journal.url_segment,
+                          article_pid_v3=article_pid_v3,
+                          lang=lang
+                       )
+                   )
+                   for lang in text_languages
+               ]
+           )
+        context = {
+            'next_article': next_article,
+            'previous_article': previous_article,
+            'article': article,
+            'journal': article.journal,
+            'issue': article.issue,
+            'html': html,
+            'pdfs': article.pdfs,
+            'pdf_urls_path': pdf_urls_path,
+            'article_lang': qs_lang,
+            'text_versions': text_versions,
+            'related_links': controllers.related_links(article),
+        }
+
+        return render_template("article/detail.html", **context)
+
+    def _handle_pdf():
+        pdf_ssm_path = None
+
+        if article.pdfs:
+            try:
+                pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
+
+                if len(pdf_url) != 1:
+                    abort(404, _('PDF do Artigo não encontrado'))
+                else:
+                    pdf_url = pdf_url[0]['url']
+
+                pdf_url_parsed = urlparse(pdf_url)
+                pdf_ssm_path = pdf_url_parsed.path
+
+            except Exception:
+                abort(404, _('PDF do Artigo não encontrado'))
+        else:
             abort(404, _('PDF do Artigo não encontrado'))
 
-    try:
-        html, text_languages = render_html(article, lang_code)
-    except (ValueError, NonRetryableError, RetryableError):
-        abort(404, _('HTML do Artigo não encontrado ou indisponível'))
-    
-    text_versions = sorted(
-           [
-               (
-                   lang,
-                   display_original_lang_name(lang),
-                   url_for(
-                      'main.article_detail_v3',
-                      url_seg=article.journal.url_segment,
-                      article_pid_v3=article_pid_v3,
-                      lang=lang
-                   )
-               )
-               for lang in text_languages
-           ]
-       )
-    context = {
-        'next_article': next_article,
-        'previous_article': previous_article,
-        'article': article,
-        'journal': article.journal,
-        'issue': article.issue,
-        'html': html,
-        'pdfs': article.pdfs,
-        'pdf_urls_path': pdf_urls_path,
-        'article_lang': lang_code,
-        'text_versions': text_versions,
-        'related_links': controllers.related_links(article),
-    }
+        if not pdf_ssm_path:
+            raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+        else:
+            return get_content_from_ssm(pdf_ssm_path)
 
-    return render_template("article/detail.html", **context)
+    if 'html' == qs_format:
+        return _handle_html()
+    elif 'pdf' == qs_format:
+        return _handle_pdf()
+    else:
+        abort(400, _('Formato não suportado'))
 
 
 @main.route('/readcube/epdf/')
@@ -1251,61 +1269,22 @@ def article_ssm_content_raw():
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-
     if not issue:
         abort(404, _('Issue não encontrado'))
 
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
-
     if not article:
         abort(404, _('Artigo não encontrado'))
 
-    lang_code = lang_code or article.original_language
-    if lang_code not in article.languages + [article.original_language]:
-        # Se não é idioma válido, redireciona
-        return redirect(
-            url_for(
-                'main.article_detail_pdf',
-                url_seg=article.journal.url_segment,
-                url_seg_issue=article.issue.url_segment,
-                url_seg_article=article.url_segment,
-                lang_code=article.original_language
-            ),
-            code=301
-        )
+    req_params = {
+        'url_seg': article.journal.url_segment,
+        'article_pid_v3': article.aid,
+        'format': 'pdf',
+    }
+    if lang_code:
+        req_params['lang'] = lang_code
 
-    if not article.is_public:
-        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-    if not article.issue.is_public:
-        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-    if not article.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
-
-    pdf_ssm_path = None
-
-    if article.pdfs:
-        try:
-            pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == lang_code]
-
-            if len(pdf_url) != 1:
-                abort(404, _('PDF do Artigo não encontrado'))
-            else:
-                pdf_url = pdf_url[0]['url']
-
-            pdf_url_parsed = urlparse(pdf_url)
-            pdf_ssm_path = pdf_url_parsed.path
-
-        except Exception:
-            abort(404, _('PDF do Artigo não encontrado'))
-    else:
-        abort(404, _('PDF do Artigo não encontrado'))
-
-    if not pdf_ssm_path:
-        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
-    else:
-        return get_content_from_ssm(pdf_ssm_path)
+    return redirect(url_for('main.article_detail_v3', **req_params), code=301)
 
 
 @main.route('/pdf/<string:journal_acron>/<string:issue_info>/<string:pdf_filename>.pdf')

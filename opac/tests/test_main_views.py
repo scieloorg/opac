@@ -516,20 +516,6 @@ class MainTestCase(BaseTestCase):
                                                article_pid_v3=article.aid))
 
             self.assertStatus(response, 200)
-            self.assertTemplateUsed('article/detail.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
-
-            content = response.data.decode('utf-8')
-            self.assertIn(
-                '<meta name="citation_title" content="Article Y"></meta>',
-                content
-            )
-            self.assertIn(
-                '<meta name="citation_language" content="en"></meta>',
-                content
-            )
 
     def test_article_detail_v3_redirects_to_original_language(self):
         """
@@ -560,7 +546,16 @@ class MainTestCase(BaseTestCase):
                                                article_pid_v3=article.aid,
                                                lang='ru'))
 
-            self.assertStatus(response, 301)
+            self.assertRedirects(
+                response, 
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment, 
+                    article_pid_v3=article.aid, 
+                    lang='en', 
+                    format='html'
+                )
+            )
 
     def test_article_detail_pid_redirect(self):
         """
@@ -584,6 +579,7 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.article_detail_pid',
                                                pid='S0102-311X2018000100101'))
 
+            #TODO: Alterar o código para 301 (Movido Permanentemente)
             self.assertStatus(response, 302)
 
     def test_article_detail_pid_redirect_follow(self):
@@ -1231,17 +1227,15 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('article/detail.html')
 
             content = response.data.decode('utf-8')
-            self.assertIn(
-                '/pdf/cta/2009.v39n1/e1/en',
-                content
+            #TODO: Há maneira melhor de executar estas asserções?
+            self.assertTrue(
+                '/j/cta/a/%s/?lang=en&amp;format=pdf' % article.aid in content or '/j/cta/a/%s/?format=pdf&amp;lang=en' % article.aid in content
             )
-            self.assertIn(
-                '/pdf/cta/2009.v39n1/e1/pt',
-                content
+            self.assertTrue(
+                '/j/cta/a/%s/?lang=pt&amp;format=pdf' % article.aid in content or '/j/cta/a/%s/?format=pdf&amp;lang=pt' % article.aid in content
             )
-            self.assertIn(
-                '/pdf/cta/2009.v39n1/e1/pt',
-                content
+            self.assertTrue(
+                '/j/cta/a/%s/?lang=es&amp;format=pdf' % article.aid in content or '/j/cta/a/%s/?format=pdf&amp;lang=es' % article.aid in content
             )
 
     def test_pdf_url_redirects_to_original_language(self):
@@ -1290,10 +1284,10 @@ class MainTestCase(BaseTestCase):
                 ]
             })
 
-            response = self.client.get(url_for('main.article_detail',
+            response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
-                                               url_seg_issue=issue.url_segment,
-                                               url_seg_article=article.url_segment,
+                                               article_pid_v3=article.aid,
+                                               format='pdf',
                                                lang='ru'), follow_redirects=False)
 
             self.assertStatus(response, 301)
