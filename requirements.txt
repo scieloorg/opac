@@ -11,7 +11,7 @@ croniter==0.3.34
 dnspython==1.16.0
 elastic-apm==5.5.2
 email-validator==1.0.5
-feedparser==5.2.1
+feedparser==6.0.1
 Flask==0.12.4
 Flask-Admin==1.5.2
 Flask-BabelEx==0.9.3
