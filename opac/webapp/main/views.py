@@ -788,39 +788,48 @@ def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
     language = session.get('lang', get_locale())
 
+    # seção dos documentos, se selecionada
     section_filter = request.args.get('section', '', type=str)
 
+    # obtém o issue
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-
     if not issue:
         abort(404, _('Número não encontrado'))
-
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
+    # obtém o journal
     journal = issue.journal
-
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
-
     if articles:
+        # obtém as seções dos documentos deste sumário
         sections = list(articles.item_frequencies('section').keys())
         sections = sorted([k for k in sections if k is not None])
     else:
+        # obtém as seções dos documentos deste sumário
         sections = []
 
+    # obtém todos os issues do journal
     issues = controllers.get_issues_by_jid(journal.id, is_public=True)
 
     if section_filter != '':
+        # obtém somente os documentos da seção selecionada
         articles = articles.filter(section__iexact=section_filter)
 
+    # código desenecessário
     issue_list = [_issue for _issue in issues]
 
+    # obtém o issue anterior referente ao atual
     previous_issue = utils.get_prev_issue(issue_list, issue)
+
+    # obtém o issue seguinte referente ao atual
     next_issue = utils.get_next_issue(issue_list, issue)
 
+    # obtém PDF e TEXT de cada documento
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
         article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
@@ -828,6 +837,7 @@ def issue_toc(url_seg, url_seg_issue):
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
+    # obtém a legenda bibliográfica
     issue_bibliographic_strip = descriptive_short_format(
         title=journal.title, short_title=journal.short_title,
         pubdate=str(issue.year), volume=issue.volume, number=issue.number,
