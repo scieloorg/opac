@@ -895,31 +895,31 @@ def get_articles_by_iid(iid, **kwargs):
         raise ValueError(__('Obrigatório um iid.'))
 
     articles = Article.objects(issue=iid, **kwargs).order_by('order')
-    if is_aop_issue(iid) or is_open_publication(articles):
+    if is_aop_issue(articles) or is_open_issue(articles):
         return articles.order_by('-publication_date')
     return articles
 
 
-def is_aop_issue(iid):
+def is_aop_issue(articles):
     """
     É um conjunto de artigos "ahead of print
     """
-    issue = get_issue_by_iid(iid)
-    if issue.number == 'ahead':
-        return True
+    try:
+        return articles.first().issue.number == 'ahead'
+    except AttributeError:
+        return False
 
 
-def is_open_publication(articles):
+def is_open_issue(articles):
     """
     É um conjunto de artigos de publicação contínua
+    Nota: a partir de SPS 1.8.1, todos os documentos passam a ter a data
+    completa, com dia, logo a lógica de verificar a data, não é correta
     """
-    return all(
-        [article.publication_date and
-         len(article.publication_date.split('-')) == 3 and
-         not article.aop_pid
-         for article in articles
-        ]
-    )
+    try:
+        return articles.first().elocation
+    except AttributeError:
+        return False
 
 
 def get_article_by_pid(pid, **kwargs):

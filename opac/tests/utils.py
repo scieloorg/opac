@@ -315,7 +315,6 @@ def makeOneArticle(attrib=None):  # noqa
         'original_language': attrib.get('original_language', 'pt'),
         'fpage': attrib.get('fpage', '15'),
         'lpage': attrib.get('lpage', '16'),
-        'elocation': attrib.get('elocation', 'e08y2y8393'),
         'translated_titles': attrib.get('translated_titles', []),
         'languages': attrib.get('languages', ['pt', ]),
     }
