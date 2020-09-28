@@ -812,21 +812,9 @@ def issue_toc(url_seg, url_seg_issue):
         # obtém as seções dos documentos deste sumário
         sections = []
 
-    # obtém todos os issues do journal
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
     if section_filter != '':
         # obtém somente os documentos da seção selecionada
         articles = articles.filter(section__iexact=section_filter)
-
-    # código desenecessário
-    issue_list = [_issue for _issue in issues]
-
-    # obtém o issue anterior referente ao atual
-    previous_issue = utils.get_prev_issue(issue_list, issue)
-
-    # obtém o issue seguinte referente ao atual
-    next_issue = utils.get_next_issue(issue_list, issue)
 
     # obtém PDF e TEXT de cada documento
     for article in articles:
@@ -846,8 +834,6 @@ def issue_toc(url_seg, url_seg_issue):
                             'main.issue_toc',
                             url_seg=url_seg,
                             url_seg_issue=url_seg_issue),
-        'next_issue': next_issue,
-        'previous_issue': previous_issue,
         'journal': journal,
         'issue': issue,
         'issue_bibliographic_strip': issue_bibliographic_strip,
@@ -857,8 +843,7 @@ def issue_toc(url_seg, url_seg_issue):
         'journal_study_areas': [
             STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
         ],
-        # o primiero item da lista é o último número.
-        'last_issue': issues[0] if issues else None
+        'last_issue': journal.last_issue
     }
     return render_template("issue/toc.html", **context)
 
