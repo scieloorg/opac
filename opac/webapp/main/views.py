@@ -803,6 +803,12 @@ def issue_toc(url_seg, url_seg_issue):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    # goto
+    goto_url = goto_next_or_previous_issue(
+        issue, request.args.get('goto', None, type=str))
+    if goto_url:
+        return redirect(goto_url, code=301)
+
     # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
     if articles:
@@ -846,6 +852,29 @@ def issue_toc(url_seg, url_seg_issue):
         'last_issue': journal.last_issue
     }
     return render_template("issue/toc.html", **context)
+
+
+def goto_next_or_previous_issue(current_issue, goto_param):
+    if goto_param not in ["next", "previous"]:
+        return None
+
+    all_issues = list(
+        controllers.get_issues_by_jid(current_issue.journal.id, is_public=True))
+    if goto_param == "next":
+        selected_issue = utils.get_next_issue(all_issues, current_issue)
+    elif goto_param == "previous":
+        selected_issue = utils.get_prev_issue(all_issues, current_issue)
+    if selected_issue in (None, current_issue):
+        # nao precisa redirecionar
+        return None
+    try:
+        url_seg_issue = selected_issue.url_segment
+    except AttributeError:
+        return None
+    else:
+        return url_for('main.issue_toc',
+                       url_seg=selected_issue.journal.url_seg,
+                       url_seg_issue=url_seg_issue)
 
 
 @main.route('/j/<string:url_seg>/aop')

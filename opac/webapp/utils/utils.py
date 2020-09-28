@@ -128,12 +128,9 @@ def get_prev_issue(issues, issue):
     IMPORTANTE: A lista de números deve ter mais do que 1 item para que
     possa existir a ideia de anterior e próximo
     """
-    if len(issues) >= 2:
-        try:
-            return issues[issues.index(issue) + 1]
-        except IndexError:
-            return None
-    else:
+    try:
+        return issues[issues.index(issue) + 1]
+    except (ValueError, IndexError):
         return None
 
 
@@ -151,17 +148,13 @@ def get_next_issue(issues, issue):
     IMPORTANTE: A lista de números deve ter mais do que 1 item para que
     possa existir a ideia de anterior e próximo
     """
-
-    if len(issues) >= 2:
-        try:
-            # Caso o número seja o primeiro retorna None
-            if issues.index(issue) == 0:
-                return None
-            return issues[issues.index(issue) - 1]
-        except IndexError:
-            return None
-    else:
+    try:
+        index = issues.index(issue) - 1
+    except ValueError:
         return None
+    if index >= 0:
+        return issues[index]
+    return None
 
 
 def get_label_issue(issue):
