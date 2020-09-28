@@ -806,9 +806,8 @@ def issue_toc(url_seg, url_seg_issue):
     # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
     if articles:
-        # obtém as seções dos documentos deste sumário
-        sections = list(articles.item_frequencies('section').keys())
-        sections = sorted([k for k in sections if k is not None])
+        # obtém TODAS as seções dos documentos deste sumário
+        sections = sorted({a.section for a in articles if a.section})
     else:
         # obtém as seções dos documentos deste sumário
         sections = []
@@ -833,7 +832,6 @@ def issue_toc(url_seg, url_seg_issue):
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
         article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
-
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
@@ -862,7 +860,6 @@ def issue_toc(url_seg, url_seg_issue):
         # o primiero item da lista é o último número.
         'last_issue': issues[0] if issues else None
     }
-
     return render_template("issue/toc.html", **context)
 
 
@@ -883,12 +880,13 @@ def aop_toc(url_seg):
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     articles = []
-    sections = []
+    sections = set()
     for aop_issue in aop_issues:
         _articles = controllers.get_articles_by_iid(
             aop_issue.iid, is_public=True)
         if _articles:
-            sections.extend(list(_articles.item_frequencies('section').keys()))
+            sections = sections | {a.section for a in _articles if a.section}
+
             if section_filter != '':
                 _articles = _articles.filter(section__iexact=section_filter)
             articles.extend(_articles)
@@ -896,7 +894,7 @@ def aop_toc(url_seg):
         abort(404, _('Artigos ahead of print não encontrados'))
 
     if sections:
-        sections = sorted([k for k in sections if k is not None])
+        sections = sorted(sections)
 
     previous_issue = None
     next_issue = None
