@@ -873,7 +873,7 @@ def goto_next_or_previous_issue(current_issue, goto_param):
         return None
     else:
         return url_for('main.issue_toc',
-                       url_seg=selected_issue.journal.url_seg,
+                       url_seg=selected_issue.journal.url_segment,
                        url_seg_issue=url_seg_issue)
 
 
@@ -910,14 +910,6 @@ def aop_toc(url_seg):
     if sections:
         sections = sorted(sections)
 
-    previous_issue = None
-    next_issue = None
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True) or []
-    for i in issues:
-        if i not in aop_issues:
-            previous_issue = i
-            break
-
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
         article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
@@ -927,8 +919,6 @@ def aop_toc(url_seg):
 
     context = {
         'this_page_url': url_for("main.aop_toc", url_seg=url_seg),
-        'next_issue': next_issue,
-        'previous_issue': previous_issue,
         'journal': journal,
         'issue': aop_issues[0],
         'issue_bibliographic_strip': "ahead of print",
@@ -940,7 +930,7 @@ def aop_toc(url_seg):
             for study_area in journal.study_areas
         ],
         # o primeiro item da lista é o último número.
-        'last_issue': previous_issue
+        'last_issue': journal.last_issue
     }
 
     return render_template("issue/toc.html", **context)
