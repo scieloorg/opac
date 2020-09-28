@@ -448,16 +448,6 @@ def journal_detail(url_seg):
     language = session.get('lang', get_locale())
     news = controllers.get_latest_news_by_lang(language)
 
-    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
-    # A lista de números deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
-
     # Press releases
     press_releases = controllers.get_press_releases({
         'journal': journal,
@@ -472,19 +462,17 @@ def journal_detail(url_seg):
         sections = []
         recent_articles = []
 
-    if len(issues) > 0:
-        latest_issue = issues[0]
+    latest_issue = journal.last_issue
+
+    if latest_issue:
         latest_issue_legend = descriptive_short_format(
             title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
             pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
             suppl=latest_issue.suppl_text, language=language[:2].lower())
     else:
-        latest_issue = None
         latest_issue_legend = ''
 
     context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
