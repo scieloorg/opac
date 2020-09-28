@@ -728,8 +728,6 @@ def issue_grid(url_seg):
 
     context = {
         'journal': journal,
-        'next_issue': None,
-        'previous_issue': issues_data['previous_issue'],
         'last_issue': issues_data['last_issue'],
         'latest_issue_legend': latest_issue_legend,
         'volume_issue': issues_data['volume_issue'],
