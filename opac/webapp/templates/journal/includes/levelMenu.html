@@ -20,12 +20,18 @@
         </a>
 
         {# Anterior #}
-        {% if not previous_issue %}
+        {% if not issue and not last_issue %}
           <a href="#" class="btn group disabled">
           &laquo; {% trans %}número anterior{% endtrans %}
           </a>
-        {% else %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=previous_issue.url_segment) }}" class="btn group">
+        {% elif issue %}
+          {# página do sumário #}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
+            &laquo; {% trans %}número anterior{% endtrans %}
+          </a>
+        {% elif last_issue %}
+          {# página inicial do periódico ou grid #}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
             &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% endif %}
@@ -42,12 +48,18 @@
         {% endif %}
 
         {# Próximo #}
-        {% if not next_issue %}
+        {% if not issue and not last_issue %}
           <a href="#" class="btn group disabled">
             {% trans %}número seguinte{% endtrans %} &raquo;
           </a>
-        {% else %}
-          <a href="{% if next_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_issue.url_segment) }}{% endif %}" class="btn group">
+        {% elif issue %}
+          {# página do sumário #}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn group">
+            {% trans %}número seguinte{% endtrans %} &raquo;
+          </a>
+        {% elif last_issue %}
+          {# página do sumário #}
+          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='next') }}" class="btn group">
             {% trans %}número seguinte{% endtrans %} &raquo;
           </a>
         {% endif %}
