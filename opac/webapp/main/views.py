@@ -548,10 +548,7 @@ def about_journal(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
-    latest_issue = issues[0] if issues else None
+    latest_issue = journal.last_issue
 
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
@@ -561,18 +558,9 @@ def about_journal(url_seg):
     else:
         latest_issue_legend = None
 
-    # A lista de números deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
-
     page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
 
     context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
         'journal': journal,
         'latest_issue_legend': latest_issue_legend,
         'last_issue': latest_issue,
