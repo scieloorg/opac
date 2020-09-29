@@ -368,9 +368,14 @@ def getLastIssue(attrib=None):  # noqa
         ('sections', None),
         ('cover_url', ''),
         ('iid', 'ID'),
-        ('url_segment', 'v100n100'),
     )
     last_issue = {}
     for k, val in attributes:
         last_issue[k] = attrib.get(k) or val
+    last_issue['url_segment'] = '{}.{}{}{}'.format(
+        last_issue.get("year"),
+        "v" + last_issue.get('volume') if last_issue.get('volume') else "",
+        "n" + last_issue.get('number') if last_issue.get('number') else "",
+        last_issue.get('suppl_text') or "",
+    )
     return models.LastIssue(**last_issue)

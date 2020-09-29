@@ -52,7 +52,7 @@
           <a title="{% trans %}número seguinte{% endtrans %}" href="#" class="btn group disabled">
             {% trans %}número seguinte{% endtrans %} &raquo;
           </a>
-        {% elif issue %}
+        {% elif issue and last_issue.url_segment != issue.url_segment %}
           {# página do sumário #}
           <a title="{% trans %}número seguinte{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn group">
             {% trans %}número seguinte{% endtrans %} &raquo;
