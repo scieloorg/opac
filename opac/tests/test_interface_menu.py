@@ -275,48 +275,68 @@ class MenuTestCase(BaseTestCase):
         ``próximo`` estão disponíveis no ``jorunal/detail.html``, quando acessamos
         qualquer número.
         """
-
         with current_app.app_context():
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            journal = utils.makeOneJournal()
-
-            issue1 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '1', 'order': '1', })
-            issue2 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '2', 'order': '2', })
-            issue3 = utils.makeOneIssue({'journal': journal,
-                                         'year': '2016', 'volume': '1',
-                                         'number': '3', 'order': '3', })
-
+            last_issue = utils.getLastIssue({
+                'year': '2016', 'volume': '1',
+                'number': '10', 'order': '10',
+                'suppl_text': "",
+            })
+            journal = utils.makeOneJournal({'last_issue': last_issue})
+            issues = [
+                utils.makeOneIssue({
+                    'year': '2016', 'volume': '1',
+                    'number': str(number), 'order': str(number),
+                    'suppl_text': "",
+                    'journal': journal._id,
+                })
+                for number in (1, 2, 10)
+            ]
             issue_toc_url = url_for(
                 'main.issue_toc',
                 url_seg=journal.url_segment,
-                url_seg_issue=issue2.url_segment)
+                url_seg_issue=issues[1].url_segment)
 
-            response = self.client .get(issue_toc_url)
-
+            response = self.client.get(issue_toc_url)
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/toc.html')
 
-            expect_btn_anterior = '<a href="%s" class="btn group">' % url_for(
-                                  '.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue1.url_segment)  # número anterior
-
-            expect_btn_atual = '<a href="%s" class="btn group ">' % url_for(
-                               '.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue3.url_segment)  # número atual
-
-            expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
-                                 '.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue3.url_segment)  # número seguinte
-
-            expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
-
+            expected_items = (
+                '<a title="número anterior" href="%s" class="btn group">' % url_for(
+                  '.issue_toc', url_seg=journal.url_segment,
+                  url_seg_issue=issues[1].url_segment,
+                  goto='previous'),
+                '<a title="número atual" href="%s" class="btn group">' % url_for(
+                   '.issue_toc', url_seg=journal.url_segment,
+                   url_seg_issue=last_issue.url_segment),
+                '<a title="número seguinte" href="%s" class="btn group">' % url_for(
+                  '.issue_toc', url_seg=journal.url_segment,
+                  url_seg_issue=issues[1].url_segment,
+                  goto='next'),
+                '<a title="anterior" href="%s">' % url_for(
+                  '.issue_toc', url_seg=journal.url_segment,
+                  url_seg_issue=issues[1].url_segment,
+                  goto='previous'),
+                '<a title="atual" href="%s">' % url_for(
+                   '.issue_toc', url_seg=journal.url_segment,
+                   url_seg_issue=last_issue.url_segment),
+                '<a title="próximo" href="%s">' % url_for(
+                  '.issue_toc', url_seg=journal.url_segment,
+                  url_seg_issue=issues[1].url_segment,
+                  goto='next'),
+            )
+            labels = (
+                'btn-group anterior', 'btn-group atual', 'btn-group próximo',
+                'dropdown-menu anterior', 'dropdown-menu atual',
+                'dropdown-menu próximo',
+            )
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
-            response_data = response.data.decode('utf-8')
-            for btn in expected_btns:
-                self.assertIn(btn, response_data)
+            for label, expected in zip(labels, expected_items):
+                with self.subTest(i=label):
+                    self.assertIn(expected, response.data.decode('utf-8'))
+
 
     def test_journal_detail_menu_access_issue_toc_lastest_issue(self):
         """
@@ -374,10 +394,11 @@ class MenuTestCase(BaseTestCase):
                 'dropdown-menu anterior', 'dropdown-menu atual',
                 'dropdown-menu próximo',
             )
+            resp = response.data.decode('utf-8')
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for label, expected in zip(labels, expected_items):
                 with self.subTest(i=label):
-                    self.assertIn(expected, response.data.decode('utf-8'))
+                    self.assertIn(expected, resp)
 
 
     def test_journal_detail_menu_access_issue_toc_oldest_issue(self):
