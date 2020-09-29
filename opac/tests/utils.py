@@ -347,3 +347,30 @@ def makeAnyArticle(issue=None, items=3, attrib=None):  # noqa
         articles.append(article)
 
     return articles
+
+
+def getLastIssue(attrib=None):  # noqa
+    """
+    Retorna um objeto ``LastIssue`` com os atributos obrigatórios:
+    ``_id``, ``jid``, ``is_public`` e ``journal_jid``.
+    Atualiza o objeto de retorno com os valores do param ``attrib``.
+    """
+    attrib = attrib or {}
+    attributes = (
+        ('volume', '100'),
+        ('number', '100'),
+        ('year', 2030),
+        ('label', 'label'),
+        ('type', 'regular'),
+        ('suppl_text', None),
+        ('start_month', 1),
+        ('end_month', 1),
+        ('sections', None),
+        ('cover_url', ''),
+        ('iid', 'ID'),
+        ('url_segment', 'v100n100'),
+    )
+    last_issue = {}
+    for k, val in attributes:
+        last_issue[k] = attrib.get(k) or val
+    return models.LastIssue(**last_issue)

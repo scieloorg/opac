@@ -466,7 +466,7 @@ def journal_detail(url_seg):
 
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
-            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            title=journal.title, short_title=journal.short_title,
             pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
             suppl=latest_issue.suppl_text, language=language[:2].lower())
     else:
