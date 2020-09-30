@@ -772,16 +772,22 @@ def issue_toc(url_seg, url_seg_issue):
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
+    # goto_next_or_previous_issue or get_next_or_previous_issue
+
+    # get_next_or_previous_issue
+    issue = get_next_or_previous_issue(
+        issue, request.args.get('goto', None, type=str)) or issue
+
+    # goto_next_or_previous_issue
+    # goto_url = goto_next_or_previous_issue(
+    #     issue, request.args.get('goto', None, type=str))
+    # if goto_url:
+    #     return redirect(goto_url, code=301)
+
     # obtém o journal
     journal = issue.journal
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
-
-    # goto
-    goto_url = goto_next_or_previous_issue(
-        issue, request.args.get('goto', None, type=str))
-    if goto_url:
-        return redirect(goto_url, code=301)
 
     # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
@@ -849,6 +855,17 @@ def goto_next_or_previous_issue(current_issue, goto_param):
         return url_for('main.issue_toc',
                        url_seg=selected_issue.journal.url_segment,
                        url_seg_issue=url_seg_issue)
+
+
+def get_next_or_previous_issue(current_issue, goto_param):
+    if goto_param not in ["next", "previous"]:
+        return current_issue
+
+    all_issues = list(
+        controllers.get_issues_by_jid(current_issue.journal.id, is_public=True))
+    if goto_param == "next":
+        return utils.get_next_issue(all_issues, current_issue)
+    return utils.get_prev_issue(all_issues, current_issue)
 
 
 @main.route('/j/<string:url_seg>/aop')
