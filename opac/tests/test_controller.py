@@ -528,7 +528,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_jid('02i28wjs92u')
 
-        self.assertIsNone(issues)
+        self.assertEqual([], list(issues))
 
     def test_get_issue_by_journal_and_assets_code_raises_error_if_no_assets_code(self):
         """
