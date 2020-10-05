@@ -437,6 +437,7 @@ def journal_detail_legacy_url(journal_seg):
 @cache.cached(key_prefix=cache_key_with_lang)
 def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
+    utils.fix_journal_last_issue(journal)
 
     if not journal:
         abort(404, _('Periódico não encontrado'))
@@ -548,7 +549,7 @@ def about_journal(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    latest_issue = journal.last_issue
+    latest_issue = utils.fix_journal_last_issue(journal)
 
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
@@ -786,6 +787,8 @@ def issue_toc(url_seg, url_seg_issue):
 
     # obtém o journal
     journal = issue.journal
+    utils.fix_journal_last_issue(journal)
+
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
@@ -880,6 +883,7 @@ def aop_toc(url_seg):
         abort(404, _('Artigos ahead of print não encontrados'))
 
     journal = aop_issues[0].journal
+    utils.fix_journal_last_issue(journal)
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))

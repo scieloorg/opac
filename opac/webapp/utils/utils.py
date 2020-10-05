@@ -19,6 +19,7 @@ from webapp.admin.forms import EmailForm
 
 from webapp.utils.page_migration import PageMigration, MigratedPage
 from opac_schema.v1.models import Pages, AuditLogEntry
+from legendarium.urlegendarium import URLegendarium
 
 try:
     from PIL import Image
@@ -537,6 +538,7 @@ def send_audit_log_daily_report():
         else:
             print('O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED')
 
+
 def asbool(s):
     """ Return the boolean value ``True`` if the case-lowered value of string
     input ``s`` is a :term:`truthy string`. If ``s`` is already one of the
@@ -549,3 +551,25 @@ def asbool(s):
         return s
     s = str(s).strip()
     return s.lower() in truthy
+
+
+def fix_journal_last_issue(journal):
+    """
+    Resolve ausência de preenchimento do atributo `LastIssue.url_segment`
+    Teoricamente, o atributo `LastIssue.url_segment` deveria ter sido preenchido
+    ao registrar os issues e/ou o journal no website. Mas no fluxo SPF,
+    não ocorreu.
+    """
+    if journal.last_issue and journal.last_issue.url_segment:
+        return journal.last_issue
+
+    leg_dict = {
+        'year_pub': journal.last_issue.year,
+        'volume': journal.last_issue.volume,
+        'number': journal.last_issue.number,
+        'suppl_number': journal.last_issue.suppl_text
+    }
+    journal.last_issue.url_segment = URLegendarium(
+        **leg_dict).get_issue_seg()
+    return journal.last_issue
+
