@@ -1152,8 +1152,10 @@ def article_detail_v3(url_seg, article_pid_v3):
 
         try:
             html, text_languages = render_html(article, qs_lang)
-        except (ValueError, NonRetryableError, RetryableError):
+        except (ValueError, NonRetryableError):
             abort(404, _('HTML do Artigo não encontrado ou indisponível'))
+        except RetryableError:
+            abort(500, _('Erro inesperado'))
         
         text_versions = sorted(
                [
@@ -1249,8 +1251,10 @@ def get_content_from_ssm(resource_ssm_media_path):
 
     try:
         ssm_response = fetch_data(url)
-    except (NonRetryableError, RetryableError):
+    except NonRetryableError:
         abort(404, _('Recurso não encontrado'))
+    except RetryableError:
+        abort(500, _('Erro inesperado'))
     else:
         return Response(ssm_response, mimetype=mimetype)
 

@@ -11,6 +11,7 @@ from .base import BaseTestCase
 
 from . import utils
 from webapp.config.lang_names import display_original_lang_name
+from webapp.main.views import RetryableError, NonRetryableError
 
 
 class MainTestCase(BaseTestCase):
@@ -1292,6 +1293,108 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 301)
 
+    @patch("webapp.main.views.render_html")
+    def test_when_render_html_raises_a_non_retryable_error_it_should_return_a_status_code_404(
+        self, mk_render_html
+    ):
+        mk_render_html.side_effect = NonRetryableError
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({"journal": journal})
+            article = utils.makeOneArticle(
+                {
+                    "title": "A",
+                    "original_language": "en",
+                    "issue": issue,
+                    "journal": journal,
+                    "url_segment": "10",
+                }
+            )
+
+            response = self.client.get(
+                url_for(
+                    "main.article_detail_v3",
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                )
+            )
+
+            self.assertStatus(response, 404)
+
+
+    @patch("webapp.main.views.render_html")
+    def test_when_render_html_raises_a_retryable_error_the_article_detail_v3_should_return_a_status_code_500(
+        self, mk_render_html
+    ):
+        mk_render_html.side_effect = RetryableError
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({"journal": journal})
+            article = utils.makeOneArticle(
+                {
+                    "title": "A",
+                    "original_language": "en",
+                    "issue": issue,
+                    "journal": journal,
+                    "url_segment": "10",
+                }
+            )
+
+            response = self.client.get(
+                url_for(
+                    "main.article_detail_v3",
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                )
+            )
+
+            self.assertStatus(response, 500)
+
+    @patch("webapp.main.views.fetch_data")
+    def test_when_fetch_data_raises_a_retryable_error_the_article_detail_v3_should_return_a_500_status_code(
+        self, mk_fetch_data
+    ):
+
+        mk_fetch_data.side_effect = RetryableError
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({"journal": journal})
+            article = utils.makeOneArticle(
+                {
+                    "title": "A",
+                    "original_language": "en",
+                    "issue": issue,
+                    "journal": journal,
+                    "url_segment": "10",
+                    "pdfs": [
+                        {
+                            "lang": "en",
+                            "url": "http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aen.pdf",
+                            "file_path": "/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf",
+                            "type": "pdf"
+                        },
+                    ]
+                }
+            )
+
+            response = self.client.get(
+                url_for(
+                    "main.article_detail_v3",
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                    format="pdf",
+                    lang="en",
+                ),
+                follow_redirects=False
+            )
+
+            self.assertStatus(response, 500)
 
     # HOMEPAGE
 
