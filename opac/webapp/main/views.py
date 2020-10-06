@@ -437,13 +437,14 @@ def journal_detail_legacy_url(journal_seg):
 @cache.cached(key_prefix=cache_key_with_lang)
 def journal_detail(url_seg):
     journal = controllers.get_journal_by_url_seg(url_seg)
-    utils.fix_journal_last_issue(journal)
 
     if not journal:
         abort(404, _('Periódico não encontrado'))
 
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    utils.fix_journal_last_issue(journal)
 
     # todo: ajustar para que seja só noticias relacionadas ao periódico
     language = session.get('lang', get_locale())
@@ -883,6 +884,12 @@ def aop_toc(url_seg):
     aop_issues = controllers.get_aop_issues(url_seg) or []
     if not aop_issues:
         abort(404, _('Artigos ahead of print não encontrados'))
+
+    goto = request.args.get("goto", None, type=str)
+    if goto == "previous":
+        url = goto_next_or_previous_issue(aop_issues[-1], goto)
+        if url:
+            redirect(url, code=301)
 
     journal = aop_issues[0].journal
     if not journal.is_public:
