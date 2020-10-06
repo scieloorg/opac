@@ -41,8 +41,14 @@
           <a title="{% trans %}número atual{% endtrans %}" href="#" class="btn group disabled">
             {% trans %}número atual{% endtrans %}
           </a>
+        {% elif issue and last_issue.url_segment == issue.url_segment %}
+          {# página do sumário #}
+          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group selected">
+            {% trans %}número atual{% endtrans %}
+          </a>
         {% else %}
-          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group{% if last_issue.url_segment == issue.url_segment %} selected{% endif %}">
+          {# página do periódico #}
+          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
             {% trans %}número atual{% endtrans %}
           </a>
         {% endif %}
