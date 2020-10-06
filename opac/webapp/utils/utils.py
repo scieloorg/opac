@@ -560,7 +560,7 @@ def fix_journal_last_issue(journal):
     ao registrar os issues e/ou o journal no website. Mas no fluxo SPF,
     não ocorreu.
     """
-    if journal.last_issue and journal.last_issue.url_segment:
+    if journal.last_issue is None or journal.last_issue.url_segment:
         return journal.last_issue
 
     leg_dict = {
