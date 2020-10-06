@@ -891,21 +891,17 @@ def aop_toc(url_seg):
     utils.fix_journal_last_issue(journal)
 
     articles = []
-    sections = set()
     for aop_issue in aop_issues:
         _articles = controllers.get_articles_by_iid(
             aop_issue.iid, is_public=True)
         if _articles:
-            sections = sections | {a.section for a in _articles if a.section}
-
-            if section_filter != '':
-                _articles = _articles.filter(section__iexact=section_filter)
             articles.extend(_articles)
     if not articles:
         abort(404, _('Artigos ahead of print não encontrados'))
 
-    if sections:
-        sections = sorted(sections)
+    sections = sorted({a.section for a in articles if a.section})
+    if section_filter != '':
+        articles = articles.filter(section__iexact=section_filter)
 
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
