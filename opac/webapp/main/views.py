@@ -757,7 +757,12 @@ def issue_toc_legacy(url_seg, url_seg_issue):
 @main.route('/j/<string:url_seg>/i/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
-    if url_seg_issue and "ahead" in url_seg_issue:
+    goto = request.args.get("goto", None, type=str)
+    if goto not in ("previous", "next"):
+        goto = None
+
+    if goto in (None, "next") and "ahead" in url_seg_issue:
+        # redireciona para `aop_toc`
         return redirect(url_for('main.aop_toc', url_seg=url_seg), code=301)
 
     # idioma da sessão
@@ -776,8 +781,7 @@ def issue_toc(url_seg, url_seg_issue):
     # goto_next_or_previous_issue or get_next_or_previous_issue
 
     # get_next_or_previous_issue
-    issue = get_next_or_previous_issue(
-        issue, request.args.get('goto', None, type=str)) or issue
+    issue = get_next_or_previous_issue(issue, goto) or issue
 
     # goto_next_or_previous_issue
     # goto_url = goto_next_or_previous_issue(
