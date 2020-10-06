@@ -270,7 +270,7 @@ class MenuTestCase(BaseTestCase):
                   '.issue_toc', url_seg=journal.url_segment,
                   url_seg_issue=issues[0].url_segment,
                   goto='previous'),
-                '<a title="número atual" href="%s" class="btn group">' % url_for(
+                '<a title="número atual" href="%s" class="btn group selected">' % url_for(
                    '.issue_toc', url_seg=journal.url_segment,
                    url_seg_issue=last_issue.url_segment),
                 '<a title="número seguinte" href="#" class="btn group disabled">',
@@ -400,7 +400,7 @@ class MenuTestCase(BaseTestCase):
                   '.issue_toc', url_seg=journal.url_segment,
                   url_seg_issue=last_issue.url_segment,
                   goto='previous'),
-                '<a title="número atual" href="%s" class="btn group">' % url_for(
+                '<a title="número atual" href="%s" class="btn group selected">' % url_for(
                    '.issue_toc', url_seg=journal.url_segment,
                    url_seg_issue=last_issue.url_segment),
                 '<a title="número seguinte" href="#" class="btn group disabled">',
