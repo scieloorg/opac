@@ -881,15 +881,14 @@ def aop_toc(url_seg):
     section_filter = request.args.get('section', '', type=str)
 
     aop_issues = controllers.get_aop_issues(url_seg) or []
-    aop_issues = [i for i in aop_issues if i.is_public]
     if not aop_issues:
         abort(404, _('Artigos ahead of print não encontrados'))
 
     journal = aop_issues[0].journal
-    utils.fix_journal_last_issue(journal)
-
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
+
+    utils.fix_journal_last_issue(journal)
 
     articles = []
     sections = set()

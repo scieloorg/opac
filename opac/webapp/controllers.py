@@ -1278,11 +1278,11 @@ def related_links(article):
     ]
 
 
-def get_aop_issues(url_seg):
+def get_aop_issues(url_seg, is_public=True):
     try:
-        journal = get_journal_by_url_seg(url_seg)
+        journal = get_journal_by_url_seg(url_seg, is_public=is_public)
     except ValueError:
         raise ValueError(__('Obrigatório url_seg para get_aop_issues'))
     else:
         order_by = ["-year"]
-        return Issue.objects(journal=journal, type='ahead').order_by(*order_by)
+        return Issue.objects(journal=journal, type='ahead', is_public=is_public).order_by(*order_by)
