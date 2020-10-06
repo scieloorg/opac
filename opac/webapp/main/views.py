@@ -778,23 +778,22 @@ def issue_toc(url_seg, url_seg_issue):
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
-    # goto_next_or_previous_issue or get_next_or_previous_issue
+    # obtém o journal
+    journal = issue.journal
+    if not journal.is_public:
+        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    # get_next_or_previous_issue
+    # completa url_segment do last_issue
+    utils.fix_journal_last_issue(journal)
+
+    # get_next_or_previous_issue (não redireciona)
     issue = get_next_or_previous_issue(issue, goto) or issue
 
-    # goto_next_or_previous_issue
+    # goto_next_or_previous_issue (redireciona)
     # goto_url = goto_next_or_previous_issue(
     #     issue, request.args.get('goto', None, type=str))
     # if goto_url:
     #     return redirect(goto_url, code=301)
-
-    # obtém o journal
-    journal = issue.journal
-    utils.fix_journal_last_issue(journal)
-
-    if not journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
     # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
