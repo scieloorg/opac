@@ -528,7 +528,7 @@ class IssueControllerTestCase(BaseTestCase):
 
         issues = controllers.get_issues_by_jid('02i28wjs92u')
 
-        self.assertIsNone(issues)
+        self.assertEqual([], list(issues))
 
     def test_get_issue_by_journal_and_assets_code_raises_error_if_no_assets_code(self):
         """
@@ -847,10 +847,10 @@ class ArticleControllerTestCase(BaseTestCase):
         Testando a função controllers.get_articles_by_iid(), deve retorna uma
         lista de articles.
         """
-
+        issue = utils.makeOneIssue({"_id": '90210j83', "number": "ahead"})
         self._make_one(attrib={
             '_id': '012ijs9y24',
-            'issue': '90210j83',
+            'issue': issue,
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-01',
             'is_aop': True,
@@ -858,7 +858,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '2183ikos90',
-            'issue': '90210j83',
+            'issue': issue,
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-10',
             'is_aop': True,
@@ -866,7 +866,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '9298wjso89',
-            'issue': '90210j83',
+            'issue': issue,
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-08',
             'is_aop': True,
@@ -962,6 +962,7 @@ class ArticleControllerTestCase(BaseTestCase):
         self._make_one(attrib={
             '_id': '012ijs9y24',
             'issue': '90210j83',
+            'elocation': "a1",
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-01',
         })
@@ -969,6 +970,7 @@ class ArticleControllerTestCase(BaseTestCase):
         self._make_one(attrib={
             '_id': '2183ikos90',
             'issue': '90210j83',
+            'elocation': "a2",
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-10',
         })
@@ -976,6 +978,7 @@ class ArticleControllerTestCase(BaseTestCase):
         self._make_one(attrib={
             '_id': '9298wjso89',
             'issue': '90210j83',
+            'elocation': "a3",
             'journal': 'oak,ajimn1',
             'publication_date': '2018-01-08',
         })

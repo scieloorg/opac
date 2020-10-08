@@ -444,19 +444,11 @@ def journal_detail(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    utils.fix_journal_last_issue(journal)
+
     # todo: ajustar para que seja só noticias relacionadas ao periódico
     language = session.get('lang', get_locale())
     news = controllers.get_latest_news_by_lang(language)
-
-    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
-    # A lista de números deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
 
     # Press releases
     press_releases = controllers.get_press_releases({
@@ -472,19 +464,17 @@ def journal_detail(url_seg):
         sections = []
         recent_articles = []
 
-    if len(issues) > 0:
-        latest_issue = issues[0]
+    latest_issue = journal.last_issue
+
+    if latest_issue:
         latest_issue_legend = descriptive_short_format(
-            title=latest_issue.journal.title, short_title=latest_issue.journal.short_title,
+            title=journal.title, short_title=journal.short_title,
             pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
             suppl=latest_issue.suppl_text, language=language[:2].lower())
     else:
-        latest_issue = None
         latest_issue_legend = ''
 
     context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
         'journal': journal,
         'press_releases': press_releases,
         'recent_articles': recent_articles,
@@ -560,10 +550,7 @@ def about_journal(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "order"
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
-    latest_issue = issues[0] if issues else None
+    latest_issue = utils.fix_journal_last_issue(journal)
 
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
@@ -573,18 +560,9 @@ def about_journal(url_seg):
     else:
         latest_issue_legend = None
 
-    # A lista de números deve ter mais do que 1 item para que possamos tem
-    # anterior e próximo
-    if len(issues) >= 2:
-        previous_issue = issues[1]
-    else:
-        previous_issue = None
-
     page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
 
     context = {
-        'next_issue': None,
-        'previous_issue': previous_issue,
         'journal': journal,
         'latest_issue_legend': latest_issue_legend,
         'last_issue': latest_issue,
@@ -752,8 +730,6 @@ def issue_grid(url_seg):
 
     context = {
         'journal': journal,
-        'next_issue': None,
-        'previous_issue': issues_data['previous_issue'],
         'last_issue': issues_data['last_issue'],
         'latest_issue_legend': latest_issue_legend,
         'volume_issue': issues_data['volume_issue'],
@@ -782,52 +758,65 @@ def issue_toc_legacy(url_seg, url_seg_issue):
 @main.route('/j/<string:url_seg>/i/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
-    if url_seg_issue and "ahead" in url_seg_issue:
+    goto = request.args.get("goto", None, type=str)
+    if goto not in ("previous", "next"):
+        goto = None
+
+    if goto in (None, "next") and "ahead" in url_seg_issue:
+        # redireciona para `aop_toc`
         return redirect(url_for('main.aop_toc', url_seg=url_seg), code=301)
 
     # idioma da sessão
     language = session.get('lang', get_locale())
 
+    # seção dos documentos, se selecionada
     section_filter = request.args.get('section', '', type=str)
 
+    # obtém o issue
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
-
     if not issue:
         abort(404, _('Número não encontrado'))
-
     if not issue.is_public:
         abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
+    # obtém o journal
     journal = issue.journal
-
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
+    # completa url_segment do last_issue
+    utils.fix_journal_last_issue(journal)
 
+    # get_next_or_previous_issue (não redireciona)
+    issue = get_next_or_previous_issue(issue, goto) or issue
+
+    # goto_next_or_previous_issue (redireciona)
+    # goto_url = goto_next_or_previous_issue(
+    #     issue, request.args.get('goto', None, type=str))
+    # if goto_url:
+    #     return redirect(goto_url, code=301)
+
+    # obtém os documentos
+    articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
     if articles:
-        sections = list(articles.item_frequencies('section').keys())
-        sections = sorted([k for k in sections if k is not None])
+        # obtém TODAS as seções dos documentos deste sumário
+        sections = sorted({a.section for a in articles if a.section})
     else:
+        # obtém as seções dos documentos deste sumário
         sections = []
 
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True)
-
     if section_filter != '':
+        # obtém somente os documentos da seção selecionada
         articles = articles.filter(section__iexact=section_filter)
 
-    issue_list = [_issue for _issue in issues]
-
-    previous_issue = utils.get_prev_issue(issue_list, issue)
-    next_issue = utils.get_next_issue(issue_list, issue)
-
+    # obtém PDF e TEXT de cada documento
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
         article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
-
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
 
+    # obtém a legenda bibliográfica
     issue_bibliographic_strip = descriptive_short_format(
         title=journal.title, short_title=journal.short_title,
         pubdate=str(issue.year), volume=issue.volume, number=issue.number,
@@ -838,8 +827,6 @@ def issue_toc(url_seg, url_seg_issue):
                             'main.issue_toc',
                             url_seg=url_seg,
                             url_seg_issue=url_seg_issue),
-        'next_issue': next_issue,
-        'previous_issue': previous_issue,
         'journal': journal,
         'issue': issue,
         'issue_bibliographic_strip': issue_bibliographic_strip,
@@ -849,11 +836,43 @@ def issue_toc(url_seg, url_seg_issue):
         'journal_study_areas': [
             STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
         ],
-        # o primiero item da lista é o último número.
-        'last_issue': issues[0] if issues else None
+        'last_issue': journal.last_issue
     }
-
     return render_template("issue/toc.html", **context)
+
+
+def goto_next_or_previous_issue(current_issue, goto_param):
+    if goto_param not in ["next", "previous"]:
+        return None
+
+    all_issues = list(
+        controllers.get_issues_by_jid(current_issue.journal.id, is_public=True))
+    if goto_param == "next":
+        selected_issue = utils.get_next_issue(all_issues, current_issue)
+    elif goto_param == "previous":
+        selected_issue = utils.get_prev_issue(all_issues, current_issue)
+    if selected_issue in (None, current_issue):
+        # nao precisa redirecionar
+        return None
+    try:
+        url_seg_issue = selected_issue.url_segment
+    except AttributeError:
+        return None
+    else:
+        return url_for('main.issue_toc',
+                       url_seg=selected_issue.journal.url_segment,
+                       url_seg_issue=url_seg_issue)
+
+
+def get_next_or_previous_issue(current_issue, goto_param):
+    if goto_param not in ["next", "previous"]:
+        return current_issue
+
+    all_issues = list(
+        controllers.get_issues_by_jid(current_issue.journal.id, is_public=True))
+    if goto_param == "next":
+        return utils.get_next_issue(all_issues, current_issue)
+    return utils.get_prev_issue(all_issues, current_issue)
 
 
 @main.route('/j/<string:url_seg>/aop')
@@ -863,38 +882,33 @@ def aop_toc(url_seg):
     section_filter = request.args.get('section', '', type=str)
 
     aop_issues = controllers.get_aop_issues(url_seg) or []
-    aop_issues = [i for i in aop_issues if i.is_public]
     if not aop_issues:
         abort(404, _('Artigos ahead of print não encontrados'))
 
-    journal = aop_issues[0].journal
+    goto = request.args.get("goto", None, type=str)
+    if goto == "previous":
+        url = goto_next_or_previous_issue(aop_issues[-1], goto)
+        if url:
+            redirect(url, code=301)
 
+    journal = aop_issues[0].journal
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
+    utils.fix_journal_last_issue(journal)
+
     articles = []
-    sections = []
     for aop_issue in aop_issues:
         _articles = controllers.get_articles_by_iid(
             aop_issue.iid, is_public=True)
         if _articles:
-            sections.extend(list(_articles.item_frequencies('section').keys()))
-            if section_filter != '':
-                _articles = _articles.filter(section__iexact=section_filter)
             articles.extend(_articles)
     if not articles:
         abort(404, _('Artigos ahead of print não encontrados'))
 
-    if sections:
-        sections = sorted([k for k in sections if k is not None])
-
-    previous_issue = None
-    next_issue = None
-    issues = controllers.get_issues_by_jid(journal.id, is_public=True) or []
-    for i in issues:
-        if i not in aop_issues:
-            previous_issue = i
-            break
+    sections = sorted({a.section for a in articles if a.section})
+    if section_filter != '':
+        articles = articles.filter(section__iexact=section_filter)
 
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
@@ -905,8 +919,6 @@ def aop_toc(url_seg):
 
     context = {
         'this_page_url': url_for("main.aop_toc", url_seg=url_seg),
-        'next_issue': next_issue,
-        'previous_issue': previous_issue,
         'journal': journal,
         'issue': aop_issues[0],
         'issue_bibliographic_strip': "ahead of print",
@@ -918,7 +930,7 @@ def aop_toc(url_seg):
             for study_area in journal.study_areas
         ],
         # o primeiro item da lista é o último número.
-        'last_issue': previous_issue
+        'last_issue': journal.last_issue
     }
 
     return render_template("issue/toc.html", **context)
