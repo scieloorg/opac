@@ -770,7 +770,7 @@ def issue_toc(url_seg, url_seg_issue):
     language = session.get('lang', get_locale())
 
     # seção dos documentos, se selecionada
-    section_filter = request.args.get('section', '', type=str)
+    section_filter = request.args.get('section', '', type=str).upper()
 
     # obtém o issue
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -797,14 +797,14 @@ def issue_toc(url_seg, url_seg_issue):
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
     if articles:
         # obtém TODAS as seções dos documentos deste sumário
-        sections = sorted({a.section for a in articles if a.section})
+        sections = sorted({a.section.upper() for a in articles if a.section})
     else:
         # obtém as seções dos documentos deste sumário
         sections = []
 
     if section_filter != '':
         # obtém somente os documentos da seção selecionada
-        articles = articles.filter(section__iexact=section_filter)
+        articles = [a for a in articles if a.section.upper() == section_filter]
 
     # obtém PDF e TEXT de cada documento
     for article in articles:
@@ -876,7 +876,7 @@ def get_next_or_previous_issue(current_issue, goto_param):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def aop_toc(url_seg):
 
-    section_filter = request.args.get('section', '', type=str)
+    section_filter = request.args.get('section', '', type=str).upper()
 
     aop_issues = controllers.get_aop_issues(url_seg) or []
     if not aop_issues:
@@ -903,9 +903,9 @@ def aop_toc(url_seg):
     if not articles:
         abort(404, _('Artigos ahead of print não encontrados'))
 
-    sections = sorted({a.section for a in articles if a.section})
+    sections = sorted({a.section.upper() for a in articles if a.section})
     if section_filter != '':
-        articles = articles.filter(section__iexact=section_filter)
+        articles = [a for a in articles if a.section.upper() == section_filter]
 
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
