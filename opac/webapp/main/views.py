@@ -787,14 +787,11 @@ def issue_toc(url_seg, url_seg_issue):
     # completa url_segment do last_issue
     utils.fix_journal_last_issue(journal)
 
-    # get_next_or_previous_issue (não redireciona)
-    issue = get_next_or_previous_issue(issue, goto) or issue
-
     # goto_next_or_previous_issue (redireciona)
-    # goto_url = goto_next_or_previous_issue(
-    #     issue, request.args.get('goto', None, type=str))
-    # if goto_url:
-    #     return redirect(goto_url, code=301)
+    goto_url = goto_next_or_previous_issue(
+        issue, request.args.get('goto', None, type=str))
+    if goto_url:
+        return redirect(goto_url, code=301)
 
     # obtém os documentos
     articles = controllers.get_articles_by_iid(issue.iid, is_public=True)
