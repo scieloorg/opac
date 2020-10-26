@@ -956,7 +956,7 @@ def get_article_by_scielo_pid(scielo_pid, **kwargs):
         raise ValueError(__('Obrigatório um pid.'))
 
     return Article.objects(
-        (Q(scielo_pids__v1=scielo_pid) | Q(scielo_pids__v2=scielo_pid) | Q(scielo_pids__v3=scielo_pid)),
+        (Q(pid=scielo_pid) | Q(scielo_pids__v1=scielo_pid) | Q(scielo_pids__v2=scielo_pid) | Q(scielo_pids__v3=scielo_pid)),
         **kwargs
     ).first()
 

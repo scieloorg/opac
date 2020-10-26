@@ -373,7 +373,7 @@ def router_legacy():
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
 
-            article = controllers.get_article_by_pid(pid)
+            article = controllers.get_article_by_scielo_pid(pid)
 
             if not article:
                 article = controllers.get_article_by_oap_pid(pid)
@@ -401,7 +401,7 @@ def router_legacy():
 
         elif script_php == 'sci_pdf':
             # accesso ao pdf do artigo:
-            article = controllers.get_article_by_pid(pid)
+            article = controllers.get_article_by_scielo_pid(pid)
 
             if not article:
                 article = controllers.get_article_by_oap_pid(pid)
@@ -1107,9 +1107,9 @@ def article_detail_v3(url_seg, article_pid_v3):
         return redirect(
             url_for(
                 'main.article_detail_v3',
-                url_seg=url_seg, 
-                article_pid_v3=article_pid_v3, 
-                format=qs_format, 
+                url_seg=url_seg,
+                article_pid_v3=article_pid_v3,
+                format=qs_format,
                 lang=article.original_language,
             ),
             code=301
@@ -1153,7 +1153,7 @@ def article_detail_v3(url_seg, article_pid_v3):
             abort(404, _('HTML do Artigo não encontrado ou indisponível'))
         except RetryableError:
             abort(500, _('Erro inesperado'))
-        
+
         text_versions = sorted(
                [
                    (
