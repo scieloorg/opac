@@ -643,6 +643,24 @@ def get_issue_by_iid(iid, **kwargs):
     return Issue.objects.filter(iid=iid, **kwargs).first()
 
 
+def get_issue_by_label(jid, issue_label, **kwargs):
+    """
+    Retorna um número considerando os parâmetros ``jid``, ``issue_label`` e ``kwargs``.
+
+    - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
+    - ``issue_label``: string, exemplo: ``v33n2``
+    - ``kwargs``: parâmetros de filtragem.
+    """
+
+    if not jid:
+        raise ValueError(__('Obrigatório um jid.'))
+
+    if not issue_label:
+        raise ValueError(__('Obrigatório um label do issue.'))
+
+    return Issue.objects.filter(journal=jid, label=issue_label, **kwargs).first()
+
+
 def get_issues_by_iid(iids):
     """
     Retorna um dicionário de números aonde o atributo ``iid`` de cada um deles
