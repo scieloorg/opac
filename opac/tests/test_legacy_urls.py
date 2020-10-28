@@ -356,7 +356,7 @@ class LegacyURLTestCase(BaseTestCase):
                     {
                         'lang': 'en',
                         'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
-                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf',
+                        'filename': '0101-2061-cta-fst30618.pdf',
                         'type': 'pdf'
                     }
                 ]
