@@ -571,6 +571,14 @@ class IssueControllerTestCase(BaseTestCase):
         issue = self._make_one()
         self.assertEqual(controllers.get_issue_by_iid(issue.id), issue)
 
+    def test_get_issue_by_label(self):
+        """
+        Teste da função controllers.get_issue_by_label() para retornar um objeto:
+        ``Issue``.
+        """
+        issue = self._make_one()
+        self.assertEqual(controllers.get_issue_by_label(issue.journal, issue.label), issue)
+
     def test_get_issue_by_iid_without_id(self):
         """
         Teste da função controllers.get_issue_by_iid() com uma lista vazia,
@@ -1106,28 +1114,28 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertEqual(set(result), set(expected))
 
     @patch('webapp.controllers.Article.objects')
-    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_file_path(
-        self, mk_article_objects
+    @patch('webapp.controllers.get_journal_by_acron')
+    @patch('webapp.controllers.get_issue_by_label')
+    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_filename(
+        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
     ):
-        controllers.get_article_by_pdf_filename("abc", "v1n3s2", "article.pdf")
-        mk_article_objects.only.assert_called_once_with(
-            "pdfs"
-        )
-        mk_article_objects.only.return_value.filter.assert_called_once_with(
-            pdfs__url__endswith="abc/v1n3s2/article.pdf", is_public=True
-        )
 
-    @patch('webapp.controllers.Article.objects')
-    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_file_path(
-        self, mk_article_objects
-    ):
-        controllers.get_article_by_pdf_filename("abc", "v1n3s2", "en tomo53(f2-3-4) 273-277.pdf")
-        mk_article_objects.only.assert_called_once_with(
-            "pdfs"
-        )
-        mk_article_objects.only.return_value.filter.assert_called_once_with(
-            pdfs__url__endswith="abc/v1n3s2/en_tomo53f2-3-4_273-277.pdf", is_public=True
-        )
+        article = self._make_one(attrib={
+                                 '_id': '012ijs9y24',
+                                 'issue': '90210j83',
+                                 'journal': 'oak,ajimn1'
+                                 })
+
+        mk_get_journal_by_acron.return_value = article.journal
+        mk_get_issue_by_label.return_value = article.issue
+
+        controllers.get_article_by_pdf_filename(article.journal, article.issue, "article.pdf")
+
+        mk_article_objects.filter.assert_called_once_with(is_public=True,
+                                                          issue=article.issue,
+                                                          journal=article.journal,
+                                                          pdfs__filename='article.pdf'
+                                                          )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_journal_acronym(self):
         with self.assertRaises(ValueError) as exc_info:
@@ -1154,7 +1162,7 @@ class ArticleControllerTestCase(BaseTestCase):
     def test_get_article_by_pdf_filename_raises_error_if_article_filter_error(
         self, mk_article_objects
     ):
-        mk_article_objects.only.return_value.filter.return_value.first.side_effect = Exception
+        mk_article_objects.filter.return_value.first.side_effect = Exception
         self.assertRaises(
             Exception,
             controllers.get_article_by_pdf_filename,
@@ -1186,6 +1194,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         for article in articles.values():
             self.assertTrue(article.display_full_text)
+
 
 class UserControllerTestCase(BaseTestCase):
 
