@@ -976,20 +976,8 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
 
 def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
     """
-    Retorna dados dos pdfs de um artigo
+    Retorna dados dos pdfs de um artigo.
     """
-    def get_valid_name(pdf_filename):
-        """
-        Por conta do SSM salvar os arquivos com "clean filename", é necessário
-        fazer a busca por ele. Na prática, o nome do arquivo tem os espaços no
-        início e fim removidos; outros espaços são substituídos por underscore; e
-        qualquer caracter que não for um alphanumérico unicode, traço, underscore ou
-        ponto será removido. Ex:
-        >>> get_valid_filename("john's portrait in 2004.jpg")
-        'johns_portrait_in_2004.jpg'
-        """
-        _filename = pdf_filename.strip().replace(' ', '_')
-        return re.sub(r'(?u)[^-\w.]', '', _filename)
 
     if not journal_acron:
         raise ValueError(__('Obrigatório o acrônimo do periódico.'))
