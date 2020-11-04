@@ -643,6 +643,24 @@ def get_issue_by_iid(iid, **kwargs):
     return Issue.objects.filter(iid=iid, **kwargs).first()
 
 
+def get_issue_by_label(jid, issue_label, **kwargs):
+    """
+    Retorna um número considerando os parâmetros ``jid``, ``issue_label`` e ``kwargs``.
+
+    - ``jid``: string, chave primaria do periódico (ex.: ``f8c87833e0594d41a89fe60455eaa5a5``);
+    - ``issue_label``: string, exemplo: ``v33n2``
+    - ``kwargs``: parâmetros de filtragem.
+    """
+
+    if not jid:
+        raise ValueError(__('Obrigatório um jid.'))
+
+    if not issue_label:
+        raise ValueError(__('Obrigatório um label do issue.'))
+
+    return Issue.objects.filter(journal=jid, label=issue_label, **kwargs).first()
+
+
 def get_issues_by_iid(iids):
     """
     Retorna um dicionário de números aonde o atributo ``iid`` de cada um deles
@@ -976,20 +994,8 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
 
 def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
     """
-    Retorna dados dos pdfs de um artigo
+    Retorna dados dos pdfs de um artigo.
     """
-    def get_valid_name(pdf_filename):
-        """
-        Por conta do SSM salvar os arquivos com "clean filename", é necessário
-        fazer a busca por ele. Na prática, o nome do arquivo tem os espaços no
-        início e fim removidos; outros espaços são substituídos por underscore; e
-        qualquer caracter que não for um alphanumérico unicode, traço, underscore ou
-        ponto será removido. Ex:
-        >>> get_valid_filename("john's portrait in 2004.jpg")
-        'johns_portrait_in_2004.jpg'
-        """
-        _filename = pdf_filename.strip().replace(' ', '_')
-        return re.sub(r'(?u)[^-\w.]', '', _filename)
 
     if not journal_acron:
         raise ValueError(__('Obrigatório o acrônimo do periódico.'))
@@ -998,27 +1004,18 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
     if not pdf_filename:
         raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
 
-    pdf_path = "/".join([journal_acron, issue_info, get_valid_name(pdf_filename)])
+    journal = get_journal_by_acron(journal_acron)
 
-    article = Article.objects.only("pdfs").filter(
-        pdfs__url__endswith=pdf_path, is_public=True).first()
+    issue = get_issue_by_label(journal, issue_info)
+
+    article = Article.objects.filter(journal=journal,
+                                     issue=issue, pdfs__filename=pdf_filename,
+                                     is_public=True).first()
 
     if article:
         for pdf in article.pdfs:
-            if pdf["url"].endswith(pdf_path):
+            if pdf["filename"] == pdf_filename:
                 return pdf["url"]
-    else:
-
-        file_path = "%s%s" % ("/pdf/", pdf_path)
-
-        article = Article.objects.only("pdfs").filter(
-            pdfs__file_path=file_path, is_public=True).first()
-
-        if article:
-            for pdf in article.pdfs:
-                if "file_path" in pdf:
-                    if pdf["file_path"] == file_path:
-                        return pdf["url"]
 
 # -------- NEWS --------
 
