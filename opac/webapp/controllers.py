@@ -484,7 +484,9 @@ def get_journal_by_issn(issn, **kwargs):
     if not issn:
         raise ValueError(__('Obrigatório um issn.'))
 
-    return Journal.objects(Q(print_issn=issn) | Q(eletronic_issn=issn), **kwargs).first()
+    return Journal.objects(
+        Q(scielo_issn=issn) | Q(print_issn=issn) | Q(eletronic_issn=issn),
+        **kwargs).first()
 
 
 def get_journal_by_title(title):
