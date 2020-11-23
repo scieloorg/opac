@@ -2232,11 +2232,15 @@ class TestArticleDetailV3MetaCitationPdfUrl(BaseTestCase):
                     )
                 )
             content = response.data.decode('utf-8')
+
+            website = current_app.config.get("SERVER_NAME")
+            if website:
+                website = "https://{}".format(website)
             expected = (
                 '<meta name="citation_pdf_url" content="'
-                'https://{}/j/journal_acron/a/{}/'
+                '{}/j/journal_acron/a/{}/'
                 '?format=pdf&amp;lang=es"'
-            ).format(current_app.config.get("SERVER_NAME"), article.aid)
+            ).format(website, article.aid)
             self.assertIn(expected, content)
             self.assertEqual(content.count('<meta name="citation_pdf_url"'), 1)
 
