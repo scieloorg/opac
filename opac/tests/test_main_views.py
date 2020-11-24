@@ -2177,3 +2177,70 @@ class TestAOPToc(BaseTestCase):
             url = url_for('main.aop_toc', url_seg=journal.url_segment)
             response = self.client.get(url)
             self.assertStatus(response, 404)
+
+
+class TestArticleDetailV3MetaCitationPdfUrl(BaseTestCase):
+
+    def test_article_detail_v3_creates_meta_citation_pdf_url_only_for_the_selected_lang(self):
+        """
+        Teste se ``view function`` ``article_detail_v3``,
+        cria a tag meta cujo name="citation_pdf_url" e conteúdo do endereço do
+        pdf no padrão
+        https://website/j/acron/a/pidv3/?format=pdf&amp;lang=idioma_selecionado
+        `<meta name="citation_pdf_url"
+          content="https://website/j/acron/a/pidv3/?format=pdf&amp;lang=idioma_selecionado"/>`
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            article = utils.makeOneArticle({
+                'title': 'Article Y',
+                'original_language': 'en',
+                'languages': ['es', 'pt', 'en'],
+                'pdfs': [{
+                    'lang': 'en',
+                    'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aen.pdf',
+                    'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                    'type': 'pdf'
+                },
+                {
+                    'lang': 'pt',
+                    'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651apt.pdf',
+                    'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-pt.pdf',
+                    'type': 'pdf'
+                },
+                {
+                    'lang': 'es',
+                    'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aes.pdf',
+                    'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                    'type': 'pdf'
+                }
+                ],
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11'
+            })
+
+            response = self.client.get(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                    lang="es"
+                    )
+                )
+            content = response.data.decode('utf-8')
+
+            website = current_app.config.get("SERVER_NAME")
+            if website:
+                website = "https://{}".format(website)
+            expected = (
+                '<meta name="citation_pdf_url" content="'
+                '{}/j/journal_acron/a/{}/'
+                '?format=pdf&amp;lang=es"'
+            ).format(website, article.aid)
+            self.assertIn(expected, content)
+            self.assertEqual(content.count('<meta name="citation_pdf_url"'), 1)
+

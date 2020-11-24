@@ -28,10 +28,8 @@
     <meta name="citation_number" content="{{ issue.number }}"></meta>
 {% endif -%}
 
-{% if article.pdfs -%}
-    {% for path in pdf_urls_path %}
-        <meta name="citation_pdf_url" content="{{ url_for('main.article_ssm_content_raw', _external=True) }}?resource_ssm_path={{ path }}"></meta>
-    {% endfor %}
+{% if citation_pdf_url -%}
+    <meta name="citation_pdf_url" content="{{ citation_pdf_url }}"></meta>
 {% endif -%}
 
 {% if article.elocation -%}

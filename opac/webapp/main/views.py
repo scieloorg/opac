@@ -1132,21 +1132,23 @@ def article_detail_v3(url_seg, article_pid_v3):
         previous_article = utils.get_prev_article(article_list, article)
         next_article = utils.get_next_article(article_list, article)
 
-        pdf_urls_path = []
+        citation_pdf_url = None
+        for pdf_data in article.pdfs:
+            if pdf_data.get("lang") == qs_lang:
+                citation_pdf_url = url_for(
+                          'main.article_detail_v3',
+                          url_seg=article.journal.url_segment,
+                          article_pid_v3=article_pid_v3,
+                          lang=qs_lang,
+                          format="pdf",
+                       )
+                break
 
-        if article.pdfs:
-            try:
-                pdf_urls = [pdf['url'] for pdf in article.pdfs]
-
-                if not pdf_urls:
-                    abort(404, _('PDF do Artigo não encontrado'))
-                else:
-                    pdf_urls_parsed = list(map(urlparse, pdf_urls))
-                    pdf_urls_path = [pdf.path for pdf in pdf_urls_parsed]
-
-            except Exception:
-                abort(404, _('PDF do Artigo não encontrado'))
-
+        if citation_pdf_url:
+            website = current_app.config.get('SERVER_NAME')
+            if website:
+                website = "https://{}".format(website)
+            citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
             html, text_languages = render_html(article, qs_lang)
         except (ValueError, NonRetryableError):
@@ -1176,8 +1178,7 @@ def article_detail_v3(url_seg, article_pid_v3):
             'journal': article.journal,
             'issue': article.issue,
             'html': html,
-            'pdfs': article.pdfs,
-            'pdf_urls_path': pdf_urls_path,
+            'citation_pdf_url': citation_pdf_url,
             'article_lang': qs_lang,
             'text_versions': text_versions,
             'related_links': controllers.related_links(article),
