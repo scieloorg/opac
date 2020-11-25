@@ -58,7 +58,11 @@
                   <tr>
                     <td>{{ year }}</td>
                     <th>
-                      {{ volume }}
+                      {% if volume %}
+                        {{ volume }}
+                      {% else %}
+                          s/v
+                      {% endif %}
                     </th>
                     <td class="left">
                       {# Verificando se é um número de volume #}
