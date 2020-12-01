@@ -46,7 +46,7 @@ https://github.com/scieloorg/packtools/archive/2.6.8.tar.gz#egg=packtools
 passlib==1.7.2
 pbr==5.4.5
 picles.plumber==0.11
-Pillow~=6.2
+Pillow==8.0.1
 pymongo==3.11.0
 PySocks==1.7.1
 python-dateutil==2.8.1
