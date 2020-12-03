@@ -1095,13 +1095,16 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3):
+    qs_format = request.args.get('format', 'html', type=str)
+    if qs_format == "xml" and request.args.get('lang'):
+        abort(400, _("Idioma não suportado para formato XML"))
+
     article = controllers.get_article_by_aid(article_pid_v3)
 
     if not article or article.journal.url_segment != url_seg:
         abort(404, _('Artigo não encontrado'))
 
     qs_lang = request.args.get('lang', article.original_language, type=str)
-    qs_format = request.args.get('format', 'html', type=str)
 
     if qs_lang not in article.languages + [article.original_language]:
         return redirect(
