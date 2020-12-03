@@ -2262,7 +2262,7 @@ class TestAOPToc(BaseTestCase):
             self.assertStatus(response, 404)
 
 
-class TestArticleDetailV3MetaCitationPdfUrl(BaseTestCase):
+class TestArticleDetailV3Meta(BaseTestCase):
 
     def test_article_detail_v3_creates_meta_citation_pdf_url_only_for_the_selected_lang(self):
         """
@@ -2330,3 +2330,49 @@ class TestArticleDetailV3MetaCitationPdfUrl(BaseTestCase):
                 parse_qs(content_url.query), {'format': ['pdf'], 'lang': ['es']}
             )
 
+    def test_article_detail_v3_creates_meta_citation_xml_url(self):
+        """
+        Teste se ``view function`` ``article_detail_v3``,
+        cria a tag meta cujo name="citation_xml_url" e conteúdo do endereço do
+        pdf no padrão
+        https://website/j/acron/a/pidv3/?format=xml
+        `<meta name="citation_xml_url"
+          content="https://website/j/acron/a/pidv3/?format=xml"/>`
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            article = utils.makeOneArticle({
+                'title': 'Article Y',
+                'original_language': 'en',
+                'languages': ['es', 'pt', 'en'],
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11'
+            })
+
+            response = self.client.get(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                )
+            )
+
+            self.assertStatus(response, 200)
+            content = response.data.decode('utf-8')
+            soup = BeautifulSoup(content, 'html.parser')
+            meta_tags = soup.find_all(attrs={"name": "citation_xml_url"})
+            self.assertEqual(len(meta_tags), 1)
+
+            content_url = urlparse(meta_tags[0].get("content"))
+            self.assertEqual(content_url.scheme, "https")
+            self.assertEqual(content_url.netloc, current_app.config.get('SERVER_NAME'))
+            self.assertEqual(
+                content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
+            )
+            self.assertEqual(
+                parse_qs(content_url.query), {'format': ['xml']}
+            )
