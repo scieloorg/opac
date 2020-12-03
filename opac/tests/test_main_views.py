@@ -8,6 +8,7 @@ import warnings
 from flask import url_for, g, current_app
 from flask import render_template
 from bs4 import BeautifulSoup
+from flask_babelex import gettext as _
 
 from .base import BaseTestCase
 
@@ -1294,6 +1295,44 @@ class MainTestCase(BaseTestCase):
                                                lang='ru'), follow_redirects=False)
 
             self.assertStatus(response, 301)
+
+    def test_xml_url_raises_bad_request_if_lang_param_informed(self):
+        """
+        Testa se retorna _Bad Request_ se parâmetro ``lang`` presente para requisição de
+        formato XML.
+
+        Formato da URL para o teste: ``/j/<acron>/a/<article_pid_v3>/?format=xml&lang=<lang>``
+        """
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+                'year': '2009',
+                'volume': '39',
+                'number': '1',
+                'suppl_text': '',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'elocation': 'e1',
+                'original_language': 'pt',
+                'languages': ["es", "en"],
+            })
+
+            response = self.client.get(url_for('main.article_detail_v3',
+                                               url_seg=journal.url_segment,
+                                               article_pid_v3=article.aid,
+                                               format='xml',
+                                               lang='en'))
+
+            self.assertStatus(response, 400)
+            self.assertIn(_("Idioma não suportado para formato XML"), response.data.decode("utf-8"))
 
     @patch("webapp.main.views.render_html")
     def test_when_render_html_raises_a_non_retryable_error_it_should_return_a_status_code_404(
