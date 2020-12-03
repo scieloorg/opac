@@ -9,7 +9,20 @@ from urllib.parse import urlparse
 from datetime import datetime
 from collections import OrderedDict
 from flask_babelex import gettext as _
-from flask import render_template, abort, current_app, request, session, redirect, jsonify, url_for, Response, send_from_directory, g
+from flask import (
+    render_template,
+    abort,
+    current_app,
+    request,
+    session,
+    redirect,
+    jsonify,
+    url_for,
+    Response,
+    send_from_directory,
+    g,
+    make_response,
+)
 from werkzeug.contrib.atom import AtomFeed
 from urllib.parse import urljoin
 from legendarium.formatter import descriptive_short_format
@@ -1214,10 +1227,21 @@ def article_detail_v3(url_seg, article_pid_v3):
         else:
             return get_content_from_ssm(pdf_ssm_path)
 
+    def _handle_xml():
+        if current_app.config["SSM_XML_URL_REWRITE"]:
+            result = fetch_data(normalize_ssm_url(article.xml))
+        else:
+            result = fetch_data(article.xml)
+        response = make_response(result)
+        response.headers['Content-Type'] = 'application/xml'
+        return response
+
     if 'html' == qs_format:
         return _handle_html()
     elif 'pdf' == qs_format:
         return _handle_pdf()
+    elif 'xml' == qs_format:
+        return _handle_xml()
     else:
         abort(400, _('Formato não suportado'))
 
