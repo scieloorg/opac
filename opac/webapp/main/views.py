@@ -1160,10 +1160,10 @@ def article_detail_v3(url_seg, article_pid_v3):
                        )
                 break
 
+        website = current_app.config.get('SERVER_NAME')
+        if website:
+            website = "https://{}".format(website)
         if citation_pdf_url:
-            website = current_app.config.get('SERVER_NAME')
-            if website:
-                website = "https://{}".format(website)
             citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
             html, text_languages = render_html(article, qs_lang)
@@ -1187,6 +1187,15 @@ def article_detail_v3(url_seg, article_pid_v3):
                    for lang in text_languages
                ]
            )
+        citation_xml_url = "{}{}".format(
+            website,
+            url_for(
+                'main.article_detail_v3',
+                url_seg=article.journal.url_segment,
+                article_pid_v3=article_pid_v3,
+                format="xml",
+            )
+        )
         context = {
             'next_article': next_article,
             'previous_article': previous_article,
@@ -1195,6 +1204,7 @@ def article_detail_v3(url_seg, article_pid_v3):
             'issue': article.issue,
             'html': html,
             'citation_pdf_url': citation_pdf_url,
+            'citation_xml_url': citation_xml_url,
             'article_lang': qs_lang,
             'text_versions': text_versions,
             'related_links': controllers.related_links(article),

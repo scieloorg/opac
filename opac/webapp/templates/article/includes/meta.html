@@ -32,6 +32,10 @@
     <meta name="citation_pdf_url" content="{{ citation_pdf_url }}"></meta>
 {% endif -%}
 
+{% if citation_xml_url -%}
+    <meta name="citation_xml_url" content="{{ citation_xml_url }}"></meta>
+{% endif -%}
+
 {% if article.elocation -%}
    <meta name="citation_firstpage" content="{{ article.elocation }}"></meta>
 {% else -%}
