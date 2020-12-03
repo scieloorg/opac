@@ -1,11 +1,13 @@
 # coding: utf-8
 import unittest
 from unittest.mock import patch, Mock
+from urllib.parse import urlparse, parse_qs
 
 import flask
 import warnings
 from flask import url_for, g, current_app
 from flask import render_template
+from bs4 import BeautifulSoup
 
 from .base import BaseTestCase
 
@@ -2233,14 +2235,17 @@ class TestArticleDetailV3MetaCitationPdfUrl(BaseTestCase):
                 )
             content = response.data.decode('utf-8')
 
-            website = current_app.config.get("SERVER_NAME")
-            if website:
-                website = "https://{}".format(website)
-            expected = (
-                '<meta name="citation_pdf_url" content="'
-                '{}/j/journal_acron/a/{}/'
-                '?format=pdf&amp;lang=es"'
-            ).format(website, article.aid)
-            self.assertIn(expected, content)
-            self.assertEqual(content.count('<meta name="citation_pdf_url"'), 1)
+            soup = BeautifulSoup(content, 'html.parser')
+            meta_tags = soup.find_all(attrs={"name": "citation_pdf_url"})
+            self.assertEqual(len(meta_tags), 1)
+
+            content_url = urlparse(meta_tags[0].get("content"))
+            self.assertEqual(content_url.scheme, "https")
+            self.assertEqual(content_url.netloc, current_app.config.get('SERVER_NAME'))
+            self.assertEqual(
+                content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
+            )
+            self.assertEqual(
+                parse_qs(content_url.query), {'format': ['pdf'], 'lang': ['es']}
+            )
 
