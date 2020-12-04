@@ -1160,9 +1160,10 @@ def article_detail_v3(url_seg, article_pid_v3):
                        )
                 break
 
-        website = current_app.config.get('SERVER_NAME')
+        website = request.url
         if website:
-            website = "https://{}".format(website)
+            parsed_url = urlparse(request.url)
+            website = "{}://{}".format(parsed_url.scheme, parsed_url.netloc)
         if citation_pdf_url:
             citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
