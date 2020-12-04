@@ -2274,7 +2274,7 @@ class TestArticleDetailV3Meta(BaseTestCase):
           content="https://website/j/acron/a/pidv3/?format=pdf&amp;lang=idioma_selecionado"/>`
         """
 
-        with current_app.app_context():
+        with current_app.test_request_context() as context:
             utils.makeOneCollection()
             journal = utils.makeOneJournal()
             issue = utils.makeOneIssue({'journal': journal})
@@ -2312,8 +2312,9 @@ class TestArticleDetailV3Meta(BaseTestCase):
                     url_seg=journal.url_segment,
                     article_pid_v3=article.aid,
                     lang="es"
-                    )
                 )
+            )
+            self.assertStatus(response, 200)
             content = response.data.decode('utf-8')
 
             soup = BeautifulSoup(content, 'html.parser')
@@ -2321,8 +2322,10 @@ class TestArticleDetailV3Meta(BaseTestCase):
             self.assertEqual(len(meta_tags), 1)
 
             content_url = urlparse(meta_tags[0].get("content"))
-            self.assertEqual(content_url.scheme, "https")
-            self.assertEqual(content_url.netloc, current_app.config.get('SERVER_NAME'))
+            self.assertEqual(
+                "{}://{}/".format(content_url.scheme, content_url.netloc),
+                context.request.url_root
+            )
             self.assertEqual(
                 content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
             )
@@ -2340,7 +2343,7 @@ class TestArticleDetailV3Meta(BaseTestCase):
           content="https://website/j/acron/a/pidv3/?format=xml"/>`
         """
 
-        with current_app.app_context():
+        with current_app.test_request_context() as context:
             utils.makeOneCollection()
             journal = utils.makeOneJournal()
             issue = utils.makeOneIssue({'journal': journal})
@@ -2368,8 +2371,10 @@ class TestArticleDetailV3Meta(BaseTestCase):
             self.assertEqual(len(meta_tags), 1)
 
             content_url = urlparse(meta_tags[0].get("content"))
-            self.assertEqual(content_url.scheme, "https")
-            self.assertEqual(content_url.netloc, current_app.config.get('SERVER_NAME'))
+            self.assertEqual(
+                "{}://{}/".format(content_url.scheme, content_url.netloc),
+                context.request.url_root
+            )
             self.assertEqual(
                 content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
             )
