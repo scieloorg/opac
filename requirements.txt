@@ -37,7 +37,7 @@ legendarium==2.0.2
 lxml==4.2.4
 Mako==1.1.3
 MarkupSafe==1.1.1
-mock==2.0.0
+mock==4.0.3
 mongoengine==0.15.3
 natsort==7.0.1
 oauthlib==3.1.0
