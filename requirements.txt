@@ -15,7 +15,7 @@ feedparser==5.2.1
 Flask==0.12.4
 Flask-Admin==1.5.2
 Flask-BabelEx==0.9.3
-Flask-Caching==1.4.0
+Flask-Caching==1.10.0
 Flask-DebugToolbar==0.10.1
 Flask-HTMLmin==1.4.0
 Flask-Login==0.4.1
