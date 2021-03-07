@@ -59,7 +59,7 @@ requests==2.24.0
 requests-oauthlib==1.3.0
 rq==0.12.0
 rq-dashboard==0.3.10
-rq-scheduler==0.8.2
+rq-scheduler==0.11.0
 rq-scheduler-dashboard==0.0.2
 six==1.15.0
 speaklater==1.3
