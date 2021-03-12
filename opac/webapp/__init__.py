@@ -129,6 +129,7 @@ def create_app():
     app.config.from_object(rq_scheduler_dashboard.default_settings)
     app.config.from_object('webapp.config.default')  # Configuração basica
     app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+    app.logger.root.setLevel(app.config.get("LOG_LEVEL"))
 
     configure_apm_agent(app)
 
