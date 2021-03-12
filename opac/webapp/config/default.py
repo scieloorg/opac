@@ -179,6 +179,8 @@ DEBUG = os.environ.get('OPAC_DEBUG_MODE', 'False') == 'True'
 # NUNCA deixar TESTING = True em produção
 TESTING = False
 
+# Define o nível do log para toda a aplicação e suas dependências
+LOG_LEVEL = os.environ.get('OPAC_LOG_LEVEL', 'DEBUG' if DEBUG else 'WARNING')
 
 # ativa/desativa o modo Debug dos assets
 # NUNCA deixar ASSETS_DEBUG = True em produção
