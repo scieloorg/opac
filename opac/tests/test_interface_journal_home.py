@@ -1,7 +1,10 @@
 # coding: utf-8
+from unittest.mock import patch
 
 import flask
 from flask import url_for, current_app
+from bs4 import BeautifulSoup
+from flask_babelex import gettext as _
 
 from .base import BaseTestCase
 
@@ -519,3 +522,84 @@ class JournalHomeTestCase(BaseTestCase):
                 expected = '<a target="_blank" href="{}">Scimago'.format(expected)
                 self.assertIn(expected, response_data)
             current_app.config['SCIMAGO_URL'] = temp
+
+    @patch("webapp.controllers.h5m5.get_current_metrics")
+    def test_journal_no_google_scholar_metrics(self, mk_get_current_metrics):
+        """
+        SEM:
+            - Periódico SEM Métricas do Google Scholar
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que SIM aparece "Não possui" do índice h5 e a mediana h5
+        """
+        mk_get_current_metrics.return_value = None
+        with current_app.app_context():
+            # with
+            collection = utils.makeOneCollection()
+            journal_data = {
+                "collection": collection,
+                "eletronic_issn": "1518-8787",
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for("main.journal_detail",
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode("utf-8")
+                # then
+                self.assertStatus(response, 200)
+
+                soup = BeautifulSoup(response_data, 'html.parser')
+                mission_tag = soup.find(attrs={"class": "block mission"})
+
+                expected_year_text = "{}: ".format(_("ano"))
+                for item in mission_tag.find_all("small"):
+                    self.assertNotIn(expected_year_text, item.text)
+
+                for item in mission_tag.find_all("strong"):
+                    self.assertEqual(item.text.strip(), _("Não possui"))
+
+    @patch("webapp.controllers.h5m5.get_current_metrics")
+    def test_journal_google_scholar_metrics(self, mk_get_current_metrics):
+        """
+        COM:
+            - Periódico COM Métricas do Google Scholar
+        QUANDO:
+            - Acessarmos a home do periódico
+        VERIFICAMOS:
+            - Que SIM aparece o valor do índice h5 e a mediana h5
+        """
+        mk_get_current_metrics.return_value = {
+            "h5": "58",
+            "m5": "42",
+            "url": "https://scholar.google.com/citations?view_op=list_hcore&venue=xxxxxxxxxxxx.2020&hl=pt-BR",
+            "year": "2020"
+        }
+        with current_app.app_context():
+            # with
+            collection = utils.makeOneCollection()
+            journal_data = {
+                "collection": collection,
+                "eletronic_issn": "1518-8787",
+            }
+            journal = utils.makeOneJournal(journal_data)
+            with self.client as c:
+                # when
+                response = c.get(
+                    url_for("main.journal_detail",
+                            url_seg=journal.url_segment))
+                response_data = response.data.decode("utf-8")
+                # then
+                self.assertStatus(response, 200)
+
+                soup = BeautifulSoup(response_data, 'html.parser')
+                mission_tag = soup.find(attrs={"class": "block mission"})
+
+                expected_year_text = "({}: 2020)".format(_("ano"))
+                for item in mission_tag.find_all("small"):
+                    self.assertIn(expected_year_text, item.text)
+
+                for item, expected in zip(mission_tag.find_all("strong"), ["58", "42"]):
+                    self.assertEqual(item.text.strip(), expected)
