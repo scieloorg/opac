@@ -14,35 +14,38 @@ from . import utils
 
 
 class TestArticleDetailV3Abstract(BaseTestCase):
-    def _get_response(self, article_data=None, part='abstract'):
+    def _get_response(self, article_data=None, part='abstract', pid_v2=None):
         with current_app.test_request_context():
             utils.makeOneCollection()
-            journal = utils.makeOneJournal()
-            issue = utils.makeOneIssue({'journal': journal})
+            self.journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': self.journal})
 
             _article_data = {
                 'title': 'Article Y',
                 'original_language': 'en',
                 'languages': ['es', 'pt', 'en'],
                 'issue': issue,
-                'journal': journal,
+                'journal': self.journal,
                 'url_segment': '10-11',
                 'translated_titles': [
                     {'language': 'es', 'name': u'Artículo en español'},
                     {'language': 'pt', 'name': u'Artigo en Português'},
                 ],
+                'pid': 'pidv2'
             }
             _article_data.update(article_data or {})
             self.article = utils.makeOneArticle(_article_data)
-
-            response = self.client.get(
-                url_for(
+            if pid_v2:
+                url = '%s?script=sci_abstract&pid=%s' % (
+                        url_for('main.router_legacy'), pid_v2)
+            else:
+                url = url_for(
                     'main.article_detail_v3',
-                    url_seg=journal.url_segment,
+                    url_seg=self.journal.url_segment,
                     article_pid_v3=self.article.aid,
                     part=part,
                 )
-            )
+            response = self.client.get(url)
             return response
 
     def test_abstract_pid_v3_returns_404_and_displays_invalid_part_value_message(self):
@@ -87,3 +90,16 @@ class TestArticleDetailV3Abstract(BaseTestCase):
         self.assertStatus(response, 404)
         result = response.data.decode('utf-8')
         self.assertIn(expected, result)
+
+    @patch("webapp.main.views.render_html")
+    def test_router_legacy_calls(self, mock_f):
+        response = self._get_response(pid_v2='pidv2')
+        self.assertRedirects(
+            response,
+            url_for(
+                'main.article_detail_v3',
+                url_seg=self.journal.url_segment,
+                article_pid_v3=self.article.aid,
+                part='abstract'
+            ),
+        )
