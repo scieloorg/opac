@@ -456,6 +456,59 @@ class JournalControllerTestCase(BaseTestCase):
         for journal in journals.values():
             self.assertTrue(journal.is_public)
 
+    def test_get_journal_metrics_no_issn_found(self):
+        journal = self._make_one({"eletronic_issn": "0101-XXXX", "print_issn" : "0101-0202"})
+        self.assertEqual(
+            controllers.get_journal_metrics(journal),
+            {
+                "total_h5_index" : 0,
+                "total_h5_median" : 0,
+                "h5_metric_year" : 0
+            },
+        )
+
+    def test_get_journal_metrics_electronic_issn(self):
+        journal = self._make_one({"eletronic_issn": "0101-XXXX", "print_issn" : "0101-0202"})
+        self.assertEqual(
+            controllers.get_journal_metrics(journal),
+            {
+                "total_h5_index" : 0,
+                "total_h5_median" : 0,
+                "h5_metric_year" : 0
+            },
+        )
+
+    def test_get_journal_metrics_print_issn(self):
+        journal = self._make_one({"print_issn" : "0101-0202"})
+        self.assertEqual(
+            controllers.get_journal_metrics(journal),
+            {
+                "total_h5_index" : 0,
+                "total_h5_median" : 0,
+                "h5_metric_year" : 0
+            },
+        )
+
+    @patch("webapp.controllers.h5m5.get_current_metrics")
+    def test_get_journal_metrics_returns_int_metrics_and_year(self, mk_get_current_metrics):
+        mk_get_current_metrics.return_value = {
+            "h5": "58",
+            "m5": "42",
+            "url": "https://scholar.google.com/citations?view_op=list_hcore&venue=xxxxxxxxxxxx.2020&hl=pt-BR",
+            "year": "2020"
+        }
+        journal = self._make_one(
+            {"eletronic_issn": "1518-8787", "print_issn" : "0034-8910"}
+        )
+        self.assertEqual(
+            controllers.get_journal_metrics(journal),
+            {
+                "total_h5_index" : 58,
+                "total_h5_median" : 42,
+                "h5_metric_year" : 2020
+            },
+        )
+
 
 class IssueControllerTestCase(BaseTestCase):
 
