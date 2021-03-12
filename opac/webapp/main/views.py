@@ -394,9 +394,13 @@ def router_legacy():
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
+            # 'abstract' or None (not False, porque False converterá a string 'False')
+            part = (script_php == 'sci_abstract' and 'abstract') or None
+
             return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
                                     article_pid_v3=article.aid,
+                                    part=part,
                                     lang=tlng), code=301)
 
         elif script_php == 'sci_issues':
@@ -1110,12 +1114,11 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
-
     qs_format = request.args.get('format', 'html', type=str)
     if qs_format == "xml" and request.args.get('lang'):
         abort(400, _("Idioma não suportado para formato XML"))
 
-    gs_abstract = part and part == "abstract"
+    gs_abstract = bool(part and part == "abstract")
     if part and not gs_abstract:
         abort(404,
               _("Não existe '{}'. No seu lugar use '{}'"
