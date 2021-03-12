@@ -48,6 +48,7 @@ services:
             - "8000:8000"
         environment:
             - OPAC_DEBUG_MODE=True
+            - OPAC_LOG_LEVEL=DEBUG
             - OPAC_MONGODB_NAME=opac
             - OPAC_MONGODB_HOST=opac_mongo
             - OPAC_MONGODB_PORT=27017
