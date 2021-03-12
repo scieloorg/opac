@@ -37,6 +37,7 @@ from uuid import uuid4
 
 from mongoengine import Q
 from mongoengine.errors import InvalidQueryError
+from scieloh5m5 import h5m5
 
 
 HIGHLIGHTED_TYPES = (
@@ -1285,3 +1286,30 @@ def get_aop_issues(url_seg, is_public=True):
     else:
         order_by = ["-year"]
         return Issue.objects(journal=journal, type='ahead', is_public=is_public).order_by(*order_by)
+
+
+def get_journal_metrics(journal):
+    """
+    Obtém métricas do Google Scholar para o periódico
+
+    @params:
+    - ``journal``: instância de opac_schema.models.Journal
+
+    @return:
+    - Dict com métricas do Google Scholar:
+        - ``total_h5_index``: Índice h5
+        - ``total_h5_median``: Mediana h5
+        - ``h5_metric_year``: Ano de referência das métricas
+    """
+    scielo_metrics = None
+    for issn in [journal.scielo_issn, journal.eletronic_issn, journal.print_issn]:
+        scielo_metrics = h5m5.get_current_metrics(issn)
+        if scielo_metrics:
+            break
+
+    metrics = {
+        "total_h5_index" : int(scielo_metrics.get("h5", 0)) if scielo_metrics else 0,
+        "total_h5_median" : int(scielo_metrics.get("m5", 0)) if scielo_metrics else 0,
+        "h5_metric_year" : int(scielo_metrics.get("year", 0)) if scielo_metrics else 0,
+    }
+    return metrics
