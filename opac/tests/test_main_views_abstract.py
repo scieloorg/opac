@@ -14,7 +14,8 @@ from . import utils
 
 
 class TestArticleDetailV3Abstract(BaseTestCase):
-    def _get_response(self, article_data=None, part='abstract', pid_v2=None):
+    def _get_response(self, article_data=None, part='abstract', pid_v2=None,
+                      abstract_lang=None):
         with current_app.test_request_context():
             utils.makeOneCollection()
             self.journal = utils.makeOneJournal()
@@ -26,6 +27,9 @@ class TestArticleDetailV3Abstract(BaseTestCase):
                 'languages': ['es', 'pt', 'en'],
                 'issue': issue,
                 'journal': self.journal,
+                'abstracts': [
+                    {"language": "en", "text": "Abstract in English"},
+                ],
                 'url_segment': '10-11',
                 'translated_titles': [
                     {'language': 'es', 'name': u'Artículo en español'},
@@ -44,6 +48,7 @@ class TestArticleDetailV3Abstract(BaseTestCase):
                     url_seg=self.journal.url_segment,
                     article_pid_v3=self.article.aid,
                     part=part,
+                    lang=abstract_lang,
                 )
             response = self.client.get(url)
             return response
@@ -56,8 +61,7 @@ class TestArticleDetailV3Abstract(BaseTestCase):
         self.assertIn(expected, result)
 
     def test_abstract_pid_v3_returns_status_code_200(self):
-        article_data = {}
-        response = self._get_response(article_data)
+        response = self._get_response(abstract_lang="en")
         self.assertStatus(response, 200)
 
     @patch("webapp.main.views.render_html")
@@ -67,7 +71,7 @@ class TestArticleDetailV3Abstract(BaseTestCase):
             ['en', 'es', 'pt'],
         )
         expected = "abstract do documento"
-        response = self._get_response()
+        response = self._get_response(abstract_lang="en")
         result = response.data.decode('utf-8')
         mock_render_html.assert_called_once_with(self.article, "en", True)
         self.assertIn(expected, result)
@@ -82,6 +86,13 @@ class TestArticleDetailV3Abstract(BaseTestCase):
         response = self._get_response(part=None)
         result = response.data.decode('utf-8')
         mock_render_html.assert_called_once_with(self.article, "en", False)
+        self.assertIn(expected, result)
+
+    def test_abstract_pid_v3_returns_404_because_lang_is_missing(self):
+        expected = "Não existe 'False'. No seu lugar use 'abstract'"
+        response = self._get_response(part=False)
+        self.assertStatus(response, 404)
+        result = response.data.decode('utf-8')
         self.assertIn(expected, result)
 
     def test_abstract_pid_v3_returns_404_and_displays_invalid_part_value_message_if_part_is_False(self):
@@ -100,6 +111,7 @@ class TestArticleDetailV3Abstract(BaseTestCase):
                 'main.article_detail_v3',
                 url_seg=self.journal.url_segment,
                 article_pid_v3=self.article.aid,
-                part='abstract'
+                part='abstract',
+                lang="en",
             ),
         )
