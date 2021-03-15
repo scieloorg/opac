@@ -451,7 +451,11 @@ class LegacyURLTestCase(BaseTestCase):
 
             article = utils.makeOneArticle({
                 'journal': journal.id, 'issue': issue.id,
-                'pid': '0000-00002016000100251'
+                'pid': '0000-00002016000100251',
+                'abstracts':
+                    [
+                        {"language": "pt", "text": "Texto do abstract"},
+                    ],
             })
 
             with self.client as c:
