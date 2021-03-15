@@ -48,6 +48,29 @@ HIGHLIGHTED_TYPES = (
     u'review-article'
 )
 
+
+class ArticleAbstractNotFoundError(Exception):
+    ...
+
+class ArticleIsNotPublishedError(Exception):
+    ...
+
+class IssueIsNotPublishedError(Exception):
+    ...
+
+class JournalIsNotPublishedError(Exception):
+    ...
+
+class ArticleJournalNotFoundError(Exception):
+    ...
+
+class ArticleLangNotFoundError(Exception):
+    ...
+
+class ArticleNotFoundError(Exception):
+    ...
+
+
 # -------- COLLECTION --------
 
 def get_current_collection():
@@ -782,18 +805,51 @@ def get_issue_by_journal_and_assets_code(assets_code, journal):
 
 # -------- ARTICLE --------
 
-def get_article_by_aid(aid, **kwargs):
+def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``aid`` e ``kwargs``.
 
     - ``aid``: string, chave primaria do artigo (ex.: ``14a278af8d224fa2a09a901123ca78ba``);
     - ``kwargs``: parâmetros de filtragem.
     """
-
     if not aid:
         raise ValueError(__('Obrigatório um aid.'))
 
-    return Article.objects(aid=aid, **kwargs).first()
+    article = Article.objects(aid=aid, **kwargs).first()
+    if not article:
+        raise ArticleNotFoundError(aid)
+
+    if not article.is_public:
+        raise ArticleIsNotPublishedError(article.unpublish_reason)
+
+    if not article.issue.is_public:
+        raise IssueIsNotPublishedError(article.issue.unpublish_reason)
+
+    if not article.journal.is_public:
+        raise JournalIsNotPublishedError(article.journal.unpublish_reason)
+
+    if not journal_url_seg:
+        raise ValueError(__('Obrigatório um journal_url_seg.'))
+
+    if article.journal.url_segment != journal_url_seg:
+        raise ArticleJournalNotFoundError(article.journal.url_segment)
+
+    if gs_abstract:
+        # "abstracts":[{"language":"en","text":"
+        abstract = None
+        for ab in article.abstracts:
+            if lang == ab["language"]:
+                abstract = ab
+                break
+        if not abstract:
+            raise ArticleAbstractNotFoundError(str(article.abstract_languages))
+    else:
+        lang = lang or article.original_language
+        valid_langs = [article.original_language] + article.languages
+        if lang not in valid_langs:
+            raise ArticleLangNotFoundError(str(valid_langs))
+
+    return article
 
 
 def get_article_by_url_seg(url_seg_article, **kwargs):
