@@ -401,7 +401,8 @@ def router_legacy():
                                     url_seg=article.journal.url_segment,
                                     article_pid_v3=article.aid,
                                     part=part,
-                                    lang=tlng), code=301)
+                                    lang=tlng or article.original_language),
+                            code=301)
 
         elif script_php == 'sci_issues':
 
@@ -1123,35 +1124,36 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404,
               _("Não existe '{}'. No seu lugar use '{}'"
                 ).format(part, 'abstract'))
+    qs_lang = request.args.get('lang', type=str) or None
 
-    article = controllers.get_article_by_aid(article_pid_v3)
-
-    if not article or article.journal.url_segment != url_seg:
+    try:
+        article = controllers.get_article_by_aid(
+            article_pid_v3, url_seg, qs_lang, gs_abstract)
+    except (controllers.ArticleNotFoundError,
+            controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
-
-    qs_lang = request.args.get('lang', article.original_language, type=str)
-
-    if qs_lang not in article.languages + [article.original_language]:
+    except controllers.ArticleLangNotFoundError:
         return redirect(
             url_for(
                 'main.article_detail_v3',
                 url_seg=url_seg,
                 article_pid_v3=article_pid_v3,
                 format=qs_format,
-                lang=article.original_language,
-                part=part,
             ),
             code=301
         )
+    except controllers.ArticleAbstractNotFoundError:
+        abort(404, _('Recurso não encontrado'))
+    except controllers.ArticleIsNotPublishedError as e:
+        abort(404, "{}{}".format(ARTICLE_UNPUBLISH, e))
+    except controllers.IssueIsNotPublishedError as e:
+        abort(404, "{}{}".format(ISSUE_UNPUBLISH, e))
+    except controllers.JournalIsNotPublishedError as e:
+        abort(404, "{}{}".format(JOURNAL_UNPUBLISH, e))
+    except Value as e:
+        abort(404, str(e))
 
-    if not article.is_public:
-        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-    if not article.issue.is_public:
-        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-    if not article.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+    qs_lang = qs_lang or article.original_language
 
     def _handle_html():
         article_list = list(
