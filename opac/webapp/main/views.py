@@ -487,6 +487,8 @@ def journal_detail(url_seg):
     else:
         latest_issue_legend = ''
 
+    journal_metrics = controllers.get_journal_metrics(journal)
+
     context = {
         'journal': journal,
         'press_releases': press_releases,
@@ -499,7 +501,8 @@ def journal_detail(url_seg):
         'last_issue': latest_issue,
         'latest_issue_legend': latest_issue_legend,
         'sections': sections if sections else None,
-        'news': news
+        'news': news,
+        'journal_metrics': journal_metrics
     }
 
     return render_template("journal/detail.html", **context)

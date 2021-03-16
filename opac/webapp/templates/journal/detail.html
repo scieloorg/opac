@@ -50,24 +50,24 @@
                 <div>
                   <small>
                     {% trans %}Índice h5{% endtrans %}:
-                    {% if journal.metrics.total_h5_index and journal.metrics.h5_metric_year %}
-                      ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
+                    {% if journal_metrics.total_h5_index and journal_metrics.h5_metric_year %}
+                      ({% trans %}ano{% endtrans %}: {{ journal_metrics.h5_metric_year }})
                     {% endif %}
                   </small>
                   <strong>
-                    {{ journal.metrics.total_h5_index|default(_("Não possui"), True) }}
+                    {{ journal_metrics.total_h5_index|default(_("Não possui"), True) }}
                   </strong>
                 </div>
                 <div>
                   <small>
                     {% trans %}Mediana h5{% endtrans %}:
-                    {% if journal.metrics.total_h5_median and journal.metrics.h5_metric_year %}
+                    {% if journal_metrics.total_h5_median and journal_metrics.h5_metric_year %}
                       {# a mediana é obtida sempre para o ano atual #}
-                      ({% trans %}ano{% endtrans %}: {{ journal.metrics.h5_metric_year }})
+                      ({% trans %}ano{% endtrans %}: {{ journal_metrics.h5_metric_year }})
                     {% endif %}
                   </small>
                   <strong>
-                    {{ journal.metrics.total_h5_median|default(_("Não possui"), True)  }}
+                    {{ journal_metrics.total_h5_median|default(_("Não possui"), True)  }}
                   </strong>
                 </div>
               </li>
