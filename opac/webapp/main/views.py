@@ -1150,7 +1150,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404, "{}{}".format(ISSUE_UNPUBLISH, e))
     except controllers.JournalIsNotPublishedError as e:
         abort(404, "{}{}".format(JOURNAL_UNPUBLISH, e))
-    except Value as e:
+    except ValueError as e:
         abort(404, str(e))
 
     qs_lang = qs_lang or article.original_language
