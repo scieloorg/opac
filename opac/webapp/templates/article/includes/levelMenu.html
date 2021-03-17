@@ -9,18 +9,23 @@
         <!-- exibe somente no sm -->
         {% include "article/includes/levelMenu_layout_sm.html" %}
 
-        <!-- exibe somente no sm e lg PDF-->
+        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
         <div class="col-lg-3 col-md-2 col-sm-4 hidden-md">
           {% include "article/includes/levelMenu_pdf.html" %}
+          <!-- exibe links de textos completos e resumos -->
+          {% include "article/includes/levelMenu_texts.html" %}
+          {% include "article/includes/levelMenu_abstracts.html" %}
         </div>
-        <!-- exibe somente no sm e lg PDF-->
+        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
 
-        <!-- exibe somente no md PDF-->
+        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
         <div class="col-lg-3 col-md-3 col-sm-4 hidden-sm hidden-lg">
           {% include "article/includes/levelMenu_pdf.html" %}
+          <!-- exibe links de textos completos e resumos -->
+          {% include "article/includes/levelMenu_texts.html" %}
+          {% include "article/includes/levelMenu_abstracts.html" %}
         </div>
-        <!-- exibe somente no md PDF-->
-
+        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
         <div class="col-lg-2 col-md-3 col-sm-2 share">
             <span class="hidden-sm">{% trans %}Compartilhe{% endtrans %}</span>
             <a data-toggle="tooltip" href="#" class="share_modal_id" title="{% trans %}Enviar link por e-mail{% endtrans %}">
@@ -103,7 +108,9 @@
                 <span class="sci-ico-filePDF"></span> PDF
               </a>
             {% endif%}
-
+            {% if gs_abstract %}
+            {% include "article/includes/levelMenu_texts.html" %}
+            {% endif %}
             <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
                 <span class="sci-ico-socialOther"></span><span class="caret"></span>
             </a>
@@ -196,8 +203,6 @@
             {%- endif %}
                 <span class="sci-ico-arrowRight"></span>
             </a>
-
-
           </div>
         </div>
       </div>
