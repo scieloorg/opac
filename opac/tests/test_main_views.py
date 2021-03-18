@@ -557,8 +557,7 @@ class MainTestCase(BaseTestCase):
                     'main.article_detail_v3',
                     url_seg=journal.url_segment, 
                     article_pid_v3=article.aid, 
-                    lang='en', 
-                    format='html'
+                    format='html',
                 )
             )
 

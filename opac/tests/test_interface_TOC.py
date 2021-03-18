@@ -275,3 +275,50 @@ class TOCTestCase(BaseTestCase):
                                      url_seg_issue=issue.url_segment))
 
             self.assertIn("ahead of print", response.data.decode('utf-8'))
+
+    def test_abstract_links_are_displayed(self):
+        """
+        Teste para verificar se caso o issue for um ahead o valor da
+        legenda bibliográfica é alterada para 'ahead of print'.
+        """
+        journal = utils.makeOneJournal()
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            _article_data = {
+                'title': 'Article Y',
+                'original_language': 'en',
+                'languages': ['es', 'pt', 'en'],
+                'issue': issue,
+                'journal': journal,
+                'abstract_languages': ["en", "es", "pt"],
+                'url_segment': '10-11',
+                'translated_titles': [
+                    {'language': 'es', 'name': u'Artículo en español'},
+                    {'language': 'pt', 'name': u'Artigo en Português'},
+                ],
+                'pid': 'pidv2',
+            }
+            article = utils.makeOneArticle(_article_data)
+
+            response = c.get(url_for('main.issue_toc',
+                                     url_seg=journal.url_segment,
+                                     url_seg_issue=issue.url_segment))
+
+            uris = [
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                    part='abstract',
+                    lang=abstract_lang,
+                )
+                for abstract_lang in ["en", "es", "pt"]
+            ]
+            for uri in uris:
+                with self.subTest(uri):
+                    self.assertIn(uri, response.data.decode('utf-8'))

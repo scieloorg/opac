@@ -394,10 +394,15 @@ def router_legacy():
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
+            # 'abstract' or None (not False, porque False converterá a string 'False')
+            part = (script_php == 'sci_abstract' and 'abstract') or None
+
             return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
                                     article_pid_v3=article.aid,
-                                    lang=tlng), code=301)
+                                    part=part,
+                                    lang=tlng or article.original_language),
+                            code=301)
 
         elif script_php == 'sci_issues':
 
@@ -1013,7 +1018,7 @@ def article_detail_pid(pid):
                             article_pid_v3=article.aid))
 
 
-def render_html_from_xml(article, lang):
+def render_html_from_xml(article, lang, gs_abstract=False):
     if current_app.config["SSM_XML_URL_REWRITE"]:
         result = fetch_data(normalize_ssm_url(article.xml))
     else:
@@ -1021,7 +1026,8 @@ def render_html_from_xml(article, lang):
 
     xml = etree.parse(BytesIO(result))
 
-    generator = HTMLGenerator.parse(xml, valid_only=False)
+    generator = HTMLGenerator.parse(
+        xml, valid_only=False, gs_abstract=gs_abstract)
 
     # Criamos um objeto do tip soup
     soup = BeautifulSoup(etree.tostring(generator.generate(lang), encoding="UTF-8", method="html"), 'html.parser')
@@ -1049,9 +1055,9 @@ def render_html_from_html(article, lang):
     return html, text_languages
 
 
-def render_html(article, lang):
+def render_html(article, lang, gs_abstract=False):
     if article.xml:
-        return render_html_from_xml(article, lang)
+        return render_html_from_xml(article, lang, gs_abstract)
     elif article.htmls:
         return render_html_from_html(article, lang)
     else:
@@ -1109,39 +1115,48 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
+@main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
 @cache.cached(key_prefix=cache_key_with_lang)
-def article_detail_v3(url_seg, article_pid_v3):
+def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_format = request.args.get('format', 'html', type=str)
     if qs_format == "xml" and request.args.get('lang'):
         abort(400, _("Idioma não suportado para formato XML"))
 
-    article = controllers.get_article_by_aid(article_pid_v3)
+    gs_abstract = bool(part and part == "abstract")
+    if part and not gs_abstract:
+        abort(404,
+              _("Não existe '{}'. No seu lugar use '{}'"
+                ).format(part, 'abstract'))
+    qs_lang = request.args.get('lang', type=str) or None
 
-    if not article or article.journal.url_segment != url_seg:
+    try:
+        article = controllers.get_article_by_aid(
+            article_pid_v3, url_seg, qs_lang, gs_abstract)
+    except (controllers.ArticleNotFoundError,
+            controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
-
-    qs_lang = request.args.get('lang', article.original_language, type=str)
-
-    if qs_lang not in article.languages + [article.original_language]:
+    except controllers.ArticleLangNotFoundError:
         return redirect(
             url_for(
                 'main.article_detail_v3',
                 url_seg=url_seg,
                 article_pid_v3=article_pid_v3,
                 format=qs_format,
-                lang=article.original_language,
             ),
             code=301
         )
+    except controllers.ArticleAbstractNotFoundError:
+        abort(404, _('Recurso não encontrado'))
+    except controllers.ArticleIsNotPublishedError as e:
+        abort(404, "{}{}".format(ARTICLE_UNPUBLISH, e))
+    except controllers.IssueIsNotPublishedError as e:
+        abort(404, "{}{}".format(ISSUE_UNPUBLISH, e))
+    except controllers.JournalIsNotPublishedError as e:
+        abort(404, "{}{}".format(JOURNAL_UNPUBLISH, e))
+    except ValueError as e:
+        abort(404, str(e))
 
-    if not article.is_public:
-        abort(404, ARTICLE_UNPUBLISH + _(article.unpublish_reason))
-
-    if not article.issue.is_public:
-        abort(404, ISSUE_UNPUBLISH + _(article.issue.unpublish_reason))
-
-    if not article.journal.is_public:
-        abort(404, JOURNAL_UNPUBLISH + _(article.journal.unpublish_reason))
+    qs_lang = qs_lang or article.original_language
 
     def _handle_html():
         article_list = list(
@@ -1170,7 +1185,7 @@ def article_detail_v3(url_seg, article_pid_v3):
         if citation_pdf_url:
             citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
-            html, text_languages = render_html(article, qs_lang)
+            html, text_languages = render_html(article, qs_lang, gs_abstract)
         except (ValueError, NonRetryableError):
             abort(404, _('HTML do Artigo não encontrado ou indisponível'))
         except RetryableError:

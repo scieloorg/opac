@@ -757,32 +757,6 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         return utils.makeAnyArticle(issue=issue, items=items)
 
-    def test_get_article_by_aid(self):
-        """
-        Teste da função controllers.get_article_by_aid para retornar um objeto:
-        ``Article``.
-        """
-
-        article = self._make_one()
-
-        self.assertEqual(controllers.get_article_by_aid(article.id).id,
-                         article.id)
-
-    def test_get_article_by_aid_without_aid(self):
-        """
-        Teste da função controllers.get_article_by_aid com uma lista vazia,
-        deve retorna um exceção ValueError.
-        """
-
-        self.assertRaises(ValueError, controllers.get_article_by_aid, [])
-
-    def test_get_article_by_aid_without_article(self):
-        """
-        Testando controllers.get_article_by_aid() sem article, deve retornar
-        None.
-        """
-        self.assertIsNone(controllers.get_article_by_aid('anyjid'))
-
     def test_get_articles_by_aid(self):
         """
         Testando a função controllers.get_articles_by_aid() deve retornar uma
@@ -1247,6 +1221,90 @@ class ArticleControllerTestCase(BaseTestCase):
 
         for article in articles.values():
             self.assertTrue(article.display_full_text)
+
+    def test_get_article_by_aid_raises_missing_aid_parameter_error(self):
+        with self.assertRaises(ValueError) as exc:
+            controllers.get_article_by_aid(None, None)
+        self.assertIn("aid", str(exc.exception))
+
+    def test_get_article_by_aid_raises_article_not_found_error(self):
+        with self.assertRaises(controllers.ArticleNotFoundError) as exc:
+            controllers.get_article_by_aid("notid", None)
+        self.assertIn("notid", str(exc.exception))
+
+    def test_get_article_by_aid_raises_missing_journal_url_seg_parameter_error(
+            self):
+        article = self._make_one()
+        with self.assertRaises(ValueError) as exc:
+            controllers.get_article_by_aid(article.id, None)
+        self.assertIn("journal_url_seg", str(exc.exception))
+
+    def test_get_article_by_aid_raises_not_found_article_journal_error(
+            self):
+        article = self._make_one({'journal': 'JOURNALID02'})
+        with self.assertRaises(controllers.ArticleJournalNotFoundError) as exc:
+            controllers.get_article_by_aid(article.id, "JOURNALID01")
+        self.assertIn(article.journal.acronym, str(exc.exception))
+
+    def test_get_article_by_aid_raises_article_is_not_published_error(
+            self):
+        article = self._make_one({"is_public": False})
+        with self.assertRaises(controllers.ArticleIsNotPublishedError):
+            controllers.get_article_by_aid(
+                article.id, article.journal.url_segment)
+
+    def test_get_article_by_aid_raises_issue_is_not_published_error(
+            self):
+        issue = utils.makeOneIssue({"is_public": False})
+        article = self._make_one({"issue": issue})
+
+        with self.assertRaises(controllers.IssueIsNotPublishedError):
+            controllers.get_article_by_aid(
+                article.id, article.journal.url_segment)
+
+    def test_get_article_by_aid_raises_journal_is_not_published_error(
+            self):
+        journal = utils.makeOneJournal({"is_public": False})
+        article = self._make_one({"journal": journal})
+        with self.assertRaises(controllers.JournalIsNotPublishedError):
+            controllers.get_article_by_aid(
+                article.id, article.journal.url_segment)
+
+    def test_get_article_by_aid_raises_article_lang_not_found_error(
+            self):
+        article = self._make_one()
+        with self.assertRaises(controllers.ArticleLangNotFoundError) as exc:
+            controllers.get_article_by_aid(
+                article.id, article.journal.url_segment, "xx")
+        self.assertEqual(
+            str([article.original_language] + article.languages),
+            str(exc.exception)
+        )
+
+    def test_get_article_by_aid_raises_article_abstract_not_found_error(
+            self):
+        article = self._make_one()
+        with self.assertRaises(controllers.ArticleAbstractNotFoundError) as exc:
+            controllers.get_article_by_aid(
+                article.id, article.journal.url_segment, "zz", True)
+        self.assertEqual(
+            str(article.abstract_languages),
+            str(exc.exception)
+        )
+
+    def test_get_article_by_aid_returns_article(self):
+        """
+        Teste da função controllers.get_article_by_aid para retornar um objeto:
+        ``Article``.
+        """
+
+        article = self._make_one()
+        id, url_seg = article.id, article.journal.url_segment
+        self.assertEqual(
+            controllers.get_article_by_aid(id, url_seg).id,
+            article.id
+        )
+
 
 
 class UserControllerTestCase(BaseTestCase):
