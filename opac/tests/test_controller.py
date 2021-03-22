@@ -757,6 +757,85 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         return utils.makeAnyArticle(issue=issue, items=items)
 
+    def _make_same_issue_articles(self, articles_attribs=None):
+        issue = utils.makeOneIssue()
+        default_attribs = [
+            {"abstracts": [{"language": "en", "text": ""}]},
+            {"abstracts": [{"language": "en", "text": ""}]},
+        ]
+        articles_attribs = articles_attribs or default_attribs
+        articles = []
+        for article_attribs in articles_attribs:
+            article_attribs.update({"issue": issue})
+            articles.append(self._make_one(article_attribs))
+        return articles
+
+    def test_goto_article_returns_next_article(self):
+        articles = self._make_same_issue_articles()
+        self.assertEqual(
+            controllers.goto_article(articles[0], "next").id,
+            articles[1].id
+        )
+
+    def test_goto_article_returns_no_next(self):
+        articles = self._make_same_issue_articles()
+        with self.assertRaises(controllers.ArticleNotFoundError):
+            controllers.goto_article(articles[-1], "next")
+
+    def test_goto_article_returns_previous_article(self):
+        articles = self._make_same_issue_articles()
+        self.assertEqual(
+            controllers.goto_article(articles[-1], "previous").id,
+            articles[-2].id
+        )
+
+    def test_goto_article_returns_no_previous(self):
+        articles = self._make_same_issue_articles()
+        with self.assertRaises(controllers.ArticleNotFoundError):
+            controllers.goto_article(articles[0], "previous")
+
+    def test_goto_article_returns_next_article_with_abstract(self):
+        articles = self._make_same_issue_articles()
+        self.assertEqual(
+            controllers.goto_article(articles[0], "next", True).id,
+            articles[1].id
+        )
+
+    def test_goto_article_returns_no_next_because_next_has_no_abstract(self):
+        attribs = [
+            {"abstracts": [{"language": "x", "text": ""}]},
+            {},
+        ]
+        articles = self._make_same_issue_articles(attribs)
+        with self.assertRaises(controllers.ArticleNotFoundError):
+            controllers.goto_article(articles[0], "next", True)
+
+    def test_goto_article_returns_previous_article_with_abstract(self):
+        articles = self._make_same_issue_articles()
+        self.assertEqual(
+            controllers.goto_article(articles[-1], "previous", True).id,
+            articles[-2].id
+        )
+
+    def test_goto_article_returns_no_previous_because_previous_has_no_abstract(self):
+        attribs = [
+            {},
+            {"abstracts": [{"language": "x", "text": ""}]},
+        ]
+        articles = self._make_same_issue_articles(attribs)
+        with self.assertRaises(controllers.ArticleNotFoundError):
+            controllers.goto_article(articles[-1], "previous", True)
+
+    def test_goto_article_returns_no_previous_because_previous_has_no_abstract(self):
+        attribs = [
+            {},
+            {"abstracts": [{"language": "x", "text": ""}]},
+        ]
+        articles = self._make_same_issue_articles(attribs)
+        with self.assertRaises(ValueError) as exc:
+            controllers.goto_article(articles[-1], "prev", True)
+        self.assertIn("Expected: next or previous", str(exc.exception))
+
     def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list(self):
         abstracts = []
         a = self._make_one({"abstracts": abstracts})

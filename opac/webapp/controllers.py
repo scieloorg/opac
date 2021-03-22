@@ -869,6 +869,48 @@ def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
     return articles
 
 
+def _prev_item(items, item):
+    """
+    Retorna os item anterior a `item` na lista `items`
+    Considera `items` em ordem crescente
+    """
+    index = items.index(item)
+    if index == -1:
+        raise ValueError("{} not found in {}".format(item, items))
+    if index > 0:
+        return items[index - 1]
+
+
+def _next_item(items, item):
+    """
+    Retorna os item posterior a `item` na lista `items`
+    Considera `items` em ordem crescente
+    """
+    index = items.index(item)
+    if index == -1:
+        raise ValueError("{} not found in {}".format(item, items))
+    try:
+        return items[index + 1]
+    except (ValueError, IndexError):
+        return None
+
+
+def goto_article(doc, goto, gs_abstract=False):
+    if goto not in ("next", "previous"):
+        raise ValueError(
+            "Invalid value: goto={}. Expected: next or previous)".format(goto)
+        )
+    docs = list(_articles_or_abstracts_sorted_by_order_or_date(
+        doc.issue.iid, gs_abstract))
+    if goto == "next":
+        article = _next_item(docs, doc)
+    if goto == "previous":
+        article = _prev_item(docs, doc)
+    if article:
+        return article
+    raise ArticleNotFoundError(goto)
+
+
 def get_article_by_url_seg(url_seg_article, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.
