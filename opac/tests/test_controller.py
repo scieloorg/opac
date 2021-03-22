@@ -757,6 +757,40 @@ class ArticleControllerTestCase(BaseTestCase):
         """
         return utils.makeAnyArticle(issue=issue, items=items)
 
+    def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list(self):
+        abstracts = []
+        a = self._make_one({"abstracts": abstracts})
+        articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
+            a.issue.id, gs_abstract=True)
+        self.assertEqual(articles, [])
+
+    def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list2(self):
+        a = self._make_one({"abstracts": None})
+        articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
+            a.issue.id, gs_abstract=True)
+        self.assertEqual(articles, [])
+
+    def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list3(self):
+        a = self._make_one()
+        articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
+            a.issue.id, gs_abstract=True)
+        self.assertEqual(articles, [])
+
+    def test__articles_or_abstracts_sorted_by_order_or_date_returns_one(self):
+        abstracts = [
+            {"language": "en", "text": "Texto"}
+        ]
+        abstract_languages = ["en"]
+        a = self._make_one(
+            {
+                "abstracts": abstracts,
+                "abstract_languages": abstract_languages
+            }
+        )
+        articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
+            a.issue.id, gs_abstract=True)
+        self.assertEqual(len(articles), 1)
+
     def test_get_articles_by_aid(self):
         """
         Testando a função controllers.get_articles_by_aid() deve retornar uma

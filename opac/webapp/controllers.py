@@ -853,6 +853,22 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     return article
 
 
+def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
+    """
+    Retorna uma lista de artigos de um _fascículo_ ou de um _bundle_
+
+    - ``iid``: chave primaria de número para escolher os artigos.
+    - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
+
+    """
+    articles = get_articles_by_iid(iid, is_public=True)
+    if gs_abstract:
+        return [a for a in list(articles) if a.abstracts]
+    return articles
+
+
 def get_article_by_url_seg(url_seg_article, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.
