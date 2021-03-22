@@ -1227,8 +1227,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             'article_lang': qs_lang,
             'text_versions': text_versions,
             'related_links': controllers.related_links(article),
+            'gs_abstract': gs_abstract,
         }
-
         return render_template("article/detail.html", **context)
 
     def _handle_pdf():

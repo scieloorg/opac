@@ -1,0 +1,42 @@
+{% if article and article.abstracts|length > 1 %}
+
+    <div class="dropdown">
+      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+      <span>{% trans %}Resumos{% endtrans %}</span>
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        {% for abstract in article.abstracts  %}
+          <li>
+              {% if gs_abstract and article_lang == abstract['language'] %}
+                  <a href="#">
+                    {% trans %}Resumo {% endtrans %}
+                    ({% if abstract['language'] == 'es' %}
+                      {% trans %}Espanhol{% endtrans %}
+                    {% elif abstract['language'] == 'en' %}
+                      {% trans %}Inglês{% endtrans %}
+                    {% elif abstract['language'] == 'pt' %}
+                      {% trans %}Português{% endtrans %}
+                    {% else %}
+                      {{ abstract['language'] }}
+                    {% endif %})
+                  </a>
+              {% else %}
+                  <a href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, part='abstract', lang=abstract['language']) }}">
+                    {% trans %}Resumo {% endtrans %}
+                    ({% if abstract['language'] == 'es' %}
+                      {% trans %}Espanhol{% endtrans %}
+                    {% elif abstract['language'] == 'en' %}
+                      {% trans %}Inglês{% endtrans %}
+                    {% elif abstract['language'] == 'pt' %}
+                      {% trans %}Português{% endtrans %}
+                    {% else %}
+                      {{ abstract['language'] }}
+                    {% endif %})
+                  </a>
+              {% endif %}
+          <li>
+        {% endfor %}
+      </ul>
+    </div>
+
+{% endif %}

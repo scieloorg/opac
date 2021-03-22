@@ -1,0 +1,43 @@
+{% if article and text_versions %}
+
+    <div class="dropdown">
+      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
+      <span>{% trans %}Textos{% endtrans %}</span>
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        {% for lang, text_lang, uri in text_versions  %}
+        <li>
+          {% if not gs_abstract and lang == article_lang %}
+            <!-- página de texto -->
+            <a href="#"> 
+                {% trans %}Texto {% endtrans %}
+                ({% if lang == 'es' %}
+                  {% trans %}Espanhol{% endtrans %}
+                {% elif lang == 'en' %}
+                  {% trans %}Inglês{% endtrans %}
+                {% elif lang == 'pt' %}
+                  {% trans %}Português{% endtrans %}
+                {% else %}
+                  {{ text_lang }}
+                {% endif %})
+            </a>
+        {% else %}
+            <a href="{{ uri }}">
+                {% trans %}Texto {% endtrans %}
+                ({% if lang == 'es' %}
+                  {% trans %}Espanhol{% endtrans %}
+                {% elif lang == 'en' %}
+                  {% trans %}Inglês{% endtrans %}
+                {% elif lang == 'pt' %}
+                  {% trans %}Português{% endtrans %}
+                {% else %}
+                  {{ text_lang }}
+                {% endif %})
+            </a>
+        {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+{% endif %}
