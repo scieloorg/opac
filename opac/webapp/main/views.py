@@ -1162,9 +1162,20 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         article_list = list(
             controllers.get_articles_by_iid(article.issue.iid, is_public=True)
         )
+        prev_lang = next_lang = None
+
+        if gs_abstract:
+            article_list = [a for a in article_list if a.abstracts]
 
         previous_article = utils.get_prev_article(article_list, article)
         next_article = utils.get_next_article(article_list, article)
+
+        if gs_abstract:
+            prev_lang = next_lang = qs_lang
+            if previous_article and (qs_lang not in previous_article.abstract_languages):
+                prev_lang = previous_article.abstract_languages[0]
+            if next_article and (qs_lang not in next_article.abstract_languages):
+                next_lang = next_article.abstract_languages[0]
 
         citation_pdf_url = None
         for pdf_data in article.pdfs:
@@ -1228,6 +1239,10 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             'text_versions': text_versions,
             'related_links': controllers.related_links(article),
             'gs_abstract': gs_abstract,
+            'part': part,
+            'next_lang': next_lang,
+            'prev_lang': prev_lang,
+
         }
         return render_template("article/detail.html", **context)
 
