@@ -1122,16 +1122,29 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     if qs_format == "xml" and request.args.get('lang'):
         abort(400, _("Idioma não suportado para formato XML"))
 
-    gs_abstract = bool(part and part == "abstract")
+    gs_abstract = (part == "abstract")
     if part and not gs_abstract:
         abort(404,
               _("Não existe '{}'. No seu lugar use '{}'"
                 ).format(part, 'abstract'))
     qs_lang = request.args.get('lang', type=str) or None
+    qs_goto = request.args.get('goto', type=str) or None
 
     try:
-        article = controllers.get_article_by_aid(
-            article_pid_v3, url_seg, qs_lang, gs_abstract)
+        qs_lang, article = controllers.get_article(
+            article_pid_v3, url_seg, qs_lang, gs_abstract, qs_goto)
+        if qs_goto:
+            return redirect(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=url_seg,
+                    article_pid_v3=article.aid,
+                    part=part,
+                    format=qs_format,
+                    lang=qs_lang,
+                ),
+                code=301
+            )
     except (controllers.ArticleNotFoundError,
             controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
@@ -1155,8 +1168,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404, "{}{}".format(JOURNAL_UNPUBLISH, e))
     except ValueError as e:
         abort(404, str(e))
-
-    qs_lang = qs_lang or article.original_language
 
     def _handle_html():
         article_list = list(
