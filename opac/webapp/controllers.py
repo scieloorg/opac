@@ -911,6 +911,41 @@ def goto_article(doc, goto, gs_abstract=False):
     raise ArticleNotFoundError(goto)
 
 
+def get_article(aid, journal_url_seg, lang=None, gs_abstract=False, goto=None):
+    # obtém o artigo
+    if goto:
+        # obtém o artigo, não importa o idioma, nem se tem abstract
+        # pois será redirecionado para o próximo ou anterior
+        article = get_article_by_aid(aid, journal_url_seg)
+
+        # obtém o próximo ou anterior?
+        article = goto_article(article, goto, gs_abstract)
+
+        # precisa obter um idioma válido
+        lang = get_existing_lang(article, lang, gs_abstract)
+    else:
+        # obtém o artigo
+        article = get_article_by_aid(aid, journal_url_seg, lang, gs_abstract)
+        if lang is None and not gs_abstract:
+            lang = article.original_language
+    return lang, article
+
+
+def get_existing_lang(article, lang, gs_abstract):
+    """
+    Evita falha de recurso não encontrado,
+    quando se navega entre os documentos e/ou resumos,
+    """
+    # ajusta o idioma
+    if gs_abstract:
+        langs = article.abstract_languages
+    else:
+        langs = [article.original_language] + article.languages
+    if lang not in langs:
+        lang = langs[0]
+    return lang
+
+
 def get_article_by_url_seg(url_seg_article, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.

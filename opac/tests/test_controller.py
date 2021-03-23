@@ -760,8 +760,18 @@ class ArticleControllerTestCase(BaseTestCase):
     def _make_same_issue_articles(self, articles_attribs=None):
         issue = utils.makeOneIssue()
         default_attribs = [
-            {"abstracts": [{"language": "en", "text": ""}]},
-            {"abstracts": [{"language": "en", "text": ""}]},
+            {
+                "original_language": "pt",
+                "languages": ["pt", ],
+                "abstracts": [{"language": "pt", "text": ""}],
+                "abstract_languages": ["pt"],
+            },
+            {
+                "original_language": "es",
+                "languages": ["es", ],
+                "abstracts": [{"language": "es", "text": ""}],
+                "abstract_languages": ["es"],
+            },
         ]
         articles_attribs = articles_attribs or default_attribs
         articles = []
@@ -769,6 +779,122 @@ class ArticleControllerTestCase(BaseTestCase):
             article_attribs.update({"issue": issue})
             articles.append(self._make_one(article_attribs))
         return articles
+
+    def test_get_article_returns_next_article(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[1]
+        lang, result = controllers.get_article(
+            articles[0].id,
+            articles[0].journal.url_segment,
+            articles[0].original_language,
+            gs_abstract=False,
+            goto="next",
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "es")
+
+    def test_get_article_returns_previous_article(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[0]
+        lang, result = controllers.get_article(
+            articles[1].id,
+            articles[1].journal.url_segment,
+            articles[1].original_language,
+            gs_abstract=False,
+            goto="previous",
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "pt")
+
+    def test_get_article_returns_article(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[0]
+        lang, result = controllers.get_article(
+            articles[0].id,
+            articles[0].journal.url_segment,
+            "pt",
+            gs_abstract=False,
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "pt")
+
+    def test_get_article_returns_article_and_original_lang(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[0]
+        lang, result = controllers.get_article(
+            articles[0].id,
+            articles[0].journal.url_segment,
+            None,
+            gs_abstract=False,
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "pt")
+
+    def test_get_article_returns_next_article_which_has_abstract(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[1]
+        lang, result = controllers.get_article(
+            articles[0].id,
+            articles[0].journal.url_segment,
+            "en",
+            gs_abstract=True,
+            goto="next",
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "es")
+
+    def test_get_article_returns_previous_article_which_has_abstract(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[0]
+        lang, result = controllers.get_article(
+            articles[1].id,
+            articles[1].journal.url_segment,
+            "en",
+            gs_abstract=True,
+            goto="previous",
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "pt")
+
+    def test_get_article_returns_article_which_has_abstract(self):
+        """
+        Teste da função controllers.get_article para retornar um objeto:
+        ``Article``.
+        """
+        articles = self._make_same_issue_articles()
+        article = articles[0]
+        lang, result = controllers.get_article(
+            articles[0].id,
+            articles[0].journal.url_segment,
+            "pt",
+            gs_abstract=True,
+        )
+        self.assertEqual(article.id, result.id)
+        self.assertEqual(lang, "pt")
 
     def test_goto_article_returns_next_article(self):
         articles = self._make_same_issue_articles()
