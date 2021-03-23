@@ -545,14 +545,18 @@ class MenuTestCase(BaseTestCase):
             expect_btn_anterior = '<a href="%s" class="btn group">' % url_for(
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article1.aid)  # artigo anterior
+                article_pid_v3=article2.aid,
+                goto='previous'
+                )  # artigo anterior
 
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
 
             expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article3.aid)  # artigo seguinte
+                article_pid_v3=article2.aid,
+                goto='next'
+                )  # artigo seguinte
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
@@ -609,20 +613,22 @@ class MenuTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
 
-            expect_btn_anterior = '<a href="#" class="btn group disabled">'  # artigo anterior
-
-            expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
-
-            expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
+            expect_btn_anterior = '<a href="%s" class="btn group">' % url_for(
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article2.aid)  # artigo seguinte
+                article_pid_v3=article3.aid,
+                goto='previous',
+                )  # artigo anterior
+
+            expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
+            expect_btn_proximo = '<a href="#" class="btn group disabled">'  # artigo anterior
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                with self.subTest(btn):
+                    self.assertIn(btn, response.data.decode('utf-8'))
 
     def test_article_detail_v3_menu_when_first_article(self):
         """
@@ -678,7 +684,8 @@ class MenuTestCase(BaseTestCase):
             expect_btn_proximo = '<a href="%s" class="btn group">' % url_for(
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article2.aid)  # artigo seguinte
+                article_pid_v3=article1.aid,
+                goto='next')  # artigo seguinte
 
             expected_btns = [
                 expect_btn_anterior,
@@ -689,3 +696,4 @@ class MenuTestCase(BaseTestCase):
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
                 self.assertIn(btn, response.data.decode('utf-8'))
+
