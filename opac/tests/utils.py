@@ -318,12 +318,7 @@ def makeOneArticle(attrib=None):  # noqa
         'translated_titles': attrib.get('translated_titles', []),
         'languages': attrib.get('languages', ['pt', ]),
     }
-    if attrib.get('htmls'):
-        article['htmls'] = attrib.get('htmls')
-
-    for k, v in attrib.items():
-        if k not in list(article.keys()):
-            article[k] = v
+    article.update(attrib)
 
     return models.Article(**article).save()
 
