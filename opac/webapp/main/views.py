@@ -48,6 +48,7 @@ ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 
 
+
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
@@ -1170,24 +1171,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404, str(e))
 
     def _handle_html():
-        article_list = list(
-            controllers.get_articles_by_iid(article.issue.iid, is_public=True)
-        )
-        prev_lang = next_lang = None
-
-        if gs_abstract:
-            article_list = [a for a in article_list if a.abstracts]
-
-        previous_article = utils.get_prev_article(article_list, article)
-        next_article = utils.get_next_article(article_list, article)
-
-        if gs_abstract:
-            prev_lang = next_lang = qs_lang
-            if previous_article and (qs_lang not in previous_article.abstract_languages):
-                prev_lang = previous_article.abstract_languages[0]
-            if next_article and (qs_lang not in next_article.abstract_languages):
-                next_lang = next_article.abstract_languages[0]
-
         citation_pdf_url = None
         for pdf_data in article.pdfs:
             if pdf_data.get("lang") == qs_lang:
@@ -1238,8 +1221,9 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             )
         )
         context = {
-            'next_article': next_article,
-            'previous_article': previous_article,
+            # mostra os botões 'next' e 'previous' sempre, por enquanto
+            'next_article': True,
+            'previous_article': True,
             'article': article,
             'journal': article.journal,
             'issue': article.issue,
@@ -1251,9 +1235,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             'related_links': controllers.related_links(article),
             'gs_abstract': gs_abstract,
             'part': part,
-            'next_lang': next_lang,
-            'prev_lang': prev_lang,
-
         }
         return render_template("article/detail.html", **context)
 
