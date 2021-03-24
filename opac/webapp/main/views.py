@@ -1119,8 +1119,12 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
+    qs_lang = request.args.get('lang', type=str) or None
+    qs_goto = request.args.get('goto', type=str) or None
+    qs_stop = request.args.get('stop', type=str) or None
     qs_format = request.args.get('format', 'html', type=str)
-    if qs_format == "xml" and request.args.get('lang'):
+
+    if qs_format == "xml" and qs_lang:
         abort(400, _("Idioma não suportado para formato XML"))
 
     gs_abstract = (part == "abstract")
@@ -1128,12 +1132,11 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404,
               _("Não existe '{}'. No seu lugar use '{}'"
                 ).format(part, 'abstract'))
-    qs_lang = request.args.get('lang', type=str) or None
-    qs_goto = request.args.get('goto', type=str) or None
 
     try:
         qs_lang, article = controllers.get_article(
             article_pid_v3, url_seg, qs_lang, gs_abstract, qs_goto)
+
         if qs_goto:
             return redirect(
                 url_for(
@@ -1143,9 +1146,12 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
                     part=part,
                     format=qs_format,
                     lang=qs_lang,
+                    stop=getattr(article, 'stop', None),
                 ),
                 code=301
             )
+    except (controllers.PreviousOrNextArticleNotFoundError) as e:
+        abort(404, _('Artigo {} não existe').format(e))
     except (controllers.ArticleNotFoundError,
             controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
@@ -1221,9 +1227,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             )
         )
         context = {
-            # mostra os botões 'next' e 'previous' sempre, por enquanto
-            'next_article': True,
-            'previous_article': True,
+            'next_article': qs_stop != 'next',
+            'previous_article': qs_stop != 'previous',
             'article': article,
             'journal': article.journal,
             'issue': article.issue,

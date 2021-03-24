@@ -535,7 +535,8 @@ class MenuTestCase(BaseTestCase):
             article_detail_url = url_for(
                 'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article2.aid)
+                article_pid_v3=article2.aid,
+                lang=article2.original_language)
 
             response = self.client.get(article_detail_url)
 
@@ -546,6 +547,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
+                lang=article2.original_language,
                 goto='previous'
                 )  # artigo anterior
 
@@ -555,6 +557,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
+                lang=article2.original_language,
                 goto='next'
                 )  # artigo seguinte
 
@@ -562,7 +565,9 @@ class MenuTestCase(BaseTestCase):
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(
+                    btn.replace('&', '&amp;'),
+                    response.data.decode('utf-8'))
 
     def test_article_detail_v3_menu_when_last_article(self):
         """
@@ -606,7 +611,9 @@ class MenuTestCase(BaseTestCase):
             article_detail_url = url_for(
                 'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article3.aid)
+                article_pid_v3=article3.aid,
+                lang=article3.original_language,
+            )
 
             response = self.client.get(article_detail_url)
 
@@ -617,6 +624,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
                 article_pid_v3=article3.aid,
+                lang=article3.original_language,
                 goto='previous',
                 )  # artigo anterior
 
@@ -628,7 +636,9 @@ class MenuTestCase(BaseTestCase):
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
                 with self.subTest(btn):
-                    self.assertIn(btn, response.data.decode('utf-8'))
+                    self.assertIn(
+                        btn.replace("&", "&amp;"),
+                        response.data.decode('utf-8'))
 
     def test_article_detail_v3_menu_when_first_article(self):
         """
@@ -670,7 +680,9 @@ class MenuTestCase(BaseTestCase):
             article_detail_url = url_for(
                 'main.article_detail_v3',
                 url_seg=journal.url_segment,
-                article_pid_v3=article1.aid)
+                article_pid_v3=article1.aid,
+                lang=article1.original_language,
+                )
 
             response = self.client.get(article_detail_url)
 
@@ -685,6 +697,7 @@ class MenuTestCase(BaseTestCase):
                 '.article_detail_v3',
                 url_seg=journal.url_segment,
                 article_pid_v3=article1.aid,
+                lang=article1.original_language,
                 goto='next')  # artigo seguinte
 
             expected_btns = [
@@ -695,7 +708,9 @@ class MenuTestCase(BaseTestCase):
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(
+                    btn.replace("&", "&amp;"),
+                    response.data.decode('utf-8'))
 
     # Article Menu
     def test_article_detail_v3_abstract_menu(self):
@@ -769,6 +784,7 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
                 part='abstract',
+                lang="pt",
                 goto='previous'
                 )  # artigo anterior
 
@@ -779,6 +795,7 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
                 part='abstract',
+                lang="pt",
                 goto='next'
                 )  # artigo seguinte
 
@@ -786,7 +803,9 @@ class MenuTestCase(BaseTestCase):
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(
+                    btn.replace('&', '&amp;'),
+                    response.data.decode('utf-8'))
 
     def test_article_detail_v3_abstract_menu_when_last_article(self):
         """
@@ -860,6 +879,7 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article3.aid,
                 part='abstract',
+                lang='pt',
                 goto='previous',
                 )  # artigo anterior
 
@@ -871,7 +891,9 @@ class MenuTestCase(BaseTestCase):
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
                 with self.subTest(btn):
-                    self.assertIn(btn, response.data.decode('utf-8'))
+                    self.assertIn(
+                        btn.replace('&', '&amp;'),
+                        response.data.decode('utf-8'))
 
     def test_article_detail_v3_abstract_menu_when_first_article(self):
         """
@@ -947,6 +969,7 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article1.aid,
                 part='abstract',
+                lang='pt',
                 goto='next')  # artigo seguinte
 
             expected_btns = [
@@ -957,4 +980,7 @@ class MenuTestCase(BaseTestCase):
 
             # Verificar se todos os btns do menu estão presentes no HTML da resposta
             for btn in expected_btns:
-                self.assertIn(btn, response.data.decode('utf-8'))
+                self.assertIn(
+                    btn.replace('&', '&amp;'),
+                    response.data.decode('utf-8')
+                )

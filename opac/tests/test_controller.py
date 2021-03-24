@@ -905,7 +905,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
     def test_goto_article_returns_no_next(self):
         articles = self._make_same_issue_articles()
-        with self.assertRaises(controllers.ArticleNotFoundError):
+        with self.assertRaises(controllers.PreviousOrNextArticleNotFoundError):
             controllers.goto_article(articles[-1], "next")
 
     def test_goto_article_returns_previous_article(self):
@@ -917,7 +917,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
     def test_goto_article_returns_no_previous(self):
         articles = self._make_same_issue_articles()
-        with self.assertRaises(controllers.ArticleNotFoundError):
+        with self.assertRaises(controllers.PreviousOrNextArticleNotFoundError):
             controllers.goto_article(articles[0], "previous")
 
     def test_goto_article_returns_next_article_with_abstract(self):
@@ -933,7 +933,7 @@ class ArticleControllerTestCase(BaseTestCase):
             {},
         ]
         articles = self._make_same_issue_articles(attribs)
-        with self.assertRaises(controllers.ArticleNotFoundError):
+        with self.assertRaises(controllers.PreviousOrNextArticleNotFoundError):
             controllers.goto_article(articles[0], "next", True)
 
     def test_goto_article_returns_previous_article_with_abstract(self):

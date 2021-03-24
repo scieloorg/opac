@@ -71,6 +71,9 @@ class ArticleLangNotFoundError(Exception):
 class ArticleNotFoundError(Exception):
     ...
 
+class PreviousOrNextArticleNotFoundError(Exception):
+    ...
+
 
 # -------- COLLECTION --------
 
@@ -865,6 +868,9 @@ def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
     """
     articles = get_articles_by_iid(iid, is_public=True)
     if gs_abstract:
+        # FIXME - Melhorar esta consulta
+        # conseguir em um único comando
+        # obter só os documentos que contenham resumo
         return [a for a in list(articles) if a.abstracts]
     return articles
 
@@ -907,8 +913,10 @@ def goto_article(doc, goto, gs_abstract=False):
     if goto == "previous":
         article = _prev_item(docs, doc)
     if article:
+        if article.aid in (docs[-1].aid, docs[0].aid):
+            article.stop = goto
         return article
-    raise ArticleNotFoundError(goto)
+    raise PreviousOrNextArticleNotFoundError(goto)
 
 
 def get_article(aid, journal_url_seg, lang=None, gs_abstract=False, goto=None):
@@ -1057,10 +1065,14 @@ def get_articles_by_iid(iid, **kwargs):
     Em caso de não existir itens retorna {}.
 
     """
-
     if not iid:
         raise ValueError(__('Obrigatório um iid.'))
 
+    # FIXME - Melhorar esta consulta
+    # Em um fascículo em que não é aop nem publicação contínua
+    # todas as datas são iguais, então, `order_by`,
+    # poderia ser chamado uma única vez
+    # No entanto, há um issue relacionado: #1435
     articles = Article.objects(issue=iid, **kwargs).order_by('order')
     if is_aop_issue(articles) or is_open_issue(articles):
         return articles.order_by('-publication_date')
