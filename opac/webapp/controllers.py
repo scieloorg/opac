@@ -866,13 +866,12 @@ def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
     Em caso de não existir itens retorna {}.
 
     """
-    articles = get_articles_by_iid(iid, is_public=True)
+    query = dict(is_public=True)
+
     if gs_abstract:
-        # FIXME - Melhorar esta consulta
-        # conseguir em um único comando
-        # obter só os documentos que contenham resumo
-        return [a for a in list(articles) if a.abstracts]
-    return articles
+        query.update({'abstracts__not__size': 0})
+
+    return list(get_articles_by_iid(iid, **query))
 
 
 def _prev_item(items, item):

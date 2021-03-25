@@ -963,14 +963,20 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertIn("Expected: next or previous", str(exc.exception))
 
     def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list(self):
-        abstracts = []
-        a = self._make_one({"abstracts": abstracts})
+        a = self._make_one({"abstracts": []})
         articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
             a.issue.id, gs_abstract=True)
         self.assertEqual(articles, [])
 
     def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list2(self):
         a = self._make_one({"abstracts": None})
+        articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
+            a.issue.id, gs_abstract=True)
+        self.assertEqual(articles, [])
+
+    def test__articles_or_abstracts_sorted_by_order_or_date_returns_empty_list3(self):
+        # nao existe nem o campo `abstracts`
+        a = self._make_one()
         articles = controllers._articles_or_abstracts_sorted_by_order_or_date(
             a.issue.id, gs_abstract=True)
         self.assertEqual(articles, [])
