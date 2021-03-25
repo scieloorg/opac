@@ -1151,7 +1151,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
                 code=301
             )
     except (controllers.PreviousOrNextArticleNotFoundError) as e:
-        abort(404, _('Artigo {} não existe').format(e))
+        abort(404, _('Artigo inexistente'))
     except (controllers.ArticleNotFoundError,
             controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
