@@ -784,8 +784,8 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
                 part='abstract',
+                goto='previous',
                 lang="pt",
-                goto='previous'
                 )  # artigo anterior
 
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
@@ -795,8 +795,8 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article2.aid,
                 part='abstract',
+                goto='next',
                 lang="pt",
-                goto='next'
                 )  # artigo seguinte
 
             expected_btns = [expect_btn_anterior, expect_btn_atual, expect_btn_proximo]
@@ -879,8 +879,8 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article3.aid,
                 part='abstract',
-                lang='pt',
                 goto='previous',
+                lang='pt',
                 )  # artigo anterior
 
             expect_btn_atual = '<a href="#" class="btn group disabled">'  # número atual
@@ -969,8 +969,9 @@ class MenuTestCase(BaseTestCase):
                 url_seg=journal.url_segment,
                 article_pid_v3=article1.aid,
                 part='abstract',
+                goto='next',
                 lang='pt',
-                goto='next')  # artigo seguinte
+                )  # artigo seguinte
 
             expected_btns = [
                 expect_btn_anterior,
