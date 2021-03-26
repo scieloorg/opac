@@ -763,13 +763,15 @@ class ArticleControllerTestCase(BaseTestCase):
             {
                 "original_language": "pt",
                 "languages": ["pt", ],
-                "abstracts": [{"language": "pt", "text": ""}],
+                "abstract": "texto",
+                "abstract": "resumo", "abstracts": [{"language": "pt", "text": ""}],
                 "abstract_languages": ["pt"],
             },
             {
                 "original_language": "es",
                 "languages": ["es", ],
-                "abstracts": [{"language": "es", "text": ""}],
+                "abstract": "texto",
+                "abstract": "resumo", "abstracts": [{"language": "es", "text": ""}],
                 "abstract_languages": ["es"],
             },
         ]
@@ -929,7 +931,10 @@ class ArticleControllerTestCase(BaseTestCase):
 
     def test_goto_article_returns_no_next_because_next_has_no_abstract(self):
         attribs = [
-            {"abstracts": [{"language": "x", "text": ""}]},
+            {
+                "abstract": "texto",
+                "abstract": "resumo", "abstracts": [{"language": "x", "text": ""}]
+            },
             {},
         ]
         articles = self._make_same_issue_articles(attribs)
@@ -946,7 +951,7 @@ class ArticleControllerTestCase(BaseTestCase):
     def test_goto_article_returns_no_previous_because_previous_has_no_abstract(self):
         attribs = [
             {},
-            {"abstracts": [{"language": "x", "text": ""}]},
+            {"abstract": "resumo", "abstracts": [{"language": "x", "text": ""}]},
         ]
         articles = self._make_same_issue_articles(attribs)
         with self.assertRaises(controllers.ArticleNotFoundError):
@@ -955,7 +960,7 @@ class ArticleControllerTestCase(BaseTestCase):
     def test_goto_article_returns_no_previous_because_previous_has_no_abstract(self):
         attribs = [
             {},
-            {"abstracts": [{"language": "x", "text": ""}]},
+            {"abstract": "resumo", "abstracts": [{"language": "x", "text": ""}]},
         ]
         articles = self._make_same_issue_articles(attribs)
         with self.assertRaises(ValueError) as exc:
@@ -994,7 +999,8 @@ class ArticleControllerTestCase(BaseTestCase):
         abstract_languages = ["en"]
         a = self._make_one(
             {
-                "abstracts": abstracts,
+                "abstract": "Texto",
+                "abstract": "resumo", "abstracts": abstracts,
                 "abstract_languages": abstract_languages
             }
         )

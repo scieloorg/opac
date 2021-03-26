@@ -869,7 +869,7 @@ def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
     query = dict(is_public=True)
 
     if gs_abstract:
-        query.update({'abstracts__not__size': 0})
+        query.update({'abstract__ne': "", 'abstract__exists': True})
 
     return list(get_articles_by_iid(iid, **query))
 
