@@ -48,6 +48,7 @@ ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 
 
+
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
@@ -1118,20 +1119,41 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
+    qs_lang = request.args.get('lang', type=str) or None
+    qs_goto = request.args.get('goto', type=str) or None
+    qs_stop = request.args.get('stop', type=str) or None
     qs_format = request.args.get('format', 'html', type=str)
-    if qs_format == "xml" and request.args.get('lang'):
+
+    if qs_format == "xml" and qs_lang:
         abort(400, _("Idioma não suportado para formato XML"))
 
-    gs_abstract = bool(part and part == "abstract")
+    gs_abstract = (part == "abstract")
     if part and not gs_abstract:
         abort(404,
               _("Não existe '{}'. No seu lugar use '{}'"
                 ).format(part, 'abstract'))
-    qs_lang = request.args.get('lang', type=str) or None
 
     try:
-        article = controllers.get_article_by_aid(
-            article_pid_v3, url_seg, qs_lang, gs_abstract)
+        qs_lang, article = controllers.get_article(
+            article_pid_v3, url_seg, qs_lang, gs_abstract, qs_goto)
+
+        if qs_goto:
+            return redirect(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=url_seg,
+                    article_pid_v3=article.aid,
+                    part=part,
+                    format=qs_format,
+                    lang=qs_lang,
+                    stop=getattr(article, 'stop', None),
+                ),
+                code=301
+            )
+    except (controllers.PreviousOrNextArticleNotFoundError) as e:
+        if gs_abstract:
+            abort(404, _('Resumo inexistente'))
+        abort(404, _('Artigo inexistente'))
     except (controllers.ArticleNotFoundError,
             controllers.ArticleJournalNotFoundError):
         abort(404, _('Artigo não encontrado'))
@@ -1156,16 +1178,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     except ValueError as e:
         abort(404, str(e))
 
-    qs_lang = qs_lang or article.original_language
-
     def _handle_html():
-        article_list = list(
-            controllers.get_articles_by_iid(article.issue.iid, is_public=True)
-        )
-
-        previous_article = utils.get_prev_article(article_list, article)
-        next_article = utils.get_next_article(article_list, article)
-
         citation_pdf_url = None
         for pdf_data in article.pdfs:
             if pdf_data.get("lang") == qs_lang:
@@ -1216,8 +1229,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             )
         )
         context = {
-            'next_article': next_article,
-            'previous_article': previous_article,
+            'next_article': qs_stop != 'next',
+            'previous_article': qs_stop != 'previous',
             'article': article,
             'journal': article.journal,
             'issue': article.issue,
@@ -1228,6 +1241,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             'text_versions': text_versions,
             'related_links': controllers.related_links(article),
             'gs_abstract': gs_abstract,
+            'part': part,
         }
         return render_template("article/detail.html", **context)
 

@@ -71,6 +71,9 @@ class ArticleLangNotFoundError(Exception):
 class ArticleNotFoundError(Exception):
     ...
 
+class PreviousOrNextArticleNotFoundError(Exception):
+    ...
+
 
 # -------- COLLECTION --------
 
@@ -853,6 +856,103 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     return article
 
 
+def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
+    """
+    Retorna uma lista de artigos de um _fascículo_ ou de um _bundle_
+
+    - ``iid``: chave primaria de número para escolher os artigos.
+    - ``kwargs``: parâmetros de filtragem.
+
+    Em caso de não existir itens retorna {}.
+
+    """
+    query = dict(is_public=True)
+
+    if gs_abstract:
+        query.update({'abstract__ne': "", 'abstract__exists': True})
+
+    return list(get_articles_by_iid(iid, **query))
+
+
+def _prev_item(items, item):
+    """
+    Retorna os item anterior a `item` na lista `items`
+    Considera `items` em ordem crescente
+    """
+    index = items.index(item)
+    if index == -1:
+        raise ValueError("{} not found in {}".format(item, items))
+    if index > 0:
+        return items[index - 1]
+
+
+def _next_item(items, item):
+    """
+    Retorna os item posterior a `item` na lista `items`
+    Considera `items` em ordem crescente
+    """
+    index = items.index(item)
+    if index == -1:
+        raise ValueError("{} not found in {}".format(item, items))
+    try:
+        return items[index + 1]
+    except (ValueError, IndexError):
+        return None
+
+
+def goto_article(doc, goto, gs_abstract=False):
+    if goto not in ("next", "previous"):
+        raise ValueError(
+            "Invalid value: goto={}. Expected: next or previous)".format(goto)
+        )
+    docs = list(_articles_or_abstracts_sorted_by_order_or_date(
+        doc.issue.iid, gs_abstract))
+    if goto == "next":
+        article = _next_item(docs, doc)
+    if goto == "previous":
+        article = _prev_item(docs, doc)
+    if article:
+        if article.aid in (docs[-1].aid, docs[0].aid):
+            article.stop = goto
+        return article
+    raise PreviousOrNextArticleNotFoundError(goto)
+
+
+def get_article(aid, journal_url_seg, lang=None, gs_abstract=False, goto=None):
+    # obtém o artigo
+    if goto:
+        # obtém o artigo, não importa o idioma, nem se tem abstract
+        # pois será redirecionado para o próximo ou anterior
+        article = get_article_by_aid(aid, journal_url_seg)
+
+        # obtém o próximo ou anterior?
+        article = goto_article(article, goto, gs_abstract)
+
+        # precisa obter um idioma válido
+        lang = get_existing_lang(article, lang, gs_abstract)
+    else:
+        # obtém o artigo
+        article = get_article_by_aid(aid, journal_url_seg, lang, gs_abstract)
+        if lang is None and not gs_abstract:
+            lang = article.original_language
+    return lang, article
+
+
+def get_existing_lang(article, lang, gs_abstract):
+    """
+    Evita falha de recurso não encontrado,
+    quando se navega entre os documentos e/ou resumos,
+    """
+    # ajusta o idioma
+    if gs_abstract:
+        langs = article.abstract_languages
+    else:
+        langs = [article.original_language] + article.languages
+    if lang not in langs:
+        lang = langs[0]
+    return lang
+
+
 def get_article_by_url_seg(url_seg_article, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``url_seg_article`` e ``kwargs``.
@@ -964,10 +1064,14 @@ def get_articles_by_iid(iid, **kwargs):
     Em caso de não existir itens retorna {}.
 
     """
-
     if not iid:
         raise ValueError(__('Obrigatório um iid.'))
 
+    # FIXME - Melhorar esta consulta
+    # Em um fascículo em que não é aop nem publicação contínua
+    # todas as datas são iguais, então, `order_by`,
+    # poderia ser chamado uma única vez
+    # No entanto, há um issue relacionado: #1435
     articles = Article.objects(issue=iid, **kwargs).order_by('order')
     if is_aop_issue(articles) or is_open_issue(articles):
         return articles.order_by('-publication_date')
