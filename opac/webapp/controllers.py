@@ -839,14 +839,9 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
         raise ArticleJournalNotFoundError(article.journal.url_segment)
 
     if gs_abstract:
-        # "abstracts":[{"language":"en","text":"
-        abstract = None
-        for ab in article.abstracts:
-            if lang == ab["language"]:
-                abstract = ab
-                break
-        if not abstract:
-            raise ArticleAbstractNotFoundError(str(article.abstract_languages))
+        abstract_languages = _abstract_languages(article.abstracts)
+        if not abstract_languages or (lang not in abstract_languages):
+            raise ArticleAbstractNotFoundError(lang)
     else:
         lang = lang or article.original_language
         valid_langs = [article.original_language] + article.languages
@@ -854,6 +849,14 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
             raise ArticleLangNotFoundError(str(valid_langs))
 
     return article
+
+
+def _abstracts(abstracts):
+    return [a for a in abstracts if a["text"].strip()]
+
+
+def _abstract_languages(abstracts):
+    return [a["language"] for a in abstracts if a["text"].strip()]
 
 
 def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
@@ -866,12 +869,20 @@ def _articles_or_abstracts_sorted_by_order_or_date(iid, gs_abstract=False):
     Em caso de não existir itens retorna {}.
 
     """
-    query = dict(is_public=True)
-
+    articles = get_articles_by_iid(iid, is_public=True)
     if gs_abstract:
-        query.update({'abstract__ne': "", 'abstract__exists': True})
-
-    return list(get_articles_by_iid(iid, **query))
+        # garante obter somente os documentos que tem resumos
+        # abstracts = [
+        #   {'language': "pt", "text": ""},
+        #   {'language': "en", "text": ""},
+        # ]
+        #
+        articles = [
+            a
+            for a in articles
+            if _abstracts(a.abstracts)
+        ]
+    return articles
 
 
 def _prev_item(items, item):
