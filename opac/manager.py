@@ -222,7 +222,7 @@ def create_superuser():
 @manager.command
 @manager.option('-p', '--pattern', dest='pattern')
 @manager.option('-f', '--failfast', dest='failfast')
-def test(pattern='test_*.py', failfast=False):
+def test(pattern=None, failfast=False):
     """ Executa tests unitarios.
     Lembre de definir a variável: OPAC_CONFIG="path do arquivo de conf para testing"
     antes de executar este comando:
@@ -236,7 +236,10 @@ def test(pattern='test_*.py', failfast=False):
         os.environ['FLASK_COVERAGE'] = '1'
         os.execvp(sys.executable, [sys.executable] + sys.argv)
 
-    tests = unittest.TestLoader().discover('tests', pattern=pattern)
+    if pattern is None:
+        tests = unittest.TestLoader().discover('tests')
+    else:
+        tests = unittest.TestLoader().loadTestsFromName('tests.' + pattern)
 
     result = unittest.TextTestRunner(verbosity=2, failfast=failfast).run(tests)
 
