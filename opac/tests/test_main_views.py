@@ -33,6 +33,32 @@ class MainTestCase(BaseTestCase):
                 self.assertEqual('text/html; charset=utf-8', response.content_type)
                 self.assert_template_used("collection/index.html")
 
+    def test_should_obtain_the_latest_metric_counts_from_collection(self):
+        with current_app.app_context():
+            collection = utils.makeOneCollection({
+                "metrics" : {
+                    "total_journal" : 0,
+                    "total_issue" : 0,
+                    "total_article" : 0,
+                    "total_citation" : 0
+                },
+            })
+
+            with self.client as client:
+                response = client.get(url_for('main.index'))
+                collection = g.get('collection')
+                self.assertEqual(0, collection.metrics.total_journal)
+            
+
+            utils.makeOneJournal({'is_public': True, 'current_status': 'current'})
+            utils.makeOneArticle({'is_public': True})
+
+            with self.client as client:
+                response = client.get(url_for('main.index'))
+                self.assertEqual(1, collection.metrics.total_issue)
+                self.assertEqual(1, collection.metrics.total_article)
+                self.assertEqual(1, collection.metrics.total_journal)
+
     def test_g_object_has_collection_object(self):
         """
         COM:

@@ -38,6 +38,8 @@ from webapp import forms
 
 from webapp.config.lang_names import display_original_lang_name
 
+from opac_schema.v1.models import Journal, Issue, Article, Collection
+
 from lxml import etree
 from packtools import HTMLGenerator
 
@@ -186,6 +188,19 @@ def index():
             current_app.config['METRICS_URL'],
             current_app.config['OPAC_COLLECTION'])
     }
+
+    if (
+        g.collection is not None
+        and isinstance(g.collection, Collection)
+        and g.collection.metrics is not None
+    ):
+        g.collection.metrics.total_journal = Journal.objects.filter(
+            is_public=True, current_status="current"
+        ).count()
+        g.collection.metrics.total_issue = Issue.objects.filter(is_public=True).count()
+        g.collection.metrics.total_article = Article.objects.filter(
+            is_public=True
+        ).count()
 
     context = {
         'news': news,
