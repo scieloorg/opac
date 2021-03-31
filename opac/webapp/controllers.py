@@ -819,9 +819,14 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     if not aid:
         raise ValueError(__('Obrigatório um aid.'))
 
-    article = Article.objects(aid=aid, **kwargs).first()
-    if not article:
+    try:
+        article = Article.objects.get(pk=aid, **kwargs)
+    except Article.DoesNotExist as e:
         raise ArticleNotFoundError(aid)
+    except Article.MultipleObjectsReturned as e:
+        article = Article.objects(aid=aid, **kwargs).first()
+        if not article:
+            raise ArticleNotFoundError(aid)
 
     if not article.is_public:
         raise ArticleIsNotPublishedError(article.unpublish_reason)
