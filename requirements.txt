@@ -9,7 +9,7 @@ click==7.1.2
 coverage==4.5.1
 croniter==0.3.34
 dnspython==1.16.0
-elastic-apm==5.5.2
+elastic-apm==6.1.0
 email-validator==1.0.5
 feedparser==5.2.1
 Flask==0.12.4
