@@ -188,7 +188,7 @@ ASSETS_DEBUG = DEBUG
 
 
 # ativa/desativa o modo Debug mimificado do HTML
-MINIFY_PAGE = True
+MINIFY_PAGE = os.environ.get('OPAC_MINIFY_PAGE', 'False') == 'True'
 
 
 # Email do webmaster, este e-mail será utilizado para contato em caso de página
