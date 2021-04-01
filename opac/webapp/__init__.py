@@ -144,8 +144,9 @@ def create_app():
     login_manager.init_app(app)
 
     # Minificando o HTML
-    if not app.config['DEBUG']:
+    if app.config['MINIFY_PAGE']:
         HTMLMIN(app)
+        logger.info('HTML minification has been activated.')
 
     # Registrando os filtros
     app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
