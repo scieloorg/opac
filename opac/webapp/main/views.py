@@ -4,7 +4,6 @@ import logging
 import requests
 import mimetypes
 from io import BytesIO
-from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
 from collections import OrderedDict
@@ -46,7 +45,6 @@ logger = logging.getLogger(__name__)
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
-
 
 
 def url_external(endpoint, **kwargs):
@@ -252,6 +250,7 @@ def collection_list_thematic():
         "collection/list_thematic.html",
         **{"objects": objects, "query_filter": query_filter, "filter": thematic_filter}
     )
+
 
 @main.route('/journals/feed/')
 @cache.cached(key_prefix=cache_key_with_lang)
@@ -1028,13 +1027,9 @@ def render_html_from_xml(article, lang, gs_abstract=False):
     xml = etree.parse(BytesIO(result))
 
     generator = HTMLGenerator.parse(
-        xml, valid_only=False, gs_abstract=gs_abstract)
+        xml, valid_only=False, gs_abstract=gs_abstract, output_style="website")
 
-    # Criamos um objeto do tip soup
-    soup = BeautifulSoup(etree.tostring(generator.generate(lang), encoding="UTF-8", method="html"), 'html.parser')
-
-    # Fatiamos o HTML pelo div com class: articleTxt
-    return soup.find('div', {'id': 'standalonearticle'}), generator.languages
+    return generator.generate(lang), generator.languages
 
 
 def render_html_from_html(article, lang):
@@ -1136,7 +1131,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     try:
         qs_lang, article = controllers.get_article(
             article_pid_v3, url_seg, qs_lang, gs_abstract, qs_goto)
-
         if qs_goto:
             return redirect(
                 url_for(
@@ -1179,6 +1173,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404, str(e))
 
     def _handle_html():
+
         citation_pdf_url = None
         for pdf_data in article.pdfs:
             if pdf_data.get("lang") == qs_lang:
