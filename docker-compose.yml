@@ -40,6 +40,7 @@ services:
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_LOG_LEVEL=WARNING
+            - OPAC_MINIFY_PAGE=False
             - OPAC_MONGODB_NAME=opac_mongo
             - OPAC_DATABASE_DIR=/app/data
             - OPAC_SECRET_KEY=s3kr3tk3y

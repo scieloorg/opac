@@ -49,6 +49,7 @@ services:
         environment:
             - OPAC_DEBUG_MODE=True
             - OPAC_LOG_LEVEL=DEBUG
+            - OPAC_MINIFY_PAGE=False
             - OPAC_MONGODB_NAME=opac
             - OPAC_MONGODB_HOST=opac_mongo
             - OPAC_MONGODB_PORT=27017
