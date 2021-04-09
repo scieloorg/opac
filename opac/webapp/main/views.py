@@ -1563,3 +1563,18 @@ def router_counter_dicts(end_date=''):
     return jsonify(results)
 
 
+def get_article_counter_data(article):
+    return {
+        article.aid: {
+            "journal_acronym": article.journal.acronym,
+            "pid": article.pid if article.pid else '',
+            "aop_pid": article.aop_pid if article.aop_pid else '',
+            "pid_v1": article.scielo_pids.get('v1', ''),
+            "pid_v2": article.scielo_pids.get('v2', ''),
+            "pid_v3": article.scielo_pids.get('v3', ''),
+            "publication_date": article.publication_date,
+            "default_language": article.original_language,
+            "create": article.created,
+            "update": article.updated
+        }
+    }
