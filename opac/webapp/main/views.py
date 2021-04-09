@@ -1533,3 +1533,33 @@ def router_legacy_info_pages(journal_seg, page):
         }
     return redirect('%s%s' % (url_for('main.about_journal',
                                       url_seg=journal_seg), page_anchor.get(page, '')), code=301)
+
+
+@main.route("/api/v1/counter", methods=['GET'])
+@main.route("/api/v1/counter/<string:end_date>", methods=['GET'])
+def router_counter_dicts(end_date=''):
+    """
+    Essa view function retorna um dicionário, em formato JSON, que mapeia PIDs a insumos
+    necessários para o funcionamento das aplicações Matomo & COUNTER & SUSHI.
+    """
+
+    try:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    except:
+        end_date = datetime.now()
+    start_date = end_date - timedelta(days=30)
+
+    results = {'dictionary_date': end_date,
+               'documents_last_create_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'documents_first_create_date': start_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'documents': {},
+               'collection': current_app.config['OPAC_COLLECTION']}
+
+    for a in controllers.get_articles_by_date_range(start_date, end_date):
+        results['documents'].update(get_article_counter_data(a))
+
+    results['total'] = len(results['documents'])
+
+    return jsonify(results)
+
+
