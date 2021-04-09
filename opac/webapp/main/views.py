@@ -1535,8 +1535,8 @@ def router_legacy_info_pages(journal_seg, page):
                                       url_seg=journal_seg), page_anchor.get(page, '')), code=301)
 
 
-@main.route("/api/v1/counter", methods=['GET'])
-@main.route("/api/v1/counter/<string:end_date>", methods=['GET'])
+@main.route("/api/v1/counter_dict", methods=['GET'])
+@main.route("/api/v1/counter_dict/<string:end_date>", methods=['GET'])
 def router_counter_dicts(end_date=''):
     """
     Essa view function retorna um dicionário, em formato JSON, que mapeia PIDs a insumos
