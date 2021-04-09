@@ -1184,6 +1184,15 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
             if pdf["filename"] == pdf_filename:
                 return pdf["url"]
 
+
+def get_articles_by_date_range(start_date, end_date):
+    """
+    Retorna artigos criados ou atualizados durante o período entre start_date e end_date.
+    """
+    return Article.objects(Q(created__gte=start_date) | Q(updated__gte=start_date),
+                           Q(created__lte=end_date) | Q(updated__lte=end_date))
+
+
 # -------- NEWS --------
 
 
