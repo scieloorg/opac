@@ -1536,13 +1536,12 @@ def router_legacy_info_pages(journal_seg, page):
 
 
 @main.route("/api/v1/counter_dict", methods=['GET'])
-@main.route("/api/v1/counter_dict/<string:end_date>", methods=['GET'])
-def router_counter_dicts(end_date=''):
+def router_counter_dicts():
     """
     Essa view function retorna um dicionário, em formato JSON, que mapeia PIDs a insumos
     necessários para o funcionamento das aplicações Matomo & COUNTER & SUSHI.
     """
-
+    end_date = request.args.get('end_date', '', type=str)
     try:
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
     except:
