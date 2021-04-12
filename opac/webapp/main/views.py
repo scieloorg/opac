@@ -1544,7 +1544,7 @@ def router_counter_dicts():
     end_date = request.args.get('end_date', '', type=str)
     try:
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
-    except:
+    except ValueError:
         end_date = datetime.now()
     start_date = end_date - timedelta(days=30)
 
