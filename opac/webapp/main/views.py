@@ -1546,15 +1546,15 @@ def router_counter_dicts():
         end_date = datetime.strptime(end_date, '%Y-%m-%d')
     except ValueError:
         end_date = datetime.now()
-    start_date = end_date - timedelta(days=30)
+    begin_date = end_date - timedelta(days=30)
 
     results = {'dictionary_date': end_date,
-               'documents_last_create_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
-               'documents_first_create_date': start_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
                'documents': {},
                'collection': current_app.config['OPAC_COLLECTION']}
 
-    for a in controllers.get_articles_by_date_range(start_date, end_date):
+    for a in controllers.get_articles_by_date_range(begin_date, end_date):
         results['documents'].update(get_article_counter_data(a))
 
     results['total'] = len(results['documents'])
