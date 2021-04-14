@@ -5,7 +5,7 @@ import requests
 import mimetypes
 from io import BytesIO
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import OrderedDict
 from flask_babelex import gettext as _
 from flask import (
@@ -1533,3 +1533,47 @@ def router_legacy_info_pages(journal_seg, page):
         }
     return redirect('%s%s' % (url_for('main.about_journal',
                                       url_seg=journal_seg), page_anchor.get(page, '')), code=301)
+
+
+@main.route("/api/v1/counter_dict", methods=['GET'])
+def router_counter_dicts():
+    """
+    Essa view function retorna um dicionário, em formato JSON, que mapeia PIDs a insumos
+    necessários para o funcionamento das aplicações Matomo & COUNTER & SUSHI.
+    """
+    end_date = request.args.get('end_date', '', type=str)
+    try:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    except ValueError:
+        end_date = datetime.now()
+    begin_date = end_date - timedelta(days=30)
+
+    results = {'dictionary_date': end_date,
+               'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'documents': {},
+               'collection': current_app.config['OPAC_COLLECTION']}
+
+    for a in controllers.get_articles_by_date_range(begin_date, end_date):
+        results['documents'].update(get_article_counter_data(a))
+
+    results['total'] = len(results['documents'])
+
+    return jsonify(results)
+
+
+def get_article_counter_data(article):
+    return {
+        article.aid: {
+            "journal_acronym": article.journal.acronym,
+            "pid": article.pid if article.pid else '',
+            "aop_pid": article.aop_pid if article.aop_pid else '',
+            "pid_v1": article.scielo_pids.get('v1', ''),
+            "pid_v2": article.scielo_pids.get('v2', ''),
+            "pid_v3": article.scielo_pids.get('v3', ''),
+            "publication_date": article.publication_date,
+            "default_language": article.original_language,
+            "create": article.created,
+            "update": article.updated
+        }
+    }
