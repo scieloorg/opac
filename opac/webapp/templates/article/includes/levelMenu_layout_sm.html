@@ -1,51 +1,18 @@
         <!-- exibe somente no sm -->
         <div class="cttMenuNavigationMobile hidden-lg hidden-md">
 
-          <div class="col-lg-1 col-md-2 col-sm-1">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
+          <div class="col-lg-1 col-md-2 col-sm-3">
+              
+              <div class="btn-group" role="group" aria-label="...">
+                <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single" style="width:auto;">
                   <span class="sci-ico-home"></span>
-              </a>
-          </div>
-
-          <div class="col-lg-6 col-md-5 col-sm-5">
-            <div class="btn-group">
-              {# Sumário #}
-              <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group no-ico-util">
-                  {% trans %}sumário{% endtrans %}
-              </a>
-
-              {# Anterior #}
-                {% if not previous_article %}
-                    <a href="#" class="btn group disabled">
-                {% else %}
-                  {% if is_pdf_page -%}
-                    <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='previous', format='pdf') }}" class="btn group ">
-                  {%- else -%}
-                    <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='previous') }}" class="btn group">
-                  {% endif %}
-                {%- endif %}
-                  <span class="sci-ico-arrowLeft">
                 </a>
+                {# Sumário #}
+                <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group no-ico-util" style="width:auto;">
+                    {% trans %}sumário{% endtrans %}
+                </a>
+              </div>
 
-              {# Atual #}
-              <a href="#" class="btn group no-ico-util disabled">
-                  {% trans %}atual{% endtrans %}
-              </a>
-
-              {# Próximo #}
-              {% if not next_article %}
-                  <a href="#" class="btn group disabled">
-              {% else %}
-                {%- if is_pdf_page -%}
-                  <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='next', format='pdf') }}" class="btn group">
-                {%- else -%}
-                  <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='next') }}" class="btn group">
-                {%- endif %}
-              {%- endif %}
-                  <span class="sci-ico-arrowRight">
-              </a>
-
-            </div>
           </div>
 
         </div>
