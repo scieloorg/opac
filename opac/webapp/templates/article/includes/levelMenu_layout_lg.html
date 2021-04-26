@@ -1,14 +1,12 @@
         <!-- exibe somente no lg -->
         <div class="cttMenuNavigation hidden-sm hidden-md">
 
-          <div class="col-lg-2 col-md-2 col-sm-2">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single">
-                  <span class="sci-ico-home"></span>{% trans %}home do periodico{% endtrans %}
-              </a>
-          </div>
-
-          <div class="col-lg-5 col-md-5 col-sm-5">
+          <div class="col-lg-6 col-md-7 col-sm-7">
             <div class="btn-group">
+              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn">
+                <span class="sci-ico-home"></span>
+              </a>
+              
               {# Sumário #}
               <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group">
                   {% trans %}sumário{% endtrans %}
