@@ -1,36 +1,62 @@
+<!-- Exibe para todos dispositivos menos mobile -->
 <section class="levelMenu hidden-xs">
     <div class="container">
-        <!-- exibe somente no lg -->
-        {% include "article/includes/levelMenu_layout_lg.html" %}
+        
+        <div class="col-lg-6 col-md-6 col-sm-5">
 
-        <!-- exibe somente no md -->
-        {% include "article/includes/levelMenu_layout_md.html" %}
+          <div class="btn-group">
+            <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn">
+              <span class="sci-ico-home"></span>
+            </a>
+            
+            {# Sumário #}
+            <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group">
+                {% trans %}sumário{% endtrans %}
+            </a>
 
-        <!-- exibe somente no sm -->
-        {% include "article/includes/levelMenu_layout_sm.html" %}
+            {# Anterior #}
+              {% if not previous_article %}
+                  <a href="#" class="btn group disabled hidden-sm">
+              {% else %}
+                {% if is_pdf_page -%}
+                  <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='previous', format='pdf') }}" class="btn group hidden-sm">
+                {%- else -%}
+                  <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='previous') }}" class="btn group hidden-sm">
+                {% endif %}
+              {%- endif %}
+                <span class="hidden-md">&laquo; {% trans %}anterior{% endtrans %}</span>
+                <span class="sci-ico-arrowLeft hidden-lg"></span>
+              </a>
 
-        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-4 col-md-2 col-sm-7 hidden-md">
-          
-          <!-- exibe links de textos completos e resumos -->
+            {# Atual #}
+            <a href="#" class="btn group disabled hidden-sm">
+                {% trans %}atual{% endtrans %}
+            </a>
+
+            {# Próximo #}
+            {% if not next_article %}
+                <a href="#" class="btn group disabled hidden-sm">
+            {% else %}
+              {%- if is_pdf_page -%}
+                <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='next', format='pdf') }}" class="btn group hidden-sm">
+              {%- else -%}
+                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='next') }}" class="btn group hidden-sm">
+              {%- endif %}
+            {%- endif %}
+              <span class="hidden-md">{% trans %}seguinte{% endtrans %} &raquo;</span>
+              <span class="sci-ico-arrowRight hidden-lg"></span>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-5 col-sm-6">
           {% include "article/includes/levelMenu_abstracts.html" %}
           {% include "article/includes/levelMenu_texts.html" %}
           {% include "article/includes/levelMenu_pdf.html" %}
-
         </div>
-        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
 
-        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-3 col-md-4 col-sm-4 hidden-sm hidden-lg">
-          
-          <!-- exibe links de textos completos e resumos -->
-          {% include "article/includes/levelMenu_abstracts.html" %}
-          {% include "article/includes/levelMenu_texts.html" %}
-          {% include "article/includes/levelMenu_pdf.html" %}
-
-        </div>
-        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-2 col-md-3 col-sm-2 share">
+        <div class="col-lg-2 col-md-1 col-sm-1 share">
           <span class="hidden-sm">{% trans %}Compartilhe{% endtrans %}</span>
             <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
               <span class="sci-ico-socialOther"></span><span class="caret"></span>
@@ -90,6 +116,8 @@
     </div>
 </section>
 
+
+<!-- Exibe somente no mobile -->
 <section class="levelMenu levelMenu-xs hidden-sm hidden-md hidden-lg">
     <div class="container">
       <div class="row">
