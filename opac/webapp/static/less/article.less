@@ -2484,3 +2484,112 @@ Ajustes para mobile
 		margin-top: 35px;
 	}
 }
+
+
+.levelMenu{
+
+	.btn{
+		min-height: 38px;
+
+		&.group{
+			width: auto;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
+
+			@media @minDesktop {
+				padding-left: 32px !important;
+				padding-right: 32px !important;
+			}
+		}
+	}
+	.dropdown-menu{
+		a.current{
+			position: relative;
+			width: 100%;
+			font-weight: bold;
+			
+			&:after{
+				content:"✓";
+				display: inline-block;
+				position: absolute;
+				right: 5px;
+			}
+		}
+
+		&.menu-share-mobile{
+			@media @onlyTablet {
+				left: auto;
+			}
+		}
+	}
+}
+
+.levelMenu-xs{
+
+	/* Btn Group nav mobile*/
+	.btn-group{
+		
+		&.btn-group-nav-mobile{
+			width: 100%;
+			display: table;
+	
+			>.btn{
+				display: table-cell;
+				width: 60%;
+
+				&:first-of-type{
+					width: 20%;
+				}
+
+				&:last-of-type{
+					width: 20%;
+				}
+
+				.sci-ico-socialOther{
+					display: inline-block;
+					width: 70%;
+				}
+			}
+		}
+		&.btn-group-nav-mobile-content{
+			width: 100%;
+			display: table;
+			padding: 5px 2px;
+
+			>.dropdown{
+				display: table-cell;
+				width: 33%;
+				padding-right:4px;
+
+				&:last-child{
+					padding-right: 0;
+
+					.btn{
+						span{
+							width: auto;
+
+							&:nth-child(2){
+								width: 55%;
+							}
+						}
+					}
+				}
+
+				.btn{
+					width: 100%;
+
+					span{
+
+						width: 90%;
+						display: inline-block;
+
+						&:last-child{
+							width: auto;
+						}
+						
+					}
+				}
+			}
+		}
+	}
+}

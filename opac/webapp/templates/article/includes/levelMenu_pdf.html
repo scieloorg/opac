@@ -18,9 +18,9 @@
             <div class="dropdown">
               <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
               <span class="sci-ico-filePDF"></span>
-              <span class="hidden-sm">PDF</span>
+              <span>PDF</span>
               <span class="caret"></span></button>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu menu-share-mobile">
                 {% for pdf in article.pdfs  %}
                   <li>
                     <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, format='pdf', lang=pdf.lang) }}">
