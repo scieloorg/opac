@@ -2,36 +2,50 @@
 
     <div class="dropdown">
       <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-      <span>{% trans %}Resumos{% endtrans %}</span>
+      <span>{% trans %}Resumo{% endtrans %}
+        {% for abstract in article.abstracts  %}
+          {% if gs_abstract and article_lang == abstract['language'] %}  
+            {% if abstract['language'] == 'es' %}
+            (ES)
+            {% elif abstract['language'] == 'en' %}
+            (EN)
+            {% elif abstract['language'] == 'pt' %}
+            (PT)
+            {% else %}
+              {{ abstract['language'] }}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </span>
       <span class="caret"></span></button>
       <ul class="dropdown-menu">
         {% for abstract in article.abstracts  %}
           <li>
               {% if gs_abstract and article_lang == abstract['language'] %}
-                  <a href="#">
-                    {% trans %}Resumo {% endtrans %}
-                    ({% if abstract['language'] == 'es' %}
-                      {% trans %}Espanhol{% endtrans %}
+                  <a href="#" class="current">
+                    {% trans %}Resumo{% endtrans %}
+                    {% if abstract['language'] == 'es' %}
+                      ({% trans %}Espanhol{% endtrans %})
                     {% elif abstract['language'] == 'en' %}
-                      {% trans %}Inglês{% endtrans %}
+                      ({% trans %}Inglês{% endtrans %})
                     {% elif abstract['language'] == 'pt' %}
-                      {% trans %}Português{% endtrans %}
+                      ({% trans %}Português{% endtrans %})
                     {% else %}
-                      {{ abstract['language'] }}
-                    {% endif %})
+                      ({{ abstract['language'] }})
+                    {% endif %}
                   </a>
               {% else %}
                   <a href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, part='abstract', lang=abstract['language']) }}">
                     {% trans %}Resumo {% endtrans %}
-                    ({% if abstract['language'] == 'es' %}
-                      {% trans %}Espanhol{% endtrans %}
+                    {% if abstract['language'] == 'es' %}
+                      ({% trans %}Espanhol{% endtrans %})
                     {% elif abstract['language'] == 'en' %}
-                      {% trans %}Inglês{% endtrans %}
+                      ({% trans %}Inglês{% endtrans %})
                     {% elif abstract['language'] == 'pt' %}
-                      {% trans %}Português{% endtrans %}
+                      ({% trans %}Português{% endtrans %})
                     {% else %}
-                      {{ abstract['language'] }}
-                    {% endif %})
+                      ({{ abstract['language'] }})
+                    {% endif %}
                   </a>
               {% endif %}
           <li>

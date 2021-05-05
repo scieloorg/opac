@@ -2,37 +2,51 @@
 
     <div class="dropdown">
       <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">
-      <span>{% trans %}Textos{% endtrans %}</span>
+      <span>{% trans %}Texto{% endtrans %}
+        {% for lang, text_lang, uri in text_versions  %}
+          {% if not gs_abstract and lang == article_lang %}        
+            {% if lang == 'es' %}
+              (ES)
+            {% elif lang == 'en' %}
+              (EN)
+            {% elif lang == 'pt' %}
+              (PT)
+            {% else %}
+              ({{ text_lang }})
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </span>
       <span class="caret"></span></button>
       <ul class="dropdown-menu">
         {% for lang, text_lang, uri in text_versions  %}
         <li>
           {% if not gs_abstract and lang == article_lang %}
             <!-- página de texto -->
-            <a href="#"> 
-                {% trans %}Texto {% endtrans %}
-                ({% if lang == 'es' %}
-                  {% trans %}Espanhol{% endtrans %}
+            <a href="#" class="current"> 
+                {% trans %}Texto{% endtrans %}
+                {% if lang == 'es' %}
+                  ({% trans %}Espanhol{% endtrans %})
                 {% elif lang == 'en' %}
-                  {% trans %}Inglês{% endtrans %}
+                  ({% trans %}Inglês{% endtrans %})
                 {% elif lang == 'pt' %}
-                  {% trans %}Português{% endtrans %}
+                  ({% trans %}Português{% endtrans %})
                 {% else %}
-                  {{ text_lang }}
-                {% endif %})
+                  ({{ text_lang }})
+                {% endif %}
             </a>
         {% else %}
             <a href="{{ uri }}">
                 {% trans %}Texto {% endtrans %}
-                ({% if lang == 'es' %}
-                  {% trans %}Espanhol{% endtrans %}
+                {% if lang == 'es' %}
+                  ({% trans %}Espanhol{% endtrans %})
                 {% elif lang == 'en' %}
-                  {% trans %}Inglês{% endtrans %}
+                  ({% trans %}Inglês{% endtrans %})
                 {% elif lang == 'pt' %}
-                  {% trans %}Português{% endtrans %}
+                  ({% trans %}Português{% endtrans %})
                 {% else %}
-                  {{ text_lang }}
-                {% endif %})
+                  ({{ text_lang }})
+                {% endif %}
             </a>
         {% endif %}
         </li>

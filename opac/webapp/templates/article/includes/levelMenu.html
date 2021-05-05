@@ -1,48 +1,84 @@
+<!-- Exibe para todos dispositivos menos mobile -->
 <section class="levelMenu hidden-xs">
     <div class="container">
-        <!-- exibe somente no lg -->
-        {% include "article/includes/levelMenu_layout_lg.html" %}
+        
+        <div class="col-lg-6 col-md-6 col-sm-5">
 
-        <!-- exibe somente no md -->
-        {% include "article/includes/levelMenu_layout_md.html" %}
+          <div class="btn-group">
+            <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn">
+              <span class="sci-ico-home"></span>
+            </a>
+            
+            {# Sumário #}
+            <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn group">
+                {% trans %}sumário{% endtrans %}
+            </a>
 
-        <!-- exibe somente no sm -->
-        {% include "article/includes/levelMenu_layout_sm.html" %}
+            {# Anterior #}
+              {% if not previous_article %}
+                  <a href="#" class="btn group disabled hidden-sm">
+              {% else %}
+                {% if is_pdf_page -%}
+                  <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='previous', format='pdf') }}" class="btn group hidden-sm">
+                {%- else -%}
+                  <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='previous') }}" class="btn group hidden-sm">
+                {% endif %}
+              {%- endif %}
+                <span class="hidden-md">&laquo; {% trans %}anterior{% endtrans %}</span>
+                <span class="sci-ico-arrowLeft hidden-lg"></span>
+              </a>
 
-        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-3 col-md-2 col-sm-4 hidden-md">
-          {% include "article/includes/levelMenu_pdf.html" %}
-          <!-- exibe links de textos completos e resumos -->
-          {% include "article/includes/levelMenu_texts.html" %}
-          {% include "article/includes/levelMenu_abstracts.html" %}
+            {# Atual #}
+            <a href="#" class="btn group disabled hidden-sm">
+                {% trans %}atual{% endtrans %}
+            </a>
+
+            {# Próximo #}
+            {% if not next_article %}
+                <a href="#" class="btn group disabled hidden-sm">
+            {% else %}
+              {%- if is_pdf_page -%}
+                <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='next', format='pdf') }}" class="btn group hidden-sm">
+              {%- else -%}
+                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='next') }}" class="btn group hidden-sm">
+              {%- endif %}
+            {%- endif %}
+              <span class="hidden-md">{% trans %}seguinte{% endtrans %} &raquo;</span>
+              <span class="sci-ico-arrowRight hidden-lg"></span>
+            </a>
+
+          </div>
         </div>
-        <!-- exibe somente no sm e lg PDF, TEXTS, ABSTRACTS -->
 
-        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-3 col-md-3 col-sm-4 hidden-sm hidden-lg">
-          {% include "article/includes/levelMenu_pdf.html" %}
-          <!-- exibe links de textos completos e resumos -->
-          {% include "article/includes/levelMenu_texts.html" %}
+        <div class="col-lg-4 col-md-5 col-sm-6">
           {% include "article/includes/levelMenu_abstracts.html" %}
+          {% include "article/includes/levelMenu_texts.html" %}
+          {% include "article/includes/levelMenu_pdf.html" %}
         </div>
-        <!-- exibe somente no md PDF, TEXTS, ABSTRACTS -->
-        <div class="col-lg-2 col-md-3 col-sm-2 share">
-            <span class="hidden-sm">{% trans %}Compartilhe{% endtrans %}</span>
-            <a data-toggle="tooltip" href="#" class="share_modal_id" title="{% trans %}Enviar link por e-mail{% endtrans %}">
-              <span class="sci-ico-socialEmail"></span>
+
+        <div class="col-lg-2 col-md-1 col-sm-1 share">
+          <span class="hidden-sm">{% trans %}Compartilhe{% endtrans %}</span>
+            <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
+              <span class="sci-ico-socialOther"></span><span class="caret"></span>
             </a>
-            <a data-toggle="tooltip" href="#" class="shareFacebook" title="{% trans %}Compartilhar no Facebook{% endtrans %}">
-              <span class="sci-ico-socialFacebook"></span>
-            </a>
-            <a data-toggle="tooltip" href="#" class="shareTwitter" title="{% trans %}Compartilhar no Twitter{% endtrans %}">
-              <span class="sci-ico-socialTwitterSingle"></span>
-            </a>
-            <a data-toggle="dropdown" href="#" class="dropdown-toggle dropdown-tooltip" title="{% trans %}Outras redes sociais{% endtrans %}">
-              <span class="sci-ico-socialOther"></span>
-            </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu menu-share-mobile" role="menu">
               <li class="dropdown-header">
-                {% trans %}Outras redes sociais{% endtrans %}
+                {% trans %}Compartilhe{% endtrans %}
+              </li>
+              <li>
+                <a href="#" class="share_modal_id">
+                  <span class="sci-ico-socialEmail"></span> E-mail
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareFacebook">
+                  <span class="sci-ico-socialFacebook"></span> Facebook
+                </a>
+              </li>
+              <li>
+                <a href="#" class="shareTwitter">
+                  <span class="sci-ico-socialTwitterSingle"></span> Twitter
+                </a>
               </li>
               <li>
                 <a href="#" class="shareGooglePlus">
@@ -81,37 +117,21 @@
 </section>
 
 
-
-
-
-
-
-
-
+<!-- Exibe somente no mobile -->
 <section class="levelMenu levelMenu-xs hidden-sm hidden-md hidden-lg">
     <div class="container">
-
       <div class="row">
-        <div class="col-xs-12 text-center">
-          <div class="btn-group levelMenuMobileTop" role="group">
+        <div class="col-xs-12">
+          <div class="btn-group btn-group-nav-mobile" role="group">
             
             <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn">
-                <span class="sci-ico-home"></span>
+              <span class="sci-ico-home"></span>
             </a>
-            
             <a href="{{ url_for('.issue_toc', url_seg=article.journal.url_segment, url_seg_issue=issue.url_segment) }}" class="btn no-ico-util">
-                {% trans %}Sumário{% endtrans %}
+              {% trans %}Sumário{% endtrans %}
             </a>
-
-            {% if article and article.pdfs|length == 1 %}
-              <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, format='pdf', lang=article.pdfs[0].lang) }}" class="btn">
-                <span class="sci-ico-filePDF"></span> PDF
-              </a>
-            {% endif%}
-            {% include "article/includes/levelMenu_texts.html" %}
-            {% include "article/includes/levelMenu_abstracts.html" %}
             <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
-                <span class="sci-ico-socialOther"></span><span class="caret"></span>
+              <span class="sci-ico-socialOther"></span><span class="caret"></span>
             </a>
             <ul class="dropdown-menu menu-share-mobile" role="menu">
               <li class="dropdown-header">
@@ -164,47 +184,17 @@
               </li>
             </ul>
 
-
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <div class="btn-group levelMenuMobileBottom" role="group">
-          
-            {# Anterior #}
-            {% if not previous_article %}
-                <a href="#" class="btn group disabled">
-            {% else %}
-              {% if is_pdf_page -%}
-                <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='previous', format='pdf') }}" class="btn group">
-              {%- else -%}
-                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='previous') }}" class="btn group">
-              {% endif %}
-            {%- endif %}
-              <span class="sci-ico-arrowLeft"></span>
-            </a>
-
-            {# Atual #}
-            <a href="#" class="btn group disabled">
-                {% trans %}Atual{% endtrans %}
-            </a>
-
-            {# Próximo #}
-            {% if not next_article %}
-                <a href="#" class="btn group disabled">
-            {% else %}
-              {%- if is_pdf_page -%}
-                <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, goto='next', format='pdf') }}" class="btn group">
-              {%- else -%}
-                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, part=part, lang=article_lang, goto='next') }}" class="btn group">
-              {%- endif %}
-            {%- endif %}
-                <span class="sci-ico-arrowRight"></span>
-            </a>
+          <div class="btn-group btn-group-nav-mobile-content" role="group">
+            {% include "article/includes/levelMenu_abstracts.html" %}
+            {% include "article/includes/levelMenu_texts.html" %}
+            {% include "article/includes/levelMenu_pdf.html" %}
           </div>
         </div>
       </div>
-
     </div>
 </section>

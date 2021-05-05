@@ -80,22 +80,10 @@ class PreviousOrNextArticleNotFoundError(Exception):
 def get_current_collection():
     """
     Retorna o objeto coleção filtrando pela coleção cadastrada no arquivo de
-    configuração ``OPAC_COLLECTION`` e atualiza com os dados da coleção já no site.
-    Isso se mantém ainda para coletar as citações que não são possíveis extrair dos
-    dados já presentes no site.
+    configuração ``OPAC_COLLECTION``.
     """
     current_collection_acronym = current_app.config['OPAC_COLLECTION']
     collection = Collection.objects.get(acronym=current_collection_acronym)
-    number_of_journals = Journal.objects.filter(
-        is_public=True, current_status="current").count()
-    if number_of_journals > 0:
-        collection.metrics.total_journal = number_of_journals
-    number_of_issues = Issue.objects.filter(is_public=True).count()
-    if number_of_issues > 0:
-        collection.metrics.total_issue = number_of_issues
-    number_of_articles = Article.objects.filter(is_public=True).count()
-    if number_of_articles > 0:
-        collection.metrics.total_article = number_of_articles
     return collection
 
 
@@ -1195,6 +1183,15 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
         for pdf in article.pdfs:
             if pdf["filename"] == pdf_filename:
                 return pdf["url"]
+
+
+def get_articles_by_date_range(begin_date, end_date):
+    """
+    Retorna artigos criados ou atualizados durante o período entre start_date e end_date.
+    """
+    return Article.objects((Q(created__gte=begin_date) & Q(created__lte=end_date)) |
+                           (Q(updated__gte=begin_date) & Q(updated__lte=end_date)))
+
 
 # -------- NEWS --------
 

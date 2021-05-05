@@ -4,9 +4,8 @@ import logging
 import requests
 import mimetypes
 from io import BytesIO
-from bs4 import BeautifulSoup
 from urllib.parse import urlparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import OrderedDict
 from flask_babelex import gettext as _
 from flask import (
@@ -38,6 +37,8 @@ from webapp import forms
 
 from webapp.config.lang_names import display_original_lang_name
 
+from opac_schema.v1.models import Journal, Issue, Article, Collection
+
 from lxml import etree
 from packtools import HTMLGenerator
 
@@ -46,7 +47,6 @@ logger = logging.getLogger(__name__)
 JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
-
 
 
 def url_external(endpoint, **kwargs):
@@ -188,6 +188,19 @@ def index():
             current_app.config['OPAC_COLLECTION'])
     }
 
+    if (
+        g.collection is not None
+        and isinstance(g.collection, Collection)
+        and g.collection.metrics is not None
+    ):
+        g.collection.metrics.total_journal = Journal.objects.filter(
+            is_public=True, current_status="current"
+        ).count()
+        g.collection.metrics.total_issue = Issue.objects.filter(is_public=True).count()
+        g.collection.metrics.total_article = Article.objects.filter(
+            is_public=True
+        ).count()
+
     context = {
         'news': news,
         'urls': urls,
@@ -252,6 +265,7 @@ def collection_list_thematic():
         "collection/list_thematic.html",
         **{"objects": objects, "query_filter": query_filter, "filter": thematic_filter}
     )
+
 
 @main.route('/journals/feed/')
 @cache.cached(key_prefix=cache_key_with_lang)
@@ -1028,13 +1042,9 @@ def render_html_from_xml(article, lang, gs_abstract=False):
     xml = etree.parse(BytesIO(result))
 
     generator = HTMLGenerator.parse(
-        xml, valid_only=False, gs_abstract=gs_abstract)
+        xml, valid_only=False, gs_abstract=gs_abstract, output_style="website")
 
-    # Criamos um objeto do tip soup
-    soup = BeautifulSoup(etree.tostring(generator.generate(lang), encoding="UTF-8", method="html"), 'html.parser')
-
-    # Fatiamos o HTML pelo div com class: articleTxt
-    return soup.find('div', {'id': 'standalonearticle'}), generator.languages
+    return generator.generate(lang), generator.languages
 
 
 def render_html_from_html(article, lang):
@@ -1136,7 +1146,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     try:
         qs_lang, article = controllers.get_article(
             article_pid_v3, url_seg, qs_lang, gs_abstract, qs_goto)
-
         if qs_goto:
             return redirect(
                 url_for(
@@ -1179,6 +1188,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         abort(404, str(e))
 
     def _handle_html():
+
         citation_pdf_url = None
         for pdf_data in article.pdfs:
             if pdf_data.get("lang") == qs_lang:
@@ -1523,3 +1533,47 @@ def router_legacy_info_pages(journal_seg, page):
         }
     return redirect('%s%s' % (url_for('main.about_journal',
                                       url_seg=journal_seg), page_anchor.get(page, '')), code=301)
+
+
+@main.route("/api/v1/counter_dict", methods=['GET'])
+def router_counter_dicts():
+    """
+    Essa view function retorna um dicionário, em formato JSON, que mapeia PIDs a insumos
+    necessários para o funcionamento das aplicações Matomo & COUNTER & SUSHI.
+    """
+    end_date = request.args.get('end_date', '', type=str)
+    try:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    except ValueError:
+        end_date = datetime.now()
+    begin_date = end_date - timedelta(days=30)
+
+    results = {'dictionary_date': end_date,
+               'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
+               'documents': {},
+               'collection': current_app.config['OPAC_COLLECTION']}
+
+    for a in controllers.get_articles_by_date_range(begin_date, end_date):
+        results['documents'].update(get_article_counter_data(a))
+
+    results['total'] = len(results['documents'])
+
+    return jsonify(results)
+
+
+def get_article_counter_data(article):
+    return {
+        article.aid: {
+            "journal_acronym": article.journal.acronym,
+            "pid": article.pid if article.pid else '',
+            "aop_pid": article.aop_pid if article.aop_pid else '',
+            "pid_v1": article.scielo_pids.get('v1', ''),
+            "pid_v2": article.scielo_pids.get('v2', ''),
+            "pid_v3": article.scielo_pids.get('v3', ''),
+            "publication_date": article.publication_date,
+            "default_language": article.original_language,
+            "create": article.created,
+            "update": article.updated
+        }
+    }
