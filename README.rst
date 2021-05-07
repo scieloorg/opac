@@ -85,6 +85,24 @@ Simplesmente executar:
 5. para parar os containers, executar: ``make dev_compose_stop``
 6. para abrir uma terminal dentro do container, executar: ``make dev_compose_exec_shell_webapp``
 
+======================
+Fixtures
+======================
+
+Procedimento para popular a instância de desenvolvimento, a partir de fixtures disponibilizadas pelo SciELO.
+
+1. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
+2. Extraia o conteúdo, execute: ``unzip opac_br.zip`
+3. Repare que contém uma pasta chamado **opac_br**, nessa pasta temos os arquivo **.bson .json .sqlite** e outra pasta chamado **media** contento os ativos dos periódico e da coleção.
+4. Acesse a pasta **opac_br**, execute: ``cd opac_br``
+5. Utilizando **mongorestore** realize o recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac_br -d``
+6. Realize a cópia da pasta **media** para {APP}/data
+7. Realize a cópia do **opac.sqlite** para {APP}/data
+8. Para ambiente utilizando **Docker** é necessário reiniciar os containers: ``make dev_compose_stop`` && ``make dev_compose_up``
+
+Caso não tenha o **mongorestore** localmente é necessário a instalação **MONGODB DATABASE TOOLS**: https://docs.mongodb.com/database-tools/installation/installation/
+
+Para utilizar o ambiente de desenvolvimento com os dados populado a partir dos passos indicado acima é necessário que esteja conectado com a **VPN da SciELO**
 
 =========================================
 Reportar problemas, ou solicitar mudanças
