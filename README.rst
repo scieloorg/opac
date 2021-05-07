@@ -104,6 +104,12 @@ Caso não tenha o **mongorestore** localmente é necessário a instalação **MO
 
 Para utilizar o ambiente de desenvolvimento com os dados populado a partir dos passos indicado acima é necessário que esteja conectado com a **VPN da SciELO**
 
+Usuário e senha para a área administrativa:
+
+**Ususário:** admin@admin.com
+**Senha:** admin
+
+
 =========================================
 Reportar problemas, ou solicitar mudanças
 =========================================
