@@ -92,7 +92,7 @@ Fixtures
 Procedimento para popular a instância de desenvolvimento a partir de fixtures disponibilizadas pelo SciELO.
 
 1. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
-2. Extraia o conteúdo, execute: ``unzip opac_br.zip`
+2. Extraia o conteúdo, execute: ``unzip opac_br.zip``
 3. Repare que contém uma pasta chamado **opac_br**, nessa pasta temos os arquivo **.bson .json .sqlite** e outra pasta chamado **media** contento os ativos dos periódico e da coleção.
 4. Acesse a pasta **opac_br**, execute: ``cd opac_br``
 5. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac --dir .``
