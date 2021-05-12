@@ -70,6 +70,6 @@ tweepy==3.7.0
 unicodecsv==0.14.1
 Unidecode==1.1.1
 urllib3==1.25.8
-Werkzeug==0.14.1
+Werkzeug==2.0.0
 WTForms==2.3.3
 XlsxWriter==1.1.0
