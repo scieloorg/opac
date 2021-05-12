@@ -91,21 +91,22 @@ Fixtures
 
 Procedimento para popular a instância de desenvolvimento a partir de fixtures disponibilizadas pelo SciELO.
 
-1. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
-2. Extraia o conteúdo, execute: ``unzip opac_br.zip``
-3. Repare que contém uma pasta chamado **opac_br**, nessa pasta temos os arquivo **.bson .json .sqlite** e outra pasta chamado **media** contento os ativos dos periódico e da coleção.
-4. Acesse a pasta **opac_br**, execute: ``cd opac_br``
-5. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac --dir .``
-6. Realize a cópia da pasta **media** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
-7. Realize a cópia da pasta **opac.sqlite** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
-8. Os seguintes parâmetros devem está configurados no arquivo no ``docker-compose-dev.yml``:
+1. Para execução dos é necessário que o ambiente de desenvolvimento do OPAC esteja rodando ``make dev_compose_up``
+2. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
+3. Extraia o conteúdo, execute: ``unzip opac_br.zip``
+4. Repare que contém uma pasta chamado **opac_br**, nessa pasta temos os arquivo **.bson .json .sqlite** e outra pasta chamado **media** contento os ativos dos periódico e da coleção.
+5. Acesse a pasta **opac_br**, execute: ``cd opac_br``
+6. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac --dir .``
+7. Realize a cópia da pasta **media** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
+8. Realize a cópia da pasta **opac.sqlite** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
+9. Os seguintes parâmetros devem está configurados no arquivo no ``docker-compose-dev.yml``:
 
 - OPAC_SSM_DOMAIN=minio.scielo.br
 - OPAC_SSM_PORT=443
 - OPAC_SSM_SCHEME=https
 - OPAC_SSM_XML_URL_REWRITE=False
 
-8. Para ambiente utilizando **Docker** é necessário reiniciar os containers: ``make dev_compose_stop`` && ``make dev_compose_up``
+10. Para ambiente utilizando **Docker** é necessário reiniciar os containers: ``make dev_compose_stop`` && ``make dev_compose_up``
 
 Caso não tenha o **mongorestore** localmente é necessário a instalação **MONGODB DATABASE TOOLS**: https://docs.mongodb.com/database-tools/installation/installation/
 
