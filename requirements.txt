@@ -31,7 +31,7 @@ Flask-WTF==0.14.2
 gunicorn==19.8.1
 htmlmin==0.1.12
 idna==2.10
-itsdangerous==1.1.0
+itsdangerous==2.0.0
 Jinja2==2.11.2
 legendarium==2.0.2
 lxml==4.2.4
