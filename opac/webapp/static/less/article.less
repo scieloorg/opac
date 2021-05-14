@@ -2501,6 +2501,15 @@ Ajustes para mobile
 				padding-right: 32px !important;
 			}
 		}
+
+		&:hover{
+			background: @Blue !important;
+			color: #fff;
+
+			[class^="sci-ico-"] {
+				color: #fff;
+			}
+		}
 	}
 	.dropdown-menu{
 		a.current{
@@ -2521,6 +2530,8 @@ Ajustes para mobile
 				left: auto;
 			}
 		}
+
+		
 	}
 }
 
@@ -2549,6 +2560,15 @@ Ajustes para mobile
 					display: inline-block;
 					width: 70%;
 				}
+
+				@media @onlyMobile {
+					.caret{
+						position: absolute;
+						right: 10px;
+						top: 17px;
+					}
+				}
+				
 			}
 		}
 		&.btn-group-nav-mobile-content{
@@ -2577,6 +2597,7 @@ Ajustes para mobile
 
 				.btn{
 					width: 100%;
+					position: relative;
 
 					span{
 
@@ -2585,6 +2606,12 @@ Ajustes para mobile
 
 						&:last-child{
 							width: auto;
+						}
+
+						&.caret{
+							position: absolute;
+							right: 10px;
+							top: 17px;
 						}
 						
 					}
