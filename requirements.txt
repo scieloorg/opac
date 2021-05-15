@@ -20,7 +20,7 @@ Flask-DebugToolbar==0.10.1
 Flask-HTMLmin==1.4.0
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
-Flask-Migrate==2.2.1
+Flask-Migrate==3.0.0
 flask-mongoengine==0.9.5
 Flask-Principal==0.4.0
 Flask-Script==2.0.6
