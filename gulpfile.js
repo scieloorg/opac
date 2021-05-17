@@ -9,6 +9,8 @@ const gutil = require('gulp-util');
 const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 const minifyCSS = require('gulp-minify-css');
+const stripDebug = require('gulp-strip-debug');
+
 
 
 // caminho da pasta 'node_modules/bootstrap'
@@ -37,8 +39,8 @@ let paths = {
 };
 
 console.info('[INFO] [gulpfile.js] path da pasta bootstrap/js:\t', paths['bootstrap_js']);
-console.info('[INFO] [gulpfile.js] path da pasta bootstrap/less:\t', paths['bootstrap_less']);
-console.info('[INFO] [gulpfile.js] path da pasta bootstrap/css:\t', paths['bootstrap_css']);
+//console.info('[INFO] [gulpfile.js] path da pasta bootstrap/less:\t', paths['bootstrap_less']);
+//console.info('[INFO] [gulpfile.js] path da pasta bootstrap/css:\t', paths['bootstrap_css']);
 
 console.info('[INFO] [gulpfile.js] path da pasta static/js:\t', paths['static_js']);
 console.info('[INFO] [gulpfile.js] path da pasta static/less:\t', paths['static_less']);
@@ -53,7 +55,7 @@ let target_src = {
             path.join(paths['jquery-typeahead_js'], 'jquery.typeahead.min.js'),
             path.join(paths['static_js'], 'plugins.js'),
             path.join(paths['static_js'], 'main.js'),
-            
+           
             // instruções JS (equipe scielo)
             path.join(paths['static_js'], 'common.js'),
             path.join(paths['static_js'], 'moment.js'),
@@ -109,6 +111,58 @@ let output = {
         'scielo-bundle-print': 'scielo-bundle-print.css',
     }
 };
+
+// Task para gerar o scielo-article-standalone.js
+function processScieloArticleStandaloneJs(){
+    return src(target_src['js']['scielo-article-standalone'])
+    .pipe(concat(output['js']['scielo-article-standalone']))
+    .pipe(sourceMaps.init())
+    .pipe(stripDebug())
+    .pipe(uglify())
+    .pipe(sourceMaps.write('../maps'))
+    .pipe(dest(output['js']['folder']));
+}
+
+// Task para gerar o scielo-article.js
+function processScieloArticleJs(){
+    return src(target_src['js']['scielo-article'])
+    .pipe(concat(output['js']['scielo-article']))
+    .pipe(sourceMaps.init())
+    .pipe(stripDebug())
+    .pipe(uglify())
+    .pipe(sourceMaps.write('../maps'))
+    .pipe(dest(output['js']['folder']));
+}
+
+// Task para gerar o scielo-bundle.js
+function processScieloBundleJs(){
+    return src(target_src['js']['scielo-bundle'])
+    .pipe(concat(output['js']['scielo-bundle']))
+    .pipe(sourceMaps.init())
+    .pipe(stripDebug())
+    .pipe(uglify())
+    .pipe(sourceMaps.write('../maps'))
+    .pipe(dest(output['js']['folder']));
+}
+
+
+// Task para gerar o scielo-bundle-print.less
+function processScieloBundlePrintLess(){
+    return src(target_src['less']['scielo-bundle-print'])
+    .pipe(concat(output['css']['scielo-bundle-print']))
+    .pipe(less(output['css']['scielo-bundle-print']))
+    .pipe(minifyCSS())
+    .pipe(dest(output['css']['folder']));
+}
+
+// Task para gerar o scielo-article-standalone.less
+function processScieloArticleStandaloneLess(){
+    return src(target_src['less']['scielo-article-standalone'])
+    .pipe(concat(output['css']['scielo-article-standalone']))
+    .pipe(less(output['css']['scielo-article-standalone']))
+    .pipe(minifyCSS())
+    .pipe(dest(output['css']['folder']));
+}
 
 function processScieloBundleLess(){
     return src(target_src['less']['scielo-bundle'])
@@ -169,15 +223,19 @@ function watchProcessScieloArticleLess() {
 exports.watch = series(
     processScieloBundleLess,
     processScieloArticleLess,
-    
+   
     parallel(
         watchProcessScieloBundleLess,
         watchProcessScieloArticleLess
     )
 )
 
-
 exports.default = series(
-    processScieloArticleLess
+    processScieloBundleLess,
+    processScieloArticleLess,
+    processScieloArticleStandaloneLess,
+    processScieloBundlePrintLess,
+    processScieloBundleJs,
+    processScieloArticleJs,
+    processScieloArticleStandaloneJs
 );
-
