@@ -48,6 +48,18 @@ Guia de configuração do site
 Pode acessar `nossa wiki <https://github.com/scieloorg/opac/wiki/Configura%C3%A7%C3%A3o-padr%C3%A3o-e-vari%C3%A1veis-de-ambiente>`_ para ter uma guia completa e como ajustar a configuração a partir de un arquivo de configuração em cada instância ou utilizando variáveis de ambiente.
 
 
+Caso queira apresentar na home do website que o atual tem versão anterior
+
+PREVIOUS_WEBSITE_URI=https://old.scielo.br
+
+
+Caso queira apresentar na home do website qualquer mensagem de texto
+
+ALERT_MSG_PT=Novo portal pode conter incorreções
+ALERT_MSG_EN=New portal may contain inaccuracies 
+ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
+
+
 ======================
 Como executar os tests
 ======================
@@ -127,11 +139,3 @@ Reportar problemas, ou solicitar mudanças
 
 Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalidade, pode `criar um ticket <https://github.com/scieloorg/opac/issues>`_ com seus pedidos.
 
-
-=========================================
-Equipe responsável por instalação, desenvolvimento e manutenção
-=========================================
-
-- Jamil Atta Junior (Desenvolvimento) <jamil.atta@scielo.org>
-- Juan Funez (Desenvolvimento) <juan.funez@scielo.org>
-- Rondineli Gama Saad (Infraestrutura) <rondineli.saad@scielo.org>

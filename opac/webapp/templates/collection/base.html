@@ -3,12 +3,28 @@
 {% block content %}
   <div class="alert-warning" style="padding: 0 5px; text-align: center">
     {% with html_lang=session.get('lang', config.get('BABEL_DEFAULT_LOCALE')) %}
-      {% if html_lang == 'pt_BR' %}
-        <strong>Novo portal</strong> - pode conter incorreções
-      {% elif html_lang == 'en' %}
-        <strong>New portal</strong> - may contain inaccuracies
-      {% elif html_lang == 'es' %}
-        <strong>Nuevo portal</strong> - puede contener incorrecciones
+      {% if config.get('ALERT_MSG') %}
+        <span>
+        {% if html_lang == 'pt_BR' %}
+          {{ config.get('ALERT_MSG_PT') }}
+        {% elif html_lang == 'es' %}
+          {{ config.get('ALERT_MSG_ES') }}
+        {% else %}
+          {{ config.get('ALERT_MSG_EN') }}
+        {% endif %}
+        </span>
+      {% endif %}
+
+      {% if config.get('PREVIOUS_WEBSITE_URI') %}
+        {% if '://' in config.get('PREVIOUS_WEBSITE_URI') %}
+          <a href="{{ config.get('PREVIOUS_WEBSITE_URI') }}">
+          {{ config.get('PREVIOUS_WEBSITE_URI') }}
+          </a>
+        {% else %}
+          <a href="https://{{ config.get('PREVIOUS_WEBSITE_URI') }}">
+          {{ config.get('PREVIOUS_WEBSITE_URI') }}
+          </a>
+        {% endif %}
       {% endif %}
     {% endwith %}
   </div>
