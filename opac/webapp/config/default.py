@@ -524,3 +524,12 @@ APM_DEBUG = os.environ.get("OPAC_APM_DEBUG", False)
 APM_DISABLE_SEND = os.environ.get("OPAC_APM_DISABLE_SEND", False)
 APM_INSTRUMENT = os.environ.get("OPAC_APM_INSTRUMENT", True)
 APM_VERIFY_SERVER_CERT = os.environ.get("OPAC_APM_APM_VERIFY_SERVER_CERT", True)
+
+# Caso queira apresentar na home do website que o atual tem versão anterior
+PREVIOUS_WEBSITE_URI = os.environ.get("PREVIOUS_WEBSITE_URI", '')
+
+# Caso queira apresentar na home do website qualquer mensagem de texto
+ALERT_MSG_PT = os.environ.get("ALERT_MSG_PT", '')
+ALERT_MSG_EN = os.environ.get("ALERT_MSG_EN", '')
+ALERT_MSG_ES = os.environ.get("ALERT_MSG_ES", '')
+ALERT_MSG = bool(ALERT_MSG_PT or ALERT_MSG_EN or ALERT_MSG_ES)
