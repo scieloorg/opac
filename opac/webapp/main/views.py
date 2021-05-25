@@ -196,7 +196,6 @@ def index():
         g.collection.metrics.total_journal = Journal.objects.filter(
             is_public=True, current_status="current"
         ).count()
-        g.collection.metrics.total_issue = Issue.objects.filter(is_public=True).count()
         g.collection.metrics.total_article = Article.objects.filter(
             is_public=True
         ).count()
