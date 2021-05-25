@@ -206,7 +206,6 @@ def index():
         'urls': urls,
         'tweets': tweets,
         'press_releases': press_releases,
-        'journals': controllers.get_journals(query_filter="current", order_by="-last_issue.year")
     }
 
     return render_template("collection/index.html", **context)
