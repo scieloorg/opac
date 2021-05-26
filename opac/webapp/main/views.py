@@ -398,7 +398,7 @@ def router_legacy():
             )
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
-
+            pid = pid.upper()
             article = controllers.get_article_by_scielo_pid(pid)
 
             if not article:
