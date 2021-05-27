@@ -1161,7 +1161,7 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
 
 def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
     """
-    Retorna dados dos pdfs de um artigo.
+    Retorna artigo pelo nome de arquivo pdf legado
     """
 
     if not journal_acron:
@@ -1172,17 +1172,24 @@ def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
         raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
 
     journal = get_journal_by_acron(journal_acron)
-
-    issue = get_issue_by_label(journal, issue_info)
-
-    article = Article.objects.filter(journal=journal,
-                                     issue=issue, pdfs__filename=pdf_filename,
-                                     is_public=True).first()
+    if issue_info.endswith("ahead"):
+        article = Article.objects.filter(
+                    issue="{}-aop".format(journal.jid),
+                    pdfs__filename=pdf_filename,
+                    is_public=True).first()
+    else:
+        issue = get_issue_by_label(journal, issue_info)
+        article = Article.objects.filter(
+                    journal=journal,
+                    issue=issue, pdfs__filename=pdf_filename,
+                    is_public=True).first()
 
     if article:
         for pdf in article.pdfs:
             if pdf["filename"] == pdf_filename:
-                return pdf["url"]
+                article._pdf_lang = pdf["lang"]
+                article._pdf_url = pdf["url"]
+                return article
 
 
 def get_articles_by_date_range(begin_date, end_date):
