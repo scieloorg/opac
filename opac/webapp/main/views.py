@@ -1383,13 +1383,20 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     pdf_filename = '%s.pdf' % pdf_filename
-    pdf_url = controllers.get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename)
-    if pdf_url is None:
+    article = controllers.get_article_by_pdf_filename(
+        journal_acron, issue_info, pdf_filename)
+    if not article:
         abort(404, _('PDF do artigo não foi encontrado'))
-    else:
-        pdf_url_parsed = urlparse(pdf_url)
-        return get_content_from_ssm(pdf_url_parsed.path)
-
+    return redirect(
+        url_for(
+            'main.article_detail_v3',
+            url_seg=article.journal.url_segment,
+            article_pid_v3=article.aid,
+            format='pdf',
+            lang=article._pdf_lang,
+        ),
+        code=301
+    )
 
 @main.route('/cgi-bin/fbpe/<string:text_or_abstract>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
