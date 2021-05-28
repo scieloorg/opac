@@ -1257,19 +1257,17 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         if not article.pdfs:
             abort(404, _('PDF do Artigo não encontrado'))
 
-        pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
-        if len(pdf_url) != 1:
+        pdf_info = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
+        if len(pdf_info) != 1:
             abort(404, _('PDF do Artigo não encontrado'))
 
         try:
-            pdf_url = pdf_url[0]['url']
-            pdf_url_parsed = urlparse(pdf_url)
-            pdf_ssm_path = pdf_url_parsed.path
+            pdf_url = pdf_info[0]['url']
         except (IndexError, KeyError, ValueError, TypeError):
             abort(404, _('PDF do Artigo não encontrado'))
 
-        if pdf_ssm_path:
-            return get_content_from_ssm(pdf_ssm_path)
+        if pdf_url:
+            return get_pdf_content(pdf_url)
         raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
 
     def _handle_xml():
