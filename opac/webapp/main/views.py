@@ -1312,21 +1312,18 @@ def article_epdf():
         return render_template("article/epdf.html", **context)
 
 
-@cache.cached(key_prefix=cache_key_with_lang_with_qs)
-def get_pdf_content(resource_ssm_media_path):
-    resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
-
-    url = resource_ssm_full_url.strip()
-    mimetype, __ = mimetypes.guess_type(url)
-
+def get_pdf_content(url):
+    if current_app.config["SSM_ARTICLE_ASSETS_OR_RENDITIONS_URL_REWRITE"]:
+        url = normalize_ssm_url(url)
     try:
-        ssm_response = fetch_data(url)
+        response = fetch_data(url)
     except NonRetryableError:
-        abort(404, _('Recurso não encontrado'))
+        abort(404, _('PDF não encontrado'))
     except RetryableError:
         abort(500, _('Erro inesperado'))
     else:
-        return Response(ssm_response, mimetype=mimetype)
+        mimetype, __ = mimetypes.guess_type(url)
+        return Response(response, mimetype=mimetype)
 
 
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
