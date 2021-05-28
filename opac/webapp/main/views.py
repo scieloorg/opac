@@ -1033,7 +1033,7 @@ def article_detail_pid(pid):
 
 def render_html_from_xml(article, lang, gs_abstract=False):
     if current_app.config["SSM_XML_URL_REWRITE"]:
-        result = fetch_data(normalize_ssm_url(article.xml))
+        result = fetch_data(use_ssm_url(article.xml))
     else:
         result = fetch_data(article.xml)
 
@@ -1055,7 +1055,7 @@ def render_html_from_html(article, lang):
     except IndexError:
         raise ValueError('Artigo não encontrado') from None
 
-    result = fetch_data(normalize_ssm_url(html_url))
+    result = fetch_data(use_ssm_url(html_url))
 
     html = result.decode('utf8')
 
@@ -1077,7 +1077,7 @@ def render_html(article, lang, gs_abstract=False):
 
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
-def normalize_ssm_url(url):
+def use_ssm_url(url):
     """Normaliza a string `url` de acordo com os valores das diretivas de
     configuração OPAC_SSM_SCHEME, OPAC_SSM_DOMAIN e OPAC_SSM_PORT.
 
@@ -1274,7 +1274,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
 
     def _handle_xml():
         if current_app.config["SSM_XML_URL_REWRITE"]:
-            result = fetch_data(normalize_ssm_url(article.xml))
+            result = fetch_data(use_ssm_url(article.xml))
         else:
             result = fetch_data(article.xml)
         response = make_response(result)
@@ -1314,7 +1314,7 @@ def article_epdf():
 
 def get_pdf_content(url):
     if current_app.config["SSM_ARTICLE_ASSETS_OR_RENDITIONS_URL_REWRITE"]:
-        url = normalize_ssm_url(url)
+        url = use_ssm_url(url)
     try:
         response = fetch_data(url)
     except NonRetryableError:
