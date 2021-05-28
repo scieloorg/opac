@@ -1313,6 +1313,23 @@ def article_epdf():
 
 
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
+def get_pdf_content(resource_ssm_media_path):
+    resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
+
+    url = resource_ssm_full_url.strip()
+    mimetype, __ = mimetypes.guess_type(url)
+
+    try:
+        ssm_response = fetch_data(url)
+    except NonRetryableError:
+        abort(404, _('Recurso não encontrado'))
+    except RetryableError:
+        abort(500, _('Erro inesperado'))
+    else:
+        return Response(ssm_response, mimetype=mimetype)
+
+
+@cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def get_content_from_ssm(resource_ssm_media_path):
     resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
 
