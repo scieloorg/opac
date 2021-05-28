@@ -1412,7 +1412,9 @@ class ArticleControllerTestCase(BaseTestCase):
         mk_get_journal_by_acron.return_value = article.journal
         mk_get_issue_by_label.return_value = article.issue
 
-        controllers.get_article_by_pdf_filename(article.journal, article.issue, "article.pdf")
+        controllers.get_article_by_pdf_filename(
+            article.journal.acronym, article.issue.label, "article.pdf"
+        )
 
         mk_article_objects.filter.assert_called_once_with(is_public=True,
                                                           issue=article.issue,
@@ -1423,7 +1425,7 @@ class ArticleControllerTestCase(BaseTestCase):
     @patch('webapp.controllers.Article.objects')
     @patch('webapp.controllers.get_journal_by_acron')
     @patch('webapp.controllers.get_issue_by_label')
-    def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_filename(
+    def test_get_article_by_pdf_filename_retrieves_aop_article_by_pdf_filename(
         self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
     ):
 
@@ -1437,11 +1439,11 @@ class ArticleControllerTestCase(BaseTestCase):
         mk_get_issue_by_label.assert_not_called()
 
         controllers.get_article_by_pdf_filename(
-            article.journal, "ahead", "article.pdf")
+            article.journal.acronym, "ahead", "article.pdf")
 
         mk_article_objects.filter.assert_called_once_with(
             is_public=True,
-            issue=article.issue,
+            issue=article.issue.label,
             pdfs__filename='article.pdf'
         )
 

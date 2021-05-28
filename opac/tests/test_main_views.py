@@ -55,7 +55,6 @@ class MainTestCase(BaseTestCase):
 
             with self.client as client:
                 response = client.get(url_for('main.index'))
-                self.assertEqual(1, collection.metrics.total_issue)
                 self.assertEqual(1, collection.metrics.total_article)
                 self.assertEqual(1, collection.metrics.total_journal)
 
