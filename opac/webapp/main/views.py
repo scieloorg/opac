@@ -1254,29 +1254,23 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         return render_template("article/detail.html", **context)
 
     def _handle_pdf():
-        pdf_ssm_path = None
-
-        if article.pdfs:
-            try:
-                pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
-
-                if len(pdf_url) != 1:
-                    abort(404, _('PDF do Artigo não encontrado'))
-                else:
-                    pdf_url = pdf_url[0]['url']
-
-                pdf_url_parsed = urlparse(pdf_url)
-                pdf_ssm_path = pdf_url_parsed.path
-
-            except Exception:
-                abort(404, _('PDF do Artigo não encontrado'))
-        else:
+        if not article.pdfs:
             abort(404, _('PDF do Artigo não encontrado'))
 
-        if not pdf_ssm_path:
-            raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
-        else:
+        pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
+        if len(pdf_url) != 1:
+            abort(404, _('PDF do Artigo não encontrado'))
+
+        try:
+            pdf_url = pdf_url[0]['url']
+            pdf_url_parsed = urlparse(pdf_url)
+            pdf_ssm_path = pdf_url_parsed.path
+        except (IndexError, KeyError, ValueError, TypeError):
+            abort(404, _('PDF do Artigo não encontrado'))
+
+        if pdf_ssm_path:
             return get_content_from_ssm(pdf_ssm_path)
+        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
 
     def _handle_xml():
         if current_app.config["SSM_XML_URL_REWRITE"]:
