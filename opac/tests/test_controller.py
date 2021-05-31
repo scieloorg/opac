@@ -1412,13 +1412,41 @@ class ArticleControllerTestCase(BaseTestCase):
         mk_get_journal_by_acron.return_value = article.journal
         mk_get_issue_by_label.return_value = article.issue
 
-        controllers.get_article_by_pdf_filename(article.journal, article.issue, "article.pdf")
+        controllers.get_article_by_pdf_filename(
+            article.journal.acronym, article.issue.label, "article.pdf"
+        )
 
         mk_article_objects.filter.assert_called_once_with(is_public=True,
                                                           issue=article.issue,
                                                           journal=article.journal,
                                                           pdfs__filename='article.pdf'
                                                           )
+
+    @patch('webapp.controllers.Article.objects')
+    @patch('webapp.controllers.get_journal_by_acron')
+    @patch('webapp.controllers.get_issue_by_label')
+    def test_get_article_by_pdf_filename_retrieves_aop_article_by_pdf_filename(
+        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
+    ):
+
+        article = self._make_one(attrib={
+                                 '_id': '012ijs9y24',
+                                 'issue': '012ijs9y24-aop',
+                                 'journal': 'oak,ajimn1'
+                                 })
+
+        mk_get_journal_by_acron.return_value = article.journal
+        mk_get_issue_by_label.assert_not_called()
+
+        controllers.get_article_by_pdf_filename(
+            article.journal.acronym, "ahead", "article.pdf")
+
+        mk_article_objects.filter.assert_called_once_with(
+            journal=article.journal,
+            is_public=True,
+            issue='oak,ajimn1-aop',
+            pdfs__filename='article.pdf'
+        )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_journal_acronym(self):
         with self.assertRaises(ValueError) as exc_info:
@@ -1427,11 +1455,11 @@ class ArticleControllerTestCase(BaseTestCase):
             str(exc_info.exception), __('Obrigatório o acrônimo do periódico.')
         )
 
-    def test_get_article_by_pdf_filename_raises_error_if_no_issue_info(self):
+    def test_get_article_by_pdf_filename_raises_error_if_no_issue_label(self):
         with self.assertRaises(ValueError) as exc_info:
             controllers.get_article_by_pdf_filename("abc", "", "article.pdf")
         self.assertEqual(
-            str(exc_info.exception), __('Obrigatório o campo issue_info.')
+            str(exc_info.exception), __('Obrigatório o campo issue_label.')
         )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_pdf_filename(self):

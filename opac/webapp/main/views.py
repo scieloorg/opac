@@ -1033,7 +1033,7 @@ def article_detail_pid(pid):
 
 def render_html_from_xml(article, lang, gs_abstract=False):
     if current_app.config["SSM_XML_URL_REWRITE"]:
-        result = fetch_data(normalize_ssm_url(article.xml))
+        result = fetch_data(use_ssm_url(article.xml))
     else:
         result = fetch_data(article.xml)
 
@@ -1055,7 +1055,7 @@ def render_html_from_html(article, lang):
     except IndexError:
         raise ValueError('Artigo não encontrado') from None
 
-    result = fetch_data(normalize_ssm_url(html_url))
+    result = fetch_data(use_ssm_url(html_url))
 
     html = result.decode('utf8')
 
@@ -1077,7 +1077,7 @@ def render_html(article, lang, gs_abstract=False):
 
 # TODO: Remover assim que o valor Article.xml estiver consistente na base de
 # dados
-def normalize_ssm_url(url):
+def use_ssm_url(url):
     """Normaliza a string `url` de acordo com os valores das diretivas de
     configuração OPAC_SSM_SCHEME, OPAC_SSM_DOMAIN e OPAC_SSM_PORT.
 
@@ -1254,33 +1254,25 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         return render_template("article/detail.html", **context)
 
     def _handle_pdf():
-        pdf_ssm_path = None
-
-        if article.pdfs:
-            try:
-                pdf_url = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
-
-                if len(pdf_url) != 1:
-                    abort(404, _('PDF do Artigo não encontrado'))
-                else:
-                    pdf_url = pdf_url[0]['url']
-
-                pdf_url_parsed = urlparse(pdf_url)
-                pdf_ssm_path = pdf_url_parsed.path
-
-            except Exception:
-                abort(404, _('PDF do Artigo não encontrado'))
-        else:
+        if not article.pdfs:
             abort(404, _('PDF do Artigo não encontrado'))
 
-        if not pdf_ssm_path:
-            raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
-        else:
-            return get_content_from_ssm(pdf_ssm_path)
+        pdf_info = [pdf for pdf in article.pdfs if pdf['lang'] == qs_lang]
+        if len(pdf_info) != 1:
+            abort(404, _('PDF do Artigo não encontrado'))
+
+        try:
+            pdf_url = pdf_info[0]['url']
+        except (IndexError, KeyError, ValueError, TypeError):
+            abort(404, _('PDF do Artigo não encontrado'))
+
+        if pdf_url:
+            return get_pdf_content(pdf_url)
+        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
 
     def _handle_xml():
         if current_app.config["SSM_XML_URL_REWRITE"]:
-            result = fetch_data(normalize_ssm_url(article.xml))
+            result = fetch_data(use_ssm_url(article.xml))
         else:
             result = fetch_data(article.xml)
         response = make_response(result)
@@ -1316,6 +1308,20 @@ def article_epdf():
             'lang': lang,
         }
         return render_template("article/epdf.html", **context)
+
+
+def get_pdf_content(url):
+    if current_app.config["SSM_ARTICLE_ASSETS_OR_RENDITIONS_URL_REWRITE"]:
+        url = use_ssm_url(url)
+    try:
+        response = fetch_data(url)
+    except NonRetryableError:
+        abort(404, _('PDF não encontrado'))
+    except RetryableError:
+        abort(500, _('Erro inesperado'))
+    else:
+        mimetype, __ = mimetypes.guess_type(url)
+        return Response(response, mimetype=mimetype)
 
 
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
@@ -1383,13 +1389,20 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     pdf_filename = '%s.pdf' % pdf_filename
-    pdf_url = controllers.get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename)
-    if pdf_url is None:
+    article = controllers.get_article_by_pdf_filename(
+        journal_acron, issue_info, pdf_filename)
+    if not article:
         abort(404, _('PDF do artigo não foi encontrado'))
-    else:
-        pdf_url_parsed = urlparse(pdf_url)
-        return get_content_from_ssm(pdf_url_parsed.path)
-
+    return redirect(
+        url_for(
+            'main.article_detail_v3',
+            url_seg=article.journal.url_segment,
+            article_pid_v3=article.aid,
+            format='pdf',
+            lang=article._pdf_lang,
+        ),
+        code=301
+    )
 
 @main.route('/cgi-bin/fbpe/<string:text_or_abstract>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)

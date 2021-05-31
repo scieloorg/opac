@@ -366,9 +366,9 @@ class LegacyURLTestCase(BaseTestCase):
 
                 url = '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf'
 
-                response = c.get(url, follow_redirects=True)
+                response = c.get(url, follow_redirects=False)
 
-                self.assertStatus(response, 200)
+                self.assertStatus(response, 301)
 
     def test_article_text_with_lng(self):
         """
