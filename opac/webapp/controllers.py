@@ -1181,14 +1181,20 @@ def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
     else:
         issue = get_issue_by_label(journal, issue_label)
 
+    splitted = pdf_filename.split("_")
+    prefix = ''
+    if len(splitted) > 1 and len(splitted[0]) == 2:
+        prefix = splitted[0]
+        pdf_filename = pdf_filename[3:]
+
     article = Article.objects.filter(
                 journal=journal,
                 issue=issue, pdfs__filename=pdf_filename,
                 is_public=True).first()
-
     if article:
         for pdf in article.pdfs:
-            if pdf["filename"] == pdf_filename:
+            if ((pdf["filename"] == pdf_filename and prefix == '') or
+                    pdf["lang"] == prefix):
                 article._pdf_lang = pdf["lang"]
                 article._pdf_url = pdf["url"]
                 return article
