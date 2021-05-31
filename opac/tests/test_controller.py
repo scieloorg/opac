@@ -1442,8 +1442,9 @@ class ArticleControllerTestCase(BaseTestCase):
             article.journal.acronym, "ahead", "article.pdf")
 
         mk_article_objects.filter.assert_called_once_with(
+            journal=article.journal,
             is_public=True,
-            issue=article.issue.label,
+            issue='oak,ajimn1-aop',
             pdfs__filename='article.pdf'
         )
 
@@ -1454,11 +1455,11 @@ class ArticleControllerTestCase(BaseTestCase):
             str(exc_info.exception), __('Obrigatório o acrônimo do periódico.')
         )
 
-    def test_get_article_by_pdf_filename_raises_error_if_no_issue_info(self):
+    def test_get_article_by_pdf_filename_raises_error_if_no_issue_label(self):
         with self.assertRaises(ValueError) as exc_info:
             controllers.get_article_by_pdf_filename("abc", "", "article.pdf")
         self.assertEqual(
-            str(exc_info.exception), __('Obrigatório o campo issue_info.')
+            str(exc_info.exception), __('Obrigatório o campo issue_label.')
         )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_pdf_filename(self):
