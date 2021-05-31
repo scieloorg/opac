@@ -1159,30 +1159,32 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
         type__in=HIGHLIGHTED_TYPES).order_by('-order')
 
 
-def get_article_by_pdf_filename(journal_acron, issue_info, pdf_filename):
+def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
     """
     Retorna artigo pelo nome de arquivo pdf legado
+    `issue_label`: nome da pasta que contém volume, número, suplemento
     """
 
     if not journal_acron:
         raise ValueError(__('Obrigatório o acrônimo do periódico.'))
-    if not issue_info:
-        raise ValueError(__('Obrigatório o campo issue_info.'))
+    if not issue_label:
+        raise ValueError(__('Obrigatório o campo issue_label.'))
     if not pdf_filename:
         raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
 
     journal = get_journal_by_acron(journal_acron)
-    if issue_info.endswith("ahead"):
-        article = Article.objects.filter(
-                    issue="{}-aop".format(journal.jid),
-                    pdfs__filename=pdf_filename,
-                    is_public=True).first()
+
+    if issue_label.endswith("ahead"):
+        # o `issue_label` para ahead seria YYYYnahead,
+        # mas ele não existe assim no site, então recuperar por `ISSN-aop`
+        issue = "{}-aop".format(journal.jid)
     else:
-        issue = get_issue_by_label(journal, issue_info)
-        article = Article.objects.filter(
-                    journal=journal,
-                    issue=issue, pdfs__filename=pdf_filename,
-                    is_public=True).first()
+        issue = get_issue_by_label(journal, issue_label)
+
+    article = Article.objects.filter(
+                journal=journal,
+                issue=issue, pdfs__filename=pdf_filename,
+                is_public=True).first()
 
     if article:
         for pdf in article.pdfs:
