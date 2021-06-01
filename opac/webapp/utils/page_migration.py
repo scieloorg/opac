@@ -63,7 +63,8 @@ def downloaded_file(url):
             with open(file_path, 'wb') as f:
                 f.write(response.content)
             return file_path
-    except requests.exceptions.ConnectionError as e:
+    except (requests.exceptions.ConnectionError,
+            requests.exceptions.HTTPError) as e:
         logging.error(
             u'%s (corresponding to %s)' % (e, url))
 
@@ -220,7 +221,8 @@ class PageMigration(object):
 
     def get_file_info(self, referenced):
         """
-
+        Retorna a localização do arquivo
+        que será migrado do site antigo para o novo
         """
         # obtém o local de importação dos arquivos para o site novo
         file_location = self.get_file_location(referenced)
@@ -239,11 +241,8 @@ class PageMigration(object):
 
         if valid_path:
             # se existe arquivo no local de importação dos arquivos,
-            # então retorna seus dados
-            file_dest_name = self.get_prefixed_slug_name(file_location)
-            return (file_location, file_dest_name, url is not None)
-
-        logging.info('CONFERIR: {} não encontrado'.format(referenced))
+            # então retorna file_location
+            return file_location
 
 
 class JournalPageMigration:
