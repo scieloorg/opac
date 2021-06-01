@@ -290,10 +290,10 @@ DATA_PATH = os.path.join(PROJECT_PATH, '../../data')
 # url do site anterior / indica quais links e imagens mudar de endereço
 JOURNAL_PAGES_ORIGINAL_WEBSITE = os.environ.get(
   'ORIGINAL_WEBSITE') or ''
-# local novo das páginas secundárias (antigo `/revistas`)
+# local mapeado para obter as páginas secundárias (antigo `/revistas`)
 JOURNAL_PAGES_SOURCE_PATH = os.environ.get(
   'OPAC_JOURNAL_PAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'pages'))
-# local novo das images (antigo `/img/revistas`)
+# local mapeado para obter as images (antigo `/img/revistas`)
 JOURNAL_IMAGES_SOURCE_PATH = os.environ.get(
   'OPAC_JOURNAL_IMAGES_SOURCE_PATH', os.path.join(DATA_PATH, 'img'))
 
