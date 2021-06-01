@@ -242,7 +242,7 @@ class PageMigration(object):
         if valid_path:
             # se existe arquivo no local de importação dos arquivos,
             # então retorna file_location
-            return file_location
+            return file_location, url is not None
 
 
 class JournalPageMigration:
@@ -413,29 +413,15 @@ class MigratedPage(object):
         return '_'.join(parts + [new_name])
 
     def get_file_info(self, referenced):
-        """
-
-        """
-        # obtém o local de importação dos arquivos para o site novo
-        file_location = self.migration.get_file_location(referenced)
-
-        # verifica se arquivo existe no local de importação dos arquivos
-        valid_path = confirm_file_location(file_location, referenced)
-
-        url = None
-        if not valid_path:
-            # tenta baixar arquivo
-            # se não existe no local de importação dos arquivos
-            url = self.migration.is_asset_url(referenced)
-            if url:
-                file_location = downloaded_file(url)
-                valid_path = confirm_file_location(file_location, referenced)
-
-        if valid_path:
+        # obtém o local de origem do arquivo a ser migrado
+        # do site antigo para o site novo
+        info = self.migration.get_file_info(referenced)
+        if info:
+            file_location, is_temp = info
             # se existe arquivo no local de importação dos arquivos,
             # então retorna seus dados
             file_dest_name = self.get_prefixed_slug_name(file_location)
-            return (file_location, file_dest_name, url is not None)
+            return (file_location, file_dest_name, is_temp)
 
         logging.info('CONFERIR: {} não encontrado'.format(referenced))
 
