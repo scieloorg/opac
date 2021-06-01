@@ -333,7 +333,7 @@ class MigratedPage(object):
     def fix_urls(self):
         replacements = []
         for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
-            for elem in self.find_original_website_reference(
+            for elem in self.find_old_website_uri_items(
                     elem_name, attr_name):
                 old_url = str(elem[attr_name])
                 new_url = old_url
@@ -356,13 +356,17 @@ class MigratedPage(object):
                 logging.info(
                     'CONFERIR: ainda existe: {} ({})'.format(old, q))
 
-    def find_original_website_reference(self, elem_name, attribute_name):
-        mentions = []
+    def find_old_website_uri_items(self, elem_name, attribute_name):
+        """
+        Busca a[@href] e/ou img[@src] com padrão do site antigo
+        """
         for item in self.tree.find_all(elem_name):
-            value = item.get(attribute_name, '')
-            if self.migration.original_website in value:
-                mentions.append(item)
-        return mentions
+            uri = item.get(attribute_name, '')
+            parsed_uri = urlparse(uri)
+            if (parsed_uri.path.startswith("/img/revistas/") or
+                    parsed_uri.path.startswith("/fbpe/") or
+                    parsed_uri.path.startswith("/revistas/")):
+                yield item
 
     @property
     def images(self):
