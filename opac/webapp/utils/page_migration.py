@@ -64,7 +64,9 @@ def downloaded_file(url):
                 f.write(response.content)
             return file_path
     except (requests.exceptions.ConnectionError,
-            requests.exceptions.HTTPError) as e:
+            requests.exceptions.HTTPError,
+            requests.exceptions.ReadTimeout,
+            ) as e:
         logging.error(
             u'%s (corresponding to %s)' % (e, url))
 
@@ -322,6 +324,12 @@ class MigratedPage(object):
     """
     def __init__(self, migration, content,
                  acron=None, page_name=None, lang=None):
+        self.old_website_uri_patterns = [
+            "/cgi-bin/",
+            "/img/revistas/",
+            "/fbpe/",
+            "/revistas/",
+        ]
         self.used_names = {}
         self.acron = acron
         self.lang = lang
@@ -336,6 +344,7 @@ class MigratedPage(object):
         if self.acron:
             self.j_migration = JournalPageMigration(
                 migration.original_website, acron)
+            self.old_website_uri_patterns += ["/{}".format(acron)]
 
     @property
     def content(self):
@@ -359,8 +368,9 @@ class MigratedPage(object):
     def fix_urls(self):
         replacements = []
         for elem_name, attr_name in [('a', 'href'), ('img', 'src')]:
-            for elem in self.find_old_website_uri_items(
-                    elem_name, attr_name):
+            for elem in self.tree.find_all(elem_name):
+                if not elem.get(attr_name):
+                    continue
                 old_url = str(elem[attr_name])
                 new_url = old_url
                 if self.j_migration:
@@ -382,29 +392,50 @@ class MigratedPage(object):
                 logging.info(
                     'CONFERIR: ainda existe: {} ({})'.format(old, q))
 
-    def find_old_website_uri_items(self, elem_name, attribute_name):
+    def find_old_website_uri_items(self, elem_name, attr_name):
         """
         Busca a[@href] e/ou img[@src] com padrão do site antigo
         """
         for item in self.tree.find_all(elem_name):
-            uri = item.get(attribute_name, '')
+            uri = item.get(attr_name, '')
+            if not uri:
+                continue
+
             parsed_uri = urlparse(uri)
-            if (parsed_uri.path.startswith("/img/revistas/") or
-                    parsed_uri.path.startswith("/fbpe/") or
-                    parsed_uri.path.startswith("/revistas/")):
+            print(parsed_uri)
+            if (parsed_uri.path == "" and
+                    parsed_uri.netloc in self.migration.original_website):
+                yield item
+                continue
+
+            found = None
+            for url_path in self.old_website_uri_patterns:
+                if parsed_uri.path.startswith(url_path):
+                    found = item
+                    yield item
+                    break
+            if found:
+                continue
+
+    @property
+    def old_website_images(self):
+        return self.find_old_website_uri_items("img", "src")
+
+    @property
+    def old_website_files(self):
+        for item in self.find_old_website_uri_items("a", "href"):
+            if is_file(item.get('href')):
                 yield item
 
     @property
     def images(self):
-        return [img
-                for img in self.tree.find_all('img')
-                if img.get('src')]
+        return self.tree.find_all("img")
 
     @property
     def files(self):
-        return [item
-                for item in self.tree.find_all('a')
-                if item.get('href') and is_file(item.get('href'))]
+        for item in self.tree.find_all("a"):
+            if item.get('href') and is_file(item.get('href')):
+                yield item
 
     def get_prefixed_slug_name(self, file_path):
         new_name = slugify_filename(file_path, self.used_names)
@@ -426,7 +457,7 @@ class MigratedPage(object):
         logging.info('CONFERIR: {} não encontrado'.format(referenced))
 
     def create_images(self, create_image_function):
-        for image in self.images:
+        for image in self.old_website_images:
             src = image.get('src')
             if ':' not in src:
                 image_info = self.get_file_info(src)
@@ -438,7 +469,7 @@ class MigratedPage(object):
                         delete_file(img_src)
 
     def create_files(self, create_file_function):
-        for _file in self.files:
+        for _file in self.old_website_files:
             href = _file.get('href')
             if ':' not in href:
                 _file_info = self.get_file_info(href)
