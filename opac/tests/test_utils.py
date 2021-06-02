@@ -260,11 +260,14 @@ class UtilsTestCase(BaseTestCase):
         registered_page.content = ''
         mocked_create_page.side_effect = registered_page
         mocked_delete_file.side_effect = None
-        content = '<img src="/img/revistas/abc.jpg"><a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"/>'
+        content = (
+            '<img src="/img/revistas/abc.jpg">'
+            '<a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"/>'
+        )
         new_content = wutils.migrate_page_content(
             content, acron='rbep', page_name=None, language='pt')
         self.assertEqual(
             '<img src="/media/rbep_abc.jpg"/>'
-            '<a href="/media/rbep_avaliacao_en.htm"></a>',
+            '<a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"></a>',
             new_content
         )

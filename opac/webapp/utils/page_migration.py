@@ -402,7 +402,6 @@ class MigratedPage(object):
                 continue
 
             parsed_uri = urlparse(uri)
-            print(parsed_uri)
             if (parsed_uri.path == "" and
                     parsed_uri.netloc in self.migration.original_website):
                 yield item

@@ -202,24 +202,25 @@ class UtilsMigratedPageTestCase(BaseTestCase):
                                   img_revistas_path, static_files_path)
         self.page = MigratedPage(
                  self.migration, '',
-                 acron=None, page_name='criterio', lang='es')
+                 acron='abc', page_name='criterio', lang='es')
 
     def test_content(self):
         self.page.content = '<html><body>x</body></html>'
         self.assertEqual(self.page.content, 'x')
 
-    def test_find_original_website_reference(self):
-        self.page.content = '''<img src="www.scielo.br"/>
-                            <img src="www.scielo.br/abc"/>
+    def test_find_old_website_uri_items(self):
+        self.page.content = '''<img src="http://www.scielo.br"/>
+                            <img src="http://www.scielo.br/abc"/>
                             <img src="/img/revistas/abc.jpg"/>
-                            <img src="www.scielo.br/abc/iaboutj.htm"/>
-                            <img src="scielo.br/img/revistas"/>'''
+                            <img src="http://www.scielo.br/abc/iaboutj.htm"/>
+                            <img src="http://scielo.br/img/revistas"/>'''
 
-        result = self.page.find_original_website_reference('img', 'src')
-        self.assertEqual(result[0]['src'], 'www.scielo.br')
-        self.assertEqual(result[1]['src'], 'www.scielo.br/abc')
-        self.assertEqual(result[2]['src'], 'www.scielo.br/abc/iaboutj.htm')
-        self.assertEqual(len(result), 3)
+        result = list(self.page.find_old_website_uri_items('img', 'src'))
+        self.assertEqual(result[0]['src'], 'http://www.scielo.br')
+        self.assertEqual(result[1]['src'], 'http://www.scielo.br/abc')
+        self.assertEqual(result[2]['src'], '/img/revistas/abc.jpg')
+        self.assertEqual(result[3]['src'], 'http://www.scielo.br/abc/iaboutj.htm')
+        self.assertEqual(len(result), 4)
 
     def test_fix_urls(self):
         self.page.content = '''
@@ -349,7 +350,8 @@ class UtilsMigratedPageTestCase(BaseTestCase):
             '/media/criterios_es_img1.jpg',
             ]
 
-        self.assertEqual(self.page.files[0]['href'], '/img/revistas/img1.jpg')
+        files = list(self.page.files)
+        self.assertEqual(files[0]['href'], '/img/revistas/img1.jpg')
         file_locations = self.page.migration.get_possible_locations(
             '/img/revistas/img1.jpg')
         self.assertEqual(
@@ -398,8 +400,8 @@ class UtilsMigratedPageTestCase(BaseTestCase):
         for result, expected in zip(results, expected_items):
             self.assertEqual(result, expected)
 
-    @patch.object(page_migration, 'downloaded_file')
-    @patch.object(page_migration, 'confirm_file_location')
+    @patch('webapp.utils.page_migration.downloaded_file')
+    @patch('webapp.utils.page_migration.confirm_file_location')
     @patch.object(wutils, 'migrate_page_create_image')
     def test_create_images_from_downloaded_files(self,
                            mocked_create_item,
@@ -576,7 +578,7 @@ class UtilsMigratedJournalPageTestCase(BaseTestCase):
         mocked_create_file_function.side_effect = [
             '/media/files/aa_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
             ]
-        _file_info = self.page.get_file_info(self.page.files[0]['href'])
+        _file_info = self.page.get_file_info(list(self.page.files)[0]['href'])
 
         file_info = (
             'opac/tests/fixtures/pages/revistas/aa/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
@@ -614,26 +616,37 @@ class UtilsMigratedABMVZJournalPageTestCase(BaseTestCase):
                  self.migration, '',
                  acron='abmvz', lang='es')
 
+    @patch('requests.get')
     @patch.object(wutils, 'migrate_page_create_file')
-    def test_create_files_from_downloaded_files(self, mocked_create_file_function):
-        pdf_file_path = 'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
+    def test_create_files_from_downloaded_files(
+            self,
+            mocked_create_file_function,
+            mocked_requests_get,
+            ):
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'content'
+        mocked_requests_get.return_value = mocked_response
+
+        pdf_file_path = (
+            'PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf'
+        )
         self.page.content = '<a href="{}"/>'.format(pdf_file_path)
         self.assertIn(
             '/revistas/abmvz/{}'.format(pdf_file_path),
             self.page.content
         )
 
-        for a in self.page.files:
-            result = self.migration.get_possible_locations(a['href'])
-            self.assertIn(
-                '{}/abmvz/{}'.format(TESTS_REVISTAS_PATH, pdf_file_path),
-                result)
+        files = list(self.page.files)
+        result = self.migration.get_possible_locations(files[0]['href'])
+        self.assertIn(
+            '{}/abmvz/{}'.format(TESTS_REVISTAS_PATH, pdf_file_path),
+            result)
 
         mocked_create_file_function.side_effect = [
             '/media/files/abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',
             ]
-        _file_info = self.page.get_file_info(self.page.files[0]['href'])
-
+        _file_info = self.page.get_file_info(files[0]['href'])
         file_info = (
             '/tmp/tmpcjnmoyos/PASSO A PASSO – SISTEMA DE SUBMISSÃO DE ARTIGOS POR INTERMÉDIO DO SCHOLARONE.pdf',
             'abmvz_passo-a-passo-sistema-de-submissao-de-artigos-por-intermedio-do-scholarone.pdf',

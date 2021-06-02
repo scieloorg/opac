@@ -398,7 +398,8 @@ def router_legacy():
             )
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
-            pid = pid.upper()
+            if pid.startswith("s"):
+                pid = pid.upper()
             article = controllers.get_article_by_scielo_pid(pid)
 
             if not article:
@@ -432,6 +433,8 @@ def router_legacy():
 
         elif script_php == 'sci_pdf':
             # accesso ao pdf do artigo:
+            if pid.startswith("s"):
+                pid = pid.upper()
             article = controllers.get_article_by_scielo_pid(pid)
 
             if not article:
