@@ -138,7 +138,7 @@
                       <li data-date="{% if article.publication_date %}{{ article.publication_date.replace('-', "") }}{% endif %}">
 
                         {% if session.lang %}
-                          <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true)|striptags }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
+                          <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true) | safe }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
                           <!-- publication_date: {{article.publication_date}} -->
                           <!-- PID: {{article.pid}} -->
                         {% endif %}
