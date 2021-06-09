@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+
+{% block ie7_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie7_extra_namespaces %}
+{% block ie8_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie8_extra_namespaces %}
+{% block ie9_extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock ie9_extra_namespaces %}
+{% block extra_namespaces %}xmlns:mml="http://www.w3.org/1998/Math/MathML"{% endblock extra_namespaces %}
+
 {% block body_class %}journal{% endblock %}
 {% block content %}
   {% include "journal/includes/header.html" %}
@@ -13,3 +19,21 @@
 
 {% endblock %}
 
+{% block extra_js %}
+  {% if config.MATHJAX_CDN_URL and has_math_content %}
+    <script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
+
+    <script>
+      var insertScript = function(url, callback, parentNode) {
+        var scriptNode = document.createElement("script");
+        scriptNode.src = url;
+        scriptNode.onload = callback;
+        parentNode.appendChild(scriptNode)
+      }
+      var headNode = document.getElementsByTagName("head")[0];
+      setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
+    </script>
+  {% else %}
+    <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
+  {% endif %}
+{% endblock %}
