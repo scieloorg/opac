@@ -22,18 +22,5 @@
 {% block extra_js %}
   {% if config.MATHJAX_CDN_URL and has_math_content %}
     <script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
-
-    <script>
-      var insertScript = function(url, callback, parentNode) {
-        var scriptNode = document.createElement("script");
-        scriptNode.src = url;
-        scriptNode.onload = callback;
-        parentNode.appendChild(scriptNode)
-      }
-      var headNode = document.getElementsByTagName("head")[0];
-      setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
-    </script>
-  {% else %}
-    <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
   {% endif %}
 {% endblock %}
