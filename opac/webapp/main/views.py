@@ -1566,6 +1566,10 @@ def router_counter_dicts():
         end_date = datetime.now()
     begin_date = end_date - timedelta(days=30)
 
+    page = request.args.get('page', type=int)
+    if not page:
+        page = 1
+
     results = {'dictionary_date': end_date,
                'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
                'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
