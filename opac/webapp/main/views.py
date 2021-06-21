@@ -1570,6 +1570,10 @@ def router_counter_dicts():
     if not page:
         page = 1
 
+    limit = request.args.get('limit', type=int)
+    if not limit or limit > 100 or limit < 0:
+        limit = 100
+
     results = {'dictionary_date': end_date,
                'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
                'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
