@@ -1584,7 +1584,10 @@ def router_counter_dicts():
     for a in articles.items:
         results['documents'].update(get_article_counter_data(a))
 
-    results['total'] = len(results['documents'])
+    results['total'] = articles.total
+    results['pages'] = articles.pages
+    results['limit'] = articles.per_page
+    results['page'] = articles.page
 
     return jsonify(results)
 
