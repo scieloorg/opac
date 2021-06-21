@@ -1580,7 +1580,8 @@ def router_counter_dicts():
                'documents': {},
                'collection': current_app.config['OPAC_COLLECTION']}
 
-    for a in controllers.get_articles_by_date_range(begin_date, end_date):
+    articles = controllers.get_articles_by_date_range(begin_date, end_date, page, limit)
+    for a in articles.items:
         results['documents'].update(get_article_counter_data(a))
 
     results['total'] = len(results['documents'])
