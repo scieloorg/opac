@@ -1039,6 +1039,8 @@ def article_detail_pid(pid):
 
 
 def render_html_from_xml(article, lang, gs_abstract=False):
+    logger.debug("Get XML: %s", article.xml)
+
     if current_app.config["SSM_XML_URL_REWRITE"]:
         result = fetch_data(use_ssm_url(article.xml))
     else:
@@ -1318,6 +1320,7 @@ def article_epdf():
 
 
 def get_pdf_content(url):
+    logger.debug("Get PDF: %s", url)
     if current_app.config["SSM_ARTICLE_ASSETS_OR_RENDITIONS_URL_REWRITE"]:
         url = use_ssm_url(url)
     try:
@@ -1373,6 +1376,14 @@ def article_ssm_content_raw():
 @main.route('/pdf/<string:url_seg>/<string:url_seg_issue>/<regex("(.*)"):url_seg_article>/<regex("(?:\w{2})"):lang_code>')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
+    """
+    Padrões esperados:
+        `/pdf/csc/2021.v26suppl1/2557-2558`
+        `/pdf/csc/2021.v26suppl1/2557-2558/en`
+    """
+    if not lang_code and "." not in url_seg_issue:
+        return router_legacy_pdf(url_seg, url_seg_issue, url_seg_article)
+
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
     if not issue:
         abort(404, _('Issue não encontrado'))
