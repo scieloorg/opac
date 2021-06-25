@@ -1577,16 +1577,28 @@ def router_counter_dicts():
         end_date = datetime.now()
     begin_date = end_date - timedelta(days=30)
 
+    page = request.args.get('page', type=int)
+    if not page:
+        page = 1
+
+    limit = request.args.get('limit', type=int)
+    if not limit or limit > 100 or limit < 0:
+        limit = 100
+
     results = {'dictionary_date': end_date,
                'end_date': end_date.strftime('%Y-%m-%d %H-%M-%S'),
                'begin_date': begin_date.strftime('%Y-%m-%d %H-%M-%S'),
                'documents': {},
                'collection': current_app.config['OPAC_COLLECTION']}
 
-    for a in controllers.get_articles_by_date_range(begin_date, end_date):
+    articles = controllers.get_articles_by_date_range(begin_date, end_date, page, limit)
+    for a in articles.items:
         results['documents'].update(get_article_counter_data(a))
 
-    results['total'] = len(results['documents'])
+    results['total'] = articles.total
+    results['pages'] = articles.pages
+    results['limit'] = articles.per_page
+    results['page'] = articles.page
 
     return jsonify(results)
 
