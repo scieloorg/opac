@@ -69,7 +69,7 @@ SQLAlchemy-Utils==0.33.3
 tweepy==3.7.0
 unicodecsv==0.14.1
 Unidecode==1.1.1
-urllib3==1.25.8
+urllib3==1.26.6
 Werkzeug==0.14.1
 WTForms==2.3.3
 XlsxWriter==1.1.0
