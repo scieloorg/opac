@@ -1519,9 +1519,9 @@ class ArticleControllerTestCase(BaseTestCase):
     def test_get_article_by_aid_raises_missing_journal_url_seg_parameter_error(
             self):
         article = self._make_one()
-        with self.assertRaises(ValueError) as exc:
+        with self.assertRaises(controllers.ArticleJournalNotFoundError) as exc:
             controllers.get_article_by_aid(article.id, None)
-        self.assertIn("journal_url_seg", str(exc.exception))
+        self.assertIn("journal_acron", str(exc.exception))
 
     def test_get_article_by_aid_raises_not_found_article_journal_error(
             self):
@@ -1530,10 +1530,10 @@ class ArticleControllerTestCase(BaseTestCase):
             controllers.get_article_by_aid(article.id, "JOURNALID01")
         self.assertIn(article.journal.acronym, str(exc.exception))
 
-    def test_get_article_by_aid_raises_article_is_not_published_error(
+    def test_get_article_by_aid_raises_article_is_not_found_error(
             self):
         article = self._make_one({"is_public": False})
-        with self.assertRaises(controllers.ArticleIsNotPublishedError):
+        with self.assertRaises(controllers.ArticleNotFoundError):
             controllers.get_article_by_aid(
                 article.id, article.journal.url_segment)
 

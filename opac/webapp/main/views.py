@@ -398,24 +398,21 @@ def router_legacy():
             )
 
         elif script_php == 'sci_arttext' or script_php == 'sci_abstract':
-            if pid.startswith("s"):
-                pid = pid.upper()
-            article = controllers.get_article_by_scielo_pid(pid)
-
-            if not article:
-                article = controllers.get_article_by_oap_pid(pid)
-
+            article = controllers.get_article_by_pid_v2(pid)
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
             # 'abstract' or None (not False, porque False converterá a string 'False')
             part = (script_php == 'sci_abstract' and 'abstract') or None
 
+            if tlng not in article.languages:
+                tlng = article.original_language
+
             return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
                                     article_pid_v3=article.aid,
                                     part=part,
-                                    lang=tlng or article.original_language),
+                                    lang=tlng),
                             code=301)
 
         elif script_php == 'sci_issues':
@@ -433,13 +430,7 @@ def router_legacy():
 
         elif script_php == 'sci_pdf':
             # accesso ao pdf do artigo:
-            if pid.startswith("s"):
-                pid = pid.upper()
-            article = controllers.get_article_by_scielo_pid(pid)
-
-            if not article:
-                article = controllers.get_article_by_oap_pid(pid)
-
+            article = controllers.get_article_by_pid_v2(pid)
             if not article:
                 abort(404, _('Artigo não encontrado'))
 
@@ -1431,7 +1422,7 @@ def router_legacy_article(text_or_abstract):
         # se tem pid
         abort(400, _('Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
 
-    article = controllers.get_article_by_scielo_pid(pid, is_public=True)
+    article = controllers.get_article_by_pid_v1(pid)
     if not article:
         abort(404, _('Artigo não encontrado'))
 
@@ -1440,7 +1431,6 @@ def router_legacy_article(text_or_abstract):
             'main.article_detail_v3',
             url_seg=article.journal.url_segment,
             article_pid_v3=article.aid,
-            lang=lng
         ),
         code=301
     )

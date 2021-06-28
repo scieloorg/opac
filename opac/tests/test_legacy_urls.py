@@ -194,15 +194,12 @@ class LegacyURLTestCase(BaseTestCase):
 
             with self.client as c:
 
-                for pid in article.scielo_pids.values():
-
-                    url = 'scielo.php?script=sci_arttext&pid=%s' % pid
-
-                    response = c.get(url, follow_redirects=True)
-
-                    self.assertStatus(response, 200)
-
-                    self.assertTemplateUsed('article/detail.html')
+                for pid in ['0000-00000000000000001', '0000-00000000000000002']:
+                    with self.subTest(pid):
+                        url = 'scielo.php?script=sci_arttext&pid=%s' % pid
+                        response = c.get(url, follow_redirects=True)
+                        self.assertStatus(response, 200)
+                        self.assertTemplateUsed('article/detail.html')
 
     def test_article_text_check_redirect(self):
         """
@@ -319,13 +316,11 @@ class LegacyURLTestCase(BaseTestCase):
 
             with self.client as c:
 
-                for pid in article.scielo_pids.values():
-
-                    url = 'scielo.php?script=sci_pdf&pid=%s' % pid
-
-                    response = c.get(url, follow_redirects=True)
-
-                    self.assertStatus(response, 200)
+                for pid in ['0000-00000000000000001', '0000-00000000000000002']:
+                    with self.subTest(pid):
+                        url = 'scielo.php?script=sci_pdf&pid=%s' % pid
+                        response = c.get(url, follow_redirects=False)
+                        self.assertStatus(response, 301)
 
     @patch('requests.get')
     def test_router_legacy_pdf(self, mocked_requests_get):

@@ -1096,7 +1096,6 @@ class MainTestCase(BaseTestCase):
                     'main.article_detail_v3',
                     url_seg=journal.url_segment,
                     article_pid_v3=article.aid,
-                    lang='en'
                 ),
             )
 
@@ -1197,7 +1196,6 @@ class MainTestCase(BaseTestCase):
                                            lang='pt'))
 
         self.assertStatus(response, 404)
-        self.assertIn(unpublish_reason, response.data.decode('utf-8'))
 
     def test_pdf_url(self):
         """
