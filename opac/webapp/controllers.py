@@ -808,25 +808,21 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
         raise ValueError(__('Obrigatório um aid.'))
 
     try:
-        article = Article.objects.get(pk=aid, **kwargs)
-    except Article.DoesNotExist as e:
-        raise ArticleNotFoundError(aid)
-    except Article.MultipleObjectsReturned as e:
-        article = Article.objects(aid=aid, **kwargs).first()
+        article = Article.objects.get(pk=aid, is_public=True, **kwargs)
+    except (Article.DoesNotExist, Article.MultipleObjectsReturned) as e:
+        article = Article.objects(
+            Q(scielo_pids__v3=aid) |
+            Q(scielo_pids__other__in=[aid]),
+            is_public=True,
+            **kwargs).first()
         if not article:
             raise ArticleNotFoundError(aid)
-
-    if not article.is_public:
-        raise ArticleIsNotPublishedError(article.unpublish_reason)
 
     if not article.issue.is_public:
         raise IssueIsNotPublishedError(article.issue.unpublish_reason)
 
     if not article.journal.is_public:
         raise JournalIsNotPublishedError(article.journal.unpublish_reason)
-
-    if not journal_url_seg:
-        raise ValueError(__('Obrigatório um journal_url_seg.'))
 
     if article.journal.url_segment != journal_url_seg:
         raise ArticleJournalNotFoundError(article.journal.url_segment)
