@@ -48,6 +48,12 @@ JOURNAL_UNPUBLISH = _("O periódico está indisponível por motivo de: ")
 ISSUE_UNPUBLISH = _("O número está indisponível por motivo de: ")
 ARTICLE_UNPUBLISH = _("O artigo está indisponível por motivo de: ")
 
+IAHX_LANGS = dict(
+    p='pt',
+    e='es',
+    i='en',
+)
+
 
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
@@ -1608,3 +1614,42 @@ def get_article_counter_data(article):
             "update": article.updated
         }
     }
+
+
+@main.route('/cgi-bin/wxis.exe/iah/')
+def author_production():
+    # http://www.scielo.br/cgi-bin/wxis.exe/iah/
+    # ?IsisScript=iah/iah.xis&base=article%5Edlibrary&format=iso.pft&
+    # lang=p&nextAction=lnk&
+    # indexSearch=AU&exprSearch=MEIERHOFFER,+LILIAN+KOZSLOWSKI
+    # ->
+    # //search.scielo.org/?lang=pt&q=au:MEIERHOFFER,+LILIAN+KOZSLOWSKI
+
+    search_url = current_app.config.get('URL_SEARCH')
+    if not search_url:
+        abort(404, "URL_SEARCH: {}".format(_('Página não encontrada')))
+
+    qs_exprSearch = request.args.get('exprSearch', type=str) or ''
+    qs_indexSearch = request.args.get('indexSearch', type=str) or ''
+    qs_lang = request.args.get('lang', type=str) or ''
+
+    _lang = IAHX_LANGS.get(qs_lang) or ''
+    _lang = _lang and "lang={}".format(_lang)
+
+    _expr = "{}{}".format(
+        qs_indexSearch == "AU" and "au:" or '', qs_exprSearch)
+    _expr = _expr and "q={}".format(_expr.replace(" ", "+"))
+
+    _and = _lang and _expr and "&" or ''
+    _question_mark = (_lang or _expr) and "?" or ""
+
+    if search_url.startswith("//"):
+        protocol = "https:"
+    elif search_url.startswith("http"):
+        protocol = ""
+    else:
+        protocol = "https://"
+
+    url = "{}{}{}{}{}{}".format(
+        protocol, search_url, _question_mark, _lang, _and, _expr)
+    return redirect(url, code=301)
