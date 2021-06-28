@@ -405,11 +405,14 @@ def router_legacy():
             # 'abstract' or None (not False, porque False converterá a string 'False')
             part = (script_php == 'sci_abstract' and 'abstract') or None
 
+            if tlng not in article.languages:
+                tlng = article.original_language
+
             return redirect(url_for('main.article_detail_v3',
                                     url_seg=article.journal.url_segment,
                                     article_pid_v3=article.aid,
                                     part=part,
-                                    lang=tlng or article.original_language),
+                                    lang=tlng),
                             code=301)
 
         elif script_php == 'sci_issues':
