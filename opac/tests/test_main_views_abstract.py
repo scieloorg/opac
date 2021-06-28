@@ -35,7 +35,7 @@ class TestArticleDetailV3Abstract(BaseTestCase):
                     {'language': 'es', 'name': u'Artículo en español'},
                     {'language': 'pt', 'name': u'Artigo en Português'},
                 ],
-                'pid': 'pidv2'
+                'pid': 'PIDV2'
             }
             _article_data.update(article_data or {})
             self.article = utils.makeOneArticle(_article_data)
