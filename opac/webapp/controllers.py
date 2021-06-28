@@ -1100,6 +1100,23 @@ def is_open_issue(articles):
         return False
 
 
+def get_article_by_pid_v1(v1, **kwargs):
+    """
+    Retorna um artigo considerando os parâmetros ``v1``.
+
+    - ``v1``: string, contendo o PID do artigo versão 1, 2 ou 3
+    """
+
+    if not v1:
+        raise ValueError(__('Obrigatório um pid.'))
+
+    return Article.objects(
+        scielo_pids__v1=v1,
+        is_public=True,
+        **kwargs
+    ).first()
+
+
 def get_article_by_pid(pid, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``pid``.
@@ -1142,7 +1159,7 @@ def get_article_by_scielo_pid(scielo_pid, **kwargs):
     ).first()
 
 
-def get_article_by_pid_v2(v2, is_public=True, **kwargs):
+def get_article_by_pid_v2(v2, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``v2``.
 
@@ -1159,6 +1176,7 @@ def get_article_by_pid_v2(v2, is_public=True, **kwargs):
         Q(aop_pid=v2) |
         Q(scielo_pids__v2=v2) |
         Q(scielo_pids__other__in=[v2]),
+        is_public=True,
         **kwargs
     ).first()
 

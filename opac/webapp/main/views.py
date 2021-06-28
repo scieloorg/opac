@@ -1422,7 +1422,7 @@ def router_legacy_article(text_or_abstract):
         # se tem pid
         abort(400, _('Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
 
-    article = controllers.get_article_by_scielo_pid(pid, is_public=True)
+    article = controllers.get_article_by_pid_v1(pid)
     if not article:
         abort(404, _('Artigo não encontrado'))
 
@@ -1431,7 +1431,6 @@ def router_legacy_article(text_or_abstract):
             'main.article_detail_v3',
             url_seg=article.journal.url_segment,
             article_pid_v3=article.aid,
-            lang=lng
         ),
         code=301
     )
