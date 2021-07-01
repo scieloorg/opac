@@ -189,7 +189,10 @@ class LegacyURLTestCase(BaseTestCase):
                 'issue': issue.id,
                 'pid': '0000-00000000000000001',
                 'scielo_pids': {'v2': '0000-00000000000000002',
-                                'v3': '0000-00000000000000003'}
+                                'v3': '0000-00000000000000003',
+                                'other':
+                                    ['0000-00000000000000002'],
+                                }
             })
 
             with self.client as c:
@@ -302,7 +305,10 @@ class LegacyURLTestCase(BaseTestCase):
                 'original_language': 'en',
                 'pid': '0000-00000000000000001',
                 'scielo_pids': {'v2': '0000-00000000000000002',
-                                'v3': '0000-00000000000000003'},
+                                'v3': '0000-00000000000000003',
+                                'other':
+                                    ['0000-00000000000000002'],
+                                },
                 'pdfs': [
                     {
                         'lang': 'en',
