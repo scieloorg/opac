@@ -807,16 +807,15 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     if not aid:
         raise ValueError(__('Obrigatório um aid.'))
 
-    try:
-        article = Article.objects.get(pk=aid, is_public=True, **kwargs)
-    except (Article.DoesNotExist, Article.MultipleObjectsReturned) as e:
-        article = Article.objects(
-            Q(scielo_pids__v3=aid) |
-            Q(scielo_pids__other__in=[aid]),
-            is_public=True,
-            **kwargs).first()
-        if not article:
-            raise ArticleNotFoundError(aid)
+    articles = Article.objects(pk=aid, is_public=True, **kwargs)
+    if not articles:
+        articles = Article.objects(
+            scielo_pids__other=aid, is_public=True, **kwargs)
+
+    if articles:
+        article = articles[0]
+    else:
+        raise ArticleNotFoundError(aid)
 
     if not article.issue.is_public:
         raise IssueIsNotPublishedError(article.issue.unpublish_reason)
@@ -1171,14 +1170,19 @@ def get_article_by_pid_v2(v2, **kwargs):
 
     v2 = v2.upper()
 
-    return Article.objects(
-        Q(pid=v2) |
-        Q(aop_pid=v2) |
-        Q(scielo_pids__v2=v2) |
-        Q(scielo_pids__other__in=[v2]),
-        is_public=True,
-        **kwargs
-    ).first()
+    articles = Article.objects(pid=v2, is_public=True, **kwargs)
+    if articles:
+        return articles[0]
+
+    articles = Article.objects(aop_pid=v2, is_public=True, **kwargs)
+    if articles:
+        return articles[0]
+
+    articles = Article.objects(scielo_pids__other=v2, is_public=True, **kwargs)
+    if articles:
+        return articles[0]
+
+    return None
 
 
 def get_recent_articles_of_issue(issue_iid, is_public=True):
