@@ -48,7 +48,7 @@ class MainTestCase(BaseTestCase):
                 response = client.get(url_for('main.index'))
                 collection = g.get('collection')
                 self.assertEqual(0, collection.metrics.total_journal)
-            
+
 
             utils.makeOneJournal({'is_public': True, 'current_status': 'current'})
             utils.makeOneArticle({'is_public': True})
@@ -577,11 +577,11 @@ class MainTestCase(BaseTestCase):
                                                lang='ru'))
 
             self.assertRedirects(
-                response, 
+                response,
                 url_for(
                     'main.article_detail_v3',
-                    url_seg=journal.url_segment, 
-                    article_pid_v3=article.aid, 
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
                     format='html',
                 )
             )
@@ -1943,6 +1943,29 @@ class TestJournalGrid(BaseTestCase):
             response = self.client.get('/grid/{}'.format(journal.url_segment))
 
             self.assertStatus(response, 301)
+
+    def test_issue_grid_social_meta_tags(self):
+        """
+        Teste para verificar a página da grade do periódico apresenta as
+        tags de compartilhamento com redes sociais.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Social Meta tags'})
+
+            response = self.client.get(
+                url_for('main.issue_grid', url_seg=journal.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+            self.assertIn('<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/grid"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="website"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="Social Meta tags"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="Esse periódico tem com objetivo xpto"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))
 
 
 class TestIssueToc(BaseTestCase):
