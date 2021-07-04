@@ -2,6 +2,10 @@
 
 {% block title %}{{ journal.title }}{% endblock %}
 
+{% block extra_meta %}
+{% include "journal/includes/meta.html" %}
+{% endblock %}
+
 {% block body_class %}journal{% endblock %}
 {% block content %}
   {% include "journal/includes/header.html" %}

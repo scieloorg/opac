@@ -603,3 +603,30 @@ class JournalHomeTestCase(BaseTestCase):
 
                 for item, expected in zip(mission_tag.find_all("strong"), ["58", "42"]):
                     self.assertEqual(item.text.strip(), expected)
+
+    def test_journal_social_meta_tags(self):
+        """
+        Teste para verificar a página do periódico apresenta as tags de compartilhamento
+        com redes sociais.
+        """
+        journal = utils.makeOneJournal({'title': 'Social Meta tags'})
+
+        with self.client as c:
+            # Criando uma coleção para termos o objeto ``g`` na interface
+            utils.makeOneCollection()
+
+            header = {'Referer': url_for('main.journal_detail',
+                                         url_seg=journal.url_segment)}
+
+            response = c.get(
+                url_for('main.set_locale', lang_code='en'),
+                headers=header,
+                follow_redirects=True)
+
+            self.assertEqual(200, response.status_code)
+
+            self.assertIn('<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="website"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="Social Meta tags"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="This journal is aiming xpto"/>', response.data.decode('utf-8'))
