@@ -1,0 +1,8 @@
+    <!-- social share tags -->
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ journal.title }}" />
+    <meta property="og:description" content="{{ journal.get_mission_by_lang(session.lang[:2])|safe|default(_(" Periódico sem
+        missão cadastrada"), true) }}" />
+    <meta property="og:image" content="{{request.url_root}}{{ journal.logo_url|replace(" /", "" , 1) }}" />
+    <!-- social share tags -->
