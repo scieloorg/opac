@@ -104,6 +104,10 @@ def add_collection_to_g():
             # discutir o que fazer aqui
             setattr(g, 'collection', {})
 
+@main.after_request
+def add_header(response):
+    response.headers['x-content-type-options'] = 'nosniff'
+    return response
 
 @main.after_request
 def add_language_code(response):

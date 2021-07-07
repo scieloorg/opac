@@ -39,13 +39,9 @@
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-plumx">
                                 <div class="badge-logo">
-                                    <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
-                                        data-popup="hidden"
-                                        data-size="large"
-                                        class="plumx-plum-print-popup"
-                                        data-site="scielo">
-                                        {{ article.title }}
-                                    </a>
+                                    <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}" data-popup="button"
+                                        data-size="large" class="plumx-plum-print-popup plum-liberty-theme"
+                                        data-site="plum" data-hide-when-empty="true" data-no-link="true" target="_blank">{{ article.title }}</a>
                                 </div>
                             </div>
                             <a target="_blank" href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}">
