@@ -2488,9 +2488,8 @@ class TestArticleDetailV3Meta(BaseTestCase):
             content = response.data.decode('utf-8')
 
             self.assertIn(
-                '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/a/%s/" />' % article.aid, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:type" content="article" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:title" content="%s" />' % article.title, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:description" content="%s" />' % article.abstract, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
-
+                '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/a/%s/"/>' % article.aid, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="article"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="%s"/>' % article.title, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="%s"/>' % article.abstract, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))

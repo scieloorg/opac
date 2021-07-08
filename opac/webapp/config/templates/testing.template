@@ -121,3 +121,6 @@ TWITTER_ACCESS_TOKEN = 'acc3ss-tok3n-secr3t'
 TWITTER_ACCESS_TOKEN_SECRET = 'acc3ss-tok3n-secr3t'
 TWITTER_SCREEN_NAME = 'RedeSciELO'
 TWITTER_LIMIT = '10'
+
+# Server Name
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', '0.0.0.0:8000')

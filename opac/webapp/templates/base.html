@@ -24,6 +24,16 @@
       <script src="{{ url_for('static', filename='js/vendor/html5-3.6-respond-1.1.0.min.js') }}"></script>
     <![endif]-->
 
+    {% block social_share_tags %}
+    <!-- social share tags -->
+    <meta property="og:url" content="{{ request.url }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="SciELO"/>
+    <meta property="og:description" content="Scientific Library On-Line"/>
+    <meta property="og:image" content="{{request.url_root}}static/img/logo-scielo-svg.svg"/>
+    <!-- social share tags -->
+    {% endblock %}
+
     {% if not config.DEBUG and config.GA_TRACKING_CODE %}
     <!-- Google Analytics -->
       <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.GA_TRACKING_CODE }}"></script>
