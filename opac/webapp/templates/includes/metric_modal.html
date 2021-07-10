@@ -1,14 +1,14 @@
 
   <div class="modal fade ModalDefault" id="metric_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content" style="width: 605px;">
+      <div class="modal-content" style="width: 673px;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans %}Fechar{% endtrans %}</span></button>
           <h4 class="modal-title">{% trans %}Métricas{% endtrans %}</h4>
         </div>
         <div class="modal-body">
           <div class="modal-metrics">
-              <div class="row" style="width: 600px;">
+              <div class="row" style="width: 661px;">
                 {% if article %}
                     {% if config.USE_METRICS %}
                     <div class="badge-link col-center">
@@ -76,6 +76,14 @@
 
                             <div id="scienceopen" data-doi="{{ article.doi }}"></div>
 
+                        </div>
+                        {% endif %}
+
+                        {% if config.USE_SCITE %}
+                        <div class="badge-link col-center"></div>
+                            <div class="scite-badge" data-doi="{{ article.doi }}" data-layout="vertical" data-tooltip-placement="left"
+                            data-show-zero="false" data-show-labels="true">
+                            </div>
                         </div>
                         {% endif %}
 
