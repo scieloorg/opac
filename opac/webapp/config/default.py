@@ -79,10 +79,12 @@ import os
         - OPAC_USE_DIMENSIONS:   ativa/desativa a integração com o Dimensions. Se sim, definir como 'True' (default: 'False')
         - OPAC_DIMENSIONS_METRICS_URL:   URL para o Dimensions (default: https://badge.dimensions.ai/details/doi)
         - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
-        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/scielo/a)
+        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: //cdn.plu.mx/widget-popup.js)
         - OPAC_USE_SCIENCEOPEN:  ativa/desativa a integração de métricas com o ScienceOpen. Se sim, definir como 'True' (default: 'False')
         - OPAC_USE_SCITE:  ativa/desativa a integração de métricas com _SCITE. Se sim, definir como 'True' (default: 'False')
+        - OPAC_SCITE_URL:  URL para o SCITE_ (default: https://cdn.scite.ai/badge/scite-badge-latest.min.js)
         - OPAC_SCITE_METRICS_URL: URL para o Scite_ (default: https://scite.ai/reports/)
+
 
       - Timezone:
         - LOCAL_ZONE: Default 'America/Sao_Paulo'
@@ -364,7 +366,8 @@ DIMENSIONS_METRICS_URL = os.environ.get(
     'https://badge.dimensions.ai/details/doi'
 )
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
-PLUMX_METRICS_URL = os.environ.get('OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
+PLUMX_METRICS_URL = os.environ.get(
+    'OPAC_PLUMX_METRICS_URL', '//cdn.plu.mx/widget-popup.js')
 
 
 USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
@@ -373,6 +376,9 @@ ALTMETRIC_METRICS_URL = os.environ.get('OPAC_ALTMETRIC_METRICS_URL', 'https://ww
 USE_SCIENCEOPEN = os.environ.get('OPAC_USE_SCIENCEOPEN', 'False') == 'True'
 
 USE_SCITE = os.environ.get('OPAC_USE_SCITE', 'False') == 'True'
+
+SCITE_URL = os.environ.get('OPAC_SCITE_URL',
+                           '//cdn.scite.ai/badge/scite-badge-latest.min.js')
 SCITE_METRICS_URL = os.environ.get(
     'OPAC_SCITE_METRICS_URL', 'https://scite.ai/reports/')
 

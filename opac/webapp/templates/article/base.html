@@ -39,7 +39,10 @@
 
 {% block extra_js %}
   <script type="text/javascript" src="{{ url_for('static', filename='js/scielo-article-min.js') }}"></script>
-  <script type="text/javascript" src="//cdn.plu.mx/widget-popup.js"></script>
+
+  {% if config.USE_PLUMX %}
+    <script type="text/javascript" src="{{ config.PLUMX_METRICS_URL }}"></script>
+  {% endif %}
 
   {% if config.USE_ALTMETRIC %}
     <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
@@ -51,7 +54,7 @@
   {% endif %}
 
   {% if config.USE_SCITE %}
-    <script async type="application/javascript" src="https://cdn.scite.ai/badge/scite-badge-latest.min.js"></script>
+    <script async type="application/javascript" src="{{ config.SCITE_URL}}"></script>
   {% endif %}
 
   {% if config.MATHJAX_CDN_URL %}
