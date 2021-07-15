@@ -1243,8 +1243,7 @@ def get_articles_by_date_range(begin_date, end_date, page=1, per_page=100):
     """
     Retorna artigos criados ou atualizados durante o período entre start_date e end_date.
     """
-    articles = Article.objects((Q(created__gte=begin_date) & Q(created__lte=end_date)) |
-                               (Q(updated__gte=begin_date) & Q(updated__lte=end_date))).order_by('pid')
+    articles = Article.objects(Q(updated__gte=begin_date) & Q(updated__lte=end_date)).order_by('pid')
     return Pagination(articles, page, per_page)
 
 

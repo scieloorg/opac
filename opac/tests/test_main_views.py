@@ -48,7 +48,7 @@ class MainTestCase(BaseTestCase):
                 response = client.get(url_for('main.index'))
                 collection = g.get('collection')
                 self.assertEqual(0, collection.metrics.total_journal)
-            
+
 
             utils.makeOneJournal({'is_public': True, 'current_status': 'current'})
             utils.makeOneArticle({'is_public': True})
@@ -577,11 +577,11 @@ class MainTestCase(BaseTestCase):
                                                lang='ru'))
 
             self.assertRedirects(
-                response, 
+                response,
                 url_for(
                     'main.article_detail_v3',
-                    url_seg=journal.url_segment, 
-                    article_pid_v3=article.aid, 
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
                     format='html',
                 )
             )
@@ -1944,6 +1944,29 @@ class TestJournalGrid(BaseTestCase):
 
             self.assertStatus(response, 301)
 
+    def test_issue_grid_social_meta_tags(self):
+        """
+        Teste para verificar a página da grade do periódico apresenta as
+        tags de compartilhamento com redes sociais.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Social Meta tags'})
+
+            response = self.client.get(
+                url_for('main.issue_grid', url_seg=journal.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/grid.html')
+            self.assertIn('<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/grid" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="website" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
+
 
 class TestIssueToc(BaseTestCase):
 
@@ -2115,6 +2138,36 @@ class TestIssueToc(BaseTestCase):
                     url_seg=journal.url_segment
                 ),
             )
+
+    def test_issue_toc_social_meta_tags(self):
+        """
+        Teste para verificar a página da TOC do periódico apresenta as
+        tags de compartilhamento com redes sociais.
+        """
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal({'title': 'Social Meta tags'})
+
+            issue = utils.makeOneIssue({'number': '31',
+                                        'volume': '10',
+                                        'journal': journal})
+
+            response = self.client.get(url_for('main.issue_toc',
+                                       url_seg=journal.url_segment,
+                                       url_seg_issue=issue.url_segment))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('issue/toc.html')
+
+            self.assertIn(
+                '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/i/2021.v10n31supplX/" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="website" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
 
 
 class TestAOPToc(BaseTestCase):
@@ -2403,3 +2456,41 @@ class TestArticleDetailV3Meta(BaseTestCase):
             self.assertEqual(
                 parse_qs(content_url.query), {'format': ['xml']}
             )
+
+    def test_article_detail_v3_social_meta_tags(self):
+        """
+        Teste para verificar a página do artigo apresenta as tags de compartilhamento
+        com redes sociais.
+        """
+
+        with current_app.test_request_context() as context:
+            utils.makeOneCollection({ 'acronym': "DUMMY_TEST2" })
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            article = utils.makeOneArticle({
+                'title': 'Article Y',
+                'original_language': 'en',
+                'languages': ['es', 'pt', 'en'],
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11'
+            })
+
+            response = self.client.get(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                )
+            )
+
+            self.assertStatus(response, 200)
+            content = response.data.decode('utf-8')
+
+            self.assertIn(
+                '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/a/%s/" />' % article.aid, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:type" content="article" />', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="%s" />' % article.title, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="%s" />' % article.abstract, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
+
