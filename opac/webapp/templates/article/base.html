@@ -47,7 +47,11 @@
 
   {% if config.USE_SCIENCEOPEN %}
     <script id="9cf9cf8f-3a99-fe86-4013-f630edbf80ac" src="https://www.scienceopen.com/script/badge2.js" async defer></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
+  {% endif %}
+
+  {% if config.USE_SCITE %}
+    <script async type="application/javascript" src="https://cdn.scite.ai/badge/scite-badge-latest.min.js"></script>
   {% endif %}
 
   {% if config.MATHJAX_CDN_URL %}

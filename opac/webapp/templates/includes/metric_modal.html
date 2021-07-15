@@ -1,31 +1,33 @@
 
   <div class="modal fade ModalDefault" id="metric_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content" style="width: 605px;">
+      <div class="modal-content" style="width: 673px;">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{% trans %}Fechar{% endtrans %}</span></button>
           <h4 class="modal-title">{% trans %}Métricas{% endtrans %}</h4>
         </div>
-        <div class="modal-body">
-          <div class="modal-metrics">
-              <div class="row" style="width: 600px;">
-                {% if article %}
-                    {% if config.USE_METRICS %}
-                    <div class="badge-link col-center">
-                        <a target="_blank" href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}" >
-                            <div class="logo-statistc logo-statistc-scielo"></div>
-                            <div>SciELO Analytics</div>
-                        </a>
+        <div class="modal-body row" style="margin-left: 30px;">
+            {% if article %}
+
+                {% if config.USE_METRICS %}
+                    <div class="col-md-4">
+                        <div class="badge-link col-center">
+                            <a target="_blank"
+                                href="{{ config.METRICS_URL }}/w/accesses?document={{ article.pid }}&amp;collection={{ config.OPAC_COLLECTION }}">
+                                <div class="logo-statistc logo-statistc-scielo"></div>
+                                <div>SciELO Analytics</div>
+                            </a>
+                        </div>
                     </div>
-                    {% endif %}
-                    {% if article.doi %}
-                        {% if config.USE_DIMENSIONS %}
+                {% endif %}
+
+                {% if article.doi %}
+                    {% if config.USE_DIMENSIONS %}
+                    <div class="col-md-4">
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-dimension">
                                 <div class="badge-logo">
-                                    <span class="__dimensions_badge_embed__"
-                                        data-doi="{{ article.doi }}"
-                                        data-legend="never"
+                                    <span class="__dimensions_badge_embed__" data-doi="{{ article.doi }}" data-legend="never"
                                         data-style="small_circle">
                                     </span>
                                 </div>
@@ -34,16 +36,17 @@
                                 <div>Dimensions</div>
                             </a>
                         </div>
-                        {% endif %}
-                        {% if config.USE_PLUMX %}
+                    </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if config.USE_PLUMX %}
+                    <div class="col-md-4 ">
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-plumx">
                                 <div class="badge-logo">
-                                    <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}"
-                                        data-popup="hidden"
-                                        data-size="large"
-                                        class="plumx-plum-print-popup"
-                                        data-site="scielo">
+                                    <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}" data-popup="hidden" data-size="large"
+                                        class="plumx-plum-print-popup" data-site="scielo">
                                         {{ article.title }}
                                     </a>
                                 </div>
@@ -52,16 +55,15 @@
                                 <div>PlumX</div>
                             </a>
                         </div>
-                        {% endif %}
+                    </div>
+                {% endif %}
 
-                        {% if config.USE_ALTMETRIC %}
+                {% if config.USE_ALTMETRIC %}
+                    <div class="col-md-4" style="margin-top: 50px;">
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-altmetric">
                                 <div class="badge-logo">
-                                    <div class='altmetric-embed'
-                                         data-badge-type='donut'
-                                         data-doi="{{ article.doi }}"
-                                         data-link-target='_blank'>
+                                    <div class='altmetric-embed' data-badge-type='donut' data-doi="{{ article.doi }}" data-link-target='_blank'>
                                     </div>
                                 </div>
                             </div>
@@ -69,31 +71,39 @@
                                 <div>Altmetric</div>
                             </a>
                         </div>
-                        {% endif %}
-
-                        {% if config.USE_SCIENCEOPEN %}
-                        <div class="badge-link col-center">
-
-                            <div id="scienceopen" data-doi="{{ article.doi }}"></div>
-
-                        </div>
-                        {% endif %}
-
-                    {% endif %}
-                {% elif config.USE_METRICS %}
-                    <div class="badge-link col-center">
-                      <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}" >
-                          <div class="logo-statistc logo-statistc-scielo"></div>
-                          <div>Scielo Analytics</div>
-                      </a>
                     </div>
                 {% endif %}
 
-              </div>
+                {% if config.USE_SCIENCEOPEN %}
+                <div class="col-md-4" style="margin-top: 50px;">
+                    <div class="badge-link col-center">
+                        <div id="scienceopen" data-doi="{{ article.doi }}"></div>
+                    </div>
+                </div>
+                {% endif %}
 
-          </div>
+                {% if config.USE_SCITE %}
+                <div class="col-md-4" style="margin-top: 18px;">
+                    <div class="badge-link col-center">
+                        <div class="scite-badge" data-doi="{{ article.doi }}" data-layout="vertical" data-tooltip-placement="right"
+                            data-show-zero="true" data-show-labels="false">
+                        </div>
+                        <a target="_blank" href="{{ config.SCITE_METRICS_URL }}{{ article.doi }}">
+                            <div>Scite_</div>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+            {% elif config.USE_METRICS %}
+                <div class="badge-link col-center">
+                    <a target="_blank" href="{{ config.METRICS_URL }}/?collection={{ config.OPAC_COLLECTION }}">
+                        <div class="logo-statistc logo-statistc-scielo"></div>
+                        <div>Scielo Analytics</div>
+                    </a>
+                </div>
+            {% endif %}
         </div>
-
-      </div>
     </div>
   </div>
+</div>
