@@ -1,4 +1,4 @@
-{% block social_share_tags %}
+
 <!-- social share tags -->
 <meta property="og:url" content="{{ request.url }}"/>
 <meta property="og:type" content="article"/>
@@ -6,7 +6,7 @@
 <meta property="og:description" content="{{ article.abstract|escape|truncate(100) }}"/>
 <meta property="og:image" content="{{request.url_root}}{{ journal.logo_url|replace("/", "" , 1)}}"/>
 <!-- social share tags -->
-{% endblock %}
+
 
 {% if journal.title -%}
     <meta name="citation_journal_title" content="{{ journal.title }}"></meta>
