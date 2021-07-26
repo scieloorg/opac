@@ -31,7 +31,8 @@ install_requirements = [
     # for production production
     'chaussette>=1.3',
     'gevent>=1.1.0',
-    'packtools'
+    'packtools',
+    'scieloh5m5',
 ]
 
 dependency_links = [
