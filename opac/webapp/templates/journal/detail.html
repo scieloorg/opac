@@ -46,6 +46,7 @@
               {% if config.SCIMAGO_ENABLED and journal.scimago_id %}
               <li><a target="_blank" href="{{ config.SCIMAGO_URL }}{{ journal.scimago_id }}">Scimago</a>
               {% endif %}
+              {% if journal_metrics.total_h5_index and journal_metrics.h5_metric_year %}
               <li><a href="">Google Metrics</a>
                 <div>
                   <small>
@@ -71,6 +72,7 @@
                   </strong>
                 </div>
               </li>
+              {% endif %}
             </ul>
           </div>
           <div class="clearfix"></div>
