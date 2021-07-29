@@ -2493,3 +2493,61 @@ class TestArticleDetailV3Meta(BaseTestCase):
             self.assertIn('<meta property="og:title" content="%s"/>' % article.title, response.data.decode('utf-8'))
             self.assertIn('<meta property="og:description" content="%s"/>' % article.abstract, response.data.decode('utf-8'))
             self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))
+
+    def test_article_detail_v3_citation_author_tags(self):
+        """
+        Teste para verificar a página do artigo apresenta as tags author com
+        afiliação e ORCID.
+        """
+
+        with current_app.test_request_context() as context:
+            utils.makeOneCollection({ 'acronym': "DUMMY_TEST2" })
+            journal = utils.makeOneJournal()
+            issue = utils.makeOneIssue({'journal': journal})
+            article = utils.makeOneArticle({
+                'title': 'Article Y',
+                'original_language': 'en',
+                'languages': ['es', 'pt', 'en'],
+                'issue': issue,
+                'journal': journal,
+                'url_segment': '10-11',
+                'authors_meta': [
+                                    {
+                                        "name" : "Arias, Sarah Muñoz",
+                                        "affiliation" : "Universidad Tecnológica de Pereira",
+                                        "orcid" : "0000-0002-3430-5422"
+                                    },
+                                    {
+                                        "name" : "Álvarez, Gloria Edith Guerrero",
+                                        "affiliation" : "Universidad Tecnológica de Pereira",
+                                        "orcid" : "0000-0002-0529-5835"
+                                    },
+                                    {
+                                        "name" : "Patiño, Paula Andrea González",
+                                        "affiliation" : "Universidad Tecnológica de Pereira",
+                                        "orcid" : "0000-0002-7323-9261"
+                                    }
+                                ]
+                })
+
+            response = self.client.get(
+                url_for(
+                    'main.article_detail_v3',
+                    url_seg=journal.url_segment,
+                    article_pid_v3=article.aid,
+                )
+            )
+
+            self.assertStatus(response, 200)
+            content = response.data.decode('utf-8')
+
+            self.assertIn(
+                '<meta name="citation_author" content="Arias, Sarah Muñoz">', content)
+            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-3430-5422">', content)
+            self.assertIn('<meta name="citation_author" content="Álvarez, Gloria Edith Guerrero">', content)
+            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-0529-5835">', content)
+            self.assertIn('<meta name="citation_author" content="Patiño, Paula Andrea González">', content)
+            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-7323-9261">', content)

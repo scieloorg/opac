@@ -169,6 +169,9 @@ import os
         - OPAC_COOKIE_POLICY_ENABLED: ativa/desativa o javascript de política de cookie, se sim definir como: 'True' caso contrário 'False' (default: 'True')
         - OPAC_COOKIE_POLICY_URL: URL do script de política de cookie (default: https://static.scielo.org/js/cookiePolicy.min.js)
 
+      - ORCID:
+        - OPAC_ORCID_URL: URL do ORCID. (default: http://orcid.org/)
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -381,6 +384,9 @@ SCITE_URL = os.environ.get('OPAC_SCITE_URL',
                            '//cdn.scite.ai/badge/scite-badge-latest.min.js')
 SCITE_METRICS_URL = os.environ.get(
     'OPAC_SCITE_METRICS_URL', 'https://scite.ai/reports/')
+
+ORCID_URL = os.environ.get(
+    'OPAC_ORCID_URL', 'http://orcid.org/')
 
 NEWS_LIST_LIMIT = 10
 
