@@ -7,6 +7,15 @@
 <meta property="og:image" content="{{request.url_root}}{{ journal.logo_url|replace("/", "" , 1)}}"/>
 <!-- social share tags -->
 
+{% if article.authors_meta %}
+
+    {% for au in article.authors_meta %}
+        <meta name="citation_author" content="{{ au.name }}">
+        <meta name="citation_author_affiliation" content="{{ au.affiliation }}">
+        <meta name="citation_author_orcid" content="{{ config.ORCID_URL }}{{ au.orcid }}">
+    {% endfor %}
+
+{% endif %}
 
 {% if journal.title -%}
     <meta name="citation_journal_title" content="{{ journal.title }}"></meta>
