@@ -72,4 +72,4 @@ Unidecode==1.1.1
 urllib3==1.25.8
 Werkzeug==0.14.1
 WTForms==2.3.3
-XlsxWriter==1.1.0
+XlsxWriter==1.4.5
