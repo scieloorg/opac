@@ -1319,13 +1319,17 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 301)
 
-    def test_xml_url_raises_bad_request_if_lang_param_informed(self):
+    @patch("webapp.main.views.fetch_data")
+    def test_xml_url_redirect_to_xml_with_original_language(self, mk_fetch_data):
         """
-        Testa se retorna _Bad Request_ se parâmetro ``lang`` presente para requisição de
-        formato XML.
+        Testa se as URLs para os XMLs estão sendo montados com o idioma original do artigo,
+        quando existir o param ``lang``.
 
         Formato da URL para o teste: ``/j/<acron>/a/<article_pid_v3>/?format=xml&lang=<lang>``
         """
+
+        test_xml_path = pathlib.Path("opac/tests/fixtures/document.xml")
+        mk_fetch_data.return_value = test_xml_path.read_bytes()
 
         with current_app.app_context():
 
@@ -1345,17 +1349,18 @@ class MainTestCase(BaseTestCase):
                 'issue': issue.id,
                 'elocation': 'e1',
                 'original_language': 'pt',
-                'languages': ["es", "en"],
+                'languages': ["es", "en", "pt"],
+                'xml': "https://kernel:6543/documents/kSiec9encE0f2dp"
             })
 
             response = self.client.get(url_for('main.article_detail_v3',
                                                url_seg=journal.url_segment,
                                                article_pid_v3=article.aid,
                                                format='xml',
-                                               lang='en'))
+                                               lang="pt"))
 
-            self.assertStatus(response, 400)
-            self.assertIn(_("Idioma não suportado para formato XML"), response.data.decode("utf-8"))
+            self.assertStatus(response, 200)
+            self.assertEqual(test_xml_path.read_bytes(), response.data)
 
     @patch("webapp.main.views.fetch_data")
     def test_xml_ok(self, mk_fetch_data):
@@ -2454,7 +2459,7 @@ class TestArticleDetailV3Meta(BaseTestCase):
                 content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
             )
             self.assertEqual(
-                parse_qs(content_url.query), {'format': ['xml']}
+                parse_qs(content_url.query), {'format': ['xml'], 'lang': ['en']}
             )
 
     def test_article_detail_v3_social_meta_tags(self):
