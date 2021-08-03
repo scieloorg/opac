@@ -1142,8 +1142,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_stop = request.args.get('stop', type=str) or None
     qs_format = request.args.get('format', 'html', type=str)
 
-    if qs_format == "xml" and qs_lang:
-        abort(400, _("Idioma não suportado para formato XML"))
 
     gs_abstract = (part == "abstract")
     if part and not gs_abstract:
@@ -1244,6 +1242,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
                 url_seg=article.journal.url_segment,
                 article_pid_v3=article_pid_v3,
                 format="xml",
+                lang=article.original_language,
             )
         )
         context = {
