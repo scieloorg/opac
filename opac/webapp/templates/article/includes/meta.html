@@ -7,15 +7,27 @@
 <meta property="og:image" content="{{request.url_root}}{{ journal.logo_url|replace("/", "" , 1)}}"/>
 <!-- social share tags -->
 
-{% if article.authors_meta %}
+{% if article.authors_meta -%}
 
-    {% for au in article.authors_meta %}
+    {% for au in article.authors_meta -%}
+
         <meta name="citation_author" content="{{ au.name }}">
-        <meta name="citation_author_affiliation" content="{{ au.affiliation }}">
-        <meta name="citation_author_orcid" content="{{ config.ORCID_URL }}{{ au.orcid }}">
-    {% endfor %}
+        {% if au.affiliation %}
+            <meta name="citation_author_affiliation" content="{{ au.affiliation }}">
+        {% endif %}
+        {% if au.orcid %}
+            <meta name="citation_author_orcid" content="{{ config.ORCID_URL }}{{ au.orcid }}">
+        {% endif %}
 
-{% endif %}
+    {%- endfor -%}
+
+{% else %}
+
+    {% for author in article.authors -%}
+        <meta name="citation_author" content="{{ author }}"></meta>
+    {% endfor -%}
+
+{% endif -%}
 
 {% if journal.title -%}
     <meta name="citation_journal_title" content="{{ journal.title }}"></meta>
@@ -32,10 +44,6 @@
 {% if journal.publisher_name -%}
     <meta name="citation_publisher" content="{{ journal.publisher_name }}"></meta>
 {% endif -%}
-
-{% for author in article.authors -%}
-  <meta name="citation_author" content="{{ author }}"></meta>
-{% endfor -%}
 
 {% if issue.volume -%}
     <meta name="citation_volume" content="{{ issue.volume }}"></meta>
@@ -70,9 +78,6 @@
 
 <meta name="citation_fulltext_world_readable" content=""></meta>
 
-{% if journal.scielo_issn -%}
-    <meta name="citation_issn" content="{{ journal.scielo_issn }}"></meta>
-{% endif -%}
 
 {% if journal.print_issn -%}
     <meta name="citation_issn" content="{{ journal.print_issn }}"></meta>
