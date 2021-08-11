@@ -96,6 +96,10 @@ def fetch_data(url: str, timeout: float = 2) -> bytes:
 
 @main.before_app_request
 def add_collection_to_g():
+
+    if not current_app.config['USE_HOME_METRICS']:
+        setattr(g, 'collection', {})
+
     if not hasattr(g, 'collection'):
         try:
             collection = controllers.get_current_collection()
@@ -103,6 +107,7 @@ def add_collection_to_g():
         except Exception:
             # discutir o que fazer aqui
             setattr(g, 'collection', {})
+
 
 @main.after_request
 def add_header(response):
@@ -202,6 +207,7 @@ def index():
         g.collection is not None
         and isinstance(g.collection, Collection)
         and g.collection.metrics is not None
+        and current_app.config['USE_HOME_METRICS']
     ):
         g.collection.metrics.total_journal = Journal.objects.filter(
             is_public=True, current_status="current"
