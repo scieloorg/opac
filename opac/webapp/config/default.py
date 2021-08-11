@@ -24,6 +24,10 @@ import os
 
   Variavies de ambiente:
 
+      - Home Metrics:
+        - OPAC_USE_HOME_METRICS: ativa/desativa a apresentação dos dados de métricas da coleção (default: False),
+                                 o padrão é não apresentar
+
       - Modo Debug:
         - OPAC_DEBUG_MODE:      ativa/desativa o modo Debug da app, deve estar desativado em produção! (default: False)
 
@@ -31,7 +35,7 @@ import os
         - OPAC_SECRET_KEY:      chave necessária para segurança nos formulario da app.
 
       - Coleção:
-        - OPAC_COLLECTION: acrônimo da coleção do opac (default: 'spa')
+        - OPAC_COLLECTION: acrônimo da coleção do opac (default: 'scl')
 
       - Para envio de emails:
         - OPAC_DEFAULT_EMAIL:   conta de email para envio de mensagens desde o site (default: 'scielo@scielo.org')
@@ -202,10 +206,13 @@ MINIFY_PAGE = os.environ.get('OPAC_MINIFY_PAGE', 'False') == 'True'
 # não encontrada e correções no conteúdo da aplicacão.
 WEBMASTER_EMAIL = "webmaster@scielo.org"
 
+# ativa/desativa a apresentação dos dados de métricas da coleção (default: False),
+# o padrão é não apresentar
+USE_HOME_METRICS = os.environ.get('OPAC_USE_HOME_METRICS', False)
 
 # Acrônimo da coleção OPAC: 'spa' ou 'esp' por exemplo.
 # -*- DEVE SER AJUSTADO NA INSTALAÇÃO -*-
-OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'spa')
+OPAC_COLLECTION = os.environ.get('OPAC_COLLECTION', 'scl')
 
 
 # Conta de email padrão para emails enviado do site - deve ser um email válido
