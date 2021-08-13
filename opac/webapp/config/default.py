@@ -463,13 +463,13 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
 
 # session cookie settings:
 
-# SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
-# SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
-# SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
-# SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
-# SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
-# SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
-# SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
+SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
+SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
+SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
+SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
+SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
+SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
+SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
 
 
 # Flask Caching:
