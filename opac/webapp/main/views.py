@@ -97,9 +97,6 @@ def fetch_data(url: str, timeout: float = 2) -> bytes:
 @main.before_app_request
 def add_collection_to_g():
 
-    if not current_app.config['USE_HOME_METRICS']:
-        setattr(g, 'collection', {})
-
     if not hasattr(g, 'collection'):
         try:
             collection = controllers.get_current_collection()
