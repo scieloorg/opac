@@ -149,26 +149,29 @@ function processScieloBundleJs(){
 // Task para gerar o scielo-bundle-print.less
 function processScieloBundlePrintLess(){
     return src(target_src['less']['scielo-bundle-print'])
+    .pipe(sourceMaps.init({loadMaps: true}))
     .pipe(concat(output['css']['scielo-bundle-print']))
     .pipe(less(output['css']['scielo-bundle-print']))
     .pipe(minifyCSS())
+    .pipe(sourceMaps.write('./'))
     .pipe(dest(output['css']['folder']));
 }
 
 // Task para gerar o scielo-article-standalone.less
 function processScieloArticleStandaloneLess(){
     return src(target_src['less']['scielo-article-standalone'])
+    .pipe(sourceMaps.init({loadMaps: true}))
     .pipe(concat(output['css']['scielo-article-standalone']))
     .pipe(less(output['css']['scielo-article-standalone']))
     .pipe(minifyCSS())
+    .pipe(sourceMaps.write('./'))
     .pipe(dest(output['css']['folder']));
 }
 
 function processScieloBundleLess(){
     return src(target_src['less']['scielo-bundle'])
-    .pipe(
-        sourceMaps.init()
-    )
+    .pipe(sourceMaps.init({loadMaps: true}))
+    .pipe(concat(output['css']['scielo-bundle']))
     .pipe(
         less().on('error', function(err) {
             gutil.log(err);
@@ -180,6 +183,7 @@ function processScieloBundleLess(){
     .pipe(
         minifyCSS()
     )
+    .pipe(sourceMaps.write('./'))
     .pipe(
         dest(output['css']['folder'])
     )
@@ -190,9 +194,7 @@ function processScieloBundleLess(){
 
 function processScieloArticleLess(){
     return src(target_src['less']['scielo-article'])
-    .pipe(
-        sourceMaps.init()
-    )
+    .pipe(sourceMaps.init({loadMaps: true}))
     .pipe(
         less().on('error', function(err) {
             gutil.log(err);
@@ -204,6 +206,7 @@ function processScieloArticleLess(){
     .pipe(
         minifyCSS()
     )
+    .pipe(sourceMaps.write('./'))
     .pipe(
         dest(output['css']['folder'])
     )
