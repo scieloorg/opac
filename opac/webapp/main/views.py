@@ -1077,10 +1077,21 @@ def render_html_from_html(article, lang):
     return html, text_languages
 
 
+def render_html_abstract(article, lang):
+    abstract_text = ''
+    for abstract in article.abstracts:
+        if abstract['language'] == lang:
+            abstract_text = abstract["text"]
+            break
+    return abstract_text, article.abstract_languages
+
+
 def render_html(article, lang, gs_abstract=False):
     if article.xml:
         return render_html_from_xml(article, lang, gs_abstract)
     elif article.htmls:
+        if gs_abstract:
+            return render_html_abstract(article, lang)
         return render_html_from_html(article, lang)
     else:
         # TODO: Corrigir os teste que esperam ter o atributo ``htmls``
