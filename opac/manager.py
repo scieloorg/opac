@@ -228,7 +228,9 @@ def test(pattern=None, failfast=False):
     antes de executar este comando:
     > export OPAC_CONFIG="/foo/bar/config.testing" && python manager.py test
 
-    Utilize -p para rodar testes específicos, ex.: test_admin_*.'
+    Utilize -p para rodar testes específicos'
+
+    ex.: export OPAC_CONFIG="config/templates/testing.template" && python opac/manager.py test -p "test_main_views"
     """
     failfast = True if failfast else False
 
