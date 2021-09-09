@@ -2352,6 +2352,12 @@ class TestArticleDetailV3Meta(BaseTestCase):
         https://website/j/acron/a/pidv3/?format=pdf&amp;lang=idioma_selecionado
         `<meta name="citation_pdf_url"
           content="https://website/j/acron/a/pidv3/?format=pdf&amp;lang=idioma_selecionado"/>`
+
+        Verifica na view se o valor da variável FORCE_USE_HTTPS_GOOGLE_TAGS é True ou False,
+        no caso de True monta a URL para o PDF sempre com protocolo https, em caso de False
+        monta a URL com o ``scheme`` obtido pelo urlparsed.scheme.
+
+        FORCE_USE_HTTPS_GOOGLE_TAGS is False in testting.template
         """
 
         with current_app.test_request_context() as context:
@@ -2403,7 +2409,8 @@ class TestArticleDetailV3Meta(BaseTestCase):
 
             content_url = urlparse(meta_tags[0].get("content"))
             self.assertEqual(
-                "{}://{}/".format(content_url.scheme, content_url.netloc),
+                "{}://{}/".format(content_url.scheme,
+                                  content_url.netloc),
                 context.request.url_root
             )
             self.assertEqual(
@@ -2421,6 +2428,12 @@ class TestArticleDetailV3Meta(BaseTestCase):
         https://website/j/acron/a/pidv3/?format=xml
         `<meta name="citation_xml_url"
           content="https://website/j/acron/a/pidv3/?format=xml"/>`
+
+        Verifica na view se o valor da variável FORCE_USE_HTTPS_GOOGLE_TAGS é True ou False,
+        no caso de True monta a URL para o XML sempre com protocolo https, em caso de False
+        monta a URL com o ``scheme`` obtido pelo urlparsed.scheme.
+
+        FORCE_USE_HTTPS_GOOGLE_TAGS is False in testting.template
         """
 
         with current_app.test_request_context() as context:
