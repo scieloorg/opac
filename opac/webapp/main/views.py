@@ -1224,7 +1224,10 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         website = request.url
         if website:
             parsed_url = urlparse(request.url)
-            website = "{}://{}".format(parsed_url.scheme, parsed_url.netloc)
+            if current_app.config["FORCE_USE_HTTPS_GOOGLE_TAGS"]:
+                website = "{}://{}".format('https', parsed_url.netloc)
+            else:
+                website = "{}://{}".format(parsed_url.scheme, parsed_url.netloc)
         if citation_pdf_url:
             citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
