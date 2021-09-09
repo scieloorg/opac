@@ -124,3 +124,12 @@ TWITTER_LIMIT = '10'
 
 # Server Name
 SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', '0.0.0.0:8000')
+
+# Google Meta tags
+FORCE_USE_HTTPS_GOOGLE_TAGS = False
+
+# ativa/desativa a apresentação dos dados de métricas da coleção (default: False),
+# o padrão é não apresentar
+USE_HOME_METRICS = True
+
+
