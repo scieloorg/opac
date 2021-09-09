@@ -176,6 +176,10 @@ import os
       - ORCID:
         - OPAC_ORCID_URL: URL do ORCID. (default: http://orcid.org/)
 
+      - Google Meta tags (https://developers.google.com/search/docs/advanced/crawling/special-tags)
+        - OPAC_FORCE_USE_HTTPS_GOOGLE_TAGS: Força o uso de https nas URLs para do site do OPAC nas tags do google. (default: True)
+
+
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -562,3 +566,8 @@ ALERT_MSG_PT = os.environ.get("ALERT_MSG_PT", '')
 ALERT_MSG_EN = os.environ.get("ALERT_MSG_EN", '')
 ALERT_MSG_ES = os.environ.get("ALERT_MSG_ES", '')
 ALERT_MSG = bool(ALERT_MSG_PT or ALERT_MSG_EN or ALERT_MSG_ES)
+
+
+# Google Meta tags
+FORCE_USE_HTTPS_GOOGLE_TAGS = os.environ.get(
+    "OPAC_FORCE_USE_HTTPS_GOOGLE_TAGS", True)
