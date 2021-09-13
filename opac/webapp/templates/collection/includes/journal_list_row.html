@@ -29,7 +29,7 @@
       </a>
       <a title="{% trans %}Grade de número{% endtrans %}"
          href="{{ journal.links.issue_grid }}">
-        <strong class="journalIssues">{{ journal.issues_count }} {% trans %}números{% endtrans %}</strong>,
+        <strong class="journalIssues">{{ journal.issues_count }} {% trans %}números{% endtrans %}</strong>{% if journal.is_active %}, {% else %} - {% endif %}
       </a>
 
       {% if journal.last_issue %}
@@ -40,7 +40,7 @@
         </a>
       {% endif %}
 
-      {% if journal.is_active %}
+      {% if not journal.is_active %}
         ({{ journal.status_reason }})
           {% if journal.next_title %}
           <span class="journalPreviousTitle">{% trans %}Continua como {% endtrans %}
@@ -55,7 +55,8 @@
               {% endif %}
           </span>
           {% endif %}
-      {% endif %}
+        {% endif %}
+
     </td>
   </tr>
 {% endfor %}
