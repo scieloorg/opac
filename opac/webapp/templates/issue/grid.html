@@ -101,20 +101,22 @@
           {% trans %}Nenhum número encontrado para esse periódico{% endtrans %}
         {% endif%}
         <div class="col-md-12">
-          <h2>{% trans %}Histórico deste periódico na coleção{% endtrans %}</h2>
-          <ul>
-            {% for event in journal.timeline %}
-              {% if event.status == 'current'%}
-                <li>Em {{ event.since|dateformat('Y') }} {% trans %} admitido na coleção da SciELO{% endtrans %}.</li>
-              {% elif event.status == 'rejected' %}
-                <li>Em {{ event.since|dateformat('Y') }} rejeitado na coleção da SciELO (motivo: {{ event.reason }}).</li>
-              {% elif event.status == 'suspended' %}
-                <li>Em {{ event.since|dateformat('Y') }} suspenso da coleção da SciELO (motivo: {{ event.reason }}).</li>
-              {% elif event.status == 'deceased' %}
-                <li>Em {{ event.since|dateformat('Y') }} descontinuado da coleção da SciELO (motivo: {{ event.reason }}).</li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+          {% if journal.timeline %}
+            <h2>{% trans %}Histórico deste periódico na coleção{% endtrans %}</h2>
+            <ul>
+              {% for event in journal.timeline %}
+                {% if event.status == 'current'%}
+                  <li>{{ event.since.strftime('%B')[:3] }} {{ event.since.strftime('%Y') }}: {% trans %}Admitido na coleção{% endtrans %}.</li>
+                {% elif event.status == 'rejected' %}
+                  <li>{{ event.since.strftime('%B')[:3] }} {{ event.since.strftime('%Y') }}: {% trans %}Rejeitado na coleção SciELO{% endtrans %}({% trans %}motivo{% endtrans %}: {{ event.reason }}).</li>
+                {% elif event.status == 'suspended' %}
+                  <li>{{ event.since.strftime('%B')[:3] }} {{ event.since.strftime('%Y') }}: {% trans %}Suspenso da coleção SciELO{% endtrans %} ({% trans %}motivo{% endtrans %}: {{ event.reason }}).</li>
+                {% elif event.status == 'deceased' %}
+                  <li>{{ event.since.strftime('%B')[:3] }} {{ event.since.strftime('%Y') }}: {% trans %}Terminado{% endtrans %}, {% trans %}continuado como{% endtrans %}<a href="{{ url_for('main.journal_detail', url_seg=journal.url_next_journal)}}"> {{ journal.next_title }}</a>.</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
         </div>
       </div>
       <div class="clearfix"></div>
