@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-09-12 21:49-0300\n"
+"POT-Creation-Date: 2021-09-21 08:37-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1460,6 +1460,18 @@ msgstr ""
 #: opac/webapp/templates/article/includes/recent_articles_row.html:13
 #: opac/webapp/templates/news/includes/journal_news_row.html:14
 msgid "Continue lendo"
+msgstr ""
+
+#: opac/webapp/templates/article/includes/related-article.html:7
+msgid "Este artigo contém correções"
+msgstr ""
+
+#: opac/webapp/templates/article/includes/related-article.html:9
+msgid "Este artigo contém adendo"
+msgstr ""
+
+#: opac/webapp/templates/article/includes/related-article.html:11
+msgid "Este artigo contém retratação"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/modal/download.html:6

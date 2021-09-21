@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-09-12 21:49-0300\n"
+"POT-Creation-Date: 2021-09-21 08:37-0300\n"
 "PO-Revision-Date: 2018-03-07 00:47+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: es\n"
@@ -1491,6 +1491,18 @@ msgstr "Documento sin título"
 msgid "Continue lendo"
 msgstr "Continúe leyendo"
 
+#: opac/webapp/templates/article/includes/related-article.html:7
+msgid "Este artigo contém correções"
+msgstr "Este artículo tiene correcciones"
+
+#: opac/webapp/templates/article/includes/related-article.html:9
+msgid "Este artigo contém adendo"
+msgstr "Este artículo tiene apéndice"
+
+#: opac/webapp/templates/article/includes/related-article.html:11
+msgid "Este artigo contém retratação"
+msgstr ""
+
 #: opac/webapp/templates/article/includes/modal/download.html:6
 #: opac/webapp/templates/article/includes/modal/related_article.html:7
 #: opac/webapp/templates/email/email_form.html:7
@@ -2371,5 +2383,8 @@ msgstr "Ver"
 #~ msgstr ""
 
 #~ msgid "continuado como "
+#~ msgstr ""
+
+#~ msgid "Este artículo tiene retracción"
 #~ msgstr ""
 
