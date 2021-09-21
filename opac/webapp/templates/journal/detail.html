@@ -28,7 +28,7 @@
         <div class="block mission">
           {# mission #}
           {% if journal.mission %}
-            <div class="col-md-6 col-sm-6">
+            <div class="col-md-8 col-sm-8">
                 <h1>{% trans %}Nossa Missão{% endtrans %}</h1>
                 {% if session.lang %}
                     <p>{{ journal.get_mission_by_lang(session.lang[:2])|safe|default(_("Periódico sem missão cadastrada"), true) }}</p>
@@ -38,6 +38,45 @@
           {# mission #}
 
           {# analytics #}
+          <div class="col-md-4 col-sm-4">
+            <h3 style="display: inline;">{% trans %}Métricas deste periódico{% endtrans %}</h3> |
+            <span id="date" class="datetime"></span>
+            <ul>
+                {% if config.SCIMAGO_ENABLED and journal.scimago_id %}
+                  <li><a target="_blank" href="{{ config.SCIMAGO_URL }}{{ journal.scimago_id }}">Scimago</a></li>
+                {% endif %}
+                {% if journal_metrics.total_h5_index and journal_metrics.h5_metric_year %}
+                  <li><a href="">Google Metrics</a>
+                    <div>
+                      <small>
+                        {% trans %}Índice h5{% endtrans %}:
+                        {% if journal_metrics.total_h5_index and journal_metrics.h5_metric_year %}
+                        ({% trans %}ano{% endtrans %}: {{ journal_metrics.h5_metric_year }})
+                        {% endif %}
+                      </small>
+                      <strong>
+                        {{ journal_metrics.total_h5_index|default(_("Não possui"), True) }}
+                      </strong>
+                    </div>
+                    <div>
+                      <small>
+                        {% trans %}Mediana h5{% endtrans %}:
+                        {% if journal_metrics.total_h5_median and journal_metrics.h5_metric_year %}
+                        {# a mediana é obtida sempre para o ano atual #}
+                        ({% trans %}ano{% endtrans %}: {{ journal_metrics.h5_metric_year }})
+                        {% endif %}
+                      </small>
+                      <strong>
+                        {{ journal_metrics.total_h5_median|default(_("Não possui"), True) }}
+                      </strong>
+                    </div>
+                  </li>
+              {% endif %}
+            </ul>
+          </div>
+          <div class="clearfix"></div>
+          </div>
+
           {# analytics #}
 
         {# last issue #}
