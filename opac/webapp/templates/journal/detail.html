@@ -44,7 +44,7 @@
               <span id="date" class="datetime"></span>
               <ul>
 
-                  {% if config.SCIMAGO_ENABLED and journal.scimago_id != None and (journal_metrics.total_h5_index != 0 and journal_metrics.h5_metric_year != 0) %}
+                  {% if config.SCIMAGO_ENABLED and journal.scimago_id != None and journal_metrics.total_h5_index != 0 and journal_metrics.h5_metric_year != 0 %}
                     <li><a target="_blank" href="{{ config.SCIMAGO_URL }}{{ journal.scimago_id }}">Scimago</a></li>
                   {% endif %}
 
