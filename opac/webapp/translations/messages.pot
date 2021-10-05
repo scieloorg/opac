@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-09-21 08:37-0300\n"
+"POT-Creation-Date: 2021-10-05 14:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1472,6 +1472,10 @@ msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:11
 msgid "Este artigo contém retratação"
+msgstr ""
+
+#: opac/webapp/templates/article/includes/related-article.html:13
+msgid "Essa errata corrige o artigo"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
