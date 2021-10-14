@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-05 14:41+0000\n"
+"POT-Creation-Date: 2021-10-14 17:25-0300\n"
 "PO-Revision-Date: 2018-03-06 19:50+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: en\n"
@@ -1490,20 +1490,28 @@ msgid "Continue lendo"
 msgstr "Continue reading"
 
 #: opac/webapp/templates/article/includes/related-article.html:7
-msgid "Este artigo contém correções"
-msgstr "This article has corrections"
+msgid "Essa errata corrige o artigo"
+msgstr "This errata corrects the article"
 
 #: opac/webapp/templates/article/includes/related-article.html:9
+msgid "Essa retratação retrata o artigo"
+msgstr "This retraction retracts the article"
+
+#: opac/webapp/templates/article/includes/related-article.html:11
+msgid "Esse adendo comenta o artigo"
+msgstr "This addendum comments the article"
+
+#: opac/webapp/templates/article/includes/related-article.html:13
 msgid "Este artigo contém adendo"
 msgstr "This article has addendum"
 
-#: opac/webapp/templates/article/includes/related-article.html:11
+#: opac/webapp/templates/article/includes/related-article.html:15
 msgid "Este artigo contém retratação"
 msgstr "This article has retraction"
 
-#: opac/webapp/templates/article/includes/related-article.html:13
-msgid "Essa errata corrige o artigo"
-msgstr "This errata corrects the article"
+#: opac/webapp/templates/article/includes/related-article.html:17
+msgid "Este artigo contém correções"
+msgstr "This article has corrections"
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
 #: opac/webapp/templates/article/includes/modal/related_article.html:7
