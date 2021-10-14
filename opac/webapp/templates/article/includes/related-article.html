@@ -1,0 +1,27 @@
+<div class="related-panel" style="display: none;">
+    <div class="panel article-correction-title">
+
+        {% for related in article.related_articles %}
+            <div class="panel-heading">
+                {% if related.related_type == "corrected-article" %}
+                    {% trans %}Este artigo contém correções{% endtrans %}:
+                {% elif related.related_type == "addendum" %}
+                    {% trans %}Este artigo contém adendo{% endtrans %}:
+                {% elif related.related_type == "retraction" %}
+                    {% trans %}Este artigo contém retratação{% endtrans %}:
+                {% elif related.related_type == "correction" %}
+                    {% trans %}Essa errata corrige o artigo{% endtrans %}:
+                {% endif %}
+            </div>
+
+            <div class="panel-body">
+                <ul>
+                    <li>
+                        <a href="https://doi.org/{{ related.doi }}" target="_blank">{{ related.doi }}</a>
+                    </li>
+                </ul>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>

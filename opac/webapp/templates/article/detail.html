@@ -22,6 +22,24 @@
         {% endif %}
       {% endif %}
       {% include "article/includes/floating_menu.html" %}
-  {% include "journal/includes/contact_footer.html" %}
+
+      {% include "journal/includes/contact_footer.html" %}
+
+      {% if article.related_articles %}
+        {% include "article/includes/related-article.html" %}
+      {% endif %}
 
 {% endblock %}
+
+{% if article.related_articles %}
+    <!-- Verifica se o artigo contém artigos relacionados -->
+
+    {% block extra_js %}
+      <script>
+        $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+      </script>
+    {% endblock %}
+
+{% endif %}
+
+
