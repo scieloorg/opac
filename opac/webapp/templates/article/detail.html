@@ -30,16 +30,3 @@
       {% endif %}
 
 {% endblock %}
-
-{% if article.related_articles %}
-    <!-- Verifica se o artigo contém artigos relacionados -->
-
-    {% block extra_js %}
-      <script>
-        $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
-      </script>
-    {% endblock %}
-
-{% endif %}
-
-

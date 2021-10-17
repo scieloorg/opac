@@ -74,4 +74,11 @@
     <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
   {% endif %}
 
+  <!-- Verifica se o artigo contém artigos relacionados -->
+  {% if article.related_articles %}
+    <script>
+      $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+    </script>
+  {% endif %}
+
 {% endblock %}
