@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-14 17:25-0300\n"
+"POT-Creation-Date: 2021-10-18 09:36-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1463,27 +1463,27 @@ msgid "Continue lendo"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:7
-msgid "Essa errata corrige o artigo"
+msgid "Esta errata corrige o documento"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:9
-msgid "Essa retratação retrata o artigo"
+msgid "Esta retratação retrata o documento"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:11
-msgid "Esse adendo comenta sobre o artigo"
+msgid "Este adendo adiciona informação ao documento"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:13
-msgid "Este artigo contém adendo"
+msgid "Este documento possui um adendo"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:15
-msgid "Este artigo contém retratação"
+msgid "Este documento possui uma retratação"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:17
-msgid "Este artigo contém correções"
+msgid "Este documento possui uma errata"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/modal/download.html:6

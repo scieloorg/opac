@@ -4,17 +4,17 @@
         {% for related in article.related_articles %}
             <div class="panel-heading">
                 {% if related.related_type == "corrected-article" %}
-                    {% trans %}Essa errata corrige o artigo{% endtrans %}:
+                    {% trans %}Esta errata corrige o documento{% endtrans %}:
                 {% elif related.related_type == "retracted-article" %}
-                    {% trans %}Essa retratação retrata o artigo{% endtrans %}:
+                    {% trans %}Esta retratação retrata o documento{% endtrans %}:
                 {% elif related.related_type == "commentary-article" %}
-                    {% trans %}Esse adendo comenta o artigo{% endtrans %}:
+                    {% trans %}Este adendo adiciona informação ao documento{% endtrans %}:
                 {% elif related.related_type == "addendum" %}
-                    {% trans %}Este artigo contém adendo{% endtrans %}:
+                    {% trans %}Este documento possui um adendo{% endtrans %}:
                 {% elif related.related_type == "retraction" %}
-                    {% trans %}Este artigo contém retratação{% endtrans %}:
+                    {% trans %}Este documento possui uma retratação{% endtrans %}:
                 {% elif related.related_type == "correction" %}
-                    {% trans %}Este artigo contém correções{% endtrans %}:
+                    {% trans %}Este documento possui uma errata{% endtrans %}:
                 {% endif %}
             </div>
 

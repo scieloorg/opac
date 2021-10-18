@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-14 17:25-0300\n"
+"POT-Creation-Date: 2021-10-18 09:36-0300\n"
 "PO-Revision-Date: 2018-03-06 19:50+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: en\n"
@@ -1490,28 +1490,28 @@ msgid "Continue lendo"
 msgstr "Continue reading"
 
 #: opac/webapp/templates/article/includes/related-article.html:7
-msgid "Essa errata corrige o artigo"
-msgstr "This errata corrects the article"
+msgid "Esta errata corrige o documento"
+msgstr "This erratum corrects the document"
 
 #: opac/webapp/templates/article/includes/related-article.html:9
-msgid "Essa retratação retrata o artigo"
-msgstr "This retraction retracts the article"
+msgid "Esta retratação retrata o documento"
+msgstr "This retraction retracts the following document"
 
 #: opac/webapp/templates/article/includes/related-article.html:11
-msgid "Esse adendo comenta o artigo"
-msgstr "This addendum comments the article"
+msgid "Este adendo adiciona informação ao documento"
+msgstr "This addendum adds information to the following document"
 
 #: opac/webapp/templates/article/includes/related-article.html:13
-msgid "Este artigo contém adendo"
-msgstr "This article has addendum"
+msgid "Este documento possui um adendo"
+msgstr "This document has an addendum"
 
 #: opac/webapp/templates/article/includes/related-article.html:15
-msgid "Este artigo contém retratação"
-msgstr "This article has retraction"
+msgid "Este documento possui uma retratação"
+msgstr "This document has a retraction"
 
 #: opac/webapp/templates/article/includes/related-article.html:17
-msgid "Este artigo contém correções"
-msgstr "This article has corrections"
+msgid "Este documento possui uma errata"
+msgstr "This document has an erratum"
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
 #: opac/webapp/templates/article/includes/modal/related_article.html:7
@@ -2382,4 +2382,28 @@ msgstr "Open"
 
 #~ msgid "continuado como "
 #~ msgstr "Continued as"
+
+#~ msgid "Essa errata corrige o artigo"
+#~ msgstr "This errata corrects the article"
+
+#~ msgid "Essa retratação retrata o artigo"
+#~ msgstr "This retraction retracts the article"
+
+#~ msgid "Esse adendo comenta o artigo"
+#~ msgstr "This addendum comments the article"
+
+#~ msgid "Este artigo contém adendo"
+#~ msgstr "This article has addendum"
+
+#~ msgid "Este artigo contém retratação"
+#~ msgstr "This article has retraction"
+
+#~ msgid "Este artigo contém correções"
+#~ msgstr "This article has corrections"
+
+#~ msgid "Este documento contém retratação"
+#~ msgstr "This document has an addendum"
+
+#~ msgid "Este documento contém correções"
+#~ msgstr "This document has an erratum"
 
