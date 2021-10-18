@@ -1,19 +1,18 @@
-# Spanish (Mexico) translations for PROJECT.
-# Copyright (C) 2016 ORGANIZATION
+# Portuguese (Brazil) translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-10-18 09:36-0300\n"
-"PO-Revision-Date: 2016-02-09 09:39-0600\n"
+"PO-Revision-Date: 2021-10-18 09:36-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: es_MX\n"
-"Language-Team: es_MX <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: pt_BR\n"
+"Language-Team: pt_BR <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1277,7 +1276,7 @@ msgstr ""
 
 #: opac/webapp/templates/article/includes/_dont_display_full_text.html:20
 msgid "Texto completo em"
-msgstr "Full text in"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/alternative_header.html:7
 #: opac/webapp/templates/article/includes/alternative_header.html:87
@@ -1382,7 +1381,7 @@ msgstr ""
 
 #: opac/webapp/templates/article/includes/levelMenu.html:14
 msgid "sumário"
-msgstr "tabla de contenido"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/levelMenu.html:27
 #: opac/webapp/templates/issue/includes/alternative_header.html:74
@@ -1466,27 +1465,27 @@ msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:7
 msgid "Esta errata corrige o documento"
-msgstr "Esta errata corrige el documento"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:9
 msgid "Esta retratação retrata o documento"
-msgstr "Esta retracción retrata el documento"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:11
 msgid "Este adendo adiciona informação ao documento"
-msgstr "Esta addenda agrega información al documento"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:13
 msgid "Este documento possui um adendo"
-msgstr "Este documento tiene una addenda"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:15
 msgid "Este documento possui uma retratação"
-msgstr "Este documento tiene una retractación"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:17
 msgid "Este documento possui uma errata"
-msgstr "Este documento tiene una errata"
+msgstr ""
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
 #: opac/webapp/templates/article/includes/modal/related_article.html:7
@@ -1531,7 +1530,7 @@ msgstr ""
 
 #: opac/webapp/templates/collection/index.html:35
 msgid "referências"
-msgstr "referencias"
+msgstr ""
 
 #: opac/webapp/templates/collection/index.html:41
 msgid "Downloads"
@@ -1954,32 +1953,32 @@ msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:105
 msgid "Histórico deste periódico na coleção"
-msgstr "Historial de esta revista en la colección"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:109
 msgid "Admitido na coleção"
-msgstr "Admitido en la colección"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:111
 msgid "Rejeitado na coleção SciELO"
-msgstr "Rechazado de la colección SciELO"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:111
 #: opac/webapp/templates/issue/grid.html:113
 msgid "motivo"
-msgstr "Razón"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:113
 msgid "Suspenso da coleção SciELO"
-msgstr "Indización interrumpida"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:115
 msgid "Terminado"
-msgstr "Terminado"
+msgstr ""
 
 #: opac/webapp/templates/issue/grid.html:115
 msgid "continuado como"
-msgstr "Continua como"
+msgstr ""
 
 #: opac/webapp/templates/issue/toc.html:10
 #: opac/webapp/templates/journal/detail.html:8
@@ -2225,364 +2224,4 @@ msgstr ""
 #: opac/webapp/templates/news/includes/issue_last_row.html:20
 msgid "Ver"
 msgstr ""
-
-#~ msgid "Fascículo"
-#~ msgstr ""
-
-#~ msgid "Problema de Direito Autoral"
-#~ msgstr ""
-
-#~ msgid "Plágio"
-#~ msgstr ""
-
-#~ msgid "Abuso ou Conteúdo Indevido"
-#~ msgstr ""
-
-#~ msgid "Coleções"
-#~ msgstr ""
-
-#~ msgid "Código IBICT - CCN"
-#~ msgstr ""
-
-#~ msgid "Ano inicial"
-#~ msgstr ""
-
-#~ msgid "Volume inicial"
-#~ msgstr ""
-
-#~ msgid "Número inicial"
-#~ msgstr ""
-
-#~ msgid "Ano final"
-#~ msgstr ""
-
-#~ msgid "Volume final"
-#~ msgstr ""
-
-#~ msgid "Número final"
-#~ msgstr ""
-
-#~ msgid "Legenda bibliográfica"
-#~ msgstr ""
-
-#~ msgid "Fascículo(s) publicado(s) com sucesso!!"
-#~ msgstr ""
-
-#~ msgid "Ocorreu um erro tentando publicar o(s) fascículo(s)!!. Erro: %(ex)s"
-#~ msgstr ""
-
-#~ msgid "Fascículo(s) despublicado(s) com sucesso!!"
-#~ msgstr ""
-
-#~ msgid "Ocorreu um erro tentando despublicar o(s) fascículo(s)!!. Erro: %(ex)s"
-#~ msgstr ""
-
-#~ msgid "É AOP?"
-#~ msgstr ""
-
-#~ msgid "Reconstruir HTML"
-#~ msgstr ""
-
-#~ msgid "Artigo(s) reconstruido com sucesso!!"
-#~ msgstr ""
-
-#~ msgid "Ocorreu um erro tentando reconstruir o(s) artigo(s)!!. Erro: %(ex)s"
-#~ msgstr ""
-
-#~ msgid "Fascículo não encontrado"
-#~ msgstr ""
-
-#~ msgid "Por favor entre en contato com o administrador."
-#~ msgstr ""
-
-#~ msgid "Página não encontrada"
-#~ msgstr ""
-
-#~ msgid "Erro interno do servidor"
-#~ msgstr ""
-
-#~ msgid "Versões"
-#~ msgstr ""
-
-#~ msgid "Texto em inglês"
-#~ msgstr ""
-
-#~ msgid "Texto em espanhol"
-#~ msgstr ""
-
-#~ msgid "Tradução automática"
-#~ msgstr ""
-
-#~ msgid "Artigos similares"
-#~ msgstr ""
-
-#~ msgid "Sobre os autores"
-#~ msgstr ""
-
-#~ msgid "Permissões"
-#~ msgstr ""
-
-#~ msgid "Artigos de"
-#~ msgstr ""
-
-#~ msgid "Baixar"
-#~ msgstr ""
-
-#~ msgid "Artigos do Ano %(year)s, Volume %(volume)s Número %(number)s"
-#~ msgstr ""
-
-#~ msgid "Outras versões deste artigo"
-#~ msgstr ""
-
-#~ msgid "Lista periódicos por instituição"
-#~ msgstr ""
-
-#~ msgid "(Total %(editoras)s editoras / %(periodicos)s periódicos)"
-#~ msgstr ""
-
-#~ msgid "(Total %(temas)s temas / %(periodicos)s periódicos)"
-#~ msgstr ""
-
-#~ msgid "Use ; (semicolon) to insert more emails."
-#~ msgstr ""
-
-#~ msgid "Alterar remetente, assunto e comentários"
-#~ msgstr ""
-
-#~ msgid "Lista de periódicos por editoras"
-#~ msgstr ""
-
-#~ msgid "Portal do Autor"
-#~ msgstr ""
-
-#~ msgid "Buscar artigos"
-#~ msgstr ""
-
-#~ msgid "Lista de Periódicos"
-#~ msgstr ""
-
-#~ msgid "Por instituição"
-#~ msgstr ""
-
-#~ msgid "Avaliação de periódicos"
-#~ msgstr ""
-
-#~ msgid "Equipe"
-#~ msgstr ""
-
-#~ msgid ""
-#~ msgstr ""
-
-#~ msgid "saiba mais"
-#~ msgstr ""
-
-#~ msgid "admitido na coleção da SciELO"
-#~ msgstr ""
-
-#~ msgid "Navegue nos números"
-#~ msgstr ""
-
-#~ msgid "Vol."
-#~ msgstr ""
-
-#~ msgid "No."
-#~ msgstr ""
-
-#~ msgid "vol."
-#~ msgstr ""
-
-#~ msgid "no."
-#~ msgstr ""
-
-#~ msgid "Press-release em"
-#~ msgstr ""
-
-#~ msgid "português"
-#~ msgstr ""
-
-#~ msgid "inglês"
-#~ msgstr ""
-
-#~ msgid "Publicação de"
-#~ msgstr ""
-
-#~ msgid "home"
-#~ msgstr ""
-
-#~ msgid "Página não encontrado"
-#~ msgstr ""
-
-#~ msgid "Ir para a homepage da coleção:"
-#~ msgstr ""
-
-#~ msgid "Número <span>mais recentes</span>"
-#~ msgstr ""
-
-#~ msgid "Títutlo"
-#~ msgstr ""
-
-#~ msgid "logomarca da coleção:"
-#~ msgstr ""
-
-#~ msgid " Ir para a homepage da coleção "
-#~ msgstr ""
-
-#~ msgid "Resumo em "
-#~ msgstr ""
-
-#~ msgid "Periódico não encontrada"
-#~ msgstr ""
-
-#~ msgid "Similares no"
-#~ msgstr ""
-
-#~ msgid "Citados no"
-#~ msgstr ""
-
-#~ msgid "referências"
-#~ msgstr ""
-
-#~ msgid "citações"
-#~ msgstr ""
-
-#~ msgid "AGRICULTURAL SCIENCES"
-#~ msgstr ""
-
-#~ msgid "APPLIED SOCIAL SCIENCES"
-#~ msgstr ""
-
-#~ msgid "BIOLOGICAL SCIENCES"
-#~ msgstr ""
-
-#~ msgid "ENGINEERING"
-#~ msgstr ""
-
-#~ msgid "EXACT AND EARTH SCIENCES"
-#~ msgstr ""
-
-#~ msgid "HEALTH SCIENCES"
-#~ msgstr ""
-
-#~ msgid "HUMAN SCIENCES"
-#~ msgstr ""
-
-#~ msgid "LINGUISTICS, LITERATURE AND ARTS"
-#~ msgstr ""
-
-#~ msgid "HTML do Artigo não encontrado"
-#~ msgstr ""
-
-#~ msgid "Recurso não encontrado"
-#~ msgstr ""
-
-#~ msgid "Grandes áreas do conhecimento"
-#~ msgstr ""
-
-#~ msgid "Áreas temáticas do Web of Science"
-#~ msgstr ""
-
-#~ msgid "Editoras"
-#~ msgstr ""
-
-#~ msgid "editoras"
-#~ msgstr ""
-
-#~ msgid "Texto completo em PDF"
-#~ msgstr "Full text in PDF"
-
-#~ msgid "Texto completo despublicado com sucesso!"
-#~ msgstr ""
-
-#~ msgid "Texto completo foi indisponibilizado com sucesso."
-#~ msgstr ""
-
-#~ msgid "Texto completo foi indisponibilizado com sucesso"
-#~ msgstr ""
-
-#~ msgid "Texto completo foi disponibilizado com sucesso"
-#~ msgstr ""
-
-#~ msgid "Texto completo temporariamente disponível apenas nas versões:"
-#~ msgstr "Full text temporarily available in these versions:"
-
-#~ msgid "Exibir o texto completo?"
-#~ msgstr ""
-
-#~ msgid "Não exibir texto completo"
-#~ msgstr ""
-
-#~ msgid "Exibir texto completo"
-#~ msgstr ""
-
-#~ msgid "Disponibilizar completo?"
-#~ msgstr ""
-
-#~ msgid "Disponibilizar completo"
-#~ msgstr ""
-
-#~ msgid "Obrigatório o campo issue_info."
-#~ msgstr ""
-
-#~ msgid "Recruso não encontrado"
-#~ msgstr ""
-
-#~ msgid "home do periodico"
-#~ msgstr ""
-
-#~ msgid "Atual"
-#~ msgstr ""
-
-#~ msgid "Números <span>mais recentes</span>"
-#~ msgstr "Números <span>más recientes</span>"
-
-#~ msgid " admitido na coleção da SciELO"
-#~ msgstr ""
-
-#~ msgid "Métricas deste periódico"
-#~ msgstr ""
-
-#~ msgid "Índice h5"
-#~ msgstr ""
-
-#~ msgid "Mediana h5"
-#~ msgstr ""
-
-#~ msgid " admitido na coleção"
-#~ msgstr ""
-
-#~ msgid "rejeitado na coleção SciELO"
-#~ msgstr ""
-
-#~ msgid "suspenso da coleção SciELO"
-#~ msgstr ""
-
-#~ msgid "continuado como "
-#~ msgstr ""
-
-#~ msgid "Este artículo tiene retracción"
-#~ msgstr ""
-
-#~ msgid "Essa errata corrige o artigo"
-#~ msgstr "Esta errata corrige el artículo"
-
-#~ msgid "Essa retratação retrata o artigo"
-#~ msgstr "Esta retractación retrata el artículo"
-
-#~ msgid "Esse adendo comenta o artigo"
-#~ msgstr "Este apéndice comenta el artículo"
-
-#~ msgid "Este artigo contém adendo"
-#~ msgstr "Este artículo tiene apéndice"
-
-#~ msgid "Este artigo contém retratação"
-#~ msgstr "Este articulo tiene retracción"
-
-#~ msgid "Este artigo contém correções"
-#~ msgstr "Este artículo tiene correcciones"
-
-#~ msgid "Este documento contém retratação"
-#~ msgstr ""
-
-#~ msgid "Este documento contém correções"
-#~ msgstr ""
 

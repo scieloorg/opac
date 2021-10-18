@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-05 14:41+0000\n"
+"POT-Creation-Date: 2021-10-18 09:36-0300\n"
 "PO-Revision-Date: 2016-02-09 09:39-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -1465,20 +1465,28 @@ msgid "Continue lendo"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/related-article.html:7
-msgid "Este artigo contém correções"
-msgstr "Este artículo tiene correcciones"
+msgid "Esta errata corrige o documento"
+msgstr "Esta errata corrige el documento"
 
 #: opac/webapp/templates/article/includes/related-article.html:9
-msgid "Este artigo contém adendo"
-msgstr "Este artículo tiene apéndice"
+msgid "Esta retratação retrata o documento"
+msgstr "Esta retracción retrata el documento"
 
 #: opac/webapp/templates/article/includes/related-article.html:11
-msgid "Este artigo contém retratação"
-msgstr "Este articulo tiene retracción"
+msgid "Este adendo adiciona informação ao documento"
+msgstr "Esta addenda agrega información al documento"
 
 #: opac/webapp/templates/article/includes/related-article.html:13
-msgid "Essa errata corrige o artigo"
-msgstr "Esta errata corrige el artículo"
+msgid "Este documento possui um adendo"
+msgstr "Este documento tiene una addenda"
+
+#: opac/webapp/templates/article/includes/related-article.html:15
+msgid "Este documento possui uma retratação"
+msgstr "Este documento tiene una retractación"
+
+#: opac/webapp/templates/article/includes/related-article.html:17
+msgid "Este documento possui uma errata"
+msgstr "Este documento tiene una errata"
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
 #: opac/webapp/templates/article/includes/modal/related_article.html:7
@@ -2552,5 +2560,29 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Este artículo tiene retracción"
+#~ msgstr ""
+
+#~ msgid "Essa errata corrige o artigo"
+#~ msgstr "Esta errata corrige el artículo"
+
+#~ msgid "Essa retratação retrata o artigo"
+#~ msgstr "Esta retractación retrata el artículo"
+
+#~ msgid "Esse adendo comenta o artigo"
+#~ msgstr "Este apéndice comenta el artículo"
+
+#~ msgid "Este artigo contém adendo"
+#~ msgstr "Este artículo tiene apéndice"
+
+#~ msgid "Este artigo contém retratação"
+#~ msgstr "Este articulo tiene retracción"
+
+#~ msgid "Este artigo contém correções"
+#~ msgstr "Este artículo tiene correcciones"
+
+#~ msgid "Este documento contém retratação"
+#~ msgstr ""
+
+#~ msgid "Este documento contém correções"
 #~ msgstr ""
 
