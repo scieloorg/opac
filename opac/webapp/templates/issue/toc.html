@@ -97,32 +97,35 @@
                     <!-- Cabeçalho do Issue Toc -->
 
                     <ul>
+                      {% if config['FILTER_SECTION_ENABLE'] %}
 
-                      {% if sections %}
-                        <li>
-                          <a href="{{this_page_url}}">
-                            {% if section_filter|length == 0 %}
-                              {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
-                            {% else %}
-                              {% trans %}Todas as seções{% endtrans %}
-                            {% endif %}
-                          </a>
-                        </li>
-                      {% endif %}
-
-                      {% for section in sections %}
-                        {% if section %}
+                        {% if sections %}
                           <li>
-                            <a href="{{this_page_url}}?section={{ section|upper }}">
-                              {% if section_filter|upper == section|upper %}
-                                {{ section }} <span style="color: #6789d3;">&laquo;</span>
+                            <a href="{{this_page_url}}">
+                              {% if section_filter|length == 0 %}
+                                {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
                               {% else %}
-                                {{ section }}
+                                {% trans %}Todas as seções{% endtrans %}
                               {% endif %}
                             </a>
                           </li>
                         {% endif %}
-                      {% endfor %}
+
+                        {% for section in sections %}
+                          {% if section %}
+                            <li>
+                              <a href="{{this_page_url}}?section={{ section|upper }}">
+                                {% if section_filter|upper == section|upper %}
+                                  {{ section }} <span style="color: #6789d3;">&laquo;</span>
+                                {% else %}
+                                  {{ section }}
+                                {% endif %}
+                              </a>
+                            </li>
+                          {% endif %}
+                        {% endfor %}
+
+                      {% endif %}
 
                     </ul>
                     <!-- Cabeçalho do Issue Toc -->

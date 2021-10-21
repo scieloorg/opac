@@ -179,7 +179,8 @@ import os
       - Google Meta tags (https://developers.google.com/search/docs/advanced/crawling/special-tags)
         - OPAC_FORCE_USE_HTTPS_GOOGLE_TAGS: Força o uso de https nas URLs para do site do OPAC nas tags do google. (default: True)
 
-
+      - Issue TOC
+        - OPAC_FILTER_SECTION_ENABLE: ativa/desativa o filtro por seção na página do issue.
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -571,3 +572,7 @@ ALERT_MSG = bool(ALERT_MSG_PT or ALERT_MSG_EN or ALERT_MSG_ES)
 # Google Meta tags
 FORCE_USE_HTTPS_GOOGLE_TAGS = os.environ.get(
     "OPAC_FORCE_USE_HTTPS_GOOGLE_TAGS", True)
+
+# Filtro por seção no TOC
+FILTER_SECTION_ENABLE = os.environ.get(
+    "OPAC_FILTER_SECTION_ENABLE", False)
