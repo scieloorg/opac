@@ -3,7 +3,7 @@
 {% block title %}{{ issue_bibliographic_strip|default('--', True) }}{% endblock %}
 
 {% block main_content %}
-
+  <!-- issue id: {{ issue._id }} -->
   <section class="journalContent">
       <div class="container">
           <div class="col-md-4 col-md-offset-8 share">
@@ -141,7 +141,7 @@
                       <li data-date="{% if article.publication_date %}{{ article.publication_date.replace('-', "") }}{% endif %}">
 
                         {% if session.lang %}
-                          <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true) | safe }} <span class="badge">{{ article.section|default("", true) }}</span></h2>
+                          <h2>{{ article.get_title_by_lang(session.lang[:2])|default(_('Documento sem título'), true)|safe }} <span class="badge">{{ article.get_section_by_lang(session.lang[:2])|default("", true)|title }}</span></h2>
                           <!-- publication_date: {{article.publication_date}} -->
                           <!-- PID: {{article.pid}} -->
                         {% endif %}
@@ -163,7 +163,7 @@
                             <li>
                               {% trans %}Resumo{% endtrans %}:
                               {% for lang in article.abstract_languages|sort %}
-                                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid, 
+                                <a href="{{ url_for('.article_detail_v3', url_seg=journal.url_segment, article_pid_v3=article.aid,
                                 part='abstract',
                                 lang=lang) }}" data-toggle="tooltip" data-placement="bottom" title="{{lang|trans_alpha2}}">
                                   {{ lang }}
