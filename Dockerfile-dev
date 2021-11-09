@@ -48,4 +48,5 @@ WORKDIR /app
 HEALTHCHECK --interval=5m --timeout=3s \
   CMD curl -f http://localhost:8000/ || exit 1
 
-CMD gunicorn --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --log-level DEBUG
+CMD gunicorn --worker-class=gevent --worker-connections=1000 --workers 3 --bind 0.0.0.0:8000 manager:app --chdir=/app/opac --log-level DEBUG
+
