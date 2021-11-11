@@ -6,7 +6,7 @@ blinker==1.4
 certifi==2019.11.28
 chardet==3.0.4
 click==7.1.2
-coverage==4.5.1
+coverage==6.1.2
 croniter==0.3.34
 dnspython==1.16.0
 elastic-apm==5.5.2
