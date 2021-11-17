@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-10-18 09:36-0300\n"
+"POT-Creation-Date: 2021-11-17 16:48+0000\n"
 "PO-Revision-Date: 2018-03-07 00:47+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: es\n"
@@ -938,7 +938,7 @@ msgstr "Autores"
 #: opac/webapp/templates/article/includes/levelMenu_abstracts.html:26
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:29
 #: opac/webapp/templates/collection/includes/levelMenu_search.html:72
-#: opac/webapp/templates/issue/toc.html:161
+#: opac/webapp/templates/issue/toc.html:164
 msgid "Resumo"
 msgstr "Resumen"
 
@@ -1051,12 +1051,12 @@ msgstr "Últimas revistas incluidas en la colección"
 msgid "10 últimos periódicos inseridos na coleção %s"
 msgstr "10 últimas revistas incluidas en la colección %s"
 
-#: opac/webapp/main/views.py:347 opac/webapp/main/views.py:1650
+#: opac/webapp/main/views.py:347 opac/webapp/main/views.py:1658
 msgid "Página não encontrada"
 msgstr "Página no encontrada"
 
 #: opac/webapp/main/views.py:372 opac/webapp/main/views.py:461
-#: opac/webapp/main/views.py:1449
+#: opac/webapp/main/views.py:1457
 #, python-format
 msgid "Requsição inválida ao tentar acessar o artigo com pid: %s"
 msgstr "Requiere no válida al intentar tener acceso al artículo con pid:% s"
@@ -1076,7 +1076,7 @@ msgstr "Fascículo no encontrado"
 #: opac/webapp/main/views.py:416 opac/webapp/main/views.py:448
 #: opac/webapp/main/views.py:1038 opac/webapp/main/views.py:1138
 #: opac/webapp/main/views.py:1188 opac/webapp/main/views.py:1410
-#: opac/webapp/main/views.py:1453
+#: opac/webapp/main/views.py:1461
 msgid "Artigo não encontrado"
 msgstr "Artículo no encontrado"
 
@@ -1174,11 +1174,17 @@ msgstr "Parámetros insuficientes para obtener el EPDF del artículo"
 msgid "PDF não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1430
+#: opac/webapp/main/views.py:1431
+msgid ""
+"Este PDF não existe em http://www.scielo.br. Consulte "
+"http://search.scielo.org"
+msgstr "Este PDF no existe en http://www.scielo.br. Ver http://search.scielo.org"
+
+#: opac/webapp/main/views.py:1437
 msgid "PDF do artigo não foi encontrado"
 msgstr "PDF del artículo no encontrado"
 
-#: opac/webapp/main/views.py:1472 opac/webapp/main/views.py:1503
+#: opac/webapp/main/views.py:1480 opac/webapp/main/views.py:1511
 msgid "Requisição inválida."
 msgstr "Petición inválida."
 
@@ -1473,7 +1479,7 @@ msgstr ""
 
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:5
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:27
-#: opac/webapp/templates/issue/toc.html:174
+#: opac/webapp/templates/issue/toc.html:177
 msgid "Texto"
 msgstr "Texto"
 
@@ -1482,7 +1488,7 @@ msgid "Texto "
 msgstr ""
 
 #: opac/webapp/templates/article/includes/recent_articles_row.html:6
-#: opac/webapp/templates/issue/toc.html:141
+#: opac/webapp/templates/issue/toc.html:144
 msgid "Documento sem título"
 msgstr "Documento sin título"
 
@@ -1895,12 +1901,8 @@ msgstr ""
 "por favor, revise e intente nuevamente."
 
 #: opac/webapp/templates/errors/500.html:5
-msgid ""
-"Erro interno do servidor. Tente novamente mais tarde. Nossos engenheiros "
-"foram notificados."
-msgstr ""
-"Error interno del servidor. Intente nuevamente luego. Nuestros ingenieros"
-" fueron notificados."
+msgid "Erro interno do servidor. Tente novamente mais tarde."
+msgstr "Error interno del servidor. Intente nuevamente luego."
 
 #: opac/webapp/templates/errors/500.html:9
 msgid "Id. do erro"
@@ -2049,20 +2051,20 @@ msgstr ""
 msgid "Mais antigos primeiro"
 msgstr ""
 
-#: opac/webapp/templates/issue/toc.html:105
-#: opac/webapp/templates/issue/toc.html:107
+#: opac/webapp/templates/issue/toc.html:106
+#: opac/webapp/templates/issue/toc.html:108
 msgid "Todas as seções"
 msgstr "Todas las secciones"
 
-#: opac/webapp/templates/issue/toc.html:185
+#: opac/webapp/templates/issue/toc.html:188
 msgid "PDF"
 msgstr ""
 
-#: opac/webapp/templates/issue/toc.html:196
+#: opac/webapp/templates/issue/toc.html:199
 msgid "ePDF"
 msgstr ""
 
-#: opac/webapp/templates/issue/toc.html:211
+#: opac/webapp/templates/issue/toc.html:214
 msgid "Resumo em"
 msgstr "Resumen en"
 
@@ -2423,4 +2425,9 @@ msgstr "Ver"
 
 #~ msgid "Este documento contém correções"
 #~ msgstr "Este documento tiene una errata"
+
+#~ msgid ""
+#~ "Este PDF não existe em "
+#~ "http://www.scielo.br. Consulte http://search.scielo.org\""
+#~ msgstr ""
 
