@@ -1424,10 +1424,18 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     pdf_filename = '%s.pdf' % pdf_filename
+
+    journal = controllers.get_journal_by_url_seg(journal_acron)
+
+    if not journal:
+        abort(404, _('Periódico não encontrado'))
+
     article = controllers.get_article_by_pdf_filename(
         journal_acron, issue_info, pdf_filename)
+
     if not article:
         abort(404, _('PDF do artigo não foi encontrado'))
+
     return redirect(
         url_for(
             'main.article_detail_v3',

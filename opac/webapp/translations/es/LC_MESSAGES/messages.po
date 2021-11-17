@@ -1896,11 +1896,9 @@ msgstr ""
 
 #: opac/webapp/templates/errors/500.html:5
 msgid ""
-"Erro interno do servidor. Tente novamente mais tarde. Nossos engenheiros "
-"foram notificados."
+"Erro interno do servidor. Tente novamente mais tarde."
 msgstr ""
-"Error interno del servidor. Intente nuevamente luego. Nuestros ingenieros"
-" fueron notificados."
+"Error interno del servidor. Intente nuevamente luego."
 
 #: opac/webapp/templates/errors/500.html:9
 msgid "Id. do erro"
