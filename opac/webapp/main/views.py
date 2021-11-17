@@ -1428,7 +1428,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     journal = controllers.get_journal_by_url_seg(journal_acron)
 
     if not journal:
-        abort(404, _('Periódico não encontrado'))
+        abort(404, _('Este PDF não existe em http://www.scielo.br. Consulte http://search.scielo.org'))
 
     article = controllers.get_article_by_pdf_filename(
         journal_acron, issue_info, pdf_filename)
