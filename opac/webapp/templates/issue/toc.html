@@ -101,7 +101,7 @@
 
                         {% if sections %}
                           <li>
-                            <a href="{{this_page_url}}">
+                            <a href="{{this_page_url}}" rel="nofollow">
                               {% if section_filter|length == 0 %}
                                 {% trans %}Todas as seções{% endtrans %} <span style="color: #6789d3;">&laquo;</span>
                               {% else %}
@@ -114,7 +114,7 @@
                         {% for section in sections %}
                           {% if section %}
                             <li>
-                              <a href="{{this_page_url}}?section={{ section|upper }}">
+                              <a href="{{this_page_url}}?section={{ section|upper }}" rel="nofollow">
                                 {% if section_filter|upper == section|upper %}
                                   {{ section }} <span style="color: #6789d3;">&laquo;</span>
                                 {% else %}

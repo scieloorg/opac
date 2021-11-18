@@ -799,6 +799,7 @@ def issue_toc_legacy(url_seg, url_seg_issue):
 @main.route('/j/<string:url_seg>/i/<string:url_seg_issue>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def issue_toc(url_seg, url_seg_issue):
+    section_filter = None
     goto = request.args.get("goto", None, type=str)
     if goto not in ("previous", "next"):
         goto = None
@@ -810,8 +811,9 @@ def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
     language = session.get('lang', get_locale())
 
-    # seção dos documentos, se selecionada
-    section_filter = request.args.get('section', '', type=str).upper()
+    if current_app.config["FILTER_SECTION_ENABLE"]:
+        # seção dos documentos, se selecionada
+        section_filter = request.args.get('section', '', type=str).upper()
 
     # obtém o issue
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
@@ -843,9 +845,10 @@ def issue_toc(url_seg, url_seg_issue):
         # obtém as seções dos documentos deste sumário
         sections = []
 
-    if section_filter != '':
-        # obtém somente os documentos da seção selecionada
-        articles = [a for a in articles if a.section.upper() == section_filter]
+    if current_app.config["FILTER_SECTION_ENABLE"]:
+        if section_filter != '':
+            # obtém somente os documentos da seção selecionada
+            articles = [a for a in articles if a.section.upper() == section_filter]
 
     # obtém PDF e TEXT de cada documento
     has_math_content = False
