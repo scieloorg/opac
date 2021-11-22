@@ -56,7 +56,7 @@ PREVIOUS_WEBSITE_URI=https://old.scielo.br
 Caso queira apresentar na home do website qualquer mensagem de texto
 
 ALERT_MSG_PT=Novo portal pode conter incorreções
-ALERT_MSG_EN=New portal may contain inaccuracies 
+ALERT_MSG_EN=New portal may contain inaccuracies
 ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 
 
@@ -80,6 +80,33 @@ Arquivos: Dockerfile* e docker-compose*.yml
 - **docker-compose.yml**: contém as definições para iniciar todos os containers necessários para rodar em **produção**
 - **docker-compose-build.yml**: contém as definições para construir as imagems e iniciar todos os containers necessários para rodar no **Travis/CI**
 - **docker-compose-dev.yml**: contém as definições para iniciar todos os containers necessários para rodar em **desenvolvimento**
+
+
+=================================================
+Variáveis de ambiente
+=================================================
+
++-----------+---------------+--------------------+-------------------+--------------+
+| Variável  | Valor padrão  | Valores possíveis  | Última avaliação  | Observações  |
++===========+===============+====================+===================+==============+
+|    OPAC_USE_HOME_METRICS       |   False            |      True/False              |      21/11/2021             |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
+|           |               |                    |                   |              |
++-----------+---------------+--------------------+-------------------+--------------+
 
 
 =================================================
