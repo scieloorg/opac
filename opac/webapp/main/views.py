@@ -1433,6 +1433,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
         abort(404, _('Este PDF não existe em %s. Consulte %s' %
                     (current_app.config.get('OPAC_SERVER_NAME'), current_app.config.get('URL_SEARCH'))))
 
+
     article = controllers.get_article_by_pdf_filename(
         journal_acron, issue_info, pdf_filename)
 
