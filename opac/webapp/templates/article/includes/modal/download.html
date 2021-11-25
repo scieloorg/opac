@@ -9,30 +9,35 @@
       </div>
       <div class="modal-body">
         <div class="row modal-center">
-          <div class="{% if config['READCUBE_ENABLED'] %}col-md-6{% else %}col-md-12{%endif%}">
-            <span class="sci-ico-filePDF"></span>
-            <br/>
-            <strong>PDF</strong>
-            <ul class="md-list">
-            {% if article and article.pdfs %}
-              {% for pdf in article.pdfs  %}
-                <li>
-                  <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang=pdf.lang, format='pdf') }}">
-                    {% if pdf.lang == 'es' %}
-                      {% trans %}Espanhol{% endtrans %}
-                    {% elif pdf.lang == 'en' %}
-                      {% trans %}Inglês{% endtrans %}
-                    {% elif pdf.lang == 'pt' %}
-                      {% trans %}Português{% endtrans %}
-                    {% else %}
-                      {{ pdf.lang }}
-                    {% endif %}
-                  </a>
-                </li>
-              {% endfor %}
-            {% endif %}
-            </ul>
-          </div>
+
+          {% if article.pdf %}
+            <div class="{% if config['READCUBE_ENABLED'] %}col-md-6{% else %}col-md-12{%endif%}">
+              <span class="sci-ico-filePDF"></span>
+              <br/>
+              <strong>PDF</strong>
+              <ul class="md-list">
+              {% if article and article.pdfs %}
+                {% for pdf in article.pdfs  %}
+                  <li>
+                    <a target='_blank' href="{{ url_for('.article_detail_v3', url_seg=article.journal.url_segment, article_pid_v3=article.aid, lang=pdf.lang, format='pdf') }}">
+                      {% if pdf.lang == 'es' %}
+                        {% trans %}Espanhol{% endtrans %}
+                      {% elif pdf.lang == 'en' %}
+                        {% trans %}Inglês{% endtrans %}
+                      {% elif pdf.lang == 'pt' %}
+                        {% trans %}Português{% endtrans %}
+                      {% else %}
+                        {{ pdf.lang }}
+                      {% endif %}
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+              </ul>
+            </div>
+          {% else %}
+            {% trans %}O periódico não forneceu este documento em formato PDF.{% endtrans%}
+          {% endif%}
           {% if config['READCUBE_ENABLED'] and article.doi and article.pid %}
             <div class="col-md-6">
               <span class="glyphBtn readcubeViewMid"></span>
