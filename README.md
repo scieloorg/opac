@@ -105,7 +105,6 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        OPAC_WTF_CSRF_ENABLED  	|         True  	|         True/False            	|       21/11/2021           	|        ativa/desativa o recurso de CSRF   |
 |        OPAC_WTF_CSRF_SECRET_KEY  	|         JGvNWiwBIq2Iig89LWbV  	|                     	|       21/11/2021           	|        chave para segurança nos formulários WTF.   |
 |        READCUBE_ENABLED  	|         False  	|          True/False           	|       21/11/2021           	|        ativa/desativa a exibição do link para o ReadCube, se sim definir como: 'True'    |
-|
 |        OPAC_SSM_SCHEME  	|         https  	|          http/https           	|       21/11/2021           	|        Protocolo de conexão com SSM. Opções: 'http' ou 'https' - (default: 'https')    |
 |        OPAC_SSM_DOMAIN  	|         ssm.scielo.org  	|          ssm.scielo.org dam.doamin.suffix           	|       21/11/2021           	|        Dominio/FQDN da conexão com SSM. Ex: 'homolog.ssm.scielo.org    |
 |        OPAC_SSM_PORT  	|         80  	|          80, 8000           	|       21/11/2021           	|        Dominio/FQDN da conexão com SSM.    |
