@@ -45,10 +45,10 @@ Em nossa `wiki <https://github.com/scieloorg/opac/wiki>`_ você tem as diferente
 ### Guia de configuração do site
 
 
-Pode acessar `nossa wiki <https://github.com/scieloorg/opac/wiki/Configura%C3%A7%C3%A3o-padr%C3%A3o-e-vari%C3%A1veis-de-ambiente>`_ para ter uma guia completa e como ajustar a configuração a partir de un arquivo de configuração em cada instância ou utilizando variáveis de ambiente.
+Pode acessar `nossa wiki <https://github.com/scieloorg/opac/wiki/Configura%C3%A7%C3%A3o-padr%C3%A3o-e-vari%C3%A1veis-de-ambiente>`_ para ter uma guia completa e como ajustar a configuração a partir de um arquivo de configuração em cada instância ou utilizando variáveis de ambiente.
 
 
-Caso queira apresentar na home do website que o atual tem versão anterior
+Caso queira apresentar na home do website o link para a versão anterior do site
 
 PREVIOUS_WEBSITE_URI=https://old.scielo.br
 
@@ -87,9 +87,9 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        Variável       	| Valor padrão 	| Valores possíveis 	| Última avaliação 	| Observações 	|
 |:---------------------	|:------------	|:-----------------	|:----------------	|:-----------	|
 | OPAC_USE_HOME_METRICS 	|       False   |         True/False 	|        21/11/2021 |     ativa/desativa a apresentação dos dados de métricas da coleção (default: False), o padrão é não apresentar        	|
-|          OPAC_DEBUG_MODE  |     False    	|  True/False         	|        21/11/2021 |       tiva/desativa o modo Debug da app, deve estar desativado em produção! (default: False)      	|
+|          OPAC_DEBUG_MODE  |     False    	|  True/False         	|        21/11/2021 |       ativa/desativa o modo Debug da app, deve estar desativado em produção! (default: False)      	|
 |        OPAC_SECRET_KEY  	|       secr3t-k3y    	|           '123523445werw45345'        	|       21/11/2021           	|       chave aleatória necessária para segurança nos formulario da app.|
-|        OPAC_COLLECTION  	|       scl    	|           scl, spa, mex, cub        	|       21/11/2021           	|       acrônimo da coleção do opac|
+|        OPAC_COLLECTION  	|       scl    	|           scl, spa, mex, cub, entre outros acrônimos válidos        	|       21/11/2021           	|       acrônimo da coleção do opac|
 |        OPAC_DEFAULT_EMAIL  	|       scielo@scielo.org    	|           admin@scielo.org, scielo@scielo.org        	|       21/11/2021           	|       conta de email para envio de mensagens desde o site|
 |        OPAC_MAIL_SERVER  	|       localhost    	|           localhost, 127.0.0.1, 0.0.0.0        	|       21/11/2021           	|       host do servidor de emails|
 |        OPAC_MAIL_PORT  	|       1025    	|           25, 485, 1025         	|       21/11/2021           	|       porta do servidor de emails|
@@ -105,13 +105,13 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        OPAC_DATABASE_DIR  	|       sqlite:////tmp/opac.sqlite    	|           sqlite:////tmp/opac.sqlite         	|       21/11/2021           	|       URI do banco sql opcional|
 |        GA_TRACKING_CODE  	|         G-MKLVK7B5B4  	|         G-MKLVK7B4B6           	|       21/11/2021           	|       código de google analytics (acesse https://goo.gl/HE77SO para resgatar seu código)|
 |        OPAC_MEDIA_ROOT  	|         /[repo dir]/opac/opac/webapp/media/  	|         /[repo dir]/opac/opac/webapp/media/           	|       21/11/2021           	|       path absoluto da pasta que vai armazenar as imagens subidas pelos usuários pelo admin.|
-|        OPAC_MEDIA_URL  	|         /media  	|         /media/            	|       21/11/2021           	|       URL para servir as imagens.|
-|        FILES_ALLOWED_EXTENSIONS  	|        ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')   	|            ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')         	|       21/11/2021           	|       extensão dos arquivos permitidos para upload|
+|        OPAC_MEDIA_URL  	|         /media/  	|         /media/            	|       21/11/2021           	|       URL para servir as imagens.|
+|        FILES_ALLOWED_EXTENSIONS  	|        ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')   	|            ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')         	|       21/11/2021           	|       conjunto de extensões dos arquivos permitidos para upload|
 |        IMAGES_ALLOWED_EXTENSIONS  	|         ('png', 'jpg', 'jpeg', 'gif', 'webp')  	|         ('png', 'jpg', 'jpeg', 'gif', 'webp')           	|       21/11/2021           	|       extensão imagens permitidas para upload|
 |        THUMBNAIL_HEIGHT  	|         100  	|         100, 200,            	|       21/11/2021           	|       altura do thumbnail|
 |        THUMBNAIL_WIDTH  	|         100  	|         100, 200,            	|       21/11/2021           	|       largura do thumbnail|
-|        OPAC_TWITTER_CONSUMER_KEY  	|         consum3r-k3y  	|           consum3r-k3y          	|       21/11/2021           	|       Twitter comuser key|
-|        OPAC_TWITTER_CONSUMER_SECRET  	|         consum3r-secr3t  	|         consum3r-secr3t            	|       21/11/2021           	|       Twitter comuser secret|
+|        OPAC_TWITTER_CONSUMER_KEY  	|         consum3r-k3y  	|           consum3r-k3y          	|       21/11/2021           	|       Twitter consumer key|
+|        OPAC_TWITTER_CONSUMER_SECRET  	|         consum3r-secr3t  	|         consum3r-secr3t            	|       21/11/2021           	|       Twitter consumer secret|
 |        OPAC_TWITTER_ACCESS_TOKEN  	|         acc3ss-tok3n-secr3t  	|         acc3ss-tok3n-secr3t            	|       21/11/2021           	|       Twitter access token|
 |        OPAC_TWITTER_ACCESS_TOKEN_SECRET  	|         acc3ss-tok3n-secr3t  	|         acc3ss-tok3n-secr3t            	|       21/11/2021           	|       Twitter access token|
 |        OPAC_TWITTER_SCREEN_NAME  	|         RedeSciELO  	|         RedeSciELO, SciELO, Scielo Espanha            	|       21/11/2021           	|       Twitter screen name |
@@ -126,7 +126,7 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        OPAC_SCITE_URL  	|         https://cdn.scite.ai/badge/scite-badge-latest.min.js  	|         https://cdn.scite.ai/badge/scite-badge-latest.min.js            	|       21/11/2021           	|       URL para o SCITE_ JS  |
 |        OPAC_SCITE_METRICS_URL  	|         https://scite.ai/reports/  	|         https://scite.ai/reports/            	|       21/11/2021           	|       URL para o Scite_   |
 |        LOCAL_ZONE  	|         'America/Sao_Paulo'  	|         'America/Sao_Paulo'            	|       21/11/2021           	|       Localização para data   |
-|        OPAC_USE_SENTRY  	|         False  	|         True/False            	|       21/11/2021           	|       ativa/desativa a integarção com Sentry, se sim definir como: 'True'   |
+|        OPAC_USE_SENTRY  	|         False  	|         True/False            	|       21/11/2021           	|       ativa/desativa a integração com Sentry, se sim definir como: 'True'   |
 |        OPAC_SENTRY_DSN  	|         None  	|         DSN do Sentry            	|       21/11/2021           	|       DSN definido pelo sentry para este projeto. Utilizado só se OPAC_USE_SENTRY == True   |
 |        OPAC_BUILD_DATE  	|         None  	|         05/11/2002, 09/02/2009            	|       21/11/2021           	|       data de build. definida em tempo de construção da imagem   |
 |        OPAC_VCS_REF  	|         None  	|         None            	|       21/11/2021           	|       commit do código. definida pelo travis em tempo de construção da imagem.   |
@@ -136,8 +136,8 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        READCUBE_ENABLED  	|         False  	|          True/False           	|       21/11/2021           	|        ativa/desativa a exibição do link para o ReadCube, se sim definir como: 'True'    |
 |
 |        OPAC_SSM_SCHEME  	|         https  	|          http/https           	|       21/11/2021           	|        Protocolo de conexão com SSM. Opções: 'http' ou 'https' - (default: 'https')    |
-|        OPAC_SSM_DOMAIN  	|         ssm.scielo.org  	|          URL: ssm.scielo.org dam.doamin.suffix           	|       21/11/2021           	|        Dominio/FQDN do conexão com SSM. Ex: 'homolog.ssm.scielo.org    |
-|        OPAC_SSM_PORT  	|         80  	|          80, 8000           	|       21/11/2021           	|        Dominio/FQDN do conexão com SSM.    |
+|        OPAC_SSM_DOMAIN  	|         ssm.scielo.org  	|          ssm.scielo.org dam.doamin.suffix           	|       21/11/2021           	|        Dominio/FQDN da conexão com SSM. Ex: 'homolog.ssm.scielo.org    |
+|        OPAC_SSM_PORT  	|         80  	|          80, 8000           	|       21/11/2021           	|        Dominio/FQDN da conexão com SSM.    |
 |        OPAC_SSM_MEDIA_PATH  	|         '/media/assets/'  	|          '/media/assets/', '/media/files/'           	|       21/11/2021           	|        Path da pasta media do assests no SSM.    |
 |        OPAC_SSM_XML_URL_REWRITE  	|         True  	|          True/False            	|       21/11/2021           	|        Troca o scheme + authority da URL armazenada em Article.xml por `OPAC_SSM_SCHEME + '://' + OPAC_SSM_DOMAIN + ':' + OPAC_SSM_PORT`.    |
 |        OPAC_SERVER_NAME  	|         None  	|          www.scielo.br, www.scielosp.org            	|       21/11/2021           	|        Nome: IP do servidor    |
@@ -162,8 +162,8 @@ ALERT_MSG_ES=Nuevo portal puede contener incorrecciones
 |        OPAC_GOOGLE_RECAPTCHA_URL  	|         chave do secreta do google  	|                      	|       21/11/2021           	|         URL do JavaScript Google reCAPTCHA    |
 |        OPAC_GOOGLE_VERIFY_RECAPTCHA_URL  	|         https://www.google.com/recaptcha/api/siteverify  	|      https://www.google.com/recaptcha/api/siteverify                	|       21/11/2021           	|      URL de verificação do google      |
 |        OPAC_EMAIL_ACCOUNTS_RECEIVE_ERRORS  	|         None  	|      webmaster@scielo.org                	|       21/11/2021           	|      Contas de email para receber mensagens de erros da interface      |
-|        OPAC_AUDIT_LOG_NOTIFICATION_ENABLED  	|         True  	|     True/False                 	|       21/11/2021           	|      ativa/desativa envio de notificaçÕes via email do relatorio de auditoria      |
-|        OPAC_AUDIT_LOG_NOTIFICATION_ENABLED  	|         True  	|     True/False                 	|       21/11/2021           	|      ativa/desativa envio de notificaçÕes via email do relatorio de auditoria      |
+|        OPAC_AUDIT_LOG_NOTIFICATION_ENABLED  	|         True  	|     True/False                 	|       21/11/2021           	|      ativa/desativa envio de notificações via email do relatorio de auditoria      |
+|        OPAC_AUDIT_LOG_NOTIFICATION_ENABLED  	|         True  	|     True/False                 	|       21/11/2021           	|      ativa/desativa envio de notificações via email do relatorio de auditoria      |
 |        OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS  	|         scielo@scielo.org  	|     emails                 	|       21/11/2021           	|      lista de email que devem receber o emails com relatorio de auditoria      |
 |        OPAC_RQ_REDIS_HOST  	|         localhost  	|          localhost, 127.0.0.1, 0.0.0.0            	|       21/11/2021           	|      localhost do servidor de Redis (pode ser o mesmo server do Cache)      |
 |        OPAC_RQ_REDIS_PORT  	|         None  	|          None           	|       21/11/2021           	|      porta do servidor de Redis (pode ser o mesmo server do Cache)      |
@@ -194,7 +194,7 @@ Simplesmente executar:
 2. executar: ``make dev_compose_up``  para rodar os containers.
 3. acessar pelo browser: http://localhost ou no caso de utilizar OSx trocar localhost pela IP da maquina default (ver na saída do comando: ``docker-machine ip``)
 4. para inspecionar os logs, executar: ``make dev_compose_logs``
-5. para parar os c`ontainers, executar: ``make dev_compose_stop``
+5. para interromper os containers, executar: ``make dev_compose_stop``
 6. para abrir uma terminal dentro do container, executar: ``make dev_compose_exec_shell_webapp``
 
 
@@ -202,15 +202,15 @@ Simplesmente executar:
 
 Procedimento para popular a instância de desenvolvimento a partir de fixtures disponibilizadas pelo SciELO.
 
-1. Para execução dos é necessário que o ambiente de desenvolvimento do OPAC esteja rodando ``make dev_compose_up``
+1. Para execução dos procedimentos que adicionam dados no banco é necessário que o ambiente de desenvolvimento do OPAC esteja rodando ``make dev_compose_up``
 2. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
 3. Extraia o conteúdo, execute: ``unzip opac_br.zip``
-4. Repare que contém uma pasta chamado **opac_br**, nessa pasta temos os arquivo **.bson .json .sqlite** e outra pasta chamado **media** contento os ativos dos periódico e da coleção.
+4. Repare que uma pasta chamada opac_br foi criada e dentro dela há arquivos .bson, .json, .sqlite e outra pasta chamada media que contém os ativos dos periódicos e da coleção.
 5. Acesse a pasta **opac_br**, execute: ``cd opac_br``
 6. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac --dir .``
 7. Realize a cópia da pasta **media** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
 8. Realize a cópia da pasta **opac.sqlite** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
-9. Os seguintes parâmetros devem está configurados no arquivo no ``docker-compose-dev.yml``:
+9. Os seguintes parâmetros devem está configurados no arquivo ``docker-compose-dev.yml``:
 
 - OPAC_SSM_DOMAIN=minio.scielo.br
 - OPAC_SSM_PORT=443
@@ -219,11 +219,11 @@ Procedimento para popular a instância de desenvolvimento a partir de fixtures d
 
 10. Para ambiente utilizando **Docker** é necessário reiniciar os containers: ``make dev_compose_stop`` && ``make dev_compose_up``
 
-Caso não tenha o **mongorestore** localmente é necessário a instalação **MONGODB DATABASE TOOLS**: https://docs.mongodb.com/database-tools/installation/installation/
+Caso não tenha o **mongorestore** localmente é necessário instalar a aplicação **MONGODB DATABASE TOOLS**: https://docs.mongodb.com/database-tools/installation/installation/
 
-Para utilizar o ambiente de desenvolvimento com os dados populado a partir dos passos indicado acima é necessário que esteja conectado com a **VPN da SciELO**, caso não esteja conectado a página do artigo estará indisponível.
+Para utilizar o ambiente de desenvolvimento com o banco de dados populado a partir dos passos indicados nestas instruções, é necessário estar conectado à **VPN da SciELO**. Caso não esteja conectado, as páginas de artigos estarão indisponíveis.
 
-A área administrativa conta com um usuário cadastrado, em http://0.0.0.0:8000/admin, utilize as seguintes credenciais:
+A área administrativa possui um usuário cadastrado. Acesse http://0.0.0.0:8000/admin com as seguintes credenciais:
 
 **Usuário:** admin@admin.com
 
@@ -236,4 +236,3 @@ Caso queira alterar para um mongodb local do hospedeiro, é necessário alterar 
 
 
 Para reportar problemas, bugs, ou simplesmente solicitar alguma nova funcionalidade, pode `criar um ticket <https://github.com/scieloorg/opac/issues>`_ com seus pedidos.
-
