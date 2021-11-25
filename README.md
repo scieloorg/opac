@@ -2,35 +2,6 @@
 ### SciELO - On-line Public Access Catalog
 
 
-.. image:: https://travis-ci.org/scieloorg/opac.svg?branch=master
-        :target: https://travis-ci.org/scieloorg/opac
-
-.. image:: https://landscape.io/github/scieloorg/opac/master/landscape.svg?style=flat
-        :target: https://landscape.io/github/scieloorg/opac/master
-        :alt: Code Health
-
-.. image:: https://pyup.io/repos/github/scieloorg/opac/shield.svg
-        :target: https://pyup.io/repos/github/scieloorg/opac/
-        :alt: Updates
-
-.. image:: https://pyup.io/repos/github/scieloorg/opac/python-3-shield.svg
-        :target: https://pyup.io/repos/github/scieloorg/opac/
-        :alt: Python 3
-
-.. image:: https://images.microbadger.com/badges/image/scieloorg/opac.svg
-        :target: https://microbadger.com/images/scieloorg/opac
-        :alt: Image info from microbadger.com
-
-.. image:: https://images.microbadger.com/badges/version/scieloorg/opac.svg
-        :target: https://microbadger.com/images/scieloorg/opac
-        :alt: Image latest version
-
-.. image:: https://images.microbadger.com/badges/commit/scieloorg/opac.svg
-        :target: https://microbadger.com/images/scieloorg/opac
-        :alt: Image latest commit
-
-
-
 ### Instalação e configuração
 
 
