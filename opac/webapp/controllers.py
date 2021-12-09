@@ -1023,6 +1023,9 @@ def get_article_by_aop_url_segs(jid, url_seg_issue, url_seg_article, **kwargs):
         "url_seg_issue": url_seg_issue
     }
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(journal=jid, aop_url_segs=aop_url_segs, **kwargs).first()
 
 
