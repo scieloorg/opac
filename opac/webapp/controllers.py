@@ -1093,6 +1093,9 @@ def get_articles_by_iid(iid, **kwargs):
     if not iid:
         raise ValueError(__('Obrigatório um iid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     # FIXME - Melhorar esta consulta
     # Em um fascículo em que não é aop nem publicação contínua
     # todas as datas são iguais, então, `order_by`,
