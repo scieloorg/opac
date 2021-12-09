@@ -1412,10 +1412,12 @@ def count_elements_by_type_and_visibility(type, public_only=False):
         else:
             return Issue.objects.count()
     elif type == 'article':
+        # add filter publication_date__lte_today_date
+        kwargs = add_filter_without_embargo()
         if public_only:
-            return Article.objects(is_public=True).count()
+            return Article.objects(is_public=True, **kwargs).count()
         else:
-            return Article.objects.count()
+            return Article.objects(**kwargs).count()
     elif type == 'news':
         return News.objects.count()
     elif type == 'sponsor':
