@@ -1330,7 +1330,8 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertEqual(article._id, '012ijs9y24')
         self.assertEqual(article.scielo_pids["v1"], 'S0101-0202(99)12345')
 
-    def test_get_recent_articles_of_issue(self):
+    @patch('webapp.controllers.now', return_value="2020-01-01")
+    def test_get_recent_articles_of_issue(self, mk):
         self._make_one(attrib={
             '_id': '012ijs9y24',
             'issue': '90210j83',
@@ -1360,6 +1361,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '2183ikos9B',
+            'publication_date': '2022',
             'issue': '90210j83',
             'type': 'rapid-communication',
             'journal': 'oak,ajimn1'
@@ -1367,6 +1369,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '012ijs9y1B',
+            'publication_date': '2022',
             'issue': '90210j83',
             'type': 'research-article',
             'journal': 'oak,ajimn1'
@@ -1391,9 +1394,9 @@ class ArticleControllerTestCase(BaseTestCase):
         })
         result = controllers.get_recent_articles_of_issue(
             issue_iid='90210j83', is_public=True)
-        self.assertEqual(len(result), 6)
+        self.assertEqual(len(result), 4)
         result = [article._id for article in result]
-        expected = ['2183ikos90', '2183ikoD90', '2183ikos9B', '012ijs9y1B',
+        expected = ['2183ikos90', '2183ikoD90',
                     '2183ikoD9F', '012ijs9y14']
         self.assertEqual(set(result), set(expected))
 
