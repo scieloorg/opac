@@ -317,6 +317,7 @@ def makeOneArticle(attrib=None):  # noqa
         'lpage': attrib.get('lpage', '16'),
         'translated_titles': attrib.get('translated_titles', []),
         'languages': attrib.get('languages', ['pt', ]),
+        'publication_date': "2000",
     }
     article.update(attrib)
 

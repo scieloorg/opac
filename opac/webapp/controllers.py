@@ -822,6 +822,9 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     if not aid:
         raise ValueError(__('Obrigatório um aid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     articles = Article.objects(pk=aid, is_public=True, **kwargs)
     if not articles:
         articles = Article.objects(
