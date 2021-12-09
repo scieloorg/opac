@@ -1397,11 +1397,14 @@ class ArticleControllerTestCase(BaseTestCase):
                     '2183ikoD9F', '012ijs9y14']
         self.assertEqual(set(result), set(expected))
 
+    @patch('webapp.controllers.now', return_value="2020-01-01")
     @patch('webapp.controllers.Article.objects')
     @patch('webapp.controllers.get_journal_by_acron')
     @patch('webapp.controllers.get_issue_by_label')
     def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_filename(
-        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
+        self, mk_get_issue_by_label, mk_get_journal_by_acron,
+        mk_article_objects,
+        mk_now,
     ):
 
         article = self._make_one(attrib={
@@ -1417,17 +1420,22 @@ class ArticleControllerTestCase(BaseTestCase):
             article.journal.acronym, article.issue.label, "article.pdf"
         )
 
-        mk_article_objects.filter.assert_called_once_with(is_public=True,
-                                                          issue=article.issue,
-                                                          journal=article.journal,
-                                                          pdfs__filename='article.pdf'
-                                                          )
+        mk_article_objects.filter.assert_called_once_with(
+            is_public=True,
+            issue=article.issue,
+            journal=article.journal,
+            pdfs__filename='article.pdf',
+            publication_date__lte='2020-01-01',
+        )
 
+    @patch('webapp.controllers.now', return_value="2021-01-01")
     @patch('webapp.controllers.Article.objects')
     @patch('webapp.controllers.get_journal_by_acron')
     @patch('webapp.controllers.get_issue_by_label')
     def test_get_article_by_pdf_filename_retrieves_aop_article_by_pdf_filename(
-        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
+        self, mk_get_issue_by_label, mk_get_journal_by_acron,
+        mk_article_objects,
+        mk_now,
     ):
 
         article = self._make_one(attrib={
@@ -1446,7 +1454,8 @@ class ArticleControllerTestCase(BaseTestCase):
             journal=article.journal,
             is_public=True,
             issue='oak,ajimn1-aop',
-            pdfs__filename='article.pdf'
+            pdfs__filename='article.pdf',
+            publication_date__lte='2021-01-01',
         )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_journal_acronym(self):

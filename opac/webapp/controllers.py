@@ -1238,9 +1238,14 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
     if not issue_iid:
         raise ValueError(__('Parámetro obrigatório: issue_iid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo()
+
     return Article.objects.filter(
         issue=issue_iid, is_public=is_public,
-        type__in=HIGHLIGHTED_TYPES).order_by('-order')
+        type__in=HIGHLIGHTED_TYPES,
+        **kwargs
+        ).order_by('-order')
 
 
 def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
@@ -1271,10 +1276,15 @@ def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
         prefix = splitted[0]
         pdf_filename = pdf_filename[3:]
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo()
+
     article = Article.objects.filter(
                 journal=journal,
                 issue=issue, pdfs__filename=pdf_filename,
-                is_public=True).first()
+                is_public=True,
+                **kwargs,
+                ).first()
     if article:
         for pdf in article.pdfs:
             if ((pdf["filename"] == pdf_filename and prefix == '') or
