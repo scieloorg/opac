@@ -1139,6 +1139,9 @@ def get_article_by_pid_v1(v1, **kwargs):
     if not v1:
         raise ValueError(__('Obrigatório um pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(
         scielo_pids__v1=v1,
         is_public=True,
@@ -1156,6 +1159,9 @@ def get_article_by_pid(pid, **kwargs):
     if not pid:
         raise ValueError(__('Obrigatório um pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(pid=pid, **kwargs).first()
 
 
@@ -1169,6 +1175,9 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     if not aop_pid:
         raise ValueError(__('Obrigatório um aop_pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(aop_pid=aop_pid, **kwargs).first()
 
 
@@ -1181,6 +1190,9 @@ def get_article_by_scielo_pid(scielo_pid, **kwargs):
 
     if not scielo_pid:
         raise ValueError(__('Obrigatório um pid.'))
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     return Article.objects(
         (Q(pid=scielo_pid) | Q(scielo_pids__v1=scielo_pid) | Q(scielo_pids__v2=scielo_pid) | Q(scielo_pids__v3=scielo_pid)),
@@ -1199,6 +1211,9 @@ def get_article_by_pid_v2(v2, **kwargs):
         raise ValueError(__('Obrigatório um pid.'))
 
     v2 = v2.upper()
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     articles = Article.objects(pid=v2, is_public=True, **kwargs)
     if articles:
