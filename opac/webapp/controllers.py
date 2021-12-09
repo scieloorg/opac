@@ -981,6 +981,9 @@ def get_article_by_url_seg(url_seg_article, **kwargs):
     if not url_seg_article:
         raise ValueError(__('Obrigatório um url_seg_article.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(url_segment=url_seg_article, **kwargs).first()
 
 
