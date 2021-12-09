@@ -999,6 +999,9 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     if not iid and url_seg_article:
         raise ValueError(__('Obrigatório um iid and url_seg_article.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
 
 
