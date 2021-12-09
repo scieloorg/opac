@@ -1,5 +1,6 @@
 # coding: utf-8
 from unittest.mock import patch
+from unittest import TestCase
 
 from werkzeug.security import check_password_hash
 
@@ -1845,4 +1846,25 @@ class PageControllerTestCase(BaseTestCase):
             {item.name for item in _page},
             {'Critérios', 'Criterios'}
             )
+
+
+@patch("webapp.controllers.now", return_value="2021-01-01")
+class AddFilterWithoutEmbargoTestCase(TestCase):
+
+    def test_add_filter_without_embargo_returns_filter_if_input_is_None(self, mock_now):
+        expected = {"publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo()
+        self.assertDictEqual(expected, result)
+
+    def test_add_filter_without_embargo_returns_filter_if_input_is_empty_dict(self, mock_now):
+        expected = {"publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo({})
+        self.assertDictEqual(expected, result)
+    
+    def test_add_filter_without_embargo_returns_filter_if_input_is_public_false(self, mock_now):
+        kwargs = {"is_public": False}
+        expected = {"is_public": False, "publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo(kwargs)
+        self.assertDictEqual(expected, result)
+
 

@@ -6,7 +6,7 @@
     ou outras camadas superiores, evitando assim que as camadas superiores
     acessem diretamente a camada inferior de modelos.
 """
-
+from datetime import datetime
 import re
 import unicodecsv
 import io
@@ -73,6 +73,21 @@ class ArticleNotFoundError(Exception):
 
 class PreviousOrNextArticleNotFoundError(Exception):
     ...
+
+
+def now():
+    return datetime.utcnow().isoformat()[:10]
+
+
+def add_filter_without_embargo(kwargs={}):
+    """
+    Add filter to publish only articles which is allowed to be published
+    (not embargoed)
+    (only articles which are publication date is before or equal today date)
+    """
+    kwargs = kwargs or {}
+    kwargs["publication_date__lte"] = now()
+    return kwargs
 
 
 # -------- COLLECTION --------
