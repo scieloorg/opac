@@ -1,5 +1,6 @@
 # coding: utf-8
 from unittest.mock import patch
+from unittest import TestCase
 
 from werkzeug.security import check_password_hash
 
@@ -1329,7 +1330,8 @@ class ArticleControllerTestCase(BaseTestCase):
         self.assertEqual(article._id, '012ijs9y24')
         self.assertEqual(article.scielo_pids["v1"], 'S0101-0202(99)12345')
 
-    def test_get_recent_articles_of_issue(self):
+    @patch('webapp.controllers.now', return_value="2020-01-01")
+    def test_get_recent_articles_of_issue(self, mk):
         self._make_one(attrib={
             '_id': '012ijs9y24',
             'issue': '90210j83',
@@ -1359,6 +1361,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '2183ikos9B',
+            'publication_date': '2022',
             'issue': '90210j83',
             'type': 'rapid-communication',
             'journal': 'oak,ajimn1'
@@ -1366,6 +1369,7 @@ class ArticleControllerTestCase(BaseTestCase):
 
         self._make_one(attrib={
             '_id': '012ijs9y1B',
+            'publication_date': '2022',
             'issue': '90210j83',
             'type': 'research-article',
             'journal': 'oak,ajimn1'
@@ -1390,17 +1394,20 @@ class ArticleControllerTestCase(BaseTestCase):
         })
         result = controllers.get_recent_articles_of_issue(
             issue_iid='90210j83', is_public=True)
-        self.assertEqual(len(result), 6)
+        self.assertEqual(len(result), 4)
         result = [article._id for article in result]
-        expected = ['2183ikos90', '2183ikoD90', '2183ikos9B', '012ijs9y1B',
+        expected = ['2183ikos90', '2183ikoD90',
                     '2183ikoD9F', '012ijs9y14']
         self.assertEqual(set(result), set(expected))
 
+    @patch('webapp.controllers.now', return_value="2020-01-01")
     @patch('webapp.controllers.Article.objects')
     @patch('webapp.controllers.get_journal_by_acron')
     @patch('webapp.controllers.get_issue_by_label')
     def test_get_article_by_pdf_filename_retrieves_articles_by_pdf_filename(
-        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
+        self, mk_get_issue_by_label, mk_get_journal_by_acron,
+        mk_article_objects,
+        mk_now,
     ):
 
         article = self._make_one(attrib={
@@ -1416,17 +1423,22 @@ class ArticleControllerTestCase(BaseTestCase):
             article.journal.acronym, article.issue.label, "article.pdf"
         )
 
-        mk_article_objects.filter.assert_called_once_with(is_public=True,
-                                                          issue=article.issue,
-                                                          journal=article.journal,
-                                                          pdfs__filename='article.pdf'
-                                                          )
+        mk_article_objects.filter.assert_called_once_with(
+            is_public=True,
+            issue=article.issue,
+            journal=article.journal,
+            pdfs__filename='article.pdf',
+            publication_date__lte='2020-01-01',
+        )
 
+    @patch('webapp.controllers.now', return_value="2021-01-01")
     @patch('webapp.controllers.Article.objects')
     @patch('webapp.controllers.get_journal_by_acron')
     @patch('webapp.controllers.get_issue_by_label')
     def test_get_article_by_pdf_filename_retrieves_aop_article_by_pdf_filename(
-        self, mk_get_issue_by_label, mk_get_journal_by_acron, mk_article_objects
+        self, mk_get_issue_by_label, mk_get_journal_by_acron,
+        mk_article_objects,
+        mk_now,
     ):
 
         article = self._make_one(attrib={
@@ -1445,7 +1457,8 @@ class ArticleControllerTestCase(BaseTestCase):
             journal=article.journal,
             is_public=True,
             issue='oak,ajimn1-aop',
-            pdfs__filename='article.pdf'
+            pdfs__filename='article.pdf',
+            publication_date__lte='2021-01-01',
         )
 
     def test_get_article_by_pdf_filename_raises_error_if_no_journal_acronym(self):
@@ -1845,4 +1858,25 @@ class PageControllerTestCase(BaseTestCase):
             {item.name for item in _page},
             {'Critérios', 'Criterios'}
             )
+
+
+@patch("webapp.controllers.now", return_value="2021-01-01")
+class AddFilterWithoutEmbargoTestCase(TestCase):
+
+    def test_add_filter_without_embargo_returns_filter_if_input_is_None(self, mock_now):
+        expected = {"publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo()
+        self.assertDictEqual(expected, result)
+
+    def test_add_filter_without_embargo_returns_filter_if_input_is_empty_dict(self, mock_now):
+        expected = {"publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo({})
+        self.assertDictEqual(expected, result)
+    
+    def test_add_filter_without_embargo_returns_filter_if_input_is_public_false(self, mock_now):
+        kwargs = {"is_public": False}
+        expected = {"is_public": False, "publication_date__lte": "2021-01-01"}
+        result = controllers.add_filter_without_embargo(kwargs)
+        self.assertDictEqual(expected, result)
+
 
