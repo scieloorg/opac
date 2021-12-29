@@ -6,7 +6,7 @@
     ou outras camadas superiores, evitando assim que as camadas superiores
     acessem diretamente a camada inferior de modelos.
 """
-
+from datetime import datetime
 import re
 import unicodecsv
 import io
@@ -73,6 +73,21 @@ class ArticleNotFoundError(Exception):
 
 class PreviousOrNextArticleNotFoundError(Exception):
     ...
+
+
+def now():
+    return datetime.utcnow().isoformat()[:10]
+
+
+def add_filter_without_embargo(kwargs={}):
+    """
+    Add filter to publish only articles which is allowed to be published
+    (not embargoed)
+    (only articles which are publication date is before or equal today date)
+    """
+    kwargs = kwargs or {}
+    kwargs["publication_date__lte"] = now()
+    return kwargs
 
 
 # -------- COLLECTION --------
@@ -807,6 +822,9 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
     if not aid:
         raise ValueError(__('Obrigatório um aid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     articles = Article.objects(pk=aid, is_public=True, **kwargs)
     if not articles:
         articles = Article.objects(
@@ -963,6 +981,9 @@ def get_article_by_url_seg(url_seg_article, **kwargs):
     if not url_seg_article:
         raise ValueError(__('Obrigatório um url_seg_article.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(url_segment=url_seg_article, **kwargs).first()
 
 
@@ -977,6 +998,9 @@ def get_article_by_issue_article_seg(iid, url_seg_article, **kwargs):
     """
     if not iid and url_seg_article:
         raise ValueError(__('Obrigatório um iid and url_seg_article.'))
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     return Article.objects(issue=iid, url_segment=url_seg_article, **kwargs).first()
 
@@ -998,6 +1022,9 @@ def get_article_by_aop_url_segs(jid, url_seg_issue, url_seg_article, **kwargs):
         "url_seg_article": url_seg_article,
         "url_seg_issue": url_seg_issue
     }
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     return Article.objects(journal=jid, aop_url_segs=aop_url_segs, **kwargs).first()
 
@@ -1066,6 +1093,9 @@ def get_articles_by_iid(iid, **kwargs):
     if not iid:
         raise ValueError(__('Obrigatório um iid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     # FIXME - Melhorar esta consulta
     # Em um fascículo em que não é aop nem publicação contínua
     # todas as datas são iguais, então, `order_by`,
@@ -1109,6 +1139,9 @@ def get_article_by_pid_v1(v1, **kwargs):
     if not v1:
         raise ValueError(__('Obrigatório um pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(
         scielo_pids__v1=v1,
         is_public=True,
@@ -1126,6 +1159,9 @@ def get_article_by_pid(pid, **kwargs):
     if not pid:
         raise ValueError(__('Obrigatório um pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(pid=pid, **kwargs).first()
 
 
@@ -1139,6 +1175,9 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     if not aop_pid:
         raise ValueError(__('Obrigatório um aop_pid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
+
     return Article.objects(aop_pid=aop_pid, **kwargs).first()
 
 
@@ -1151,6 +1190,9 @@ def get_article_by_scielo_pid(scielo_pid, **kwargs):
 
     if not scielo_pid:
         raise ValueError(__('Obrigatório um pid.'))
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     return Article.objects(
         (Q(pid=scielo_pid) | Q(scielo_pids__v1=scielo_pid) | Q(scielo_pids__v2=scielo_pid) | Q(scielo_pids__v3=scielo_pid)),
@@ -1169,6 +1211,9 @@ def get_article_by_pid_v2(v2, **kwargs):
         raise ValueError(__('Obrigatório um pid.'))
 
     v2 = v2.upper()
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo(kwargs)
 
     articles = Article.objects(pid=v2, is_public=True, **kwargs)
     if articles:
@@ -1193,9 +1238,14 @@ def get_recent_articles_of_issue(issue_iid, is_public=True):
     if not issue_iid:
         raise ValueError(__('Parámetro obrigatório: issue_iid.'))
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo()
+
     return Article.objects.filter(
         issue=issue_iid, is_public=is_public,
-        type__in=HIGHLIGHTED_TYPES).order_by('-order')
+        type__in=HIGHLIGHTED_TYPES,
+        **kwargs
+        ).order_by('-order')
 
 
 def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
@@ -1226,10 +1276,15 @@ def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
         prefix = splitted[0]
         pdf_filename = pdf_filename[3:]
 
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo()
+
     article = Article.objects.filter(
                 journal=journal,
                 issue=issue, pdfs__filename=pdf_filename,
-                is_public=True).first()
+                is_public=True,
+                **kwargs,
+                ).first()
     if article:
         for pdf in article.pdfs:
             if ((pdf["filename"] == pdf_filename and prefix == '') or
@@ -1357,10 +1412,12 @@ def count_elements_by_type_and_visibility(type, public_only=False):
         else:
             return Issue.objects.count()
     elif type == 'article':
+        # add filter publication_date__lte_today_date
+        kwargs = add_filter_without_embargo()
         if public_only:
-            return Article.objects(is_public=True).count()
+            return Article.objects(is_public=True, **kwargs).count()
         else:
-            return Article.objects.count()
+            return Article.objects(**kwargs).count()
     elif type == 'news':
         return News.objects.count()
     elif type == 'sponsor':

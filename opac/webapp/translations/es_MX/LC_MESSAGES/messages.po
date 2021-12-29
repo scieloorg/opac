@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-11-17 16:48+0000\n"
+"POT-Creation-Date: 2021-11-25 12:08+0000\n"
 "PO-Revision-Date: 2016-02-09 09:39-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_MX\n"
@@ -197,7 +197,7 @@ msgstr ""
 #: opac/webapp/templates/article/includes/levelMenu_abstracts.html:45
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:33
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:46
-#: opac/webapp/templates/article/includes/modal/download.html:26
+#: opac/webapp/templates/article/includes/modal/download.html:28
 msgid "Português"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 #: opac/webapp/templates/article/includes/levelMenu_abstracts.html:43
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:31
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:44
-#: opac/webapp/templates/article/includes/modal/download.html:24
+#: opac/webapp/templates/article/includes/modal/download.html:26
 msgid "Inglês"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgstr ""
 #: opac/webapp/templates/article/includes/levelMenu_abstracts.html:41
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:29
 #: opac/webapp/templates/article/includes/levelMenu_texts.html:42
-#: opac/webapp/templates/article/includes/modal/download.html:22
+#: opac/webapp/templates/article/includes/modal/download.html:24
 msgid "Espanhol"
 msgstr ""
 
@@ -1035,12 +1035,12 @@ msgstr ""
 msgid "10 últimos periódicos inseridos na coleção %s"
 msgstr ""
 
-#: opac/webapp/main/views.py:347 opac/webapp/main/views.py:1658
+#: opac/webapp/main/views.py:347 opac/webapp/main/views.py:1660
 msgid "Página não encontrada"
 msgstr ""
 
 #: opac/webapp/main/views.py:372 opac/webapp/main/views.py:461
-#: opac/webapp/main/views.py:1457
+#: opac/webapp/main/views.py:1459
 #, python-format
 msgid "Requsição inválida ao tentar acessar o artigo com pid: %s"
 msgstr ""
@@ -1052,15 +1052,15 @@ msgstr ""
 msgid "Periódico não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:393 opac/webapp/main/views.py:819
-#: opac/webapp/main/views.py:987
+#: opac/webapp/main/views.py:393 opac/webapp/main/views.py:821
+#: opac/webapp/main/views.py:989
 msgid "Número não encontrado"
 msgstr ""
 
 #: opac/webapp/main/views.py:416 opac/webapp/main/views.py:448
-#: opac/webapp/main/views.py:1038 opac/webapp/main/views.py:1138
-#: opac/webapp/main/views.py:1188 opac/webapp/main/views.py:1410
-#: opac/webapp/main/views.py:1461
+#: opac/webapp/main/views.py:1040 opac/webapp/main/views.py:1140
+#: opac/webapp/main/views.py:1190 opac/webapp/main/views.py:1412
+#: opac/webapp/main/views.py:1463
 msgid "Artigo não encontrado"
 msgstr ""
 
@@ -1100,71 +1100,71 @@ msgstr ""
 msgid "Requisição inválida, captcha inválido."
 msgstr ""
 
-#: opac/webapp/main/views.py:928 opac/webapp/main/views.py:949
+#: opac/webapp/main/views.py:930 opac/webapp/main/views.py:951
 msgid "Artigos ahead of print não encontrados"
 msgstr ""
 
-#: opac/webapp/main/views.py:1130 opac/webapp/main/views.py:1406
+#: opac/webapp/main/views.py:1132 opac/webapp/main/views.py:1408
 msgid "Issue não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1163
+#: opac/webapp/main/views.py:1165
 msgid "Não existe '{}'. No seu lugar use '{}'"
 msgstr ""
 
-#: opac/webapp/main/views.py:1184
+#: opac/webapp/main/views.py:1186
 msgid "Resumo inexistente"
 msgstr ""
 
-#: opac/webapp/main/views.py:1185
+#: opac/webapp/main/views.py:1187
 msgid "Artigo inexistente"
 msgstr ""
 
-#: opac/webapp/main/views.py:1200 opac/webapp/main/views.py:1364
+#: opac/webapp/main/views.py:1202 opac/webapp/main/views.py:1366
 msgid "Recurso não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1236
+#: opac/webapp/main/views.py:1238
 msgid "HTML do Artigo não encontrado ou indisponível"
 msgstr ""
 
-#: opac/webapp/main/views.py:1238 opac/webapp/main/views.py:1348
-#: opac/webapp/main/views.py:1366
+#: opac/webapp/main/views.py:1240 opac/webapp/main/views.py:1350
+#: opac/webapp/main/views.py:1368
 msgid "Erro inesperado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1284 opac/webapp/main/views.py:1288
-#: opac/webapp/main/views.py:1293
+#: opac/webapp/main/views.py:1286 opac/webapp/main/views.py:1290
+#: opac/webapp/main/views.py:1295
 msgid "PDF do Artigo não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1297 opac/webapp/main/views.py:1385
+#: opac/webapp/main/views.py:1299 opac/webapp/main/views.py:1387
 msgid "Recurso do Artigo não encontrado. Caminho inválido!"
 msgstr ""
 
-#: opac/webapp/main/views.py:1315
+#: opac/webapp/main/views.py:1317
 msgid "Formato não suportado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1328
+#: opac/webapp/main/views.py:1330
 msgid "Parâmetros insuficientes para obter o EPDF do artigo"
 msgstr ""
 
-#: opac/webapp/main/views.py:1346
+#: opac/webapp/main/views.py:1348
 msgid "PDF não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1431
+#: opac/webapp/main/views.py:1433
 msgid ""
 "Este PDF não existe em http://www.scielo.br. Consulte "
 "http://search.scielo.org"
 msgstr "Este PDF no existe en http://www.scielo.br. Ver http://search.scielo.org"
 
-#: opac/webapp/main/views.py:1437
+#: opac/webapp/main/views.py:1439
 msgid "PDF do artigo não foi encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1480 opac/webapp/main/views.py:1511
+#: opac/webapp/main/views.py:1482 opac/webapp/main/views.py:1513
 msgid "Requisição inválida."
 msgstr ""
 
@@ -1504,6 +1504,10 @@ msgstr ""
 #: opac/webapp/templates/article/includes/modal/download.html:8
 msgid "Versão para download de PDF"
 msgstr ""
+
+#: opac/webapp/templates/article/includes/modal/download.html:39
+msgid "O periódico não forneceu este documento em formato PDF."
+msgstr "La revista no proporcionó este documento en formato PDF."
 
 #: opac/webapp/templates/article/includes/modal/translate_version.html:6
 msgid "Versões e tradução automática"
