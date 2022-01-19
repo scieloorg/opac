@@ -235,6 +235,13 @@ class FileAdminView(AssetsMixin, sqla.ModelView):
         language=__('Idioma'),
     )
 
+    def search_placeholder(self):
+        if self.column_searchable_list:
+            return ", ".join(
+                str(self.column_labels.get(col, col))
+                for col in self.column_searchable_list
+            )
+
 
 class ImageAdminView(AssetsMixin, sqla.ModelView):
 
@@ -269,6 +276,13 @@ class ImageAdminView(AssetsMixin, sqla.ModelView):
         path=__('Link'),
         language=__('Idioma'),
     )
+
+    def search_placeholder(self):
+        if self.column_searchable_list:
+            return ", ".join(
+                str(self.column_labels.get(col, col))
+                for col in self.column_searchable_list
+            )
 
 
 class OpacBaseAdminView(mongoengine.ModelView):
