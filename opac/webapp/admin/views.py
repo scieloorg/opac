@@ -1,4 +1,5 @@
 # coding: utf-8
+import json
 import logging
 import socket
 from uuid import uuid4
@@ -6,6 +7,7 @@ from jinja2 import Markup
 from flask_babelex import gettext as _
 from flask_babelex import lazy_gettext as __
 import flask_admin as admin
+from flask import jsonify
 from flask_admin.actions import action
 from flask_admin.form import Select2Field
 from wtforms.fields import SelectField
@@ -733,7 +735,7 @@ class PagesAdminView(OpacBaseAdminView):
         'name', 'description', 'content',
     ]
 
-    create_template = 'admin/pages/edit.html'
+    create_template = 'admin/pages/add.html'
     edit_template = 'admin/pages/edit.html'
 
     form_overrides = dict(
@@ -749,6 +751,20 @@ class PagesAdminView(OpacBaseAdminView):
     )
 
     form_excluded_columns = ('created_at', 'updated_at')
+
+    @admin.expose('/ajx/', methods=('GET', 'POST'))
+    def save_ajax_view(self):
+        """
+            View to save page (time to time).
+        """
+        try:
+            p = Pages(id=request.args.get('id'), **request.form)
+            p.save()
+        except Exception as ex:
+            return jsonify({'saved': False, 'error': ex})
+        else:
+            return jsonify({'saved': True})
+
 
     def _content_formatter(self, context, model, name):
         return Markup(model.content)
