@@ -1,5 +1,11 @@
 {% extends 'admin/model/edit.html' %}
 
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+{% endblock %}
+
+
 {% block messages %}
     {{ super() }}
     <div class="alert alert-info alert-dismissable">
@@ -8,9 +14,57 @@
     </div>
 {% endblock %}
 
+{% block edit_form %}
+        {% call lib.form_tag(form) %}
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.name])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.language])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.content])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.journal])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.description])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.slug_name])}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 offset-md-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="autoSave" checked="checked">
+                    <label class="custom-control-label" for="autoSave">Salvar a cada 10 segundos</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-buttons">
+            {{ lib.render_form_buttons(return_url) }}
+        </div>
+        {% endcall %}
+
+{% endblock %}
+
 {% block tail %}
     {{ super() }}
     <script src="/static/js/ckeditor/ckeditor.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         var editor_content = CKEDITOR.replace( 'content', {} );
         editor_content.on('instanceReady', function() {
@@ -30,6 +84,45 @@
                     breakAfterClose: true
                 });
             }
+        });
+
+        var autoSave = $('#autoSave');
+        var interval;
+        // Time is set in millisecond (1 second = 1000 milliseconds).
+        var timer = function () {
+            interval = setInterval(function () {
+                //start slide...
+                if (autoSave.prop('checked'))
+                    save();
+                clearInterval(interval);
+            }, 10000);
+        };
+
+        //save
+        var save = function () {
+            $.ajax({
+                url: "/admin/pages/ajx/?id={{ request.args.get('id') }}",
+                type: "POST",
+                // Get the first form of the page.
+                data: $("form:first").serialize(),
+                success: function (data) {
+                    if(data.saved == false){
+                        toastr.error(data.error);
+                    }else{
+                        toastr.success("Dados do conteúdo salvo com sucesso!");
+                    }
+                },
+                error: function (data) {
+                    toastr.error("Erro ao tentar salvar os dados do conteúdo.\
+                                 Tente novamente, mais tarde.");
+                },
+
+            });
+        };
+
+        editor_content.on('change', function () {
+            clearInterval(interval);
+            timer();
         });
     </script>
 {% endblock %}
