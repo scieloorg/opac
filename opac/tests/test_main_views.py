@@ -1741,6 +1741,43 @@ class PageTestCase(BaseTestCase):
             self.assertStatus(response, 404)
 
 
+    def test_page_when_is_draft_collection(self):
+        """
+        Teste da ``view function`` ``page``, deve retornar uma página
+        que usa o template ``collection/about.html`` quando está em rascunho.
+
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            page = utils.makeOnePage({'name': 'Critérios SciELO',
+                                      'language': 'pt_BR',
+                                      'is_draft': True})
+            response = self.client.get(url_for('main.about_collection',
+                                               slug_name=page.slug_name))
+
+            self.assertEqual(404, response.status_code)
+            self.assertIn('Página não encontrada', response.data.decode('utf-8'))
+
+
+    def test_page_when_is_draft_journal(self):
+        """
+        Teste da ``view function`` ``page``, deve retornar uma página
+        que usa o template ``journal/about.html``, retorna que o
+        ``Conteúdo não cadastrado.``
+        """
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            page = utils.makeOnePage({'name': 'Critérios SciELO',
+                                      'language': 'pt_BR',
+                                      'is_draft': True})
+            response = self.client.get(url_for('main.about_journal',
+                                               url_seg=page.slug_name))
+
+            self.assertEqual(404, response.status_code)
+
+
 class TestJournaDetail(BaseTestCase):
 
         # JOURNAL

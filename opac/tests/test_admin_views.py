@@ -4765,16 +4765,16 @@ class PagesAdminViewTests(BaseTestCase):
                 response_data = response.data.decode('utf-8')
                 self.assertIn(page.id, response_data)
                 self.assertIn(
-                    "/media/files/criterios_pt-br_faq-avaliacao-en.htm",
+                    "/avaliacao/faq_avaliacao_en.htm",
                     response_data)
                 self.assertIn(
-                    "/media/images/criterios_pt-br_glogo.gif",
+                    "/img/revistas/abcd/glogo.gif",
                     response_data)
                 self.assertEqual(
                     response_data.count(
-                        "/media/files/criterios_pt-br_faq-avaliacao-en.htm"),
+                        "/avaliacao/faq_avaliacao_en.htm"),
                     2)
                 self.assertEqual(
                     response_data.count(
-                        "/media/images/criterios_pt-br_glogo.gif"),
+                        "/img/revistas/abcd/glogo.gif"),
                     2)
