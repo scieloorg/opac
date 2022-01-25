@@ -47,6 +47,11 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-12 col-xs-12">
+                {{ lib.render_form_fields([form.is_draft])}}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-3 offset-md-3">
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="autoSave" checked="checked">

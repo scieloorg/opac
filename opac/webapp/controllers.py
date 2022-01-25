@@ -1512,28 +1512,28 @@ def send_email_contact(recipents, name, your_mail, message):
 # -------- PAGES --------
 
 
-def get_page_by_journal_acron_lang(acron, language):
-    return Pages.objects(language=language, journal=acron).first()
+def get_page_by_journal_acron_lang(acron, language, is_draft=False):
+    return Pages.objects(language=language, journal=acron, is_draft=is_draft).first()
 
 
-def get_page_by_id(id):
-    return Pages.objects.get(_id=id)
+def get_page_by_id(id, is_draft=False):
+    return Pages.objects.get(_id=id, is_draft=is_draft)
 
 
-def get_pages_by_lang(lang, journal=''):
-    return Pages.objects(language=lang, journal=journal)
+def get_pages_by_lang(lang, journal='', is_draft=False):
+    return Pages.objects(language=lang, journal=journal, is_draft=is_draft)
 
 
-def get_pages():
-    return Pages.objects()
+def get_pages(is_draft=False):
+    return Pages.objects(is_draft=is_draft)
 
 
-def get_page_by_slug_name(slug_name, lang=None):
+def get_page_by_slug_name(slug_name, lang=None, is_draft=False):
     if not slug_name:
         raise ValueError(__('Obrigatório um slug_name.'))
     if not lang:
-        return Pages.objects(slug_name=slug_name)
-    return Pages.objects(language=lang, slug_name=slug_name).first()
+        return Pages.objects(slug_name=slug_name, is_draft=is_draft)
+    return Pages.objects(language=lang, slug_name=slug_name, is_draft=is_draft).first()
 
 
 def related_links(article):

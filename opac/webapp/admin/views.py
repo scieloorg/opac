@@ -728,7 +728,7 @@ class PagesAdminView(OpacBaseAdminView):
     )
 
     column_filters = [
-        'name', 'language', 'journal', 'created_at', 'updated_at',
+        'name', 'language', 'journal', 'is_draft', 'created_at', 'updated_at',
     ]
 
     column_searchable_list = [
