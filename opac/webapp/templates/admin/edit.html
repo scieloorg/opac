@@ -60,16 +60,7 @@
             </div>
         </div>
         <div class="form-buttons">
-            <hr>
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10 submit-row">
-                    <input type="submit" class="btn btn-primary" value="{{ _gettext('Save') }}" />
-                    <input name="_continue_editing" type="submit" class="btn btn-default"
-                    value="{{ _gettext('Save and Continue Editing') }}" />
-                    <a href="{{ url_for('pages.preview') }}?id={{ request.args.get('id') }}" class="btn btn-warning bigpopup" role="button">Preview</a>
-                    <a href="{{return_url}}" class="btn btn-danger" role="button">{{ _gettext('Cancel') }}</a>
-                </div>
-            </div>
+            {{ lib.render_form_buttons(return_url) }}
         </div>
         {% endcall %}
 

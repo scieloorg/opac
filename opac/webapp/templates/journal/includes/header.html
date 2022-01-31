@@ -21,7 +21,7 @@
         <div class="row">
           {% if journal.logo_url %}
             <div class="col-md-3 hidden-sm">
-              <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}">
+              <a href="{{ url_for('main.journal_detail', url_seg=journal.url_segment) }}">
                   <img src="{{ cimages.proxy_ssm_resource_url(journal.logo_url) }}"
                        class="image" alt="Logomarca do periódico: {{ journal.title }}" />
               </a>
@@ -120,17 +120,17 @@
             </li>
           {% endif %}
           <li>
-            <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about" class="scroll">
+            <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#about" class="scroll">
               <span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#editors" class="scroll">
+            <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#editors" class="scroll">
               <span class="glyphBtn editorial"></span> {% trans %}Corpo Editorial{% endtrans %}
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions" class="scroll">
+            <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#instructions" class="scroll">
               <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
             </a>
           </li>

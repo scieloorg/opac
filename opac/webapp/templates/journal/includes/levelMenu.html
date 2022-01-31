@@ -6,7 +6,7 @@
   <div class="container hidden-sm hidden-md">
     <div class="col-md-2 col-sm-2">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single {{ mmenu.endpoint_selected(view_name='main.journal_detail') }}">
+      <a href="{{ url_for('main.journal_detail', url_seg=journal.url_segment) }}" class="btn single {{ mmenu.endpoint_selected(view_name='main.journal_detail') }}">
         <span class="glyphBtn home"></span> {% trans %}home do periódico{% endtrans %}
       </a>
     </div>
@@ -15,7 +15,7 @@
       <div class="btn-group">
 
         {# Todos #}
-        <a href="{{ url_for('.issue_grid', url_seg=journal.url_segment) }}" class="btn group {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
+        <a href="{{ url_for('main.issue_grid', url_seg=journal.url_segment) }}" class="btn group {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
           {% trans %}todos os números{% endtrans %}
         </a>
 
@@ -26,12 +26,12 @@
           </a>
         {% elif issue %}
           {# página do sumário #}
-          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
+          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
             &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% elif last_issue %}
           {# página inicial do periódico ou grid #}
-          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
+          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
             &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% endif %}
@@ -43,12 +43,12 @@
           </a>
         {% elif issue and last_issue.url_segment == issue.url_segment %}
           {# página do sumário #}
-          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group selected">
+          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group selected">
             {% trans %}número atual{% endtrans %}
           </a>
         {% else %}
           {# página do periódico #}
-          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
+          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
             {% trans %}número atual{% endtrans %}
           </a>
         {% endif %}
@@ -60,7 +60,7 @@
           </a>
         {% elif issue and last_issue.url_segment != issue.url_segment %}
           {# página do sumário #}
-          <a title="{% trans %}número seguinte{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn group">
+          <a title="{% trans %}número seguinte{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn group">
             {% trans %}número seguinte{% endtrans %} &raquo;
           </a>
         {% elif last_issue %}
@@ -95,7 +95,7 @@
   <div class="container hidden-lg">
     <div class="col-md-1 col-sm-1">
       <h2>&#160;</h2>
-      <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="btn single {{ mmenu.endpoint_selected(view_name='main.journal_detail') }}">
+      <a href="{{ url_for('main.journal_detail', url_seg=journal.url_segment) }}" class="btn single {{ mmenu.endpoint_selected(view_name='main.journal_detail') }}">
         <span class="glyphBtn home"></span>
       </a>
     </div>
@@ -104,22 +104,22 @@
       <div class="btn-group">
 
         {# Todos #}
-        <a href="{{ url_for('.issue_grid', url_seg=journal.url_segment) }}" class="btn group no-ico-util {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
+        <a href="{{ url_for('main.issue_grid', url_seg=journal.url_segment) }}" class="btn group no-ico-util {{ mmenu.endpoint_selected(view_name='main.issue_grid') }}">
           {% trans %}todos{% endtrans %}
         </a>
 
-        
+
         {# Anterior #}
         {% if not last_issue and not issue %}
           <a href="#" class="btn group disabled">
           &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% elif issue %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
+          <a href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
             &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% elif last_issue %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
+          <a href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
             &laquo; {% trans %}número anterior{% endtrans %}
           </a>
         {% endif %}
@@ -134,7 +134,7 @@
            {% trans %}número atual{% endtrans %}
           </a>
         {% elif last_issue %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
+          <a href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
             {% trans %}número atual{% endtrans %}
           </a>
         {% endif %}
@@ -145,7 +145,7 @@
             <span class="sci-ico-arrowRight">
           </a>
         {% elif issue %}
-          <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn single group">
+          <a href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn single group">
             <span class="sci-ico-arrowRight">
           </a>
         {% elif last_issue %}

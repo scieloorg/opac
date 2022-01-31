@@ -19,11 +19,13 @@ from flask_admin.contrib.mongoengine.tools import parse_like_term
 from mongoengine import StringField, EmailField, URLField, ReferenceField, EmbeddedDocumentField
 from mongoengine.errors import NotUniqueError
 
+from legendarium.formatter import descriptive_short_format
+
 from webapp import models, controllers, choices, custom_filters
 from webapp.admin import forms, custom_fields
 from webapp.admin.custom_filters import get_flt, CustomFilterConverter, CustomFilterConverterSqla
 from webapp.admin.ajax import CustomQueryAjaxModelLoader
-from webapp.utils import get_timed_serializer, migrate_page_content
+from webapp.utils import get_timed_serializer, migrate_page_content, fix_journal_last_issue
 from opac_schema.v1.models import Sponsor, Journal, Issue, Article, AuditLogEntry, Pages
 from webapp.admin.custom_widget import CKEditorField
 
@@ -764,6 +766,46 @@ class PagesAdminView(OpacBaseAdminView):
             return jsonify({'saved': False, 'error': ex})
         else:
             return jsonify({'saved': True})
+
+
+    @admin.expose('/preview/', methods=('GET', ))
+    def preview(self):
+        """
+            View to preview the page about the journal.
+        """
+
+        # page id
+        id = request.args.get('id')
+
+        page = controllers.get_page_by_id(id)
+
+        journal = controllers.get_journal_by_acron(page.journal)
+
+        latest_issue = fix_journal_last_issue(journal)
+
+        if latest_issue:
+            latest_issue_legend = descriptive_short_format(
+                title=journal.title, short_title=journal.short_title,
+                pubdate=str(latest_issue.year), volume=latest_issue.volume, number=latest_issue.number,
+                suppl=latest_issue.suppl_text, language=page.language[:2].lower())
+        else:
+            latest_issue_legend = None
+
+        context = {
+            'journal': journal,
+            'latest_issue_legend': latest_issue_legend,
+            'last_issue': latest_issue,
+            'journal_study_areas': [
+                choices.STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
+            ],
+        }
+
+        if page:
+            context['content'] = page.content
+            if page.updated_at:
+                context['page_updated_at'] = page.updated_at
+
+        return render_template("journal/about.html", **context)
 
 
     def _content_formatter(self, context, model, name):

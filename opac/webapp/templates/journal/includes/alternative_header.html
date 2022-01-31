@@ -23,7 +23,7 @@
     <div class="col-md-6 col-sm-5 journalInfo">
       <ul>
         <li>
-          <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="dropdown-toggle" data-toggle="dropdown">
+          <a href="{{ url_for('main.journal_detail', url_seg=journal.url_segment) }}" class="dropdown-toggle" data-toggle="dropdown">
             {{ journal.title }} <span class="glyphBtn grayArrowDown"></span>
           </a>
           <ul class="dropdown-menu" role="menu">
@@ -32,7 +32,7 @@
             </li>
             <li>
               <strong>
-                <a href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
+                <a href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}">
                   {{ latest_issue_legend|default('--', True) }}
                 </a>
               </strong>
@@ -44,7 +44,7 @@
     <div class="col-md-4 col-md-5 menuItens">
       <ul>
         <li>
-          <a href="{{ url_for('.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
+          <a href="{{ url_for('main.journal_detail', url_seg=journal.url_segment) }}" class="showTooltip" data-placement="bottom" title="{% trans %}Homepage do periódico{% endtrans %}">
             <span class="glyphBtn home"></span>
           </a>
         </li>
@@ -60,21 +60,21 @@
 
             {# Grid #}
             <li>
-              <a href="{{ url_for('.issue_grid', url_seg=journal.url_segment) }}">
+              <a href="{{ url_for('main.issue_grid', url_seg=journal.url_segment) }}">
                 &bull; {% trans %}todos{% endtrans %}
               </a>
             </li>
 
             {# Anterior #}
             <li class="{% if not last_issue %} disabled {% endif %}">
-              <a title="{% trans %}anterior{% endtrans %}" href="{% if last_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous')}}{% endif %}">
+              <a title="{% trans %}anterior{% endtrans %}" href="{% if last_issue %}{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous')}}{% endif %}">
                 &laquo; {% trans %}anterior{% endtrans %}
               </a>
             </li>
 
             {# Atual #}
             <li class="{% if not last_issue %} disabled {% endif %}">
-              <a title="{% trans %}atual{% endtrans %}" href="{% if last_issue %}{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment)}}{% endif %}">
+              <a title="{% trans %}atual{% endtrans %}" href="{% if last_issue %}{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment)}}{% endif %}">
                 {% trans %}atual{% endtrans %}
               </a>
             </li>
@@ -119,17 +119,17 @@
               </li>
             {% endif %}
             <li>
-              <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#about" class="scroll">
+              <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#about" class="scroll">
                 <span class="glyphBtn about"></span> {% trans %}Sobre o periódico{% endtrans %}
               </a>
             </li>
             <li>
-              <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#editors" class="scroll">
+              <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#editors" class="scroll">
                 <span class="glyphBtn authorInstructions"></span> {% trans %}Corpo Editorial{% endtrans %}
               </a>
             </li>
             <li>
-              <a href="{{ url_for('.about_journal', url_seg=journal.url_segment) }}#instructions" class="scroll">
+              <a href="{{ url_for('main.about_journal', url_seg=journal.url_segment) }}#instructions" class="scroll">
                 <span class="glyphBtn authorInstructions"></span> {% trans %}Instruções aos autores{% endtrans %}
               </a>
             </li>

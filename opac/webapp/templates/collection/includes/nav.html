@@ -3,17 +3,17 @@
 <nav>
   <ul>
     <li>
-      <a href="{{ url_for('.index') }}">
+      <a href="{{ url_for('main.index') }}">
         <strong>{{ coll_macro.get_collection_name() }}</strong>
       </a>
       <ul>
           <li>
-            <a href="{{ url_for('.collection_list') }}?status=current" class="tab_link">
+            <a href="{{ url_for('main.collection_list') }}?status=current" class="tab_link">
               {% trans %}Lista alfabética de periódicos{% endtrans %}
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.collection_list_thematic') }}?status=current" class="tab_link">
+            <a href="{{ url_for('main.collection_list_thematic') }}?status=current" class="tab_link">
               {% trans %}Lista temática de periódicos{% endtrans %}
             </a>
           </li>
@@ -28,12 +28,12 @@
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.about_collection') }}">
+            <a href="{{ url_for('main.about_collection') }}">
               {% trans %}Sobre:{% endtrans %} {{ coll_macro.get_collection_name() }}
             </a>
           </li>
           <li>
-            <a href="{{ url_for('.about_collection') }}">
+            <a href="{{ url_for('main.about_collection') }}">
               {% trans %}Contatos{% endtrans %}
             </a>
           </li>
