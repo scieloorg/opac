@@ -109,7 +109,14 @@
                 url: "/admin/pages/ajx/?id={{ request.args.get('id') }}",
                 type: "POST",
                 // Get the first form of the page.
-                data: $("form:first").serialize(),
+                data: {
+                        'content': editor_content.getData(),
+                        'description': $('#description').val(),
+                        'journal': $('#journal').val(),
+                        'language': $('#language').val(),
+                        'name': $('#name').val(),
+                        'slug_name': $('slug_name').val()
+                    },
                 success: function (data) {
                     if(data.saved == false){
                         toastr.error(data.error);
