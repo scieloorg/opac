@@ -8,7 +8,7 @@ import logging
 from uuid import uuid4
 from datetime import datetime, timedelta
 
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Message
 from flask import current_app, render_template

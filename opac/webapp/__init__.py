@@ -15,7 +15,7 @@ import flask_admin
 from flask_mail import Mail
 from flask_babelex import Babel
 from flask_babelex import lazy_gettext
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.routing import BaseConverter
 from flask_caching import Cache
 from elasticapm.contrib.flask import ElasticAPM

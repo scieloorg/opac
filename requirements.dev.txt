@@ -1,5 +1,5 @@
-Flask-DebugToolbar==0.10.1
-Flask-Testing==0.6.2
+Flask-DebugToolbar==0.11.0
+Flask-Testing==0.8.1
 mock==2.0.0
 coverage==4.5.1
 pyinstrument==3.2.0

@@ -22,7 +22,7 @@ from flask import (
     g,
     make_response,
 )
-from werkzeug.contrib.atom import AtomFeed
+from feedwerk.atom  import AtomFeed
 from urllib.parse import urljoin
 from legendarium.formatter import descriptive_short_format
 
