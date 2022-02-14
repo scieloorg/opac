@@ -155,6 +155,7 @@ def makeOnePage(attrib=None):  # noqa
         'name': attrib.get('name', default_name),
         'slug_name': slugify(attrib.get('name', default_name)),
         'journal': attrib.get('journal', ''),
+        'is_draft': attrib.get('is_draft', False),
         'content': ' '.join([random.choice(texts) for n in range(0, times)]),
         'description': 'Description {}'.format(default_name),
         'language': attrib.get('language', 'pt_BR'),
