@@ -624,7 +624,7 @@ def about_journal(url_seg):
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def journals_search_alpha_ajax():
 
-    if not request.is_xhr:
+    if not request.is_json:
         abort(400, _('Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=str)
@@ -645,7 +645,7 @@ def journals_search_alpha_ajax():
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def journals_search_by_theme_ajax():
 
-    if not request.is_xhr:
+    if not request.is_json:
         abort(400, _('Requisição inválida. Deve ser por ajax'))
 
     query = request.args.get('query', '', type=str)
@@ -693,7 +693,7 @@ def download_journal_list(list_type, extension):
 @main.route("/<string:url_seg>/contact", methods=['POST'])
 def contact(url_seg):
 
-    if not request.is_xhr:
+    if not request.is_json:
         abort(403, _('Requisição inválida, deve ser ajax.'))
 
     if utils.is_recaptcha_valid(request):
@@ -1480,7 +1480,7 @@ def router_legacy_article(text_or_abstract):
 @main.route("/email_share_ajax/", methods=['POST'])
 def email_share_ajax():
 
-    if not request.is_xhr:
+    if not request.is_json:
         abort(400, _('Requisição inválida.'))
 
     form = forms.EmailShareForm(request.form)
@@ -1511,7 +1511,7 @@ def email_form():
 @main.route("/email_error_ajax/", methods=['POST'])
 def email_error_ajax():
 
-    if not request.is_xhr:
+    if not request.is_json:
         abort(400, _('Requisição inválida.'))
 
     form = forms.ErrorForm(request.form)
