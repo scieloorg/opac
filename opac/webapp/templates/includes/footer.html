@@ -32,7 +32,7 @@
   {% endif %}
 
   <div class="container collectionLicense">
-    <a href="{{ url_for('.about_collection') }}">
+    <a href="{{ url_for('main.about_collection') }}">
       <img alt="{% trans %}Open Access{% endtrans %}" style="border-width:0" class="image" src="{{ url_for('static', filename='img/oa_logo_32.png') }}">
       <span>
         <strong>{% trans %}Leia{% endtrans %}</strong> {% trans %}a Declaração de Acesso Aberto{% endtrans %}
