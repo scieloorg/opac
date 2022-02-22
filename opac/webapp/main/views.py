@@ -1437,6 +1437,12 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
     article = controllers.get_article_by_pdf_filename(
         journal_acron, issue_info, pdf_filename)
 
+    # Se não tem pdf do artigo
+    # Verifica se tem material suplementar
+    if not article:
+        article = controllers.get_article_by_suppl_material_filename(
+            journal_acron, issue_info, pdf_filename)
+
     if not article:
         abort(404, _('PDF do artigo não foi encontrado'))
 
