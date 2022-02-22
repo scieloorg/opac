@@ -1293,6 +1293,37 @@ def get_article_by_pdf_filename(journal_acron, issue_label, pdf_filename):
                 article._pdf_url = pdf["url"]
                 return article
 
+def get_article_by_suppl_material_filename(journal_acron, issue_label, pdf_filename):
+    """
+    Retorna artigo pelo nome de arquivo pdf legado
+    `issue_label`: nome da pasta que contém volume, número, suplemento
+    """
+
+    if not journal_acron:
+        raise ValueError(__('Obrigatório o acrônimo do periódico.'))
+    if not issue_label:
+        raise ValueError(__('Obrigatório o campo issue_label.'))
+    if not pdf_filename:
+        raise ValueError(__('Obrigatório o nome do arquivo PDF.'))
+
+    journal = get_journal_by_acron(journal_acron)
+
+    issue = get_issue_by_label(journal, issue_label)
+
+    # add filter publication_date__lte_today_date
+    kwargs = add_filter_without_embargo()
+
+    article = Article.objects.filter(
+                mat_suppl__filename=pdf_filename,
+                journal=journal,
+                issue=issue,
+                is_public=True,
+                **kwargs,
+                ).first()
+
+    if article:
+        return article
+
 
 def get_articles_by_date_range(begin_date, end_date, page=1, per_page=100):
     """

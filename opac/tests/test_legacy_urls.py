@@ -371,6 +371,48 @@ class LegacyURLTestCase(BaseTestCase):
 
                 self.assertStatus(response, 301)
 
+    @patch('requests.get')
+    def test_router_legacy_pdf_suppl_material(self, mocked_requests_get):
+        """
+        Testa o acesso à URL antiga do PDF de material suplementar quando existe
+        a chave filename no campo pdf.
+        URL testada: /pdf/<JOURNAL_ACRON>/<ISSUE_LABEL>/<PDF_FILENAME>
+            Exemplo: /pdf/cta/v39s2/0101-2061-cta-suppl01.pdf
+        """
+
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<pdf>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v92n2',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'mat_suppl': [
+                    {
+                        'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'filename': '0101-2061-cta-suppl01.pdf',
+                    }
+                ]
+            })
+
+            with self.client as c:
+
+                url = '/pdf/cta/v92n2/0101-2061-cta-suppl01.pdf'
+
+                response = c.get(url, follow_redirects=False)
+
+                self.assertStatus(response, 301)
+
     def test_article_text_with_lng(self):
         """
         Testa o acesso ao artigo pela URL antiga.
