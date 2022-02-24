@@ -135,6 +135,8 @@ import os
         - OPAC_CACHE_REDIS_PORT: porta do servidor redis que vai ser usado no cache. (default: 6379)
         - OPAC_CACHE_REDIS_DB: nome de db do servidor redis que vai ser usado no cache (inteiro >= 0). (default: 0)
         - OPAC_CACHE_REDIS_PASSWORD: senha do servidor redis que vai ser usado no cache. (default = '')
+        - OPAC_SEND_FILE_MAX_AGE_DEFAULT: define um valor inteiro padrão para os arquivos estáticos servido pelo Werkzeug. (default = 604800) valor em segundos 604800 é igual a uma semana
+        - OPAC_CACHE_CONTROL_MAX_AGE_HEADER: define o tempo de cache para as páginas, response header Cache-Control: public, max-age={VALUE}, (default = 604800) valor em segundos 604800 é igual a uma semana
 
       - Pindom visitor insights:
         - OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC: URL do JS para utilizar o Pingdom visitor insights (ex: `//rum-static.pingdom.net/pa-XXXXXXXXX.js`) (default: None)
@@ -488,6 +490,13 @@ CACHE_REDIS_HOST = os.environ.get('OPAC_CACHE_REDIS_HOST', 'redis-cache')
 CACHE_REDIS_PORT = os.environ.get('OPAC_CACHE_REDIS_PORT', 6379)
 CACHE_REDIS_DB = os.environ.get('OPAC_CACHE_REDIS_DB', '0')
 CACHE_REDIS_PASSWORD = os.environ.get('OPAC_CACHE_REDIS_PASSWORD', None)
+
+# https://flask.palletsprojects.com/en/2.0.x/config/#SEND_FILE_MAX_AGE_DEFAULT
+SEND_FILE_MAX_AGE_DEFAULT = os.environ.get('OPAC_SEND_FILE_MAX_AGE_DEFAULT', 604800)
+
+# https://werkzeug.palletsprojects.com/en/2.0.x/changes/?highlight=cache-control%20default%20#version-2-0-0
+# https://github.com/pallets/werkzeug/issues/1882
+CACHE_CONTROL_MAX_AGE_HEADER = os.environ.get('OPAC_CACHE_CONTROL_MAX_AGE_HEADER', 604800)
 
 # Pingdom Visitor Insights:
 PINGDOM_VISITOR_INSIGHTS_JS_SRC = os.environ.get('OPAC_PINGDOM_VISITOR_INSIGHTS_JS_SRC', None)
