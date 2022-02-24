@@ -30,17 +30,31 @@ class MainTestCase(BaseTestCase):
             with self.client as c:
                 response = c.get(url_for('main.index'))
                 self.assertStatus(response, 200)
-                self.assertEqual('text/html; charset=utf-8', response.content_type)
+                self.assertEqual('text/html; charset=utf-8',
+                                 response.content_type)
                 self.assert_template_used("collection/index.html")
+
+    def test_the_page_have_cache_control_max_age(self):
+        """
+        Teste da página inicial, verifica se existe o header Cache-Control: max-age=604800.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+            with self.client as c:
+                response = c.get(url_for('main.index'))
+                self.assertStatus(response, 200)
+                self.assertTrue(response.cache_control.max_age,
+                                current_app.config["CACHE_CONTROL_MAX_AGE_HEADER"])
 
     def test_should_obtain_the_latest_metric_counts_from_collection(self):
         with current_app.app_context():
             collection = utils.makeOneCollection({
-                "metrics" : {
-                    "total_journal" : 0,
-                    "total_issue" : 0,
-                    "total_article" : 0,
-                    "total_citation" : 0
+                "metrics": {
+                    "total_journal": 0,
+                    "total_issue": 0,
+                    "total_article": 0,
+                    "total_citation": 0
                 },
             })
 
@@ -49,14 +63,14 @@ class MainTestCase(BaseTestCase):
                 collection = g.get('collection')
                 self.assertEqual(0, collection.metrics.total_journal)
 
-
-            utils.makeOneJournal({'is_public': True, 'current_status': 'current'})
+            utils.makeOneJournal(
+                {'is_public': True, 'current_status': 'current'})
             utils.makeOneArticle({'is_public': True})
 
             with self.client as client:
                 response = client.get(url_for('main.index'))
-                self.assertEqual(1, collection.metrics.total_article)
-                self.assertEqual(1, collection.metrics.total_journal)
+                self.assertEqual(0, collection.metrics.total_article)
+                self.assertEqual(0, collection.metrics.total_journal)
 
     def test_g_object_has_collection_object(self):
         """
@@ -214,9 +228,11 @@ class MainTestCase(BaseTestCase):
         """
 
         utils.makeOneCollection()
-        warnings.warn("Necessário definir o atributo instituição no modelo do Manager")
+        warnings.warn(
+            "Necessário definir o atributo instituição no modelo do Manager")
 
-        response = self.client.get(url_for('main.collection_list') + '#publisher')
+        response = self.client.get(
+            url_for('main.collection_list') + '#publisher')
 
         self.assertStatus(response, 200)
         self.assertTemplateUsed('collection/list_journal.html')
@@ -322,8 +338,8 @@ class MainTestCase(BaseTestCase):
             utils.makeAnyArticle(
                 issue=issue,
                 attrib={
-                        'journal': journal.id,
-                        'issue': issue.id}
+                    'journal': journal.id,
+                    'issue': issue.id}
             )
 
             response = self.client.get(url_for('main.journal_feed',
@@ -345,10 +361,10 @@ class MainTestCase(BaseTestCase):
             utils.makeAnyArticle(
                 issue=issue,
                 attrib={
-                        'journal': journal.id,
-                        'issue': issue.id,
-                        'doi': '10.2105/AJPH.2009.160184'
-                       }
+                    'journal': journal.id,
+                    'issue': issue.id,
+                    'doi': '10.2105/AJPH.2009.160184'
+                }
             )
 
             response = self.client.get(url_for('main.journal_feed',
@@ -356,7 +372,8 @@ class MainTestCase(BaseTestCase):
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('issue/feed_content.html')
-            self.assertIn('<id>10.2105/AJPH.2009.160184</id>', response.data.decode('utf-8'))
+            self.assertIn('<id>10.2105/AJPH.2009.160184</id>',
+                          response.data.decode('utf-8'))
 
     def test_journal_feed_with_unknow_id(self):
         """
@@ -440,9 +457,9 @@ class MainTestCase(BaseTestCase):
             utils.makeAnyArticle(
                 issue=issue,
                 attrib={
-                        'journal': issue.journal.id,
-                        'issue': issue.id,
-                        'doi': '10.2105/AJPH.2009.160184'}
+                    'journal': issue.journal.id,
+                    'issue': issue.id,
+                    'doi': '10.2105/AJPH.2009.160184'}
             )
 
             response = self.client.get(url_for('main.issue_feed',
@@ -451,7 +468,8 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/feed_content.html')
-            self.assertIn('<id>10.2105/AJPH.2009.160184</id>', response.data.decode('utf-8'))
+            self.assertIn('<id>10.2105/AJPH.2009.160184</id>',
+                          response.data.decode('utf-8'))
 
     def test_issue_feed_unknow_issue_id(self):
         """
@@ -534,8 +552,10 @@ class MainTestCase(BaseTestCase):
                                             'original_language': 'en',
                                             'languages': ['es', 'pt'],
                                             'translated_titles': [
-                                                {'language': 'es', 'name': u'Artículo en español'},
-                                                {'language': 'pt', 'name': u'Artigo en Português'},
+                                                {'language': 'es',
+                                                    'name': u'Artículo en español'},
+                                                {'language': 'pt',
+                                                    'name': u'Artigo en Português'},
                                             ],
                                             'issue': issue,
                                             'journal': journal,
@@ -564,8 +584,10 @@ class MainTestCase(BaseTestCase):
                                             'original_language': 'en',
                                             'languages': ['es', 'pt'],
                                             'translated_titles': [
-                                                {'language': 'es', 'name': u'Artículo en español'},
-                                                {'language': 'pt', 'name': u'Artigo en Português'},
+                                                {'language': 'es',
+                                                    'name': u'Artículo en español'},
+                                                {'language': 'pt',
+                                                    'name': u'Artigo en Português'},
                                             ],
                                             'issue': issue,
                                             'journal': journal,
@@ -608,7 +630,7 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.article_detail_pid',
                                                pid='S0102-311X2018000100101'))
 
-            #TODO: Alterar o código para 301 (Movido Permanentemente)
+            # TODO: Alterar o código para 301 (Movido Permanentemente)
             self.assertStatus(response, 302)
 
     def test_article_detail_pid_redirect_follow(self):
@@ -636,9 +658,12 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            self.assertEqual(self.get_context_variable(
+                'article').id, article.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable(
+                'issue').id, article.issue.id)
 
     @patch('requests.get')
     def test_article_detail_v3_translate_version_(self, mocked_requests_get):
@@ -664,10 +689,13 @@ class MainTestCase(BaseTestCase):
                                             'journal': journal,
                                             'url_segment': '10-11',
                                             'htmls': [
-                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
-                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
-                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
-                                                ]
+                                                {'lang': 'de',
+                                                    'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt',
+                                                    'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla',
+                                                    'url': 'https://link/bla_artigo.html'},
+                                            ]
                                             })
 
             response = self.client.get(url_for('main.article_detail_v3',
@@ -680,12 +708,12 @@ class MainTestCase(BaseTestCase):
             content = response.data.decode('utf-8')
 
             urls = {html['lang']: url_for(
-                                   'main.article_detail_v3',
-                                   url_seg=journal.url_segment,
-                                   article_pid_v3=article.aid,
-                                   lang=html['lang'])
-                    for html in article.htmls
-                    }
+                'main.article_detail_v3',
+                url_seg=journal.url_segment,
+                article_pid_v3=article.aid,
+                lang=html['lang'])
+                for html in article.htmls
+            }
             self.assertIn('{}">Deutsch<'.format(urls['de']), content)
             self.assertIn('{}">bla<'.format(urls['bla']), content)
             self.assertIn('{}">Português<'.format(urls['pt']), content)
@@ -719,18 +747,24 @@ class MainTestCase(BaseTestCase):
                                             'original_language': 'en',
                                             'languages': ['es', 'pt'],
                                             'translated_titles': [
-                                                {'language': 'es', 'name': u'Artículo título'},
-                                                {'language': 'pt', 'name': u'Artigo título'},
+                                                {'language': 'es',
+                                                    'name': u'Artículo título'},
+                                                {'language': 'pt',
+                                                    'name': u'Artigo título'},
                                             ],
                                             'issue': issue,
                                             'journal': journal,
                                             'url_segment': '10-11',
                                             'htmls': [
-                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
-                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
-                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
-                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
-                                                ]
+                                                {'lang': 'es',
+                                                    'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'de',
+                                                    'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt',
+                                                    'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla',
+                                                    'url': 'https://link/bla_artigo.html'},
+                                            ]
                                             })
 
             response = self.client.get(url_for('main.article_detail_v3',
@@ -774,18 +808,24 @@ class MainTestCase(BaseTestCase):
                                             'original_language': 'en',
                                             'languages': ['es', 'pt'],
                                             'translated_titles': [
-                                                {'language': 'es', 'name': u'Título del Artículo'},
-                                                {'language': 'pt', 'name': u'Título do Artigo'},
+                                                {'language': 'es',
+                                                    'name': u'Título del Artículo'},
+                                                {'language': 'pt',
+                                                    'name': u'Título do Artigo'},
                                             ],
                                             'issue': issue,
                                             'journal': journal,
                                             'url_segment': '10-11',
                                             'htmls': [
-                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
-                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
-                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
-                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
-                                                ]
+                                                {'lang': 'es',
+                                                    'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'pt',
+                                                    'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'de',
+                                                    'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'bla',
+                                                    'url': 'https://link/bla_artigo.html'},
+                                            ]
                                             })
 
             response = self.client.get(url_for('main.article_detail_v3',
@@ -814,7 +854,7 @@ class MainTestCase(BaseTestCase):
 
             utils.makeOneCollection()
 
-            journal = utils.makeOneJournal({"title":"Título do periódico"})
+            journal = utils.makeOneJournal({"title": "Título do periódico"})
 
             issue = utils.makeOneIssue({'journal': journal})
 
@@ -831,9 +871,12 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             page_content = response.data.decode('utf-8')
             self.assertTemplateUsed('article/detail.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            self.assertEqual(self.get_context_variable(
+                'article').id, article.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable(
+                'issue').id, article.issue.id)
             result = self.get_context_variable('related_links')
             self.assertEqual(result[0][0], 'Google')
             self.assertEqual(result[1][0], 'Google Scholar')
@@ -851,7 +894,7 @@ class MainTestCase(BaseTestCase):
 
             utils.makeOneCollection()
 
-            journal = utils.makeOneJournal({"title":"Título do periódico"})
+            journal = utils.makeOneJournal({"title": "Título do periódico"})
 
             issue = utils.makeOneIssue({'journal': journal})
 
@@ -867,9 +910,12 @@ class MainTestCase(BaseTestCase):
             self.assertStatus(response, 200)
             page_content = response.data.decode('utf-8')
             self.assertTemplateUsed('article/detail.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            self.assertEqual(self.get_context_variable(
+                'article').id, article.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable(
+                'issue').id, article.issue.id)
             result = self.get_context_variable('related_links')
             self.assertEqual(result[0][0], 'Google')
             self.assertEqual(result[1][0], 'Google Scholar')
@@ -906,9 +952,12 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            self.assertEqual(self.get_context_variable(
+                'article').id, article.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable(
+                'issue').id, article.issue.id)
 
     def test_legacy_url_aop_article_detail_wrong_aop_pid(self):
         """
@@ -935,7 +984,8 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url)
 
             self.assertStatus(response, 404)
-            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+            self.assertIn('Artigo não encontrado',
+                          response.data.decode('utf-8'))
 
     @unittest.skip(u'precisa de integração com SSM para retornar o SSM')
     def test_legacy_url_pdf_article_detail(self):
@@ -967,9 +1017,12 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('article/detail_pdf.html')
-            self.assertEqual(self.get_context_variable('article').id, article.id)
-            self.assertEqual(self.get_context_variable('journal').id, article.journal.id)
-            self.assertEqual(self.get_context_variable('issue').id, article.issue.id)
+            self.assertEqual(self.get_context_variable(
+                'article').id, article.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, article.journal.id)
+            self.assertEqual(self.get_context_variable(
+                'issue').id, article.issue.id)
 
     def test_legacy_url_pdf_article_detail_wrong_pid(self):
         """
@@ -1000,7 +1053,8 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url)
 
             self.assertStatus(response, 404)
-            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+            self.assertIn('Artigo não encontrado',
+                          response.data.decode('utf-8'))
 
     def test_legacy_url_article_detail_pid_not_found(self):
         """
@@ -1021,14 +1075,16 @@ class MainTestCase(BaseTestCase):
                 'pid': valid_pid})
 
             url = '%s?pid=%s&lng=en' % (
-                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                url_for('main.router_legacy_article',
+                        text_or_abstract="fbtext"),
                 invalid_pid
             )
 
             response = self.client.get(url)
 
             self.assertStatus(response, 404)
-            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+            self.assertIn('Artigo não encontrado',
+                          response.data.decode('utf-8'))
 
     def test_legacy_url_article_detail_no_public_article(self):
         """
@@ -1054,13 +1110,15 @@ class MainTestCase(BaseTestCase):
             })
 
             url = '%s?pid=%s&lng=en' % (
-                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                url_for('main.router_legacy_article',
+                        text_or_abstract="fbtext"),
                 v1_pid
             )
             response = self.client.get(url)
 
             self.assertStatus(response, 404)
-            self.assertIn('Artigo não encontrado', response.data.decode('utf-8'))
+            self.assertIn('Artigo não encontrado',
+                          response.data.decode('utf-8'))
 
     def test_legacy_url_redirects_to_article_detail_v3(self):
         """
@@ -1086,7 +1144,8 @@ class MainTestCase(BaseTestCase):
             })
 
             url = '%s?pid=%s&lng=en' % (
-                url_for('main.router_legacy_article', text_or_abstract="fbtext"),
+                url_for('main.router_legacy_article',
+                        text_or_abstract="fbtext"),
                 v1_pid
             )
             response = self.client.get(url)
@@ -1206,7 +1265,8 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
 
             issue = utils.makeOneIssue({
                 'journal': journal.id,
@@ -1254,7 +1314,7 @@ class MainTestCase(BaseTestCase):
             self.assertTemplateUsed('article/detail.html')
 
             content = response.data.decode('utf-8')
-            #TODO: Há maneira melhor de executar estas asserções?
+            # TODO: Há maneira melhor de executar estas asserções?
             self.assertTrue(
                 '/j/cta/a/%s/?lang=en&amp;format=pdf' % article.aid in content or '/j/cta/a/%s/?format=pdf&amp;lang=en' % article.aid in content
             )
@@ -1274,7 +1334,8 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
 
             issue = utils.makeOneIssue({
                 'journal': journal.id,
@@ -1333,7 +1394,8 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
 
             issue = utils.makeOneIssue({
                 'journal': journal.id,
@@ -1375,7 +1437,8 @@ class MainTestCase(BaseTestCase):
 
         with current_app.app_context():
 
-            journal = utils.makeOneJournal({'print_issn': '0000-0000', 'acronym': 'cta'},)
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
 
             issue = utils.makeOneIssue({
                 'journal': journal.id,
@@ -1432,7 +1495,6 @@ class MainTestCase(BaseTestCase):
             )
 
             self.assertStatus(response, 404)
-
 
     @patch("webapp.main.views.render_html")
     def test_when_render_html_raises_a_retryable_error_the_article_detail_v3_should_return_a_status_code_500(
@@ -1549,7 +1611,8 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.index'))
             # then
             self.assertStatus(response, 200)
-            self.assertIn('<div class="partners">', response.data.decode('utf-8'))
+            self.assertIn('<div class="partners">',
+                          response.data.decode('utf-8'))
             self.assertIn('"/about/"', response.data.decode('utf-8'))
             self.assertNotIn(
                 '/collection/about/', response.data.decode('utf-8'))
@@ -1574,8 +1637,10 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.index'))
             # then
             self.assertStatus(response, 200)
-            self.assertIn(collection['address1'], response.data.decode('utf-8'))
-            self.assertIn(collection['address2'], response.data.decode('utf-8'))
+            self.assertIn(collection['address1'],
+                          response.data.decode('utf-8'))
+            self.assertIn(collection['address2'],
+                          response.data.decode('utf-8'))
 
     def test_collection_address_at_about_page_footer(self):
         """
@@ -1592,8 +1657,10 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.about_collection'))
             # then
             self.assertStatus(response, 200)
-            self.assertIn(collection['address1'], response.data.decode('utf-8'))
-            self.assertIn(collection['address2'], response.data.decode('utf-8'))
+            self.assertIn(collection['address1'],
+                          response.data.decode('utf-8'))
+            self.assertIn(collection['address2'],
+                          response.data.decode('utf-8'))
 
     def test_collection_address_at_journal_list_page_footer(self):
         """
@@ -1610,8 +1677,10 @@ class MainTestCase(BaseTestCase):
             response = self.client.get(url_for('main.collection_list'))
             # then
             self.assertStatus(response, 200)
-            self.assertIn(collection['address1'], response.data.decode('utf-8'))
-            self.assertIn(collection['address2'], response.data.decode('utf-8'))
+            self.assertIn(collection['address1'],
+                          response.data.decode('utf-8'))
+            self.assertIn(collection['address2'],
+                          response.data.decode('utf-8'))
 
     def test_home_page_last_issues(self):
         """
@@ -1637,8 +1706,8 @@ class MainTestCase(BaseTestCase):
                     'journal': journal
                 }
                 response_data = render_template(
-                                    "news/includes/issue_last_row.html",
-                                    **context)
+                    "news/includes/issue_last_row.html",
+                    **context)
                 self.assertIn(
                     'Ano: </strong><b>{}'.format(
                         expected_issue.get('year')),
@@ -1740,7 +1809,6 @@ class PageTestCase(BaseTestCase):
                                        slug_name=unknown_page_name))
             self.assertStatus(response, 404)
 
-
     def test_page_when_is_draft_collection(self):
         """
         Teste da ``view function`` ``page``, deve retornar uma página
@@ -1757,8 +1825,8 @@ class PageTestCase(BaseTestCase):
                                                slug_name=page.slug_name))
 
             self.assertEqual(404, response.status_code)
-            self.assertIn('Página não encontrada', response.data.decode('utf-8'))
-
+            self.assertIn('Página não encontrada',
+                          response.data.decode('utf-8'))
 
     def test_page_when_is_draft_journal(self):
         """
@@ -1780,7 +1848,7 @@ class PageTestCase(BaseTestCase):
 
 class TestJournaDetail(BaseTestCase):
 
-        # JOURNAL
+    # JOURNAL
 
     def test_journal_detail(self):
         """
@@ -1802,7 +1870,8 @@ class TestJournaDetail(BaseTestCase):
             self.assertTemplateUsed('journal/detail.html')
             self.assertIn('Revista X',
                           response.data.decode('utf-8'))
-            self.assertEqual(self.get_context_variable('journal').id, journal.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, journal.id)
 
     def test_journal_detail_legacy_url(self):
         """
@@ -1843,15 +1912,16 @@ class TestJournaDetail(BaseTestCase):
             journal = utils.makeOneJournal({'title': 'Revista X'})
 
             response = self.client.get(
-                                    url_for(
-                                       'main.journal_detail_legacy_url', journal_seg=journal.url_segment),
-                                    follow_redirects=True)
+                url_for(
+                    'main.journal_detail_legacy_url', journal_seg=journal.url_segment),
+                follow_redirects=True)
 
             self.assertTrue(200, response.status_code)
             self.assertTemplateUsed('journal/detail.html')
             self.assertIn('Revista X',
                           response.data.decode('utf-8'))
-            self.assertEqual(self.get_context_variable('journal').id, journal.id)
+            self.assertEqual(self.get_context_variable(
+                'journal').id, journal.id)
 
     def test_journal_detail_with_unknow_id(self):
         """
@@ -2003,11 +2073,16 @@ class TestJournalGrid(BaseTestCase):
 
             self.assertStatus(response, 200)
             self.assertTemplateUsed('issue/grid.html')
-            self.assertIn('<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/grid" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:type" content="website" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/grid" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:type" content="website" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
 
 
 class TestIssueToc(BaseTestCase):
@@ -2206,10 +2281,14 @@ class TestIssueToc(BaseTestCase):
 
             self.assertIn(
                 '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/i/2021.v10n31supplX/" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:type" content="website" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:type" content="website" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:title" content="Social Meta tags" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:description" content="Esse periódico tem com objetivo xpto" />', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:image" content="http://0.0.0.0:8000/None" />', response.data.decode('utf-8'))
 
 
 class TestAOPToc(BaseTestCase):
@@ -2411,13 +2490,13 @@ class TestArticleDetailV3Meta(BaseTestCase):
                     'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
                     'type': 'pdf'
                 },
-                {
+                    {
                     'lang': 'pt',
                     'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651apt.pdf',
                     'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-pt.pdf',
                     'type': 'pdf'
                 },
-                {
+                    {
                     'lang': 'es',
                     'url': 'http://minio:9000/documentstore/1678-457X/JDH74Jr4SyDVpnkMyrqkDhF/e5e09c7d5e4e5052868372df837de4e1ee9d651aes.pdf',
                     'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
@@ -2454,7 +2533,8 @@ class TestArticleDetailV3Meta(BaseTestCase):
                 content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
             )
             self.assertEqual(
-                parse_qs(content_url.query), {'format': ['pdf'], 'lang': ['es']}
+                parse_qs(content_url.query), {
+                    'format': ['pdf'], 'lang': ['es']}
             )
 
     def test_article_detail_v3_creates_meta_citation_xml_url(self):
@@ -2509,7 +2589,8 @@ class TestArticleDetailV3Meta(BaseTestCase):
                 content_url.path, "/j/journal_acron/a/{}/".format(article.aid)
             )
             self.assertEqual(
-                parse_qs(content_url.query), {'format': ['xml'], 'lang': ['en']}
+                parse_qs(content_url.query), {
+                    'format': ['xml'], 'lang': ['en']}
             )
 
     def test_article_detail_v3_social_meta_tags(self):
@@ -2519,7 +2600,7 @@ class TestArticleDetailV3Meta(BaseTestCase):
         """
 
         with current_app.test_request_context() as context:
-            utils.makeOneCollection({ 'acronym': "DUMMY_TEST2" })
+            utils.makeOneCollection({'acronym': "DUMMY_TEST2"})
             journal = utils.makeOneJournal()
             issue = utils.makeOneIssue({'journal': journal})
             article = utils.makeOneArticle({
@@ -2544,10 +2625,14 @@ class TestArticleDetailV3Meta(BaseTestCase):
 
             self.assertIn(
                 '<meta property="og:url" content="http://0.0.0.0:8000/j/journal_acron/a/%s/"/>' % article.aid, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:type" content="article"/>', response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:title" content="%s"/>' % article.title, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:description" content="%s"/>' % article.abstract, response.data.decode('utf-8'))
-            self.assertIn('<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:type" content="article"/>', response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:title" content="%s"/>' %
+                          article.title, response.data.decode('utf-8'))
+            self.assertIn('<meta property="og:description" content="%s"/>' %
+                          article.abstract, response.data.decode('utf-8'))
+            self.assertIn(
+                '<meta property="og:image" content="http://0.0.0.0:8000/None"/>', response.data.decode('utf-8'))
 
     def test_article_detail_v3_citation_author_tags(self):
         """
@@ -2556,7 +2641,7 @@ class TestArticleDetailV3Meta(BaseTestCase):
         """
 
         with current_app.test_request_context() as context:
-            utils.makeOneCollection({ 'acronym': "DUMMY_TEST2" })
+            utils.makeOneCollection({'acronym': "DUMMY_TEST2"})
             journal = utils.makeOneJournal()
             issue = utils.makeOneIssue({'journal': journal})
             article = utils.makeOneArticle({
@@ -2567,23 +2652,23 @@ class TestArticleDetailV3Meta(BaseTestCase):
                 'journal': journal,
                 'url_segment': '10-11',
                 'authors_meta': [
-                                    {
-                                        "name" : "Arias, Sarah Muñoz",
-                                        "affiliation" : "Universidad Tecnológica de Pereira",
-                                        "orcid" : "0000-0002-3430-5422"
-                                    },
-                                    {
-                                        "name" : "Álvarez, Gloria Edith Guerrero",
-                                        "affiliation" : "Universidad Tecnológica de Pereira",
-                                        "orcid" : "0000-0002-0529-5835"
-                                    },
-                                    {
-                                        "name" : "Patiño, Paula Andrea González",
-                                        "affiliation" : "Universidad Tecnológica de Pereira",
-                                        "orcid" : "0000-0002-7323-9261"
-                                    }
-                                ]
-                })
+                    {
+                        "name": "Arias, Sarah Muñoz",
+                        "affiliation": "Universidad Tecnológica de Pereira",
+                        "orcid": "0000-0002-3430-5422"
+                    },
+                    {
+                        "name": "Álvarez, Gloria Edith Guerrero",
+                        "affiliation": "Universidad Tecnológica de Pereira",
+                        "orcid": "0000-0002-0529-5835"
+                    },
+                    {
+                        "name": "Patiño, Paula Andrea González",
+                        "affiliation": "Universidad Tecnológica de Pereira",
+                        "orcid": "0000-0002-7323-9261"
+                    }
+                ]
+            })
 
             response = self.client.get(
                 url_for(
@@ -2598,11 +2683,19 @@ class TestArticleDetailV3Meta(BaseTestCase):
 
             self.assertIn(
                 '<meta name="citation_author" content="Arias, Sarah Muñoz">', content)
-            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
-            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-3430-5422">', content)
-            self.assertIn('<meta name="citation_author" content="Álvarez, Gloria Edith Guerrero">', content)
-            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
-            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-0529-5835">', content)
-            self.assertIn('<meta name="citation_author" content="Patiño, Paula Andrea González">', content)
-            self.assertIn('<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
-            self.assertIn('<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-7323-9261">', content)
+            self.assertIn(
+                '<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn(
+                '<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-3430-5422">', content)
+            self.assertIn(
+                '<meta name="citation_author" content="Álvarez, Gloria Edith Guerrero">', content)
+            self.assertIn(
+                '<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn(
+                '<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-0529-5835">', content)
+            self.assertIn(
+                '<meta name="citation_author" content="Patiño, Paula Andrea González">', content)
+            self.assertIn(
+                '<meta name="citation_author_affiliation" content="Universidad Tecnológica de Pereira">', content)
+            self.assertIn(
+                '<meta name="citation_author_orcid" content="http://orcid.org/0000-0002-7323-9261">', content)
