@@ -1506,6 +1506,80 @@ class MainTestCase(BaseTestCase):
 
             self.assertStatus(response, 500)
 
+    @patch('requests.get')
+    def test_article_detail_v3_has_doi_with_lang(self, mocked_requests_get):
+        """
+        Teste da ``view function`` ``article_detail_v3``, deve retornar uma página
+        que usa o template ``article/detail.html`` com o meta do DOI com tradução.
+        """
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<html/>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue({'journal': journal})
+
+            article = utils.makeOneArticle({'title': 'Article Y',
+                                            'original_language': 'en',
+                                            'languages': ['es', 'pt'],
+                                            'translated_titles': [
+                                                {'language': 'es', 'name': u'Artículo título'},
+                                                {'language': 'pt', 'name': u'Artigo título'},
+                                            ],
+                                            'issue': issue,
+                                            'journal': journal,
+                                            'url_segment': '10-11',
+                                            'htmls': [
+                                                {'lang': 'es', 'url': 'https://link/es_artigo.html'},
+                                                {'lang': 'de', 'url': 'https://link/de_artigo.html'},
+                                                {'lang': 'pt', 'url': 'https://link/pt_artigo.html'},
+                                                {'lang': 'bla', 'url': 'https://link/bla_artigo.html'},
+                                                ],
+                                            "doi_with_lang": [
+                                                {
+                                                    "doi": "10.1590/S0103-50532006000200015_ru",
+                                                    "language": "ru"
+                                                },
+                                                {
+                                                    "doi": "10.1590/S0103-5053200600020098983_pt",
+                                                    "language": "pt"
+                                                },
+                                                {
+                                                    "doi": "10.1590/S0103-50532006000200015_en",
+                                                    "language": "en"
+                                                },
+                                                {
+                                                    "doi": "10.1590/S0103-50532006000200015_es1",
+                                                    "language": "es"
+                                                },
+                                                {
+                                                    "doi": "10.1590/S0103-50532006000200015_es2",
+                                                    "language": "es"
+                                                },
+                                            ]
+                                            })
+
+            response = self.client.get(url_for('main.article_detail_v3',
+                                               url_seg=journal.url_segment,
+                                               article_pid_v3=article.aid,
+                                               lang='pt'))
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed('article/detail.html')
+            content = response.data.decode('utf-8')
+
+            self.assertIn(
+                '<meta name="citation_doi" content="10.1590/S0103-5053200600020098983_pt"></meta>',
+                content
+            )
+
+
     # HOMEPAGE
 
     def test_collection_sponsors_at_homepage(self):
