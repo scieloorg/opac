@@ -72,12 +72,13 @@
     {% endif -%}
 {% endif -%}
 
-{% if article.doi -%}
-    <meta name="citation_doi" content="{{ article.doi }}"></meta>
-{% endif -%}
+{%- for doi in article.doi_with_lang %}
+    {%- if doi.language == article_lang -%}
+        <meta name="citation_doi" content="{{ doi.doi }}"></meta>
+    {%- endif -%}
+{% endfor %}
 
 <meta name="citation_fulltext_world_readable" content=""></meta>
-
 
 {% if journal.print_issn -%}
     <meta name="citation_issn" content="{{ journal.print_issn }}"></meta>
