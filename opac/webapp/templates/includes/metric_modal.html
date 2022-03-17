@@ -1,3 +1,4 @@
+{% import "macros/article.html" as article_macros %}
 
   <div class="modal fade ModalDefault" id="metric_modal_id" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -27,12 +28,12 @@
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-dimension">
                                 <div class="badge-logo">
-                                    <span class="__dimensions_badge_embed__" data-doi="{{ article.doi }}" data-legend="never"
+                                    <span class="__dimensions_badge_embed__" data-doi="{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}" data-legend="never"
                                         data-style="small_circle">
                                     </span>
                                 </div>
                             </div>
-                            <a target="_blank" href="{{ config.DIMENSIONS_METRICS_URL }}/{{ article.doi }}">
+                            <a target="_blank" href="{{ config.DIMENSIONS_METRICS_URL }}/{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}">
                                 <div>Dimensions</div>
                             </a>
                         </div>
@@ -45,11 +46,11 @@
                         <div class="badge-link col-center">
                             <div class="logo-statistc logo-statistc-altmetric">
                                 <div class="badge-logo">
-                                    <div class='altmetric-embed' data-badge-type='donut' data-doi="{{ article.doi }}" data-link-target='_blank'>
+                                    <div class='altmetric-embed' data-badge-type='donut' data-doi="{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}" data-link-target='_blank'>
                                     </div>
                                 </div>
                             </div>
-                            <a target="_blank" href="{{ config.ALTMETRIC_METRICS_URL }}?&doi={{ article.doi }}">
+                            <a target="_blank" href="{{ config.ALTMETRIC_METRICS_URL }}?&doi={{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}">
                                 <div>Altmetric</div>
                             </a>
                         </div>
@@ -59,7 +60,7 @@
                 {% if config.USE_SCIENCEOPEN %}
                 <div class="col-md-4" style="margin-top: 50px;">
                     <div class="badge-link col-center">
-                        <div id="scienceopen" data-doi="{{ article.doi }}"></div>
+                        <div id="scienceopen" data-doi="{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}"></div>
                     </div>
                 </div>
                 {% endif %}
@@ -67,10 +68,10 @@
                 {% if config.USE_SCITE %}
                 <div class="col-md-4" style="margin-top: 18px;">
                     <div class="badge-link col-center">
-                        <div class="scite-badge" data-doi="{{ article.doi }}" data-layout="vertical" data-tooltip-placement="right"
+                        <div class="scite-badge" data-doi="{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}" data-layout="vertical" data-tooltip-placement="right"
                             data-show-zero="false" data-show-labels="false">
                         </div>
-                        <a target="_blank" href="{{ config.SCITE_METRICS_URL }}{{ article.doi }}">
+                        <a target="_blank" href="{{ config.SCITE_METRICS_URL }}{{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}">
                             <div>Scite_</div>
                         </a>
                     </div>
@@ -82,12 +83,12 @@
                     <div class="badge-link col-center">
                         <div class="logo-statistc logo-statistc-plumx">
                             <div class="badge-logo">
-                                <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}" data-popup="right" data-size="large"
+                                <a href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}" data-popup="right" data-size="large"
                                     class="plumx-plum-print-popup plum-liberty-theme" data-site="plum" data-hide-when-empty="true"
-                                    data-no-link="true" target="_blank">{{ article.title }}</a>
+                                    data-no-link="true" target="_blank">{{ article_macros.get_translate_title_by_lang(article=article, article_lang=article_lang) }}</a>
                             </div>
                         </div>
-                        <a target="_blank" href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article.doi }}">
+                        <a target="_blank" href="{{ config.PLUMX_METRICS_URL }}/?doi={{ article_macros.get_doi_by_lang(article=article, article_lang=article_lang) }}">
                             <div>PlumX</div>
                         </a>
                     </div>
