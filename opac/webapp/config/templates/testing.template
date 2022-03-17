@@ -133,3 +133,7 @@ FORCE_USE_HTTPS_GOOGLE_TAGS = False
 USE_HOME_METRICS = False
 
 
+# Define o tempo de cache para as páginas, response header Cache-Control: public, max-age=604800
+CACHE_CONTROL_MAX_AGE_HEADER = 604800
+
+

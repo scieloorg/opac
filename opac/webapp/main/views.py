@@ -22,7 +22,7 @@ from flask import (
     g,
     make_response,
 )
-from feedwerk.atom  import AtomFeed
+from feedwerk.atom import AtomFeed
 from urllib.parse import urljoin
 from legendarium.formatter import descriptive_short_format
 
@@ -108,8 +108,10 @@ def add_collection_to_g():
 
 @main.after_request
 def add_header(response):
+    response.cache_control.max_age = current_app.config.get('CACHE_CONTROL_MAX_AGE_HEADER')
     response.headers['x-content-type-options'] = 'nosniff'
     return response
+
 
 @main.after_request
 def add_language_code(response):
@@ -165,7 +167,10 @@ def set_locale(lang_code):
 
     # salvar o lang code na sessão
     session['lang'] = lang_code
-    return redirect(referrer)
+    if referrer:
+        return redirect(referrer)
+    else:
+        return redirect('/')
 
 
 def get_lang_from_session():
@@ -284,8 +289,10 @@ def collection_list_feed():
     language = session.get('lang', get_locale())
     collection = controllers.get_current_collection()
 
-    title = 'SciELO - %s - %s' % (collection.name, _('Últimos periódicos inseridos na coleção'))
-    subtitle = _('10 últimos periódicos inseridos na coleção %s' % collection.name)
+    title = 'SciELO - %s - %s' % (collection.name,
+                                  _('Últimos periódicos inseridos na coleção'))
+    subtitle = _('10 últimos periódicos inseridos na coleção %s' %
+                 collection.name)
 
     feed = AtomFeed(title,
                     subtitle=subtitle,
@@ -322,10 +329,12 @@ def collection_list_feed():
         }
 
         feed.add(journal.title,
-                 render_template("collection/list_feed_content.html", **context),
+                 render_template(
+                     "collection/list_feed_content.html", **context),
                  content_type='html',
                  author=journal.publisher_name,
-                 url=url_external('main.journal_detail', url_seg=journal.url_segment),
+                 url=url_external('main.journal_detail',
+                                  url_seg=journal.url_segment),
                  updated=journal.updated,
                  published=journal.created)
 
@@ -396,7 +405,8 @@ def router_legacy():
                 abort(404, ISSUE_UNPUBLISH + _(issue.unpublish_reason))
 
             if not issue.journal.is_public:
-                abort(404, JOURNAL_UNPUBLISH + _(issue.journal.unpublish_reason))
+                abort(404, JOURNAL_UNPUBLISH +
+                      _(issue.journal.unpublish_reason))
 
             if issue.url_segment and "ahead" in issue.url_segment:
                 return redirect(
@@ -458,7 +468,8 @@ def router_legacy():
             )
 
         else:
-            abort(400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
+            abort(
+                400, _(u'Requsição inválida ao tentar acessar o artigo com pid: %s' % pid))
 
     else:
         return redirect('/')
@@ -496,8 +507,10 @@ def journal_detail(url_seg):
     # Lista de seções
     # Mantendo sempre o idioma inglês para as seções na página incial do periódico
     if journal.last_issue and journal.current_status == "current":
-        sections = [section for section in journal.last_issue.sections if section.language == 'en']
-        recent_articles = controllers.get_recent_articles_of_issue(journal.last_issue.iid, is_public=True)
+        sections = [
+            section for section in journal.last_issue.sections if section.language == 'en']
+        recent_articles = controllers.get_recent_articles_of_issue(
+            journal.last_issue.iid, is_public=True)
     else:
         sections = []
         recent_articles = []
@@ -601,7 +614,8 @@ def about_journal(url_seg):
     else:
         latest_issue_legend = None
 
-    page = controllers.get_page_by_journal_acron_lang(journal.acronym, language)
+    page = controllers.get_page_by_journal_acron_lang(
+        journal.acronym, language)
 
     context = {
         'journal': journal,
@@ -633,10 +647,10 @@ def journals_search_alpha_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     response_data = controllers.get_alpha_list_from_paginated_journals(
-                        title_query=query,
-                        query_filter=query_filter,
-                        page=page,
-                        lang=lang)
+        title_query=query,
+        query_filter=query_filter,
+        page=page,
+        lang=lang)
 
     return jsonify(response_data)
 
@@ -654,11 +668,14 @@ def journals_search_by_theme_ajax():
     lang = get_lang_from_session()[:2].lower()
 
     if filter == 'areas':
-        objects = controllers.get_journals_grouped_by('study_areas', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by(
+            'study_areas', query, query_filter=query_filter, lang=lang)
     elif filter == 'wos':
-        objects = controllers.get_journals_grouped_by('subject_categories', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by(
+            'subject_categories', query, query_filter=query_filter, lang=lang)
     elif filter == 'publisher':
-        objects = controllers.get_journals_grouped_by('publisher_name', query, query_filter=query_filter, lang=lang)
+        objects = controllers.get_journals_grouped_by(
+            'publisher_name', query, query_filter=query_filter, lang=lang)
     else:
         return jsonify({
             'error': 401,
@@ -673,7 +690,8 @@ def download_journal_list(list_type, extension):
     if extension.lower() not in ['csv', 'xls']:
         abort(401, _('Parámetro "extension" é inválido, deve ser "csv" ou "xls".'))
     elif list_type.lower() not in ['alpha', 'areas', 'wos', 'publisher']:
-        abort(401, _('Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
+        abort(401, _(
+            'Parámetro "list_type" é inválido, deve ser: "alpha", "areas", "wos" ou "publisher".'))
     else:
         if extension.lower() == 'xls':
             mimetype = 'application/vnd.ms-excel'
@@ -759,7 +777,8 @@ def issue_grid(url_seg):
     language = session.get('lang', get_locale())
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
-    issues_data = controllers.get_issues_for_grid_by_jid(journal.id, is_public=True)
+    issues_data = controllers.get_issues_for_grid_by_jid(
+        journal.id, is_public=True)
     latest_issue = issues_data['last_issue']
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
@@ -853,7 +872,8 @@ def issue_toc(url_seg, url_seg_issue):
     has_math_content = False
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
-        article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
+        article_pdf_languages = [(doc['lang'], doc['url'])
+                                 for doc in article.pdfs]
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
         if 'mml:' in article.title:
@@ -867,9 +887,9 @@ def issue_toc(url_seg, url_seg_issue):
 
     context = {
         'this_page_url': url_for(
-                            'main.issue_toc',
-                            url_seg=url_seg,
-                            url_seg_issue=url_seg_issue),
+            'main.issue_toc',
+            url_seg=url_seg,
+            url_seg_issue=url_seg_issue),
         'has_math_content': has_math_content,
         'journal': journal,
         'issue': issue,
@@ -956,7 +976,8 @@ def aop_toc(url_seg):
 
     for article in articles:
         article_text_languages = [doc['lang'] for doc in article.htmls]
-        article_pdf_languages = [(doc['lang'], doc['url']) for doc in article.pdfs]
+        article_pdf_languages = [(doc['lang'], doc['url'])
+                                 for doc in article.pdfs]
 
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
@@ -1131,7 +1152,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if not issue:
         abort(404, _('Issue não encontrado'))
 
-    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
+    article = controllers.get_article_by_issue_article_seg(
+        issue.iid, url_seg_article)
     if article is None:
         article = controllers.get_article_by_aop_url_segs(
             issue.journal, url_seg_issue, url_seg_article
@@ -1140,8 +1162,8 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
         abort(404, _('Artigo não encontrado'))
 
     req_params = {
-            "url_seg": article.journal.acronym,
-            "article_pid_v3": article.aid,
+        "url_seg": article.journal.acronym,
+        "article_pid_v3": article.aid,
     }
     if lang_code:
         req_params["lang"] = lang_code
@@ -1157,7 +1179,6 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_goto = request.args.get('goto', type=str) or None
     qs_stop = request.args.get('stop', type=str) or None
     qs_format = request.args.get('format', 'html', type=str)
-
 
     gs_abstract = (part == "abstract")
     if part and not gs_abstract:
@@ -1215,12 +1236,12 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         for pdf_data in article.pdfs:
             if pdf_data.get("lang") == qs_lang:
                 citation_pdf_url = url_for(
-                          'main.article_detail_v3',
-                          url_seg=article.journal.url_segment,
-                          article_pid_v3=article_pid_v3,
-                          lang=qs_lang,
-                          format="pdf",
-                       )
+                    'main.article_detail_v3',
+                    url_seg=article.journal.url_segment,
+                    article_pid_v3=article_pid_v3,
+                    lang=qs_lang,
+                    format="pdf",
+                )
                 break
 
         website = request.url
@@ -1229,7 +1250,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             if current_app.config["FORCE_USE_HTTPS_GOOGLE_TAGS"]:
                 website = "{}://{}".format('https', parsed_url.netloc)
             else:
-                website = "{}://{}".format(parsed_url.scheme, parsed_url.netloc)
+                website = "{}://{}".format(parsed_url.scheme,
+                                           parsed_url.netloc)
         if citation_pdf_url:
             citation_pdf_url = "{}{}".format(website, citation_pdf_url)
         try:
@@ -1240,20 +1262,20 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             abort(500, _('Erro inesperado'))
 
         text_versions = sorted(
-               [
-                   (
-                       lang,
-                       display_original_lang_name(lang),
-                       url_for(
-                          'main.article_detail_v3',
-                          url_seg=article.journal.url_segment,
-                          article_pid_v3=article_pid_v3,
-                          lang=lang
-                       )
-                   )
-                   for lang in text_languages
-               ]
-           )
+            [
+                (
+                    lang,
+                    display_original_lang_name(lang),
+                    url_for(
+                        'main.article_detail_v3',
+                        url_seg=article.journal.url_segment,
+                        article_pid_v3=article_pid_v3,
+                        lang=lang
+                    )
+                )
+                for lang in text_languages
+            ]
+        )
         citation_xml_url = "{}{}".format(
             website,
             url_for(
@@ -1296,7 +1318,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
 
         if pdf_url:
             return get_pdf_content(pdf_url)
-        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+        raise abort(
+            404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
 
     def _handle_xml():
         if current_app.config["SSM_XML_URL_REWRITE"]:
@@ -1355,7 +1378,8 @@ def get_pdf_content(url):
 
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
 def get_content_from_ssm(resource_ssm_media_path):
-    resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + resource_ssm_media_path
+    resource_ssm_full_url = current_app.config['SSM_BASE_URI'] + \
+        resource_ssm_media_path
 
     url = resource_ssm_full_url.strip()
     mimetype, __ = mimetypes.guess_type(url)
@@ -1384,7 +1408,8 @@ def media_assets_proxy(relative_media_path):
 def article_ssm_content_raw():
     resource_ssm_path = request.args.get('resource_ssm_path', None)
     if not resource_ssm_path:
-        raise abort(404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
+        raise abort(
+            404, _('Recurso do Artigo não encontrado. Caminho inválido!'))
     else:
         return get_content_from_ssm(resource_ssm_path)
 
@@ -1407,7 +1432,8 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=''):
     if not issue:
         abort(404, _('Issue não encontrado'))
 
-    article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
+    article = controllers.get_article_by_issue_article_seg(
+        issue.iid, url_seg_article)
     if not article:
         abort(404, _('Artigo não encontrado'))
 
@@ -1431,11 +1457,16 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
 
     if not journal:
         abort(404, _('Este PDF não existe em %s. Consulte %s' %
-                    (current_app.config.get('OPAC_SERVER_NAME'), current_app.config.get('URL_SEARCH'))))
-
+                     (current_app.config.get('OPAC_SERVER_NAME'), current_app.config.get('URL_SEARCH'))))
 
     article = controllers.get_article_by_pdf_filename(
         journal_acron, issue_info, pdf_filename)
+
+    # Se não tem pdf do artigo
+    # Verifica se tem material suplementar
+    if not article:
+        article = controllers.get_article_by_suppl_material_filename(
+            journal_acron, issue_info, pdf_filename)
 
     if not article:
         abort(404, _('PDF do artigo não foi encontrado'))
@@ -1446,10 +1477,11 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
             url_seg=article.journal.url_segment,
             article_pid_v3=article.aid,
             format='pdf',
-            lang=article._pdf_lang,
+            lang=article._pdf_lang if hasattr(article, '_pdf_lang') else None,
         ),
         code=301
     )
+
 
 @main.route('/cgi-bin/fbpe/<string:text_or_abstract>/')
 @cache.cached(key_prefix=cache_key_with_lang_with_qs)
@@ -1486,7 +1518,8 @@ def email_share_ajax():
     form = forms.EmailShareForm(request.form)
 
     if form.validate():
-        recipients = [email.strip() for email in form.data['recipients'].split(';') if email.strip() != '']
+        recipients = [email.strip() for email in form.data['recipients'].split(
+            ';') if email.strip() != '']
 
         sent, message = controllers.send_email_share(form.data['your_email'],
                                                      recipients,
@@ -1518,7 +1551,8 @@ def email_error_ajax():
 
     if form.validate():
 
-        recipients = [email.strip() for email in current_app.config.get('EMAIL_ACCOUNTS_RECEIVE_ERRORS') if email.strip() != '']
+        recipients = [email.strip() for email in current_app.config.get(
+            'EMAIL_ACCOUNTS_RECEIVE_ERRORS') if email.strip() != '']
 
         sent, message = controllers.send_email_error(form.data['name'],
                                                      form.data['your_email'],
@@ -1587,7 +1621,7 @@ def router_legacy_info_pages(journal_seg, page):
         'iinstruc': '#instructions',
         'pinstruc': '#instructions',
         'einstruc': '#instructions'
-        }
+    }
     return redirect('%s%s' % (url_for('main.about_journal',
                                       url_seg=journal_seg), page_anchor.get(page, '')), code=301)
 
@@ -1619,7 +1653,8 @@ def router_counter_dicts():
                'documents': {},
                'collection': current_app.config['OPAC_COLLECTION']}
 
-    articles = controllers.get_articles_by_date_range(begin_date, end_date, page, limit)
+    articles = controllers.get_articles_by_date_range(
+        begin_date, end_date, page, limit)
     for a in articles.items:
         results['documents'].update(get_article_counter_data(a))
 
