@@ -1,11 +1,15 @@
 {# Retorna o número do fascículo especial que deve ser exibido #}
 {% macro get_doi_by_lang(article, article_lang) -%}
-    {%- if article_lang -%}
-        {%- for doi in article.doi_with_lang %}
-            {%- if doi.language == article_lang -%}
-                {{ doi.doi }}
-            {%- endif -%}
-        {% endfor %}
+    {%- if article.doi_with_lang -%}
+        {%- if article_lang -%}
+            {%- for doi in article.doi_with_lang %}
+                {%- if doi.language == article_lang -%}
+                    {{ doi.doi }}
+                {%- endif -%}
+            {% endfor %}
+        {%- endif -%}
+    {%- else -%}
+        {{ article.doi }}
     {%- endif -%}
 {%- endmacro %}
 
