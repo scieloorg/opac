@@ -463,6 +463,7 @@ def router_legacy():
                     url_seg=article.journal.url_segment,
                     article_pid_v3=article.aid,
                     format='pdf',
+                    lang=tlng,
                 ),
                 code=301
             )
