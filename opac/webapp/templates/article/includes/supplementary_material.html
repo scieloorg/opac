@@ -1,0 +1,13 @@
+<div class="supplementary-material-panel articleSection" style="display: none;">
+
+    <div class="articleSection">
+
+        <h1 class="articleSectionTitle">{% trans %}Material Suplementar{% endtrans %}:</h1>
+
+        {% for suppl in article.mat_suppl %}
+            <p><a href="{{ suppl.url }}">{{ suppl.filename }}</a></p>
+        {% endfor %}
+
+    </div>
+    
+</div>
