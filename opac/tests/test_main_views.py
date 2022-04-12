@@ -1642,6 +1642,105 @@ class MainTestCase(BaseTestCase):
             )
 
 
+    @patch("webapp.main.views.fetch_data")
+    def test_article_with_supplementary_material(self, mk_fetch_data):
+        """
+        Testa se o material suplementar está sendo apresentado na página do artigo.
+        """
+
+        test_xml_path = pathlib.Path("opac/tests/fixtures/document.xml")
+        mk_fetch_data.return_value = test_xml_path.read_bytes()
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+                'year': '2009',
+                'volume': '39',
+                'number': '1',
+                'suppl_text': '',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'elocation': 'e1',
+                'original_language': 'pt',
+                'languages': ["es", "en", "pt"],
+                'mat_suppl': [{
+                                "url" : "https://minio.scielo.br/documentstore/1678-2690/hYnMxt6qc7qsHQtZqMcgYmv/9fecf610692444456c055e2959b26f787f4208bc.pdf", 
+                                "filename" : "0001-3765-aabc-92-suppl01-e20181357.pdf"
+                              }],
+                'xml': "https://kernel:6543/documents/kSiec9encE0f2dp"
+            })
+
+            response = self.client.get(url_for('main.article_detail_v3',
+                                               url_seg=journal.url_segment,
+                                               article_pid_v3=article.aid,
+                                               format='html',
+                                               lang="pt"))
+
+            self.assertStatus(response, 200)
+            self.assertIn(article.mat_suppl[0].filename, response.data.decode('utf-8'))
+
+    @patch("webapp.main.views.fetch_data")
+    def test_article_with_two_supplementary_material(self, mk_fetch_data):
+        """
+        Testa se o material suplementar está sendo apresentado na página do artigo.
+
+        Verificar se contém dois links na página do artigo.
+        """
+
+        test_xml_path = pathlib.Path("opac/tests/fixtures/document.xml")
+        mk_fetch_data.return_value = test_xml_path.read_bytes()
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal(
+                {'print_issn': '0000-0000', 'acronym': 'cta'},)
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'label': 'v39s2',
+                'year': '2009',
+                'volume': '39',
+                'number': '1',
+                'suppl_text': '',
+            })
+
+            article = utils.makeOneArticle({
+                'journal': journal.id,
+                'issue': issue.id,
+                'elocation': 'e1',
+                'original_language': 'pt',
+                'languages': ["es", "en", "pt"],
+                'mat_suppl': [{
+                                "url" : "https://minio.scielo.br/documentstore/1678-2690/hYnMxt6qc7qsHQtZqMcgYmv/9fecf610692444456c055e2959b26f787f4208bc.pdf", 
+                                "filename" : "0001-3765-aabc-92-suppl01-e20181357.pdf"
+                              },
+                              {
+                                "url" : "https://minio.scielo.br/documentstore/1678-2690/hYnMxt6qc7qsHQtZqMcgYmv/9fecf610692444456c055e2959b26f787f4208bc.pdf", 
+                                "filename" : "0001-3765-aabc-92-suppl01-e20181358.pdf"
+                              },
+                              ],
+                'xml': "https://kernel:6543/documents/kSiec9encE0f2dp"
+            })
+
+            response = self.client.get(url_for('main.article_detail_v3',
+                                               url_seg=journal.url_segment,
+                                               article_pid_v3=article.aid,
+                                               format='html',
+                                               lang="pt"))
+
+            self.assertStatus(response, 200)
+            self.assertIn(article.mat_suppl[0].filename, response.data.decode('utf-8'))
+            self.assertIn(article.mat_suppl[1].filename, response.data.decode('utf-8'))
+
+
     # HOMEPAGE
 
     def test_collection_sponsors_at_homepage(self):
