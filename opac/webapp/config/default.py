@@ -533,7 +533,7 @@ MAILING_CRON_STRING = os.environ.get(
 DEFAULT_SCHEDULER_TIMEOUT = int(
     os.environ.get('OPAC_DEFAULT_SCHEDULER_TIMEOUT', 1000))
 
-DEFAULT_MATHJAX_CDN_URL = "https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-chtml.js"
+DEFAULT_MATHJAX_CDN_URL = "https://cdn.jsdelivr.net/npm/mathjax@3.0.0/es5/tex-mml-svg.js"
 MATHJAX_CDN_URL = os.environ.get('OPAC_MATHJAX_CDN_URL', DEFAULT_MATHJAX_CDN_URL)
 
 
