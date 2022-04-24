@@ -70,4 +70,4 @@ urllib3==1.26.7
 Werkzeug==2.0.3
 WTForms==2.3.3
 XlsxWriter==1.1.0
-feedwerk==1.0.0
+feedwerk==1.1.0
