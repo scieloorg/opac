@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from urllib.parse import urlparse
 from unittest.mock import patch, Mock
 
 from flask import current_app, url_for
@@ -277,6 +278,235 @@ class LegacyURLTestCase(BaseTestCase):
                 response = c.get(url, follow_redirects=True)
 
                 self.assertStatus(response, 200)
+
+    @patch('requests.get')
+    def test_article_pdf_with_tlng(self, mocked_requests_get):
+        """
+        Testa o acesso ao PDF pela URL antiga verificando em todas as versões do pid
+        campo ``scielo_pids`` e considerando o idioma do PDF e garante que o redirect para o a URL PID v3 está correta.
+        URL testa: scielo.php?script=sci_pdf&pid=ISSN + ID DO número + ID DO ARTIGO&tlng=LANG CODE ["pt", "es", "en"]
+        """
+
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<es_content>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000000000000'
+            })
+
+            article = utils.makeOneArticle({
+                '_id': '2586f2aadb65457c94fcee24c48b3d6c',
+                'journal': journal.id,
+                'issue': issue.id,
+                'original_language': 'en',
+                'pid': '0000-00000000000000001',
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'pt',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'es',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                        'type': 'pdf'
+                    },
+                ]
+
+            })
+
+            # Verifica o conteúdo do PDF com es(espanhol)
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_pdf&pid=%s&tlng=es' % article.pid
+
+                response = c.get(url, follow_redirects=True)
+
+                self.assertStatus(response, 200)
+                self.assertEqual(response.data, b'<es_content>')
+
+            # Verifica se o redirect para a URL com PID v3 está correta
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_pdf&pid=%s&tlng=es' % article.pid
+
+                response = c.get(url, follow_redirects=False)
+
+                expectedPath = '/j/journal_acron/a/2586f2aadb65457c94fcee24c48b3d6c/'
+                expectedQuery = 'format=pdf&lang=es'
+
+                self.assertStatus(response, 301)
+                self.assertEqual(
+                    urlparse(response.location).path, expectedPath)
+                self.assertEqual(
+                    urlparse(response.location).query, expectedQuery)
+
+
+    @patch('requests.get')
+    def test_article_pdf_without_tlng(self, mocked_requests_get):
+        """
+        Testa o acesso ao PDF pela URL antiga sem o tlng, considera o idioma original
+        quando não existe o tlng.
+        URL testa: scielo.php?script=sci_pdf&pid=ISSN + ID DO número + ID DO ARTIGO
+        """
+
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<en_content>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000000000000'
+            })
+
+            article = utils.makeOneArticle({
+                '_id': '2586f2aadb65457c94fcee24c48b3d6c',
+                'journal': journal.id,
+                'issue': issue.id,
+                'original_language': 'en',
+                'pid': '0000-00000000000000001',
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'pt',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'es',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                        'type': 'pdf'
+                    },
+                ]
+
+            })
+
+            # Verifica o conteúdo do PDF com en(espanhol)
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_pdf&pid=%s' % article.pid
+
+                response = c.get(url, follow_redirects=True)
+
+                self.assertStatus(response, 200)
+                self.assertEqual(response.data, b'<en_content>')
+
+            # Verifica se o redirect para a URL com PID v3 está correta
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_pdf&pid=%s&' % article.pid
+
+                response = c.get(url, follow_redirects=False)
+
+                expectedPath = '/j/journal_acron/a/2586f2aadb65457c94fcee24c48b3d6c/'
+                expectedQuery = 'format=pdf'
+
+                self.assertStatus(response, 301)
+                self.assertEqual(
+                    urlparse(response.location).path, expectedPath)
+                self.assertEqual(
+                    urlparse(response.location).query, expectedQuery)
+
+
+    @patch('requests.get')
+    def test_article_pdf_when_dont_have_the_pdf_translation(self, mocked_requests_get):
+        """
+        Testa o acesso ao PDF pela URL antiga verificando em todas as versões do pid
+        campo ``scielo_pids`` e retornando o primeiro encontrado quando não existe a traduçã
+        URL testa: scielo.php?script=sci_pdf&pid=ISSN + ID DO número + ID DO ARTIGO&tlng=LANG CODE ["pt", "es", "en"]
+        """
+
+        mocked_response = Mock()
+        mocked_response.status_code = 200
+        mocked_response.content = b'<content>'
+        mocked_requests_get.return_value = mocked_response
+
+        with current_app.app_context():
+
+            journal = utils.makeOneJournal({'print_issn': '0000-0000'})
+
+            issue = utils.makeOneIssue({
+                'journal': journal.id,
+                'pid': '0000-000000000000'
+            })
+
+            article = utils.makeOneArticle({
+                '_id': '2586f2aadb65457c94fcee24c48b3d6c',
+                'journal': journal.id,
+                'issue': issue.id,
+                'original_language': 'en',
+                'pid': '0000-00000000000000001',
+                'pdfs': [
+                    {
+                        'lang': 'en',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-en.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'pt',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618.pdf',
+                        'type': 'pdf'
+                    },
+                    {
+                        'lang': 'es',
+                        'url': 'http://minio:9000/documentstore/1678-457X/2586f2aadb65457c94fcee24c48b3d6c/e5e09c7d5e4e5052868372df837de4e1ee9d651a.pdf',
+                        'file_path': '/pdf/cta/v39s2/0101-2061-cta-fst30618-es.pdf',
+                        'type': 'pdf'
+                    },
+                ]
+
+            })
+
+            # Verifica se o redirect para a URL com PID v3 está correta
+            with self.client as c:
+
+                url = 'scielo.php?script=sci_pdf&pid=%s&tlng=xxx' % article.pid
+
+                response = c.get(url, follow_redirects=False)
+
+                expectedPath = '/j/journal_acron/a/2586f2aadb65457c94fcee24c48b3d6c/'
+                expectedQuery = 'format=pdf&lang=xxx'
+
+                self.assertStatus(response, 301)
+                self.assertEqual(
+                    urlparse(response.location).path, expectedPath)
+                self.assertEqual(
+                    urlparse(response.location).query, expectedQuery)
+
+                response = c.get(url, follow_redirects=True)
+
+                self.assertStatus(response, 200)
+                self.assertEqual(response.data, b'<content>')
+
 
     @patch('requests.get')
     def test_article_pdf_looking_scielo_pids(self, mocked_requests_get):
