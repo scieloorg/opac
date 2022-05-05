@@ -41,7 +41,7 @@ oauthlib==3.1.0
 -e git+https://git@github.com/scieloorg/opac_schema@v2.66#egg=Opac_Schema
 -e git+https://github.com/scieloorg/packtools/@2.9.4#egg=packtools
 passlib==1.7.2
-pbr==5.4.5
+pbr==5.9.0
 picles.plumber==0.11
 Pillow~=6.2
 pymongo==3.11.2
