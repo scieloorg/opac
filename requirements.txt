@@ -43,7 +43,7 @@ oauthlib==3.1.0
 passlib==1.7.2
 pbr==5.4.5
 picles.plumber==0.11
-Pillow~=6.2
+Pillow~=9.0.1
 pymongo==3.11.2
 PySocks==1.7.1
 python-dateutil==2.8.1
@@ -68,6 +68,6 @@ unicodecsv==0.14.1
 Unidecode==1.1.1
 urllib3==1.26.7
 Werkzeug==2.0.3
-WTForms==2.3.3
+WTForms==3.0.0a1
 XlsxWriter==1.1.0
 feedwerk==1.0.0
