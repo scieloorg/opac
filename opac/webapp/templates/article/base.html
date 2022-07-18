@@ -33,8 +33,8 @@
 
   {% if article.mat_suppl %}
     {% include "article/includes/supplementary_material.html" %}
-  {% endif %}  
-  
+  {% endif %}
+
   {% include "includes/footer.html" %}
 
   {% include "includes/metric_modal.html" %}
@@ -64,7 +64,7 @@
   {% if config.MATHJAX_CDN_URL %}
     <script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
 
-    <script>
+    <!-- <script>
       var insertScript = function(url, callback, parentNode) {
         var scriptNode = document.createElement("script");
         scriptNode.src = url;
@@ -75,8 +75,10 @@
       setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
     </script>
   {% else %}
-    <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
-  {% endif %}
+    <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script> -->
+    {% endif %}
+
+  <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script> -->
 
   <!-- Verifica se o artigo contém artigos relacionados -->
   {% if article.related_articles %}
