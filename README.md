@@ -173,7 +173,7 @@ Simplesmente executar:
 Procedimento para popular a instância de desenvolvimento a partir de fixtures disponibilizadas pelo SciELO.
 
 1. Para execução dos procedimentos que adicionam dados no banco é necessário que o ambiente de desenvolvimento do OPAC esteja rodando ``make dev_compose_up``
-2. Baixar a fixture de desenvolvimento, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip``
+2. Baixar a fixture de desenvolvimento versão light com 4 periódicos, execute: ``wget https://minio.scielo.br/dev/fixtures/opac_br.zip`` ou a versão full:``wget https://minio.scielo.br/dev/fixtures/opac_br_full.zip``
 3. Extraia o conteúdo, execute: ``unzip opac_br.zip``
 4. Repare que uma pasta chamada opac_br foi criada e dentro dela há arquivos .bson, .json, .sqlite e outra pasta chamada media que contém os ativos dos periódicos e da coleção.
 5. Acesse a pasta **opac_br**, execute: ``cd opac_br``
