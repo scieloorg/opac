@@ -83,7 +83,8 @@ import os
         - OPAC_USE_DIMENSIONS:   ativa/desativa a integração com o Dimensions. Se sim, definir como 'True' (default: 'False')
         - OPAC_DIMENSIONS_METRICS_URL:   URL para o Dimensions (default: https://badge.dimensions.ai/details/doi)
         - OPAC_USE_PLUMX:    ativa/desativa a integração com o PlumX. Se sim, definir como 'True' (default: 'False')
-        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: //cdn.plu.mx/widget-popup.js)
+        - OPAC_PLUMX_METRICS_URL:   URL para o PlumX (default: https://plu.mx/a)
+        - OPAC_PLUMX_METRICS_JS:   URL para o PlumX (default: //cdn.plu.mx/widget-popup.js)
         - OPAC_USE_SCIENCEOPEN:  ativa/desativa a integração de métricas com o ScienceOpen. Se sim, definir como 'True' (default: 'False')
         - OPAC_USE_SCITE:  ativa/desativa a integração de métricas com _SCITE. Se sim, definir como 'True' (default: 'False')
         - OPAC_SCITE_URL:  URL para o SCITE_ (default: https://cdn.scite.ai/badge/scite-badge-latest.min.js)
@@ -384,7 +385,9 @@ DIMENSIONS_METRICS_URL = os.environ.get(
 )
 USE_PLUMX = os.environ.get('OPAC_USE_PLUMX', 'False') == 'True'
 PLUMX_METRICS_URL = os.environ.get(
-    'OPAC_PLUMX_METRICS_URL', '//cdn.plu.mx/widget-popup.js')
+    'OPAC_PLUMX_METRICS_URL', 'https://plu.mx/scielo/a')
+PLUMX_METRICS_JS = os.environ.get(
+    'OPAC_PLUMX_METRICS_JS', '//cdn.plu.mx/widget-popup.js')
 
 
 USE_ALTMETRIC = os.environ.get('OPAC_USE_ALTMETRIC', 'False') == 'True'
@@ -470,13 +473,13 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
 
 # session cookie settings:
 
-SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
-SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
-SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
-SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
-SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
-SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
-SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
+# SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
+# SESSION_COOKIE_DOMAIN = os.environ.get('OPAC_SESSION_COOKIE_DOMAIN', SERVER_NAME)
+# SESSION_COOKIE_HTTPONLY = os.environ.get('OPAC_SESSION_COOKIE_HTTPONLY', 'True') == 'True'
+# SESSION_COOKIE_NAME = os.environ.get('OPAC_SESSION_COOKIE_NAME', 'opac_session')
+# SESSION_COOKIE_PATH = os.environ.get('OPAC_SESSION_COOKIE_PATH', None)
+# SESSION_COOKIE_SECURE = os.environ.get('OPAC_SESSION_COOKIE_SECURE', 'False') == 'True'
+# SESSION_REFRESH_EACH_REQUEST = os.environ.get('OPAC_SESSION_REFRESH_EACH_REQUEST', 'False') == 'True'
 
 
 # Flask Caching:
