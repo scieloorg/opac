@@ -9,14 +9,22 @@
           {% include "collection/includes/nav.html" %}
         </div>
       </div>
+
       <div class="col-md-6 col-sm-4 brandLogo">
         <h1 class="logo-svg-legenda">
-          <a href="/">
-            <small>{{ coll_macro.get_collection_name() }}</small>
-            <span>Scientific Electronic Library Online</span>
-          </a>
+          {% if coll_macro.get_image() != "None" %}
+            <a href="/" style="background:url({{ coll_macro.get_image() }}); background-position: 20px; background-repeat: no-repeat;">
+              <span style="margin-top:10px;">Scientific Electronic Library Online</span>
+            </a>
+          {% else %}
+            <a href="/">
+              <small>{{ coll_macro.get_collection_name() }}</small>
+              <span>Scientific Electronic Library Online</span>
+            </a>
+          {% endif %}
         </h1>
       </div>
+
       <div class="col-md-3 col-sm-4 language">
         {% include "includes/language.html" %}
       </div>
