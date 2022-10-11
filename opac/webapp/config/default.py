@@ -327,7 +327,8 @@ FILE_ROOT = os.path.join(MEDIA_ROOT, 'files')
 MEDIA_URL = os.environ.get('OPAC_MEDIA_URL', '/media')
 
 # extensions
-FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm')
+FILES_ALLOWED_EXTENSIONS = ('txt', 'pdf', 'csv', 'xls', 'doc',
+                            'ppt', 'xlsx', 'docx', 'pptx', 'html', 'htm', 'svg')
 IMAGES_ALLOWED_EXTENSIONS = ('png', 'jpg', 'jpeg', 'gif', 'webp')
 IMAGES_ALLOWED_EXTENSIONS_RE = tuple('*.' + ext for ext in IMAGES_ALLOWED_EXTENSIONS)
 THUMBNAIL_HEIGHT = 100

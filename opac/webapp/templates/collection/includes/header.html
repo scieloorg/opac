@@ -14,6 +14,7 @@
         <h1 class="logo-svg-legenda">
           {% if coll_macro.get_image() != "None" %}
             <a href="/" style="background:url({{ coll_macro.get_image() }}); background-position: 20px; background-repeat: no-repeat;">
+              <small>{{ coll_macro.get_collection_name() }}</small>
               <span style="margin-top:10px;">Scientific Electronic Library Online</span>
             </a>
           {% else %}
