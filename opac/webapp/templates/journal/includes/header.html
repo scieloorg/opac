@@ -20,7 +20,11 @@
           {% endif %}
         <div class="mainMenu" id="mainMenu">
           <div class="row">
-            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo logo-svg"></div>
+            {% if coll_macro.get_image() != "None" %}
+            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo logo-svg" style="background:url({{ coll_macro.get_image() }}); background-position: 0px; background-repeat: no-repeat;"></div>       
+            {% else %}
+            <div class="col-md-7 col-md-offset-2 col-sm-7 col-sm-offset-2 logo logo-svg"></div>       
+            {% endif %}
           </div>
           {% include "collection/includes/nav.html" %}
         </div>
