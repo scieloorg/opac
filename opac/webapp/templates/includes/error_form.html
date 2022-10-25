@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Fechar</span></button>
-            <h4 class="modal-title">{% trans %} Reportar erro {% endtrans %}</h4>
+            <h4 class="modal-title">{% trans %} ACESSIBILIDADE/REPORTAR ERRO {% endtrans %}</h4>
         </div>
 
         <form action="" method="POST" id="error_form_id">
@@ -32,7 +32,11 @@
                     <label class="control-label">{% trans %}Erro referente{% endtrans %}:</label>
 
                     <div class="radio" style="margin-top:0;">
-                        <label><input type="radio" name="error_type" value="content" checked>{% trans %}ao conteúdo{% endtrans %}</label>
+                        <label><input type="radio" name="accessibility" value="content">{% trans %}acessibilidade -- por favor, considere responder ao nosso questionário para mapear o perfil dos usuários do site SciELO:{% endtrans %} <a target="_blank" href="{{ config.get('ACCESSIBILITY_BY_LANGUAGE').get(session.get('lang', config.get('BABEL_DEFAULT_LOCALE')))}}">{{ config.get('ACCESSIBILITY_BY_LANGUAGE').get(session.get('lang', config.get('BABEL_DEFAULT_LOCALE')))}}</a>
+                    </div>
+
+                    <div class="radio" style="margin-top:0;">
+                        <label><input type="radio" name="error_type" value="content">{% trans %}ao conteúdo{% endtrans %}</label>
                     </div>
 
                     <div class="radio">
