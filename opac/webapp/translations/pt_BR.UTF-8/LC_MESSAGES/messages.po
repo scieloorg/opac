@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-25 12:39-0300\n"
+"POT-Creation-Date: 2022-10-27 07:19-0300\n"
 "PO-Revision-Date: 2021-10-18 09:36-0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pt_BR\n"
@@ -1167,6 +1167,10 @@ msgstr ""
 
 #: opac/webapp/main/views.py:1517 opac/webapp/main/views.py:1549
 msgid "Requisição inválida."
+msgstr ""
+
+#: opac/webapp/templates/base.html:87
+msgid "Acessibilidade / Reportar erro"
 msgstr ""
 
 #: opac/webapp/templates/admin/index.html:7
