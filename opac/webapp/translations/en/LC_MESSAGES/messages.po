@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  OPAC\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-25 12:39-0300\n"
+"POT-Creation-Date: 2022-10-27 07:19-0300\n"
 "PO-Revision-Date: 2018-03-06 19:50+0000\n"
 "Last-Translator: jamil Atta <atta.jamil@gmail.com>\n"
 "Language: en\n"
@@ -1188,6 +1188,10 @@ msgstr "Article's PDF not found"
 #: opac/webapp/main/views.py:1517 opac/webapp/main/views.py:1549
 msgid "Requisição inválida."
 msgstr "Invalid request"
+
+#: opac/webapp/templates/base.html:87
+msgid "Acessibilidade / Reportar erro"
+msgstr "Accessibility / Report Error"
 
 #: opac/webapp/templates/admin/index.html:7
 msgid "da coleção"
