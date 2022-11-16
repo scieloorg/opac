@@ -10,61 +10,62 @@
 {% block title %}{{ super() }} - {{ article.title }}{% endblock %}
 
 {% block extra_meta %}
-  {% include "article/includes/meta.html" %}
+{% include "article/includes/meta.html" %}
 {% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async />
 {% endblock %}
 
 {% block content %}
 
-  {% include "article/includes/header.html" %}
+{% include "article/includes/header.html" %}
 
-  {% include "article/includes/alternative_header.html" %}
+{% include "article/includes/alternative_header.html" %}
 
-  {% block main_content %}{% endblock %}
+{% block main_content %}{% endblock %}
 
-  {% include "article/includes/modal/download.html" %}
+{% include "article/includes/modal/download.html" %}
 
-  {% include "article/includes/modal/related_article.html" %}
+{% include "article/includes/modal/related_article.html" %}
 
-  {% include "article/includes/modal/translate_version.html" %}
+{% include "article/includes/modal/translate_version.html" %}
 
-  {% if article.mat_suppl %}
-    {% include "article/includes/supplementary_material.html" %}
-  {% endif %}
+{% if article.mat_suppl %}
+{% include "article/includes/supplementary_material.html" %}
+{% endif %}
 
-  {% include "includes/footer.html" %}
+{% include "includes/footer.html" %}
 
-  {% include "includes/metric_modal.html" %}
+{% include "includes/metric_modal.html" %}
 
 {% endblock %}
 
 {% block extra_js %}
-  <script type="text/javascript" src="{{ url_for('static', filename='js/scielo-article-min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/scielo-article-min.js') }}"></script>
 
-  {% if config.USE_PLUMX %}
-    <script type="text/javascript" src="{{ config.PLUMX_METRICS_JS }}"></script>
-  {% endif %}
+{% if config.USE_PLUMX %}
+<script type="text/javascript" src="{{ config.PLUMX_METRICS_JS }}"></script>
+{% endif %}
 
-  {% if config.USE_ALTMETRIC %}
-    <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-  {% endif %}
+{% if config.USE_ALTMETRIC %}
+<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+{% endif %}
 
-  {% if config.USE_SCIENCEOPEN %}
-    <script id="9cf9cf8f-3a99-fe86-4013-f630edbf80ac" src="https://www.scienceopen.com/script/badge2.js" async defer></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
-  {% endif %}
+{% if config.USE_SCIENCEOPEN %}
+<script id="9cf9cf8f-3a99-fe86-4013-f630edbf80ac" src="https://www.scienceopen.com/script/badge2.js" async
+  defer></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/scienceopen.js') }}"></script>
+{% endif %}
 
-  {% if config.USE_SCITE %}
-    <script async type="application/javascript" src="{{ config.SCITE_URL}}"></script>
-  {% endif %}
+{% if config.USE_SCITE %}
+<script async type="application/javascript" src="{{ config.SCITE_URL}}"></script>
+{% endif %}
 
-  {% if config.MATHJAX_CDN_URL %}
-    <script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
+{% if config.MATHJAX_CDN_URL %}
+<script sync src="{{ config.MATHJAX_CDN_URL }}" charset="utf-8"></script>
 
-    <!-- <script>
+<!-- <script>
       var insertScript = function(url, callback, parentNode) {
         var scriptNode = document.createElement("script");
         scriptNode.src = url;
@@ -75,22 +76,66 @@
       setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
     </script>
     -->
-  {% endif %}
+{% endif %}
 
-  <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
+<script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
 
-  <!-- Verifica se o artigo contém artigos relacionados -->
-  {% if article.related_articles %}
-    <script>
-      $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
-    </script>
-  {% endif %}
+<!-- Verifica se o artigo contém artigos relacionados -->
+{% if article.related_articles %}
+<script>
+  $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+</script>
+{% endif %}
 
-  <!-- Verifica se o artigo contém suplemento -->
-  {% if article.mat_suppl %}
-    <script>
-      $("div[data-anchor='Referências bibliográficas'], div[data-anchor='References'], div[data-anchor='Referencias bibliográficas'], div[data-anchor='REFERENCES'], div[data-anchor='REFERÊNCIAS']").before($('.supplementary-material-panel').html())
-    </script>
-  {% endif %}
+<!-- Verifica se o artigo contém suplemento -->
+{% if article.mat_suppl %}
+<script>
+  $("div[data-anchor='Referências bibliográficas'], div[data-anchor='References'], div[data-anchor='Referencias bibliográficas'], div[data-anchor='REFERENCES'], div[data-anchor='REFERÊNCIAS']").before($('.supplementary-material-panel').html())
+</script>
+{% endif %}
+
+<script>
+  var scimago_verify = false;
+
+  $('#ModalTutors').on('shown.bs.modal', function () {
+
+    if (!scimago_verify) {
+      $('.tutors').each(
+
+        function () {
+          // ensure just one item is append on html.
+          appended = false;
+
+          $(this).find('div').not(".clearfix").each(function () {
+            self = $(this);
+
+            items = self.text().split(',');
+
+            // just the first and the second item.
+            items.splice(0, 2).forEach(function (item) {
+
+              if (!appended) {
+                $.ajax({
+                  type: "GET",
+                  async: false,
+                  url: "{{ url_for('main.scimago_ir') }}",
+                  data: 'q=' + encodeURI(item),
+                  success: function (data) {
+                    if (data) {
+                      self.append(' <a href="{{ config.SCIMAGO_URL_IR }}' + data + '" target="_blank"><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="12"></a>')
+                      appended = true;
+                    }
+                  }
+                });
+              }
+
+            });
+          });
+        });
+      scimago_verify = true;  
+    }
+  });
+</script>
+
 
 {% endblock %}
