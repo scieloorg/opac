@@ -511,11 +511,14 @@ GOOGLE_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_RECAPTCHA_URL', "//www.google
 GOOGLE_VERIFY_RECAPTCHA_URL = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_URL', "https://www.google.com/recaptcha/api/siteverify")
 GOOGLE_VERIFY_RECAPTCHA_KEY = os.environ.get('OPAC_GOOGLE_VERIFY_RECAPTCHA_KEY', "")
 
-
 SCIMAGO_URL = os.environ.get(
               'SCIMAGO_URL',
               'https://www.scimagojr.com/journalsearch.php?tip=sid&clean=0&q=')
 SCIMAGO_ENABLED = os.environ.get('SCIMAGO_ENABLED', 'True') == 'True'
+
+# SCImago Institutions Ranking(IR)
+SCIMAGO_URL_IR = os.environ.get('SCIMAGO_URL_IR', 'https://www.scimagoir.com/')  
+
 # Audit Log Email notifications:
 AUDIT_LOG_NOTIFICATION_ENABLED = os.environ.get('OPAC_AUDIT_LOG_NOTIFICATION_ENABLED', 'True') == 'True'
 _audit_log_notification_recipients = os.environ.get('OPAC_AUDIT_LOG_NOTIFICATION_RECIPIENTS', None)
