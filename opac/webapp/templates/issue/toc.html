@@ -148,11 +148,11 @@
 
                         {%- for author in article.authors %}
                           {% if session.lang %}
-                            <a href="{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:{{ author }}">
+                            <a href='{{config['URL_SEARCH']}}?lang={{session.lang[:2]}}&q=au:"{{ author }}"'>
                               {{- author|striptags -}}
                             </a>{% if not loop.last %};{% endif %}
                           {% else %}
-                            <a href="{{config['URL_SEARCH']}}?q=au:{{ author }}">
+                            <a href='{{config['URL_SEARCH']}}?q=au:"{{ author }}"'>
                               {{- author|striptags -}}
                             </a>{% if not loop.last %};{% endif %}
                           {% endif %}
