@@ -1851,14 +1851,17 @@ button.btn:active {
 }
 
 .floatingBtnError{
-	width: 35px;
-	height: 177px;
-	background: url(../img/button.error.feedback.jpg);
-	background-position: center center;
-	background-repeat:no-repeat;
 	position: fixed;
-	top:40%;
-	right:0;
+	padding: 12px;
+	writing-mode: vertical-rl;		
+	right: 10px;
+	top: 40%;
+	transform: rotate(-180deg);
+	line-height: 1rem;
+
+	&:focus{
+		color: white;
+	}
 }
 .info-form{
 	font-size: .8em;

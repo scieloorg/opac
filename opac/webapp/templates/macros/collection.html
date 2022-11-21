@@ -10,3 +10,13 @@
       {{ g.collection.name }}
     {%- endif -%}
 {%- endmacro %}
+
+{% macro get_image() -%}
+    {%- if session.lang == 'pt_BR' and g.collection.name_pt -%}
+      {{ g.collection.home_logo_pt }}
+    {%- elif session.lang == 'en' and g.collection.name_en-%}
+      {{ g.collection.home_logo_en }}
+    {%- elif session.lang == 'es' and g.collection.name_es-%}
+      {{ g.collection.home_logo_es }}
+    {%- endif -%}
+{%- endmacro %}
