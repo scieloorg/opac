@@ -1,46 +1,31 @@
 # coding: utf-8
 
 import logging
-import requests
 import mimetypes
-from io import BytesIO
-from urllib.parse import urlparse
-from datetime import datetime, timedelta
 from collections import OrderedDict
-from flask_babelex import gettext as _
-from flask import (
-    render_template,
-    abort,
-    current_app,
-    request,
-    session,
-    redirect,
-    jsonify,
-    url_for,
-    Response,
-    send_from_directory,
-    g,
-    make_response,
-)
+from datetime import datetime, timedelta
+from io import BytesIO
+from urllib.parse import urljoin, urlparse
+
+import requests
+from bs4 import BeautifulSoup
 from feedwerk.atom import AtomFeed
-from urllib.parse import urljoin
+from flask import (Response, abort, current_app, g, jsonify, make_response,
+                   redirect, render_template, request, send_from_directory,
+                   session, url_for)
+from flask_babelex import gettext as _
 from legendarium.formatter import descriptive_short_format
+from lxml import etree
+from opac_schema.v1.models import Article, Collection, Issue, Journal
+from packtools import HTMLGenerator
+from webapp import babel, cache, controllers, forms
+from webapp.choices import STUDY_AREAS
+from webapp.config.lang_names import display_original_lang_name
+from webapp.utils import utils
+from webapp.utils.caching import (cache_key_with_lang,
+                                  cache_key_with_lang_with_qs)
 
 from . import main
-from webapp import babel
-from webapp import cache
-from webapp import controllers
-from webapp.choices import STUDY_AREAS
-from webapp.utils import utils
-from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
-from webapp import forms
-
-from webapp.config.lang_names import display_original_lang_name
-
-from opac_schema.v1.models import Journal, Issue, Article, Collection
-
-from lxml import etree
-from packtools import HTMLGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -1721,3 +1706,34 @@ def author_production():
     url = "{}{}{}{}{}{}".format(
         protocol, search_url, _question_mark, _lang, _and, _expr)
     return redirect(url, code=301)
+
+
+@main.route('/scimago/query')
+def scimago_ir():
+    """
+    Essa view function faz um `proxy` o link para o SCImago IR(Institutions Ranking)
+    
+    Link para o página do SCImago Institutions Rankings: https://www.scimagoir.com/
+
+    É feita uma requisição para o endereço, exemplo: https://www.scimagoir.com/query.php?q=universidade%20de%20s%C3%A3o%20paulo. 
+
+    Obtemos uma lista de links e utilizamos o priemiro link. 
+
+    Exemplo de retorno do link: https://www.scimagoir.com/query.php?q=
+
+        <a href='institution.php?idp=773'>Universidade de Sao Paulo *</a>
+        <a href='institution.php?idp=839'>Universidade Federal de Sao Paulo *</a>
+        <a href='institution.php?idp=66628'>Hospital das Clinicas da Faculdade de Medicina da Universidade de Sao Paulo</a>
+        <a href='institution.php?idp=735'>Pontificia Universidade Catolica de Sao Paulo</a>
+        <a href='institution.php?idp=753'>Universidade Cidade de Sao Paulo</a>
+        <a href='institution.php?idp=57556'>Hospital das Clinicas da Faculdade de Medicina de Ribeirao Preto da Universidade de Sao Paulo</a>
+    """
+    if not request.headers.get('X-Requested-With'):
+        abort(400, _('Requisição inválida.'))
+
+    html = BeautifulSoup(requests.get('%squery.php?q=%s' % (current_app.config.get('SCIMAGO_URL_IR'), request.args.get('q'))).content)
+
+    if html.find('a'):
+        return html.find('a').get('href')
+    else:
+        return ''
