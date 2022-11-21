@@ -31,6 +31,10 @@
 
 {% include "article/includes/modal/translate_version.html" %}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b3bd8a12c6a701aa8da10952c28a2511feffd41d
 {% include "includes/footer.html" %}
 
 {% include "includes/metric_modal.html" %}
@@ -72,6 +76,30 @@
       setTimeout(MathJax.Callback([insertScript, "//badge.dimensions.ai/badge.js", console.log, headNode]), 1500);
     </script>
     -->
+
+  {% endif %}
+
+  <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
+
+  <!-- Verifica se o artigo contém artigos relacionados -->
+  {% if article.related_articles %}
+    <script>
+      $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+    </script>
+  {% endif %}
+
+  <!-- Verifica se o artigo contém suplemento -->
+  {% if article.mat_suppl %}
+    <script type="text/javascript">
+        {% for suppl in article.mat_suppl %}
+            elem = document.querySelector("a[href='{{ suppl.url }}']").getElementsByClassName("REPLACE_BY_SUPPLEMENTARY_MATERIAL_TEXT");
+            if (elem) elem[0].parentElement.innerHTML = "{{ suppl.filename }}";
+        {% endfor %}
+    </script>
+  {% endif %}
+
+{% endblock %}
+
 {% endif %}
 
 <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
@@ -83,6 +111,7 @@
 </script>
 {% endif %}
 
+<<<<<<< HEAD
 <!-- Verifica se o artigo contém suplemento -->
 {% if article.mat_suppl %}
   <script type="text/javascript">
@@ -93,6 +122,8 @@
   </script>
 {% endif %}
 
+=======
+>>>>>>> b3bd8a12c6a701aa8da10952c28a2511feffd41d
 <script>
   var scimago_verify = false;
 
@@ -138,3 +169,4 @@
 
 
 {% endblock %}
+
