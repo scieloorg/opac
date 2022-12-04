@@ -73,26 +73,26 @@
     </script>
     -->
 
-  {% endif %}
+{% endif %}
 
-  <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
+<script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
 
-  <!-- xxx Verifica se o artigo contém artigos relacionados -->
-  {% if article.related_articles %}
-    <script>
-      $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
-    </script>
-  {% endif %}
+<!-- xxx Verifica se o artigo contém artigos relacionados -->
+{% if article.related_articles %}
+<script>
+  $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+</script>
+{% endif %}
 
-  <!-- Verifica se o artigo contém suplemento -->
-  {% if article.mat_suppl %}
-    <script type="text/javascript">
-        {% for suppl in article.mat_suppl %}
-            elem = document.querySelector("a[href='{{ suppl.url }}']").getElementsByClassName("REPLACE_BY_SUPPLEMENTARY_MATERIAL_TEXT");
-            if (elem) elem[0].parentElement.innerHTML = "{{ suppl.filename }}";
-        {% endfor %}
-    </script>
-  {% endif %}
+<!-- Verifica se o artigo contém suplemento -->
+{% if article.mat_suppl %}
+<script type="text/javascript">
+    {% for suppl in article.mat_suppl %}
+        elem = document.querySelector("a[href='{{ suppl.url }}']").getElementsByClassName("REPLACE_BY_SUPPLEMENTARY_MATERIAL_TEXT");
+        if (elem) elem[0].parentElement.innerHTML = "{{ suppl.filename }}";
+    {% endfor %}
+</script>
+{% endif %}
 
 <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
 
