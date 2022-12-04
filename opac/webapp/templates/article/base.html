@@ -80,7 +80,11 @@
 <!-- xxx Verifica se o artigo contém artigos relacionados -->
 {% if article.related_articles %}
 <script>
-  $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+    if (document.querySelectorAll(".related-panel").length == 1) {
+        // somente há o related-panel do site
+        // não há o related-panel inserido pelo packtools
+        $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
+    }
 </script>
 {% endif %}
 
