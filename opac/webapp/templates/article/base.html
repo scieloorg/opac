@@ -80,7 +80,7 @@
 <!-- xxx Verifica se o artigo contém artigos relacionados -->
 {% if article.related_articles %}
 <script>
-    if (document.querySelectorAll(".related-panel").length == 1) {
+    if (document.querySelectorAll(".article-correction-title").length == 0) {
         // somente há o related-panel do site
         // não há o related-panel inserido pelo packtools
         $('.articleBadge-editionMeta-doi-copyLink').append($('.related-panel').html())
