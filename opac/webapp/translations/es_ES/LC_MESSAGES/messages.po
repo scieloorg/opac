@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-27 07:19-0300\n"
+"POT-Creation-Date: 2022-12-04 17:12-0200\n"
 "PO-Revision-Date: 2016-02-09 09:39-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
+"Generated-By: Babel 2.6.0\n"
 
 #: opac/tests/test_admin_custom_filters.py:100
 #: opac/tests/test_admin_custom_filters.py:114
@@ -1013,160 +1013,161 @@ msgstr ""
 msgid "Dados dos campos"
 msgstr ""
 
-#: opac/webapp/main/views.py:47
+#: opac/webapp/main/views.py:32
 msgid "O periódico está indisponível por motivo de: "
 msgstr ""
 
-#: opac/webapp/main/views.py:48
+#: opac/webapp/main/views.py:33
 msgid "O número está indisponível por motivo de: "
 msgstr ""
 
-#: opac/webapp/main/views.py:49
+#: opac/webapp/main/views.py:34
 msgid "O artigo está indisponível por motivo de: "
 msgstr ""
 
-#: opac/webapp/main/views.py:161
+#: opac/webapp/main/views.py:146
 msgid "Código de idioma inválido"
 msgstr ""
 
-#: opac/webapp/main/views.py:293
+#: opac/webapp/main/views.py:278
 msgid "Últimos periódicos inseridos na coleção"
 msgstr ""
 
-#: opac/webapp/main/views.py:294
+#: opac/webapp/main/views.py:279
 #, python-format
 msgid "10 últimos periódicos inseridos na coleção %s"
 msgstr ""
 
-#: opac/webapp/main/views.py:356 opac/webapp/main/views.py:1698
+#: opac/webapp/main/views.py:341 opac/webapp/main/views.py:1683
 msgid "Página não encontrada"
 msgstr ""
 
-#: opac/webapp/main/views.py:381 opac/webapp/main/views.py:473
-#: opac/webapp/main/views.py:1494
+#: opac/webapp/main/views.py:366 opac/webapp/main/views.py:458
+#: opac/webapp/main/views.py:1479
 #, python-format
 msgid "Requsição inválida ao tentar acessar o artigo com pid: %s"
 msgstr ""
 
-#: opac/webapp/main/views.py:389 opac/webapp/main/views.py:446
-#: opac/webapp/main/views.py:492 opac/webapp/main/views.py:556
-#: opac/webapp/main/views.py:603 opac/webapp/main/views.py:750
-#: opac/webapp/main/views.py:772
+#: opac/webapp/main/views.py:374 opac/webapp/main/views.py:431
+#: opac/webapp/main/views.py:477 opac/webapp/main/views.py:541
+#: opac/webapp/main/views.py:588 opac/webapp/main/views.py:735
+#: opac/webapp/main/views.py:757
 msgid "Periódico não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:402 opac/webapp/main/views.py:841
-#: opac/webapp/main/views.py:1011
+#: opac/webapp/main/views.py:387 opac/webapp/main/views.py:826
+#: opac/webapp/main/views.py:996
 msgid "Número não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:426 opac/webapp/main/views.py:458
-#: opac/webapp/main/views.py:1062 opac/webapp/main/views.py:1163
-#: opac/webapp/main/views.py:1212 opac/webapp/main/views.py:1439
-#: opac/webapp/main/views.py:1498
+#: opac/webapp/main/views.py:411 opac/webapp/main/views.py:443
+#: opac/webapp/main/views.py:1047 opac/webapp/main/views.py:1148
+#: opac/webapp/main/views.py:1197 opac/webapp/main/views.py:1424
+#: opac/webapp/main/views.py:1483
 msgid "Artigo não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:580
+#: opac/webapp/main/views.py:565
 msgid "Artigo sem título"
 msgstr ""
 
-#: opac/webapp/main/views.py:643 opac/webapp/main/views.py:664
+#: opac/webapp/main/views.py:628 opac/webapp/main/views.py:649
 msgid "Requisição inválida. Deve ser por ajax"
 msgstr ""
 
-#: opac/webapp/main/views.py:683
+#: opac/webapp/main/views.py:668
 msgid ""
 "Parámetro \"filter\" é inválido, deve ser \"areas\", \"wos\" ou "
 "\"publisher\"."
 msgstr ""
 
-#: opac/webapp/main/views.py:692
+#: opac/webapp/main/views.py:677
 msgid "Parámetro \"extension\" é inválido, deve ser \"csv\" ou \"xls\"."
 msgstr ""
 
-#: opac/webapp/main/views.py:694
+#: opac/webapp/main/views.py:679
 msgid ""
 "Parámetro \"list_type\" é inválido, deve ser: \"alpha\", \"areas\", "
 "\"wos\" ou \"publisher\"."
 msgstr ""
 
-#: opac/webapp/main/views.py:716
+#: opac/webapp/main/views.py:701
 msgid "Requisição inválida, deve ser ajax."
 msgstr ""
 
-#: opac/webapp/main/views.py:725
+#: opac/webapp/main/views.py:710
 msgid "Periódico não permite envio de email."
 msgstr ""
 
-#: opac/webapp/main/views.py:743
+#: opac/webapp/main/views.py:728
 msgid "Requisição inválida, captcha inválido."
 msgstr ""
 
-#: opac/webapp/main/views.py:951 opac/webapp/main/views.py:972
+#: opac/webapp/main/views.py:936 opac/webapp/main/views.py:957
 msgid "Artigos ahead of print não encontrados"
 msgstr ""
 
-#: opac/webapp/main/views.py:1154 opac/webapp/main/views.py:1434
+#: opac/webapp/main/views.py:1139 opac/webapp/main/views.py:1419
 msgid "Issue não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1187
+#: opac/webapp/main/views.py:1172
 msgid "Não existe '{}'. No seu lugar use '{}'"
 msgstr ""
 
-#: opac/webapp/main/views.py:1208
+#: opac/webapp/main/views.py:1193
 msgid "Resumo inexistente"
 msgstr ""
 
-#: opac/webapp/main/views.py:1209
+#: opac/webapp/main/views.py:1194
 msgid "Artigo inexistente"
 msgstr ""
 
-#: opac/webapp/main/views.py:1224 opac/webapp/main/views.py:1391
+#: opac/webapp/main/views.py:1209 opac/webapp/main/views.py:1376
 msgid "Recurso não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1261
+#: opac/webapp/main/views.py:1246
 msgid "HTML do Artigo não encontrado ou indisponível"
 msgstr ""
 
-#: opac/webapp/main/views.py:1263 opac/webapp/main/views.py:1374
-#: opac/webapp/main/views.py:1393
+#: opac/webapp/main/views.py:1248 opac/webapp/main/views.py:1359
+#: opac/webapp/main/views.py:1378
 msgid "Erro inesperado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1309 opac/webapp/main/views.py:1313
-#: opac/webapp/main/views.py:1318
+#: opac/webapp/main/views.py:1294 opac/webapp/main/views.py:1298
+#: opac/webapp/main/views.py:1303
 msgid "PDF do Artigo não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1323 opac/webapp/main/views.py:1413
+#: opac/webapp/main/views.py:1308 opac/webapp/main/views.py:1398
 msgid "Recurso do Artigo não encontrado. Caminho inválido!"
 msgstr ""
 
-#: opac/webapp/main/views.py:1341
+#: opac/webapp/main/views.py:1326
 msgid "Formato não suportado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1354
+#: opac/webapp/main/views.py:1339
 msgid "Parâmetros insuficientes para obter o EPDF do artigo"
 msgstr ""
 
-#: opac/webapp/main/views.py:1372
+#: opac/webapp/main/views.py:1357
 msgid "PDF não encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1461
+#: opac/webapp/main/views.py:1446
 #, python-format
 msgid "Este PDF não existe em %s. Consulte %s"
 msgstr ""
 
-#: opac/webapp/main/views.py:1473
+#: opac/webapp/main/views.py:1458
 msgid "PDF do artigo não foi encontrado"
 msgstr ""
 
-#: opac/webapp/main/views.py:1517 opac/webapp/main/views.py:1549
+#: opac/webapp/main/views.py:1502 opac/webapp/main/views.py:1534
+#: opac/webapp/main/views.py:1732
 msgid "Requisição inválida."
 msgstr ""
 
@@ -1256,7 +1257,7 @@ msgstr ""
 #: opac/webapp/templates/admin/auth/login.html:24
 #: opac/webapp/templates/admin/auth/reset.html:13
 #: opac/webapp/templates/admin/auth/reset_with_token.html:13
-#: opac/webapp/templates/includes/error_form.html:64
+#: opac/webapp/templates/includes/error_form.html:72
 msgid "Enviar"
 msgstr ""
 
@@ -1290,6 +1291,10 @@ msgid ""
 "esta página será a página \"secundária\" do periódico selecionado, caso "
 "contrário será uma página da coleção, verificar páginas da coleção em "
 "<em>Sobre o SciELO</em>. "
+msgstr ""
+
+#: opac/webapp/templates/article/base.html:122
+msgid " SCImago image"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/_dont_display_full_text.html:12
@@ -1488,34 +1493,6 @@ msgstr ""
 #: opac/webapp/templates/article/includes/recent_articles_row.html:13
 #: opac/webapp/templates/news/includes/journal_news_row.html:14
 msgid "Continue lendo"
-msgstr ""
-
-#: opac/webapp/templates/article/includes/related-article.html:7
-msgid "Esta errata corrige o documento"
-msgstr "Esta errata corrige el documento"
-
-#: opac/webapp/templates/article/includes/related-article.html:9
-msgid "Esta retratação retrata o documento"
-msgstr "Esta retracción retrata el documento"
-
-#: opac/webapp/templates/article/includes/related-article.html:11
-msgid "Este adendo adiciona informação ao documento"
-msgstr "Esta addenda agrega información al documento"
-
-#: opac/webapp/templates/article/includes/related-article.html:13
-msgid "Este documento possui um adendo"
-msgstr "Este documento tiene una addenda"
-
-#: opac/webapp/templates/article/includes/related-article.html:15
-msgid "Este documento possui uma retratação"
-msgstr "Este documento tiene una retractación"
-
-#: opac/webapp/templates/article/includes/related-article.html:17
-msgid "Este documento possui uma errata"
-msgstr "Este documento tiene una errata"
-
-#: opac/webapp/templates/article/includes/supplementary_material.html:5
-msgid "Material Suplementar"
 msgstr ""
 
 #: opac/webapp/templates/article/includes/modal/download.html:6
@@ -1880,7 +1857,7 @@ msgid "Email enviado com sucesso."
 msgstr ""
 
 #: opac/webapp/templates/email/email_form.html:76
-#: opac/webapp/templates/includes/error_form.html:90
+#: opac/webapp/templates/includes/error_form.html:98
 #: opac/webapp/templates/journal/includes/contact_form.html:77
 msgid "Erro ao tentar enviar e-mail, por favor tente mais tarde."
 msgstr ""
@@ -1929,38 +1906,52 @@ msgid "Digite seu Nome"
 msgstr ""
 
 #: opac/webapp/templates/includes/error_form.html:32
-msgid "Erro referente"
-msgstr ""
+msgid "Erro referente a"
+msgstr "Error relativo a"
 
-#: opac/webapp/templates/includes/error_form.html:35
+#: opac/webapp/templates/includes/error_form.html:36
+msgid "acessibilidade (por favor, considere responder ao "
+msgstr "accesibilidad (por favor, considere responder a"
+
+#: opac/webapp/templates/includes/error_form.html:36
 msgid ""
-"acessibilidade -- por favor, considere responder ao nosso questionário "
-"para mapear o perfil dos usuários do site SciELO:"
-msgstr ""
-"accesibilidad -- por favor, considere responder a nuestro cuestionario "
-"para trazar el perfil de los usuarios del sitio SciELO:"
+"nosso questionário para mapear o perfil dos usuários do site SciELO - "
+"link externo"
+msgstr "nuestro cuestionario para trazar el perfil de los usuarios del sitio SciELO - enlace externo"
 
-#: opac/webapp/templates/includes/error_form.html:39
+#: opac/webapp/templates/includes/error_form.html:38
+msgid "outro tipo de erro"
+msgstr "otro tipo de error"
+
+#: opac/webapp/templates/includes/error_form.html:42
+msgid ""
+"Caso o erro esteja no conteúdo de um documento e apresente-se também na "
+"versão em PDF do mesmo documento, por favor não utilize este formulário. "
+"Entre em contato com o periódico que publicou o documento e reporte o "
+"erro diretamente a ele."
+msgstr "Si el error está en el contenido y también se presenta en la versión PDF del documento, no utilice este formulario. Póngase en contacto con la revista que ha publicado el documento y comuníquele directamente el error."
+
+#: opac/webapp/templates/includes/error_form.html:47
 msgid "ao conteúdo"
 msgstr ""
 
-#: opac/webapp/templates/includes/error_form.html:43
+#: opac/webapp/templates/includes/error_form.html:51
 msgid "à aplicação"
 msgstr ""
 
-#: opac/webapp/templates/includes/error_form.html:50
+#: opac/webapp/templates/includes/error_form.html:58
 msgid "Descrição do erro"
 msgstr ""
 
-#: opac/webapp/templates/includes/error_form.html:51
+#: opac/webapp/templates/includes/error_form.html:59
 msgid "Digite sua mensagem"
 msgstr ""
 
-#: opac/webapp/templates/includes/error_form.html:53
+#: opac/webapp/templates/includes/error_form.html:61
 msgid "Obs.: Link e título da página são enviados automaticamente"
 msgstr ""
 
-#: opac/webapp/templates/includes/error_form.html:89
+#: opac/webapp/templates/includes/error_form.html:97
 msgid "Email de erro enviado com sucesso."
 msgstr ""
 
@@ -2654,5 +2645,40 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid " Reportar erro "
+#~ msgstr ""
+
+#~ msgid "Esta errata corrige o documento"
+#~ msgstr "Esta errata corrige el documento"
+
+#~ msgid "Esta retratação retrata o documento"
+#~ msgstr "Esta retracción retrata el documento"
+
+#~ msgid "Este adendo adiciona informação ao documento"
+#~ msgstr "Esta addenda agrega información al documento"
+
+#~ msgid "Este documento possui um adendo"
+#~ msgstr "Este documento tiene una addenda"
+
+#~ msgid "Este documento possui uma retratação"
+#~ msgstr "Este documento tiene una retractación"
+
+#~ msgid "Este documento possui uma errata"
+#~ msgstr "Este documento tiene una errata"
+
+#~ msgid "Material Suplementar"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "acessibilidade -- por favor, considere "
+#~ "responder ao nosso questionário para "
+#~ "mapear o perfil dos usuários do "
+#~ "site SciELO:"
+#~ msgstr ""
+#~ "accesibilidad -- por favor, considere "
+#~ "responder a nuestro cuestionario para "
+#~ "trazar el perfil de los usuarios "
+#~ "del sitio SciELO:"
+
+#~ msgid "Erro referente"
 #~ msgstr ""
 
