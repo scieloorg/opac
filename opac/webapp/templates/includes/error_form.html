@@ -29,19 +29,25 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label">{% trans %}Erro referente{% endtrans %}:</label>
+                    <label class="control-label">{% trans %}Erro referente a{% endtrans %}:</label>
 
                     <div class="radio" style="margin-top:0;">
-                        <label><input type="radio" name="accessibility" value="content">{% trans %}acessibilidade -- por favor, considere responder ao nosso questionário para mapear o perfil dos usuários do site SciELO:{% endtrans %} <a target="_blank" href="{{ config.get('ACCESSIBILITY_BY_LANGUAGE').get(session.get('lang', config.get('BABEL_DEFAULT_LOCALE')))}}">{{ config.get('ACCESSIBILITY_BY_LANGUAGE').get(session.get('lang', config.get('BABEL_DEFAULT_LOCALE')))}}</a>
+
+                        <label><input type="radio" name="error_type" value="acessibility">{% trans %}acessibilidade (por favor, considere responder ao {% endtrans %} <a target="_blank" href="{{ config.get('ACCESSIBILITY_BY_LANGUAGE').get(session.get('lang', config.get('BABEL_DEFAULT_LOCALE')))}}">{% trans %}nosso questionário para mapear o perfil dos usuários do site SciELO - link externo{% endtrans %}</a>)
+
                     </div>
 
                     <div class="radio" style="margin-top:0;">
-                        <label><input type="radio" name="error_type" value="content">{% trans %}ao conteúdo{% endtrans %}</label>
+                        <label><input type="radio" name="error_type" value="other">{% trans %}outro tipo de erro{% endtrans %}*</label>
                     </div>
 
-                    <div class="radio">
+                    <br>
+
+                    * {% trans %}Caso o erro esteja no conteúdo de um documento e apresente-se também na versão em PDF do mesmo documento, por favor não utilize este formulário. Entre em contato com o periódico que publicou o documento e reporte o erro diretamente a ele.{% endtrans %}
+
+                    <!-- <div class="radio">
                         <label><input type="radio" name="error_type" value="application">{% trans %}à aplicação{% endtrans %}</label>
-                    </div>
+                    </div>  -->
 
                     <label class="control-label" id="{{g.error.error_type.name}}_error"></label>
                 </div>
