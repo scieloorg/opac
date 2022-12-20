@@ -43,6 +43,8 @@
   <body class="{% block body_class %}{% endblock %}">
     <a name="top"></a>
 
+    <a class="btn floatingBtnError" href="#" id="#floatingBtnError">{% trans %}Acessibilidade / Reportar erro{% endtrans %}</a>
+
     {% block content %}{% endblock %}
 
     <!-- share modal -->
@@ -83,9 +85,6 @@
           </div>
       </div>
     </div>
-    
-    <a class="btn floatingBtnError" href="#" id="#floatingBtnError">{% trans %}Acessibilidade / Reportar erro{% endtrans %}</a>
-    <!-- error modal -->
 
     <script src="{{ url_for('static', filename='js/scielo-bundle-min.js') }}"></script>
 
