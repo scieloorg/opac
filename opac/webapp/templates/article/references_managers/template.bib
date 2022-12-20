@@ -1,0 +1,19 @@
+@article&#123;{{ last_name_and_year }},
+   title = &#123;&#123;{{ article_title }}&#125;&#125;,
+   journal = &#123;&#123;{{ article.journal.title }}&#125;,
+   author=&#123;{{ authors }}&#125;,
+   ISSN = &#123;1517-106X&#125;,
+   language = &#123;{{ lang }}&#125;,
+   URL = &#123;{{ url_for('main.article_detail_v3',
+                          url_seg=article.journal.url_segment,
+                          article_pid_v3=article.aid,
+                          lang=lang) }}&#125;,
+   volume = &#123;{{ article.volume }}&#125;,
+   year = &#123;{{ year }}&#125;,
+   {% if month %}
+   month = &#123;{{ month }}&#125;,
+   {% endif %}
+   pages = &#123;{{ 13 - 32 }}&#125;,
+   publisher = &#123;{{ scielo }}&#125;,
+   crossref = &#123;{{ 10.1590/1517-106x/202224201 }}&#125;,
+   &#125;
