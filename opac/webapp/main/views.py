@@ -40,6 +40,55 @@ IAHX_LANGS = dict(
 )
 
 
+def _handle_references_managers(article, lang, qs_format):
+    authors = []
+    last_name_and_year = ''
+    for item in article.authors_meta:
+        try:
+            name = item['name']
+            names = name.split()
+            last = -1
+            last_name = names[last]
+            if not last_name_and_year:
+                last_name_and_year = last_name
+            if last_name.upper() in ('JR', 'NETO', 'JÚNIOR', 'JUNIOR', 'FILHO'):
+                last_name = " ".join(names[-2:])
+                last = -2
+            given_names = " ".join(names[:last])
+            authors.append(f"{last_name}, {given_names}")
+        except KeyError:
+            continue
+        break
+    year = article.publication_date[:4]
+    month = article.publication_date[4:6]
+
+    pages = " - ".join([item for item in [article.fpage, article.lpage] if item])
+    last_name_and_year = f"{last_name_and_year}{year}"
+
+    if lang == original_language:
+        article_title = article.title
+    else:
+        for item in article.translated_titles:
+            if item.language == lang:
+                article_title = item.name
+                break
+
+    result = render_template(
+        f"article/references_managers/template.{qs_format}",
+        {
+            'article': article,
+            'last_name_and_year': last_name_and_year,
+            'article_title': article_title,
+            'lang': lang,
+            'year': year,
+            'month': month,
+        }
+    )
+    response = make_response(result)
+    response.headers['Content-Type'] = 'text/plain'
+    return response
+
+
 def url_external(endpoint, **kwargs):
     url = url_for(endpoint, **kwargs)
     return urljoin(request.url_root, url)
@@ -1322,6 +1371,8 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         return _handle_pdf()
     elif 'xml' == qs_format:
         return _handle_xml()
+    elif qs_format in ('bib', 'ris', 'enw', 'txt'):
+        return _handle_references_managers(qs_format)
     else:
         abort(400, _('Formato não suportado'))
 
