@@ -1,32 +1,37 @@
 # coding: utf-8
 
-import os
-import re
-import pytz
-import shutil
 import logging
-from uuid import uuid4
+import os
+import json
+import re
+import shutil
 from datetime import datetime, timedelta
+from uuid import uuid4
 
-from werkzeug.utils import secure_filename
-from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Message
-from flask import current_app, render_template
-import webapp
+import pytz
 import requests
+import webapp
+from citeproc import (Citation, CitationItem, CitationStylesBibliography,
+                      CitationStylesStyle, formatter)
+from citeproc.source.json import CiteProcJSON
+from citeproc_styles import get_style_filepath
+from flask import current_app, render_template
+from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer
+from legendarium.urlegendarium import URLegendarium
+from opac_schema.v1.models import AuditLogEntry, Pages
 from webapp import models
 from webapp.admin.forms import EmailForm
-
-from webapp.utils.page_migration import PageMigration, MigratedPage
-from opac_schema.v1.models import Pages, AuditLogEntry
-from legendarium.urlegendarium import URLegendarium
+from webapp.utils.page_migration import MigratedPage, PageMigration
+from werkzeug.utils import secure_filename
 
 try:
     from PIL import Image
 except ImportError:
     Image = None
 
-CSS = "/static/css/style_article_html.css"  # caminho para o CSS a ser incluído no HTML do artigo
+# caminho para o CSS a ser incluído no HTML do artigo
+CSS = "/static/css/style_article_html.css"
 REGEX_EMAIL = re.compile(
     r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
     re.IGNORECASE)  # RFC 2822 (simplified)
@@ -373,7 +378,7 @@ def join_html_files_content(revistas_path, acron, files):
         else:
             content.append(page.body)
     text = ' <!-- UNAVAILABLE MESSAGE: {} --> '.format(
-                len(unavailable_message))
+        len(unavailable_message))
     return '\n'.join(content)+text
 
 
@@ -425,9 +430,9 @@ def create_new_journal_page(acron, files, lang):
     if content:
         content = migrate_page_content(content, lang, acron=acron)
         create_page(
-                    'Página secundária %s (%s)' % (acron.upper(), lang),
-                    lang, content, acron,
-                    'Página secundária do periódico %s' % acron)
+            'Página secundária %s (%s)' % (acron.upper(), lang),
+            lang, content, acron,
+            'Página secundária do periódico %s' % acron)
         return content
 
 
@@ -481,21 +486,25 @@ def send_audit_log_daily_report():
     def collect_recipients_from_conf():
         print('coletamos os emails para envio definidos na conf: AUDIT_LOG_NOTIFICATION_RECIPIENTS')
         recipients_from_conf = current_app.config['AUDIT_LOG_NOTIFICATION_RECIPIENTS']
-        recipients_from_conf_validated = filter_only_valid_emails(recipients_from_conf)
-        print('emails definidos na configuração, validados: ', recipients_from_conf_validated)
+        recipients_from_conf_validated = filter_only_valid_emails(
+            recipients_from_conf)
+        print('emails definidos na configuração, validados: ',
+              recipients_from_conf_validated)
         if len(recipients_from_conf_validated) == 0:
             print('não temos emails (da configuração) válidos, para enviar')
         return recipients_from_conf_validated
 
     def colect_recipiets_from_users_table():
-        active_users = webapp.dbsql.session.query(models.User).filter_by(email_confirmed=True)
+        active_users = webapp.dbsql.session.query(
+            models.User).filter_by(email_confirmed=True)
         print('recipients_from_users: ', [u.email for u in active_users])
         return [u.email for u in active_users]
 
     def prepare_report_email(recipients, records):
         report_date = datetime.today().strftime('%Y-%m-%d')
         collection_acronym = current_app.config['OPAC_COLLECTION']
-        email_subject = '[%s] - Relatório de auditoria de mudanças - últimas 24hs (%s) ' % (collection_acronym, report_date)
+        email_subject = '[%s] - Relatório de auditoria de mudanças - últimas 24hs (%s) ' % (
+            collection_acronym, report_date)
         templ_context = {
             'records': records,
             'report_date': report_date
@@ -519,7 +528,8 @@ def send_audit_log_daily_report():
                 }
             }
 
-            audit_records = AuditLogEntry.objects.filter(__raw__=date_range_query).order_by('-created_at')
+            audit_records = AuditLogEntry.objects.filter(
+                __raw__=date_range_query).order_by('-created_at')
             audit_records_count = audit_records.count()
             if audit_records_count > 0:
                 print("registros encontrados: ", audit_records_count)
@@ -529,9 +539,11 @@ def send_audit_log_daily_report():
                 print('todos os recipients:', all_recipients)
 
                 for record in audit_records:
-                    print('-> ', record._id, record.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+                    print('-> ', record._id,
+                          record.created_at.strftime('%Y-%m-%d %H:%M:%S'))
 
-                email_data = prepare_report_email(all_recipients, audit_records)
+                email_data = prepare_report_email(
+                    all_recipients, audit_records)
                 send_email(**email_data)
             else:
                 print("não encontramos registros modificados hoje.")
@@ -573,3 +585,72 @@ def fix_journal_last_issue(journal):
         **leg_dict).get_issue_seg()
     return journal.last_issue
 
+
+def render_citation(csl_json, style='apa', formatter=formatter.html, validate=False):
+    """
+    Given a csl_json and return a citation
+
+    Link do the csl-json schema: https://github.com/citation-style-language/schema/blob/master/schemas/input/csl-data.json
+
+    Example of csl_json param: 
+        [
+            {
+                "id": "wNZLxRjKfGdDw8KGmbNN7qj",
+                "DOI": "10.1590/0001-3765202020181115",
+                "URL": "http://dx.doi.org/10.1590/0001-3765202020181115",
+                "author": [
+                    {
+                        "family": "SANTOS-SILVA",
+                        "given": "JULIANA"
+                    },
+                    {
+                        "family": "ARAÚJO",
+                        "given": "TAINAR J."
+                    }
+                ],
+                "container-title": "Scientific Electronic Library Online",
+                "container-title-short": "SciELO",
+                "issue": "An. Acad. Bras. Ciênc., 2020 92(2)",
+                "issued": {
+                    "date-parts": [
+                        [
+                            2020,
+                            9
+                        ]
+                    ]
+                },
+                "page": "",
+                "publisher": "Academia Brasileira de Ciências",
+                "title": "Are Fabaceae the principal super-hosts of galls in Brazil?",
+                "title-short": "Are Fabaceae the principal super-hosts of galls in Brazil?",
+                "type": "research-article",
+                "volume": "92"
+            }
+        ]
+
+    Return a list citation as string.
+    
+    """
+
+    bib_source = CiteProcJSON(csl_json)
+
+    style_path = get_style_filepath(style)
+
+    bib_style = CitationStylesStyle(style_path, validate=validate)
+
+    bibliography = CitationStylesBibliography(bib_style, bib_source, formatter)
+
+    # Loop to the citations id on csl_json
+    ids = [c.get('id') for c in csl_json]
+
+    for id in ids:
+        citation = Citation([CitationItem(id)])
+        bibliography.register(citation)
+
+    def warn(citation_item):
+        print("WARNING: Reference with key '{}' not found in the bibliography."
+              .format(citation_item.key))
+
+    bibliography.cite(citation, warn)
+
+    return [str(item) for item in bibliography.bibliography()]
