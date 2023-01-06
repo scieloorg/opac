@@ -47,7 +47,7 @@ def url_external(endpoint, **kwargs):
 
 class RetryableError(Exception):
     """Erro recuperável sem que seja necessário modificar o estado dos dados
-    na parte cliente, e.g., timeouts, erros advindos de particionamento de rede
+    na parte cliente, e.g., time
     etc.
     """
 
@@ -93,7 +93,8 @@ def add_collection_to_g():
 
 @main.after_request
 def add_header(response):
-    response.cache_control.max_age = current_app.config.get('CACHE_CONTROL_MAX_AGE_HEADER')
+    response.cache_control.max_age = current_app.config.get(
+        'CACHE_CONTROL_MAX_AGE_HEADER')
     response.headers['x-content-type-options'] = 'nosniff'
     return response
 
@@ -1492,6 +1493,34 @@ def router_legacy_article(text_or_abstract):
     )
 
 
+@main.route('/c/a/<string:article_id>/')
+def article_cite_csl_ajax(article_id):
+    """
+    Given the ``article_id`` and return the citation to the same article with many styles.
+
+    article_id: pid | aid.
+    """
+
+    style = request.args.get('style', 'apa', type=str)
+    csl = request.args.get('csl', False, type=bool)
+
+    if not request.headers.get('X-Requested-With'):
+        abort(400, _('Requisição inválida.'))
+
+    article = controllers.get_article_by_aid(
+        article_id) or controllers.get_article_by_pid(article_id)
+
+    if article is None:
+        abort(404, _('Artigo não encontrado'))
+
+    if csl:
+        return jsonify(article.csl_json)
+
+    citation = utils.render_citation(article.csl_json, style=style)
+
+    return citation[0] if citation else ''
+
+
 # ###############################E-mail share##################################
 
 
@@ -1712,7 +1741,7 @@ def author_production():
 def scimago_ir():
     """
     Essa view function faz um `proxy` o link para o SCImago IR(Institutions Ranking)
-    
+
     Link para o página do SCImago Institutions Rankings: https://www.scimagoir.com/
 
     É feita uma requisição para o endereço, exemplo: https://www.scimagoir.com/query.php?q=universidade%20de%20s%C3%A3o%20paulo. 
@@ -1731,7 +1760,8 @@ def scimago_ir():
     if not request.headers.get('X-Requested-With'):
         abort(400, _('Requisição inválida.'))
 
-    html = BeautifulSoup(requests.get('%squery.php?q=%s' % (current_app.config.get('SCIMAGO_URL_IR'), request.args.get('q'))).content)
+    html = BeautifulSoup(requests.get('%squery.php?q=%s' % (
+        current_app.config.get('SCIMAGO_URL_IR'), request.args.get('q'))).content)
 
     if html.find('a'):
         return html.find('a').get('href')
