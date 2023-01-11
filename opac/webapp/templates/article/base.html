@@ -15,6 +15,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async />
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" async/>
 {% endblock %}
 
 {% block content %}
@@ -30,6 +31,8 @@
 {% include "article/includes/modal/related_article.html" %}
 
 {% include "article/includes/modal/translate_version.html" %}
+
+{% include "article/includes/modal/how_cite.html" %}
 
 {% include "includes/footer.html" %}
 
@@ -76,6 +79,7 @@
 {% endif %}
 
 <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- xxx Verifica se o artigo contém artigos relacionados -->
 {% if article.related_articles %}
@@ -99,6 +103,9 @@
 {% endif %}
 
 <script>
+
+  //Change the bootstrap gobally behavior to select2 work with modal, more about see: https://select2.org/troubleshooting/common-problems
+  $.fn.modal.Constructor.prototype.enforceFocus = function() {};
 
   function splitMulti(str, tokens){
     var tempChar = tokens[0];
@@ -149,6 +156,80 @@
       scimago_verify = true;
     }
   });
+  
+  var howcite_initialized = false;
+
+  $('#ModalHowcite').on('shown.bs.modal', function () {
+    
+    if (!howcite_initialized){
+      initial = {
+        "American Psychological Association": "apa",  "Vancouver": "vancouver"
+      } 
+    
+      $.each(initial, function( key, value ) {
+          $.ajax({
+            url: "/j/a/c/{{ article.aid }}/?style=" + value,
+            dataType: 'html',
+            delay: 250,
+            async: true
+          })
+          .done(function(html) {
+            $("<span><b>" + key + "</b></span>" + "<pre>" + html + "</pre>").insertBefore($("#select_csl"));
+            //$("#initial_csl").append("<span><b>" + key + "</b></span>" + "<pre>" + html + "</pre>");
+          })
+      });
+      howcite_initialized = true;
+    }
+    
+    $(".js-data-example-ajax").select2({
+      ajax: {
+        url: "/j/a/c/csl/list",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            q: params.term, // search term
+          };
+        },
+        processResults: function (data, params) {
+          return {
+            results: data.results
+          };
+        },
+        cache: true
+      },
+      escapeMarkup: function (markup) { return markup; },
+      minimumInputLength: 1,
+    });
+  
+    $(document).on('select2:open', () => {
+      document.querySelector('.select2-search__field').focus();
+    });
+  
+    $(".js-data-example-ajax").on('select2:select', function (e) {
+        var data = e.params.data;
+  
+        $.ajax({
+          url: "/j/a/c/{{ article.aid }}/?style=" + data.id,
+          dataType: 'html',
+          delay: 250
+        })
+        .done(function(html) {
+  
+          if($('#citation_text').css('display') == 'none'){
+              $('#citation_text').show()
+          }
+  
+          $("#citation_text").html(html);
+          
+        })
+        .fail(function() {
+          alert("Erro ao tentar obter esse estilo de citação");
+        })
+  
+    });
+  });
+
 </script>
 
 
