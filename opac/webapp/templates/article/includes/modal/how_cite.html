@@ -1,0 +1,43 @@
+<style>
+  pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-break: break-word; 
+}
+</style>
+
+<div class="modal fade ModalDefault" id="ModalHowcite" tabindex="-1" role="dialog" aria-hidden="true"
+  style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+            class="sr-only">{% trans %}Close{% endtrans %}</span></button>
+        <h4 class="modal-title">{% trans %}How to cite{% endtrans %}</h4>
+      </div>
+      <div class="modal-body">
+
+        <div id='initial_csl'></div>
+
+        <select id="select_csl" class="js-data-example-ajax" style="width: 100%">
+          <option value="" selected="selected">{% trans %}Enter citation style (e.g., "APA"){% endtrans %}</option>
+        </select>
+        
+        <br>
+        <br>
+      
+        <pre id="citation_text" style="display:none;"></pre>
+
+      </div>
+    </div>
+  </div>
+</div>
