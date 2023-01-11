@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from io import BytesIO
 from urllib.parse import urljoin, urlparse
 
+import orjson
 import requests
 from bs4 import BeautifulSoup
 from feedwerk.atom import AtomFeed
@@ -1493,7 +1494,7 @@ def router_legacy_article(text_or_abstract):
     )
 
 
-@main.route('/c/a/<string:article_id>/')
+@main.route('/j/a/c/<string:article_id>/')
 def article_cite_csl_ajax(article_id):
     """
     Given the ``article_id`` and return the citation to the same article with many styles.
@@ -1515,11 +1516,69 @@ def article_cite_csl_ajax(article_id):
 
     if csl:
         return jsonify(article.csl_json)
-
+    
     citation = utils.render_citation(article.csl_json, style=style)
 
     return citation[0] if citation else ''
 
+
+@main.route('/j/a/c/csl/list')
+def article_cite_csl_ajax_list():
+    """
+    Obtém a lista de CSL e retorna um formato esperado. 
+
+    Exemplo de uso dessa view function: /j/a/c/csl/list?q=ama
+
+    Formato do retorno: 
+
+        {
+            "results": [
+                {
+                "id": "american-marketing-association",
+                "text": "American Marketing Association"
+                },
+                {
+                "id": "american-medical-association",
+                "text": "American Medical Association"
+                },
+                {
+                "id": "american-medical-association-alphabetical",
+                "text": "American Medical Association (sorted alphabetically)"
+                },
+                {
+                "id": "american-medical-association-no-et-al",
+                "text": "American Medical Association (no \"et al.\")"
+                },
+                {
+                "id": "american-medical-association-no-url",
+                "text": "American Medical Association (no URL)"
+                }
+            ]
+        }
+    """
+    q = request.args.get('q', None)
+
+    result = {"results": []}
+
+    if q: 
+        q = q.lower()
+        
+        csls_json = orjson.loads(
+            open(current_app.config.get('COMMON_STYLE_LIST')).read())
+
+        for csl in csls_json.get("data"):
+            title_terms = csl.get("attributes").get("title", "").lower().split(" ")
+
+            short_title_terms = csl.get("attributes").get("short_title").lower().split(
+                " ") if csl.get("attributes").get("short_title") else []
+            short_title_terms += csl.get("attributes").get("short_title").lower().split(
+                " ") if csl.get("attributes").get("short_title") else []
+
+            if q in title_terms or q in short_title_terms:
+                result.get("results").append(
+                    {"id": csl.get("id"), "text": csl.get("attributes").get("title")})
+
+    return jsonify(result)
 
 # ###############################E-mail share##################################
 
