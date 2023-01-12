@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import io
 import logging
 import mimetypes
 from collections import OrderedDict
@@ -12,8 +12,8 @@ import requests
 from bs4 import BeautifulSoup
 from feedwerk.atom import AtomFeed
 from flask import (Response, abort, current_app, g, jsonify, make_response,
-                   redirect, render_template, request, send_from_directory,
-                   session, url_for)
+                   redirect, render_template, request, send_file,
+                   send_from_directory, session, url_for)
 from flask_babelex import gettext as _
 from legendarium.formatter import descriptive_short_format
 from lxml import etree
@@ -1516,7 +1516,7 @@ def article_cite_csl_ajax(article_id):
 
     if csl:
         return jsonify(article.csl_json)
-    
+
     citation = utils.render_citation(article.csl_json, style=style)
 
     return citation[0] if citation else ''
@@ -1560,14 +1560,15 @@ def article_cite_csl_ajax_list():
 
     result = {"results": []}
 
-    if q: 
+    if q:
         q = q.lower()
-        
+
         csls_json = orjson.loads(
             open(current_app.config.get('COMMON_STYLE_LIST')).read())
 
         for csl in csls_json.get("data"):
-            title_terms = csl.get("attributes").get("title", "").lower().split(" ")
+            title_terms = csl.get("attributes").get(
+                "title", "").lower().split(" ")
 
             short_title_terms = csl.get("attributes").get("short_title").lower().split(
                 " ") if csl.get("attributes").get("short_title") else []
@@ -1579,6 +1580,47 @@ def article_cite_csl_ajax_list():
                     {"id": csl.get("id"), "text": csl.get("attributes").get("title")})
 
     return jsonify(result)
+
+
+@main.route('/j/a/c/e/<string:article_id>/')
+def article_cite_export_format(article_id):
+    """
+    Given the ``article_id`` and return export citation for ["ris", "bib"]|current_app.config.get('CITATION_EXPORT_FORMAT') formats.
+
+    Exemplo de uso dessa view function: /j/a/c/e/<id>?format=ris
+
+    article_id: pid | aid.
+    """
+
+    format = request.args.get('format', 'ris', type=str)
+
+    formats = current_app.config.get('CITATION_EXPORT_FORMATS')
+
+    if not format in formats.keys():
+        abort(404, _('Formato de exportação não suportado.'))
+
+    article = controllers.get_article_by_aid(
+        article_id) or controllers.get_article_by_pid(article_id)
+
+    if article is None:
+        abort(404, _('Artigo não encontrado.'))
+
+    csl_json = article.csl_json
+
+    if format == "bib":
+        ex_citation = utils.render_citation(csl_json, style="bibtex")
+
+    if format == "ris":
+        ex_citation = render_template(
+            "article/export/citation/ris", **{"csl_json": csl_json[0]})
+
+    response = Response(ex_citation, mimetype="application/octet-stream")
+
+    response.headers['Content-Disposition'] = 'attachment; filename=%s.%s' % (
+        article_id, format)
+
+    return response
+
 
 # ###############################E-mail share##################################
 

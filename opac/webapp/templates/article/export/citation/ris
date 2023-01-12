@@ -1,0 +1,12 @@
+TY  - JOUR 
+T1  - {{csl_json.title}}
+JO  - {{csl_json.__getitem__('container-title')}}
+{%- for au in csl_json.author -%}
+A1  - {{au.family}}, {{au.given}}
+{%- endfor -%}
+SN  - {{csl_json.ISSN}}
+UL  - {{csl_json.DOI}}
+VL  - {{csl_json.volume}} 
+Y1  - {{csl_json.issued.get('data-parts').0}}
+PB  - scielo 
+ER  - 

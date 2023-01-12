@@ -12,6 +12,17 @@
             "links": {}
         },
         {
+            "id": "research-institute-for-nature-and-forest",
+            "type": "citation-styles",
+            "attributes": {
+                "title": "Research Institute for Nature and Forest (Instituut voor Natuur- en Bosonderzoek)",
+                "date_parsed": "2018-06-14T01:07:47.907675",
+                "short_title": "INBO",
+                "summary": "Available in: https://github.com/citation-style-language/styles/blob/master/research-institute-for-nature-and-forest.csl"
+            },
+            "links": {}
+        },
+        {
             "id": "3d-printed-materials-and-systems",
             "type": "citation-styles",
             "attributes": {
