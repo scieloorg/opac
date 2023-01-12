@@ -638,3 +638,7 @@ ACCESSIBILITY_BY_LANGUAGE = {
 # Common Style List
 COMMON_STYLE_LIST = os.environ.get("OPAC_COMMON_STYLE_LIST", os.path.abspath(
     os.path.join(PROJECT_PATH, 'media/csl_styles.json')))
+
+# Citation Export Format
+CITATION_EXPORT_FORMATS = {"bib": "BibTex",
+                          "ris": "Reference Manager"}
