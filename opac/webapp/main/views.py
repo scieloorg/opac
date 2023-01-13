@@ -1518,9 +1518,10 @@ def article_cite_csl(article_id):
         abort(404, _('Artigo não encontrado'))
 
     if csl:
-        return jsonify(article.csl_json)
+        return jsonify(article.csl_json(site_domain=current_app.config.get('OPAC_BASE_URI')))
 
-    citation = utils.render_citation(article.csl_json, style=style)
+    citation = utils.render_citation(article.csl_json(
+        site_domain=current_app.config.get('OPAC_BASE_URI')), style=style)
 
     return citation[0] if citation else ''
 
@@ -1608,7 +1609,8 @@ def article_cite_export_format(article_id):
     if article is None:
         abort(404, _('Artigo não encontrado.'))
 
-    csl_json = article.csl_json
+    csl_json = article.csl_json(
+        site_domain=current_app.config.get('OPAC_BASE_URI'))
 
     if format == "bib":
         ex_citation = utils.render_citation(csl_json, style="bibtex")

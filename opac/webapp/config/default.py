@@ -485,7 +485,7 @@ SSM_MEDIA_URI = "{scheme}://{domain}:{port}{path}".format(
     port=SSM_PORT,
     path=SSM_MEDIA_PATH)
 
-# session cookie settings:  z
+# session cookie settings:
 OPAC_SCHEME = os.environ.get('OPAC_OPAC_SCHEME', 'https')
 SERVER_NAME = os.environ.get('OPAC_SERVER_NAME', None)
 OPAC_BASE_URI = "{scheme}://{domain}".format(
