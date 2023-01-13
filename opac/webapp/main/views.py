@@ -1525,7 +1525,7 @@ def article_cite_csl(article_id):
     return citation[0] if citation else ''
 
 
-@main.route('/citattion/list')
+@main.route('/citation/list')
 def article_cite_csl_list():
     """
     Obtém a lista de CSL e retorna um formato esperado. 
