@@ -168,14 +168,13 @@
     
       $.each(initial, function( key, value ) {
           $.ajax({
-            url: "/j/a/c/{{ article.aid }}/?style=" + value,
+            url: "{{ url_for('main.article_cite_csl', article_id=article.id) }}?style=" + value, 
             dataType: 'html',
             delay: 250,
             async: true
           })
           .done(function(html) {
-            $("<span><b>" + key + "</b></span>" + "<pre>" + html + "</pre>").insertBefore($("#select_csl"));
-            //$("#initial_csl").append("<span><b>" + key + "</b></span>" + "<pre>" + html + "</pre>");
+            $("<span><b>" + key + "</b></span>" + "<pre>" + html + "</pre>").insertBefore($("#select_label"));
           })
       });
       howcite_initialized = true;
@@ -183,7 +182,7 @@
     
     $(".js-data-example-ajax").select2({
       ajax: {
-        url: "/j/a/c/csl/list",
+        url: "{{ url_for('main.article_cite_csl_list') }}",
         dataType: 'json',
         delay: 250,
         data: function (params) {
@@ -210,7 +209,7 @@
         var data = e.params.data;
   
         $.ajax({
-          url: "/j/a/c/{{ article.aid }}/?style=" + data.id,
+          url: "{{ url_for('main.article_cite_csl', article_id=article.id) }}?style=" + data.id,
           dataType: 'html',
           delay: 250
         })

@@ -1161,6 +1161,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
+@main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/citation/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_lang = request.args.get('lang', type=str) or None
@@ -1318,12 +1319,17 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         response.headers['Content-Type'] = 'application/xml'
         return response
 
+    def _handle_csl():
+        return redirect(url_for('main.article_cite_csl', article_id=article_pid_v3) + "?format=csl", code=301)
+
     if 'html' == qs_format:
         return _handle_html()
     elif 'pdf' == qs_format:
         return _handle_pdf()
     elif 'xml' == qs_format:
         return _handle_xml()
+    elif 'csl' == qs_format:
+        return _handle_csl()
     else:
         abort(400, _('Formato não suportado'))
 
@@ -1494,8 +1500,8 @@ def router_legacy_article(text_or_abstract):
     )
 
 
-@main.route('/j/a/c/<string:article_id>/')
-def article_cite_csl_ajax(article_id):
+@main.route('/citation/<string:article_id>/')
+def article_cite_csl(article_id):
     """
     Given the ``article_id`` and return the citation to the same article with many styles.
 
@@ -1504,9 +1510,6 @@ def article_cite_csl_ajax(article_id):
 
     style = request.args.get('style', 'apa', type=str)
     csl = request.args.get('csl', False, type=bool)
-
-    if not request.headers.get('X-Requested-With'):
-        abort(400, _('Requisição inválida.'))
 
     article = controllers.get_article_by_aid(
         article_id) or controllers.get_article_by_pid(article_id)
@@ -1522,8 +1525,8 @@ def article_cite_csl_ajax(article_id):
     return citation[0] if citation else ''
 
 
-@main.route('/j/a/c/csl/list')
-def article_cite_csl_ajax_list():
+@main.route('/citattion/list')
+def article_cite_csl_list():
     """
     Obtém a lista de CSL e retorna um formato esperado. 
 
@@ -1582,12 +1585,12 @@ def article_cite_csl_ajax_list():
     return jsonify(result)
 
 
-@main.route('/j/a/c/e/<string:article_id>/')
+@main.route('/citation/export/<string:article_id>/')
 def article_cite_export_format(article_id):
     """
     Given the ``article_id`` and return export citation for ["ris", "bib"]|current_app.config.get('CITATION_EXPORT_FORMAT') formats.
 
-    Exemplo de uso dessa view function: /j/a/c/e/<id>?format=ris
+    Exemplo de uso dessa view function: /citation/export/<id>?format=ris
 
     article_id: pid | aid.
     """
