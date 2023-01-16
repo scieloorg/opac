@@ -1,5 +1,6 @@
 # coding: utf-8
 import io
+import json
 import logging
 import mimetypes
 from collections import OrderedDict
@@ -7,7 +8,6 @@ from datetime import datetime, timedelta
 from io import BytesIO
 from urllib.parse import urljoin, urlparse
 
-import orjson
 import requests
 from bs4 import BeautifulSoup
 from feedwerk.atom import AtomFeed
@@ -1567,7 +1567,7 @@ def article_cite_csl_list():
     if q:
         q = q.lower()
 
-        csls_json = orjson.loads(
+        csls_json = json.loads(
             open(current_app.config.get('COMMON_STYLE_LIST')).read())
 
         for csl in csls_json.get("data"):
