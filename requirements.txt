@@ -26,7 +26,7 @@ Flask-Security==3.0.0
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==1.0.0
 gunicorn==20.1.0
-# gevent==1.4.0
+gevent==1.4.0
 greenlet==0.4.17
 htmlmin==0.1.12
 idna==2.10
@@ -40,7 +40,7 @@ mongoengine==0.16.3
 natsort==7.0.1
 oauthlib==3.1.0
 -e git+https://git@github.com/scieloorg/opac_schema@v2.67#egg=Opac_Schema
-# -e git+https://github.com/scieloorg/packtools@2.17.8#egg=packtools
+-e git+https://github.com/scieloorg/packtools@2.17.8#egg=packtools
 passlib==1.7.2
 pbr==5.4.5
 picles.plumber==0.11
