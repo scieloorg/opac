@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import io
 import logging
 import mimetypes
 from collections import OrderedDict
@@ -7,12 +7,13 @@ from datetime import datetime, timedelta
 from io import BytesIO
 from urllib.parse import urljoin, urlparse
 
+import orjson
 import requests
 from bs4 import BeautifulSoup
 from feedwerk.atom import AtomFeed
 from flask import (Response, abort, current_app, g, jsonify, make_response,
-                   redirect, render_template, request, send_from_directory,
-                   session, url_for)
+                   redirect, render_template, request, send_file,
+                   send_from_directory, session, url_for)
 from flask_babelex import gettext as _
 from legendarium.formatter import descriptive_short_format
 from lxml import etree
@@ -47,7 +48,7 @@ def url_external(endpoint, **kwargs):
 
 class RetryableError(Exception):
     """Erro recuperável sem que seja necessário modificar o estado dos dados
-    na parte cliente, e.g., timeouts, erros advindos de particionamento de rede
+    na parte cliente, e.g., time
     etc.
     """
 
@@ -93,7 +94,8 @@ def add_collection_to_g():
 
 @main.after_request
 def add_header(response):
-    response.cache_control.max_age = current_app.config.get('CACHE_CONTROL_MAX_AGE_HEADER')
+    response.cache_control.max_age = current_app.config.get(
+        'CACHE_CONTROL_MAX_AGE_HEADER')
     response.headers['x-content-type-options'] = 'nosniff'
     return response
 
@@ -1159,6 +1161,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
+@main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/citation/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_lang = request.args.get('lang', type=str) or None
@@ -1316,12 +1319,17 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         response.headers['Content-Type'] = 'application/xml'
         return response
 
+    def _handle_csl():
+        return redirect(url_for('main.article_cite_csl', article_id=article_pid_v3) + "?format=csl", code=301)
+
     if 'html' == qs_format:
         return _handle_html()
     elif 'pdf' == qs_format:
         return _handle_pdf()
     elif 'xml' == qs_format:
         return _handle_xml()
+    elif 'csl' == qs_format:
+        return _handle_csl()
     else:
         abort(400, _('Formato não suportado'))
 
@@ -1490,6 +1498,133 @@ def router_legacy_article(text_or_abstract):
         ),
         code=301
     )
+
+
+@main.route('/citation/<string:article_id>/')
+def article_cite_csl(article_id):
+    """
+    Given the ``article_id`` and return the citation to the same article with many styles.
+
+    article_id: pid | aid.
+    """
+
+    style = request.args.get('style', 'apa', type=str)
+    csl = request.args.get('csl', False, type=bool)
+
+    article = controllers.get_article_by_aid(
+        article_id) or controllers.get_article_by_pid(article_id)
+
+    if article is None:
+        abort(404, _('Artigo não encontrado'))
+
+    if csl:
+        return jsonify(article.csl_json(site_domain=current_app.config.get('OPAC_BASE_URI')))
+
+    citation = utils.render_citation(article.csl_json(
+        site_domain=current_app.config.get('OPAC_BASE_URI')), style=style)
+
+    return citation[0] if citation else ''
+
+
+@main.route('/citation/list')
+def article_cite_csl_list():
+    """
+    Obtém a lista de CSL e retorna um formato esperado. 
+
+    Exemplo de uso dessa view function: /j/a/c/csl/list?q=ama
+
+    Formato do retorno: 
+
+        {
+            "results": [
+                {
+                "id": "american-marketing-association",
+                "text": "American Marketing Association"
+                },
+                {
+                "id": "american-medical-association",
+                "text": "American Medical Association"
+                },
+                {
+                "id": "american-medical-association-alphabetical",
+                "text": "American Medical Association (sorted alphabetically)"
+                },
+                {
+                "id": "american-medical-association-no-et-al",
+                "text": "American Medical Association (no \"et al.\")"
+                },
+                {
+                "id": "american-medical-association-no-url",
+                "text": "American Medical Association (no URL)"
+                }
+            ]
+        }
+    """
+    q = request.args.get('q', None)
+
+    result = {"results": []}
+
+    if q:
+        q = q.lower()
+
+        csls_json = orjson.loads(
+            open(current_app.config.get('COMMON_STYLE_LIST')).read())
+
+        for csl in csls_json.get("data"):
+            title_terms = csl.get("attributes").get(
+                "title", "").lower().split(" ")
+
+            short_title_terms = csl.get("attributes").get("short_title").lower().split(
+                " ") if csl.get("attributes").get("short_title") else []
+            short_title_terms += csl.get("attributes").get("short_title").lower().split(
+                " ") if csl.get("attributes").get("short_title") else []
+
+            if q in title_terms or q in short_title_terms:
+                result.get("results").append(
+                    {"id": csl.get("id"), "text": csl.get("attributes").get("title")})
+
+    return jsonify(result)
+
+
+@main.route('/citation/export/<string:article_id>/')
+def article_cite_export_format(article_id):
+    """
+    Given the ``article_id`` and return export citation for ["ris", "bib"]|current_app.config.get('CITATION_EXPORT_FORMAT') formats.
+
+    Exemplo de uso dessa view function: /citation/export/<id>?format=ris
+
+    article_id: pid | aid.
+    """
+
+    format = request.args.get('format', 'ris', type=str)
+
+    formats = current_app.config.get('CITATION_EXPORT_FORMATS')
+
+    if not format in formats.keys():
+        abort(404, _('Formato de exportação não suportado.'))
+
+    article = controllers.get_article_by_aid(
+        article_id) or controllers.get_article_by_pid(article_id)
+
+    if article is None:
+        abort(404, _('Artigo não encontrado.'))
+
+    csl_json = article.csl_json(
+        site_domain=current_app.config.get('OPAC_BASE_URI'))
+
+    if format == "bib":
+        ex_citation = utils.render_citation(csl_json, style="bibtex")
+
+    if format == "ris":
+        ex_citation = render_template(
+            "article/export/citation/ris", **{"csl_json": csl_json[0]})
+
+    response = Response(ex_citation, mimetype="application/octet-stream")
+
+    response.headers['Content-Disposition'] = 'attachment; filename=%s.%s' % (
+        article_id, format)
+
+    return response
 
 
 # ###############################E-mail share##################################
@@ -1712,7 +1847,7 @@ def author_production():
 def scimago_ir():
     """
     Essa view function faz um `proxy` o link para o SCImago IR(Institutions Ranking)
-    
+
     Link para o página do SCImago Institutions Rankings: https://www.scimagoir.com/
 
     É feita uma requisição para o endereço, exemplo: https://www.scimagoir.com/query.php?q=universidade%20de%20s%C3%A3o%20paulo. 
@@ -1731,7 +1866,8 @@ def scimago_ir():
     if not request.headers.get('X-Requested-With'):
         abort(400, _('Requisição inválida.'))
 
-    html = BeautifulSoup(requests.get('%squery.php?q=%s' % (current_app.config.get('SCIMAGO_URL_IR'), request.args.get('q'))).content)
+    html = BeautifulSoup(requests.get('%squery.php?q=%s' % (
+        current_app.config.get('SCIMAGO_URL_IR'), request.args.get('q'))).content)
 
     if html.find('a'):
         return html.find('a').get('href')

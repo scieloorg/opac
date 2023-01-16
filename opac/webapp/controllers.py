@@ -812,7 +812,7 @@ def get_issue_by_journal_and_assets_code(assets_code, journal):
 
 # -------- ARTICLE --------
 
-def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwargs):
+def get_article_by_aid(aid, journal_url_seg=None, lang=None, gs_abstract=False, **kwargs):
     """
     Retorna um artigo considerando os parâmetros ``aid`` e ``kwargs``.
 
@@ -840,9 +840,10 @@ def get_article_by_aid(aid, journal_url_seg, lang=None, gs_abstract=False, **kwa
 
     if not article.journal.is_public:
         raise JournalIsNotPublishedError(article.journal.unpublish_reason)
-
-    if article.journal.url_segment != journal_url_seg:
-        raise ArticleJournalNotFoundError(article.journal.url_segment)
+    
+    if journal_url_seg:  
+        if article.journal.url_segment != journal_url_seg:
+            raise ArticleJournalNotFoundError(article.journal.url_segment)
 
     if gs_abstract:
         abstract_languages = _abstract_languages(article.abstracts)

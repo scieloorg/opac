@@ -1,0 +1,61 @@
+<style>
+  pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 11px;
+    line-height: 1;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-break: break-word; 
+}
+</style>
+
+<div class="modal fade ModalDefault" id="ModalHowcite" tabindex="-1" role="dialog" aria-hidden="true"
+  style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+            class="sr-only">{% trans %}Close{% endtrans %}</span></button>
+        <h4 class="modal-title">{% trans %}Como citar{% endtrans %}</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-3" style="text-align: center;">
+              <a href="{{ url_for('main.article_cite_export_format', article_id=article.id) }}?format=ris" class="btn hidden-sm">
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span> RIS
+              </a>
+            </div>
+            <div class="col-sm-3" style="text-align: center;">
+              <a href="{{ url_for('main.article_cite_export_format', article_id=article.id) }}?format=bib" class="btn hidden-sm">
+                <span class="glyphicon glyphicon-download" aria-hidden="true"></span> BIBTEX
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <br>
+        
+        <div id='initial_csl'></div>
+
+        <label id="select_label">{% trans %}Outros formatos de citação e exportação{% endtrans %}:</label>
+        <select id="select_csl" class="js-data-example-ajax" style="width: 100%">
+          <option value="" selected="selected">{% trans %}Enter references manager format or citation style (e.g., "APA", "AMA", "MLA", "Vancouver"){% endtrans %}</option>
+        </select>
+        
+        <br>
+        <br>
+      
+        <pre id="citation_text" style="display:none;"></pre>
+
+      </div>
+    </div>
+  </div>
+</div>
