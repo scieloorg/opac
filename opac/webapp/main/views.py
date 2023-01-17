@@ -1161,7 +1161,6 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=''):
 
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/')
 @main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/<string:part>/')
-@main.route('/j/<string:url_seg>/a/<string:article_pid_v3>/citation/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_v3(url_seg, article_pid_v3, part=None):
     qs_lang = request.args.get('lang', type=str) or None
