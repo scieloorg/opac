@@ -634,7 +634,7 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
         if issue.type == 'volume_issue':
             volume_issue.setdefault(issue.volume, {})
             volume_issue[issue.volume]['issue'] = issue
-            volume_issue[issue.volume]['art_count'] = len(get_articles_by_iid(issue.iid))
+            volume_issue[issue.volume]['art_count'] = len(get_articles_by_iid(issue.iid, is_public=True))
 
         key_volume = issue.volume
 
