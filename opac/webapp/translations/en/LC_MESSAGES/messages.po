@@ -2468,6 +2468,9 @@ msgstr "Open"
 #~ msgid "Este documento possui um adendo"
 #~ msgstr "This document has an addendum"
 
+#~ msgid "Este documento possui um comentário"
+#~ msgstr "This document has a comment"
+
 #~ msgid "Este documento possui uma retratação"
 #~ msgstr "This document has a retraction"
 

@@ -2508,3 +2508,5 @@ msgstr "Ver"
 #~ msgid "Erro referente"
 #~ msgstr "Error de referencia"
 
+#~ msgid "Este documento possui um comentário"
+#~ msgstr "Este documento tiene un comentario"
