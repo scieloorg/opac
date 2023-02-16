@@ -109,7 +109,7 @@
 
   var scimago_verify = false;
 
-  $('#ModalTutors').on('shown.bs.modal', function () {
+  function add_scimago_link(){
 
     if (!scimago_verify) {
 
@@ -150,7 +150,30 @@
         });
       scimago_verify = true;
     }
-  });
+  
+  }
+  
+  {% if config.SCIMAGO_IR_LOAD_ON_MODAL %}
+
+    $('#ModalTutors').on('shown.bs.modal', function () {
+      add_scimago_link()
+    });
+
+  {% else %}
+    
+    if ($('.tutors').length > {{config.SCIMAGO_IR_AUTHOR_LENGTH}}){
+
+      $('#ModalTutors').on('shown.bs.modal', function () {
+        add_scimago_link();
+      });
+
+    }else{
+
+      add_scimago_link()
+
+    }
+    
+  {% endif %}
 
   var howcite_initialized = false;
 

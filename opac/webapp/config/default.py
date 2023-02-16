@@ -545,7 +545,6 @@ SCIMAGO_ENABLED = os.environ.get('SCIMAGO_ENABLED', 'True') == 'True'
 SCIMAGO_URL_IR = os.environ.get('OPAC_SCIMAGO_URL_IR', 'https://www.scimagoir.com/')
 # Turn On or Off the load of SCImago link 
 SCIMAGO_IR_LOAD_ON_MODAL = os.environ.get('OPAC_SCIMAGO_IR_LOAD_ON_MODAL', 'True') == 'True'
-SCIMAGO_IR_LOAD_ON_MODAL = True
 # Check the length of authors on article page to Turn On or Off the load of SCImago on page load or modal load (avoid page break)
 SCIMAGO_IR_AUTHOR_LENGTH = int(os.environ.get('OPAC_SCIMAGO_IR_AUTHOR_LENGTH', '30'))
 
