@@ -107,50 +107,57 @@
   //Change the bootstrap gobally behavior to select2 work with modal, more about see: https://select2.org/troubleshooting/common-problems
   $.fn.modal.Constructor.prototype.enforceFocus = function () { };
 
-  var scimago_verify = false;
+  affiliations = {};
 
-  $('#ModalTutors').on('shown.bs.modal', function () {
+  function add_scimago_image(){
+    $('.tutors').each(
 
-    if (!scimago_verify) {
+    function () {
 
-      // Like a cache dict
-      var affiliations = {};
+      $(this).find('div').not(".clearfix").each(function () {
+        self = $(this);
 
-      $('.tutors').each(
+        affiliation_name = $('span:first', self).text();
+        if (affiliation_name){
+            scimago_link = ' <a href="#" target="_blank" class="scimago_link" data-affiliation="' + affiliation_name + '" ><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="20" width="100" data-toggle="tooltip" data-placement="top" title="{% trans %}Link to SCIMAGO{% endtrans %}"></a>';
+            self.append(scimago_link);
 
-        function () {
+        }
+      });
 
-          $(this).find('div').not(".clearfix").each(function () {
-            self = $(this);
+    });
 
-            affiliation_name = $('span:first', self).text();
+  }
 
-            if (affiliation_name){
-              // if affiliations is in dict
-              if (affiliations[affiliation_name]) {
-                self.append(affiliations[affiliation_name]);
-                // if affiliations is not in dict  
-              } else {
-                $.ajax({
-                  type: "GET",
-                  async: false,
-                  url: "{{ url_for('main.scimago_ir') }}",
-                  data: 'q=' + encodeURI(affiliation_name),
-                  success: function (data) {
-                    if (data) {
-                      scimago_link = ' <a href="{{ config.SCIMAGO_URL_IR }}' + data + '" target="_blank"><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="12" data-toggle="tooltip" data-placement="top" title="{% trans %}Link to SCIMAGO{% endtrans %}"></a>'
-                      self.append(scimago_link);
-                      affiliations[affiliation_name] = scimago_link;
-                    }
-                  }
-                });
-              }
+  add_scimago_image()
+
+  $(".scimago_link").click(function(e){
+    e.preventDefault();
+
+    affiliation_name = $(this).data("affiliation");
+
+    if (affiliation_name){
+      if (affiliations[affiliation_name]) {
+        window.open(affiliations[affiliation_name], '_blank');
+      } else {
+        $.ajax({
+          type: "GET",
+          async: false,
+          url: "{{ url_for('main.scimago_ir') }}",
+          data: 'q=' + encodeURI(affiliation_name),
+          success: function (data) {
+            if (data) {
+              affiliations[affiliation_name] = '{{ config.SCIMAGO_URL_IR }}' + data
+              window.open(affiliations[affiliation_name], '_blank');
+            }else{
+              alert("{% trans %}Afiliação: {% endtrans%}<b>" + affiliation_name + "</b>{% trans %} não encontrado no SCImago Institutions Rankings{% endtrans%}");
             }
-          });
+          }
         });
-      scimago_verify = true;
-    }
+      }
+    }    
   });
+
 
   var howcite_initialized = false;
 

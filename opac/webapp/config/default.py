@@ -542,7 +542,7 @@ SCIMAGO_URL = os.environ.get(
 SCIMAGO_ENABLED = os.environ.get('SCIMAGO_ENABLED', 'True') == 'True'
 
 # SCImago Institutions Ranking(IR)
-SCIMAGO_URL_IR = os.environ.get('SCIMAGO_URL_IR', 'https://www.scimagoir.com/')
+SCIMAGO_URL_IR = os.environ.get('OPAC_SCIMAGO_URL_IR', 'https://www.scimagoir.com/')
 
 # Audit Log Email notifications:
 AUDIT_LOG_NOTIFICATION_ENABLED = os.environ.get(
