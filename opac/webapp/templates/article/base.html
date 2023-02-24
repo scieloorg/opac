@@ -16,11 +16,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/scielo-article.css') }}" type="text/css" async />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" async />
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" async />
 {% endblock %}
 
 {% block content %}
-
-{% include "article/includes/header.html" %}
 
 {% include "article/includes/alternative_header.html" %}
 
@@ -80,6 +79,7 @@
 
 <script type="text/javascript" src="//badge.dimensions.ai/badge.js" charset="utf-8" async></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <!-- xxx Verifica se o artigo contém artigos relacionados -->
 {% if article.related_articles %}
@@ -119,7 +119,7 @@
 
         affiliation_name = $('span:first', self).text();
         if (affiliation_name){
-            scimago_link = ' <a href="#" target="_blank" class="scimago_link" data-affiliation="' + affiliation_name + '" ><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="20" width="100" data-toggle="tooltip" data-placement="top" title="{% trans %}Link to SCIMAGO{% endtrans %}"></a>';
+            scimago_link = ' <a href="#" target="_blank" class="scimago_link" data-affiliation="' + affiliation_name + '" ><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="12" data-toggle="tooltip" data-placement="top" title="{% trans %}Link to SCImago Institutions Rankings{% endtrans %}"></a>';
             self.append(scimago_link);
 
         }
@@ -150,7 +150,10 @@
               affiliations[affiliation_name] = '{{ config.SCIMAGO_URL_IR }}' + data
               window.open(affiliations[affiliation_name], '_blank');
             }else{
-              alert("{% trans %}Afiliação: {% endtrans%}<b>" + affiliation_name + "</b>{% trans %} não encontrado no SCImago Institutions Rankings{% endtrans%}");
+              toastr.options = {
+                positionClass: 'toast-top-center'
+              };
+              toastr.error('{% trans %}Link temporariamente indisponível{% endtrans%}');
             }
           }
         });
