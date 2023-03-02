@@ -37,7 +37,7 @@ lxml==4.7.1
 Mako==1.1.3
 MarkupSafe==2.0.1
 mongoengine==0.16.3
-natsort==7.0.1
+natsort==8.3.1
 oauthlib==3.1.0
 -e git+https://git@github.com/scieloorg/opac_schema@v2.68#egg=Opac_Schema
 -e git+https://github.com/scieloorg/packtools@4b5211acad5a596a56edf008b839b1d9e41125bf#egg=packtools
