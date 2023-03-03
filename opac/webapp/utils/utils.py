@@ -1,8 +1,8 @@
 # coding: utf-8
 
+import json
 import logging
 import os
-import json
 import re
 import shutil
 from datetime import datetime, timedelta
@@ -11,8 +11,13 @@ from uuid import uuid4
 import pytz
 import requests
 import webapp
-from citeproc import (Citation, CitationItem, CitationStylesBibliography,
-                      CitationStylesStyle, formatter)
+from citeproc import (
+    Citation,
+    CitationItem,
+    CitationStylesBibliography,
+    CitationStylesStyle,
+    formatter,
+)
 from citeproc.source.json import CiteProcJSON
 from citeproc_styles import get_style_filepath
 from flask import current_app, render_template
@@ -34,25 +39,26 @@ except ImportError:
 CSS = "/static/css/style_article_html.css"
 REGEX_EMAIL = re.compile(
     r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-    re.IGNORECASE)  # RFC 2822 (simplified)
+    re.IGNORECASE,
+)  # RFC 2822 (simplified)
 logger = logging.getLogger(__name__)
 
 
 def namegen_filename(obj, file_data=None):
     """
-        Retorna um nome de arquivo seguro para o arquivo subido,
-        utilizando o nome (campo "name" do modelo) e mantendo a extensão original
+    Retorna um nome de arquivo seguro para o arquivo subido,
+    utilizando o nome (campo "name" do modelo) e mantendo a extensão original
     """
 
     if isinstance(obj, str):
         _, extension = os.path.splitext(obj)
-        return secure_filename('%s%s' % (_, extension))
+        return secure_filename("%s%s" % (_, extension))
     else:
         _, extension = os.path.splitext(file_data.filename)
-        return secure_filename('%s%s' % (obj.name, extension))
+        return secure_filename("%s%s" % (obj.name, extension))
 
 
-def open_file(file_path, mode='rb', encoding='iso-8859-1'):
+def open_file(file_path, mode="rb", encoding="iso-8859-1"):
     """
     Open file as like object(bytes)
     """
@@ -64,10 +70,10 @@ def open_file(file_path, mode='rb', encoding='iso-8859-1'):
 
 def thumbgen_filename(filename):
     """
-        Gera o nome do arquivo do thumbnail a partir do  filename.
+    Gera o nome do arquivo do thumbnail a partir do  filename.
     """
     name, ext = os.path.splitext(filename)
-    return '%s_thumb%s' % (name, ext)
+    return "%s_thumb%s" % (name, ext)
 
 
 def get_timed_serializer():
@@ -164,9 +170,9 @@ def get_next_issue(issues, issue):
 
 
 def get_label_issue(issue):
-    label = 'Vol. %s ' % issue.volume if issue.volume else ''
-    label += 'No. %s ' % issue.number if issue.number else ''
-    label += '- %s' % issue.year if issue.year else ''
+    label = "Vol. %s " % issue.volume if issue.volume else ""
+    label += "No. %s " % issue.number if issue.number else ""
+    label += "- %s" % issue.year if issue.year else ""
 
     return label
 
@@ -183,16 +189,20 @@ def send_email(recipient, subject, html):
      - (True, '') em caso de sucesso.
      - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-    recipients = [recipient, ]
+    recipients = [
+        recipient,
+    ]
     if isinstance(recipient, list):
         recipients = recipient
     try:
-        msg = Message(subject=subject,
-                      sender=current_app.config['MAIL_DEFAULT_SENDER'],
-                      recipients=recipients,
-                      html=html)
+        msg = Message(
+            subject=subject,
+            sender=current_app.config["MAIL_DEFAULT_SENDER"],
+            recipients=recipients,
+            html=html,
+        )
         webapp.mail.send(msg)
-        return (True, '')
+        return (True, "")
     except Exception as e:
         return (False, e)
 
@@ -228,9 +238,8 @@ def create_user(user_email, user_password, user_email_confirmed):
     """
 
     new_user = models.User(
-        email=user_email,
-        _password=user_password,
-        email_confirmed=user_email_confirmed)
+        email=user_email, _password=user_password, email_confirmed=user_email_confirmed
+    )
     new_user.define_password(user_password)
     webapp.dbsql.session.add(new_user)
     webapp.dbsql.session.commit()
@@ -246,10 +255,12 @@ def generate_thumbnail(input_filename):
     caso contrário None.
     """
 
-    image_root = current_app.config['IMAGE_ROOT']
+    image_root = current_app.config["IMAGE_ROOT"]
 
-    size = (current_app.config["THUMBNAIL_HEIGHT"],
-            current_app.config["THUMBNAIL_WIDTH"])
+    size = (
+        current_app.config["THUMBNAIL_HEIGHT"],
+        current_app.config["THUMBNAIL_WIDTH"],
+    )
 
     image_path = os.path.join(image_root, thumbgen_filename(input_filename))
 
@@ -258,11 +269,11 @@ def generate_thumbnail(input_filename):
         img.thumbnail(size)
         img.save(image_path)
     except KeyError as e:
-        logger.error(u'%s' % e)
+        logger.error("%s" % e)
     except IOError as e:
-        logger.error(u'%s' % e)
+        logger.error("%s" % e)
     except Exception as e:
-        logger.exception('Unexpected error', e)
+        logger.exception("Unexpected error", e)
     else:
         return image_path
 
@@ -278,7 +289,7 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
     nome da imagem.
     """
 
-    image_root = current_app.config['IMAGE_ROOT']
+    image_root = current_app.config["IMAGE_ROOT"]
     if not os.path.isdir(image_root):
         os.makedirs(image_root)
     image_destiation_path = os.path.join(image_root, filename)
@@ -287,19 +298,21 @@ def create_image(image_path, filename, thumbnail=False, check_if_exists=True):
         shutil.copyfile(image_path, image_destiation_path)
     except IOError as e:
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
-        logger.error(u'%s' % e)
+        logger.error("%s" % e)
     else:
         if thumbnail:
             generate_thumbnail(image_destiation_path)
 
         if check_if_exists:
-            img = webapp.dbsql.session.query(
-                models.Image).filter_by(name=filename).first()
+            img = (
+                webapp.dbsql.session.query(models.Image)
+                .filter_by(name=filename)
+                .first()
+            )
             if img:
                 return img
 
-        img = models.Image(name=namegen_filename(filename),
-                           path='images/' + filename)
+        img = models.Image(name=namegen_filename(filename), path="images/" + filename)
         webapp.dbsql.session.add(img)
         webapp.dbsql.session.commit()
         return img
@@ -315,7 +328,7 @@ def create_file(file_path, filename, check_if_exists=True):
     nome do arquivo.
     """
 
-    file_root = current_app.config['FILE_ROOT']
+    file_root = current_app.config["FILE_ROOT"]
     if not os.path.isdir(file_root):
         os.makedirs(file_root)
     file_destination_path = os.path.join(file_root, filename)
@@ -324,17 +337,16 @@ def create_file(file_path, filename, check_if_exists=True):
         shutil.copyfile(file_path, file_destination_path)
     except IOError as e:
         # https://docs.python.org/3/library/exceptions.html#FileNotFoundError
-        logger.error(u'%s' % e)
+        logger.error("%s" % e)
     else:
-
         if check_if_exists:
-            _file = webapp.dbsql.session.query(
-                models.File).filter_by(name=filename).first()
+            _file = (
+                webapp.dbsql.session.query(models.File).filter_by(name=filename).first()
+            )
             if _file:
                 return _file
 
-        _file = models.File(name=namegen_filename(filename),
-                            path='files/' + filename)
+        _file = models.File(name=namegen_filename(filename), path="files/" + filename)
         webapp.dbsql.session.add(_file)
         webapp.dbsql.session.commit()
         return _file
@@ -349,8 +361,14 @@ def create_page(name, language, content, journal=None, description=None):
     Parâmetro journal: acrônimo do periódico se a página for de periódico
     Parâmetro description: descrição da página
     """
-    page = Pages(_id=str(uuid4().hex), name=name, language=language,
-                 content=content, journal=journal, description=description)
+    page = Pages(
+        _id=str(uuid4().hex),
+        name=name,
+        language=language,
+        content=content,
+        journal=journal,
+        description=description,
+    )
     page.save()
     return page
 
@@ -373,13 +391,13 @@ def join_html_files_content(revistas_path, acron, files):
         page = webapp.utils.journal_static_page.OldJournalPageFile(file_path)
         if page.unavailable_message:
             unavailable_message.append(
-                page.anchor + page.anchor_title + page.unavailable_message)
+                page.anchor + page.anchor_title + page.unavailable_message
+            )
             content.append(unavailable_message[-1])
         else:
             content.append(page.body)
-    text = ' <!-- UNAVAILABLE MESSAGE: {} --> '.format(
-        len(unavailable_message))
-    return '\n'.join(content)+text
+    text = " <!-- UNAVAILABLE MESSAGE: {} --> ".format(len(unavailable_message))
+    return "\n".join(content) + text
 
 
 def migrate_page_create_image(src, dest, check_if_exists=False):
@@ -401,18 +419,19 @@ def migrate_page_content(content, language, acron=None, page_name=None):
     """
     if content:
         if not acron and not page_name:
-            raise IOError('migrate_page_content() requer acron ou page_name')
+            raise IOError("migrate_page_content() requer acron ou page_name")
 
-        pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
-        images_source_path = current_app.config['JOURNAL_IMAGES_SOURCE_PATH']
-        original_website = current_app.config['JOURNAL_PAGES_ORIGINAL_WEBSITE']
+        pages_source_path = current_app.config["JOURNAL_PAGES_SOURCE_PATH"]
+        images_source_path = current_app.config["JOURNAL_IMAGES_SOURCE_PATH"]
+        original_website = current_app.config["JOURNAL_PAGES_ORIGINAL_WEBSITE"]
 
         migration = PageMigration(
-            original_website, pages_source_path, images_source_path)
+            original_website, pages_source_path, images_source_path
+        )
 
         page = MigratedPage(
-            migration, content,
-            acron=acron, page_name=page_name, lang=language)
+            migration, content, acron=acron, page_name=page_name, lang=language
+        )
         page.migrate_urls(migrate_page_create_file, migrate_page_create_image)
         return page.content
 
@@ -425,14 +444,17 @@ def create_new_journal_page(acron, files, lang):
     Parâmetro files: about, editorial board e instrucoes aos autores
     Parâmetro lang: idioma da página
     """
-    pages_source_path = current_app.config['JOURNAL_PAGES_SOURCE_PATH']
+    pages_source_path = current_app.config["JOURNAL_PAGES_SOURCE_PATH"]
     content = join_html_files_content(pages_source_path, acron, files)
     if content:
         content = migrate_page_content(content, lang, acron=acron)
         create_page(
-            'Página secundária %s (%s)' % (acron.upper(), lang),
-            lang, content, acron,
-            'Página secundária do periódico %s' % acron)
+            "Página secundária %s (%s)" % (acron.upper(), lang),
+            lang,
+            content,
+            acron,
+            "Página secundária do periódico %s" % acron,
+        )
         return content
 
 
@@ -451,7 +473,7 @@ def get_resources_url(resource_list, type, lang):
 
 
 def utc_to_local(utc_dt):
-    local_tz = pytz.timezone(current_app.config['LOCAL_ZONE'])
+    local_tz = pytz.timezone(current_app.config["LOCAL_ZONE"])
 
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
 
@@ -462,100 +484,108 @@ def is_recaptcha_valid(request):
     """
     Verify if the response for the Google recaptcha is valid.
     """
-    return requests.post(
-        current_app.config["GOOGLE_VERIFY_RECAPTCHA_URL"],
-        data={
-            'secret': current_app.config["GOOGLE_VERIFY_RECAPTCHA_KEY"],
-            'response': request.form['g-recaptcha-response'],
-        },
-        verify=True
-    ).json().get("success", False)
+    return (
+        requests.post(
+            current_app.config["GOOGLE_VERIFY_RECAPTCHA_URL"],
+            data={
+                "secret": current_app.config["GOOGLE_VERIFY_RECAPTCHA_KEY"],
+                "response": request.form["g-recaptcha-response"],
+            },
+            verify=True,
+        )
+        .json()
+        .get("success", False)
+    )
 
 
 def send_audit_log_daily_report():
-
     def filter_only_valid_emails(recipients_list):
         validated_emails = []
         for raw_email in recipients_list:
-            form = EmailForm(data={'email': raw_email})
+            form = EmailForm(data={"email": raw_email})
             if form.validate():
                 validated_emails.append(raw_email)
 
         return validated_emails
 
     def collect_recipients_from_conf():
-        print('coletamos os emails para envio definidos na conf: AUDIT_LOG_NOTIFICATION_RECIPIENTS')
-        recipients_from_conf = current_app.config['AUDIT_LOG_NOTIFICATION_RECIPIENTS']
-        recipients_from_conf_validated = filter_only_valid_emails(
-            recipients_from_conf)
-        print('emails definidos na configuração, validados: ',
-              recipients_from_conf_validated)
+        print(
+            "coletamos os emails para envio definidos na conf: AUDIT_LOG_NOTIFICATION_RECIPIENTS"
+        )
+        recipients_from_conf = current_app.config["AUDIT_LOG_NOTIFICATION_RECIPIENTS"]
+        recipients_from_conf_validated = filter_only_valid_emails(recipients_from_conf)
+        print(
+            "emails definidos na configuração, validados: ",
+            recipients_from_conf_validated,
+        )
         if len(recipients_from_conf_validated) == 0:
-            print('não temos emails (da configuração) válidos, para enviar')
+            print("não temos emails (da configuração) válidos, para enviar")
         return recipients_from_conf_validated
 
     def colect_recipiets_from_users_table():
-        active_users = webapp.dbsql.session.query(
-            models.User).filter_by(email_confirmed=True)
-        print('recipients_from_users: ', [u.email for u in active_users])
+        active_users = webapp.dbsql.session.query(models.User).filter_by(
+            email_confirmed=True
+        )
+        print("recipients_from_users: ", [u.email for u in active_users])
         return [u.email for u in active_users]
 
     def prepare_report_email(recipients, records):
-        report_date = datetime.today().strftime('%Y-%m-%d')
-        collection_acronym = current_app.config['OPAC_COLLECTION']
-        email_subject = '[%s] - Relatório de auditoria de mudanças - últimas 24hs (%s) ' % (
-            collection_acronym, report_date)
-        templ_context = {
-            'records': records,
-            'report_date': report_date
-        }
+        report_date = datetime.today().strftime("%Y-%m-%d")
+        collection_acronym = current_app.config["OPAC_COLLECTION"]
+        email_subject = (
+            "[%s] - Relatório de auditoria de mudanças - últimas 24hs (%s) "
+            % (collection_acronym, report_date)
+        )
+        templ_context = {"records": records, "report_date": report_date}
         email_data = {
-            'recipient': recipients,
-            'subject': email_subject,
-            'html': render_template("admin/email/audit_log_report.html", **templ_context)
+            "recipient": recipients,
+            "subject": email_subject,
+            "html": render_template(
+                "admin/email/audit_log_report.html", **templ_context
+            ),
         }
         return email_data
 
     flask_app = webapp.create_app()
 
     with flask_app.app_context():
-        if current_app.config['AUDIT_LOG_NOTIFICATION_ENABLED']:
-
+        if current_app.config["AUDIT_LOG_NOTIFICATION_ENABLED"]:
             target_datetime = datetime.today() - timedelta(days=1)
-            date_range_query = {
-                "created_at": {
-                    '$gte': target_datetime
-                }
-            }
+            date_range_query = {"created_at": {"$gte": target_datetime}}
 
             audit_records = AuditLogEntry.objects.filter(
-                __raw__=date_range_query).order_by('-created_at')
+                __raw__=date_range_query
+            ).order_by("-created_at")
             audit_records_count = audit_records.count()
             if audit_records_count > 0:
                 print("registros encontrados: ", audit_records_count)
                 recipients_from_conf_validated = collect_recipients_from_conf()
                 recipients_from_users = colect_recipiets_from_users_table()
                 all_recipients = recipients_from_conf_validated + recipients_from_users
-                print('todos os recipients:', all_recipients)
+                print("todos os recipients:", all_recipients)
 
                 for record in audit_records:
-                    print('-> ', record._id,
-                          record.created_at.strftime('%Y-%m-%d %H:%M:%S'))
+                    print(
+                        "-> ",
+                        record._id,
+                        record.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    )
 
-                email_data = prepare_report_email(
-                    all_recipients, audit_records)
+                email_data = prepare_report_email(all_recipients, audit_records)
                 send_email(**email_data)
             else:
                 print("não encontramos registros modificados hoje.")
         else:
-            print('O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED')
+            print(
+                "O envio de email de auditoria esta desativado. Verifique a conf: AUDIT_LOG_NOTIFICATION_ENABLED"
+            )
 
 
 def asbool(s):
-    """ Return the boolean value ``True`` if the case-lowered value of string
+    """Return the boolean value ``True`` if the case-lowered value of string
     input ``s`` is a :term:`truthy string`. If ``s`` is already one of the
     boolean values ``True`` or ``False``, return it."""
-    truthy = ('t', 'true', 'y', 'yes', 'on', '1')
+    truthy = ("t", "true", "y", "yes", "on", "1")
 
     if s is None:
         return False
@@ -576,23 +606,22 @@ def fix_journal_last_issue(journal):
         return journal.last_issue
 
     leg_dict = {
-        'year_pub': journal.last_issue.year,
-        'volume': journal.last_issue.volume,
-        'number': journal.last_issue.number,
-        'suppl_number': journal.last_issue.suppl_text
+        "year_pub": journal.last_issue.year,
+        "volume": journal.last_issue.volume,
+        "number": journal.last_issue.number,
+        "suppl_number": journal.last_issue.suppl_text,
     }
-    journal.last_issue.url_segment = URLegendarium(
-        **leg_dict).get_issue_seg()
+    journal.last_issue.url_segment = URLegendarium(**leg_dict).get_issue_seg()
     return journal.last_issue
 
 
-def render_citation(csl_json, style='apa', formatter=formatter.html, validate=False):
+def render_citation(csl_json, style="apa", formatter=formatter.html, validate=False):
     """
     Given a csl_json and return a citation
 
     Link do the csl-json schema: https://github.com/citation-style-language/schema/blob/master/schemas/input/csl-data.json
 
-    Example of csl_json param: 
+    Example of csl_json param:
         [
             {
                 "id": "wNZLxRjKfGdDw8KGmbNN7qj",
@@ -629,7 +658,7 @@ def render_citation(csl_json, style='apa', formatter=formatter.html, validate=Fa
         ]
 
     Return a list citation as string.
-    
+
     """
 
     bib_source = CiteProcJSON(csl_json)
@@ -641,15 +670,18 @@ def render_citation(csl_json, style='apa', formatter=formatter.html, validate=Fa
     bibliography = CitationStylesBibliography(bib_style, bib_source, formatter)
 
     # Loop to the citations id on csl_json
-    ids = [c.get('id') for c in csl_json]
+    ids = [c.get("id") for c in csl_json]
 
     for id in ids:
         citation = Citation([CitationItem(id)])
         bibliography.register(citation)
 
     def warn(citation_item):
-        print("WARNING: Reference with key '{}' not found in the bibliography."
-              .format(citation_item.key))
+        print(
+            "WARNING: Reference with key '{}' not found in the bibliography.".format(
+                citation_item.key
+            )
+        )
 
     bibliography.cite(citation, warn)
 

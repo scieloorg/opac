@@ -1,5 +1,6 @@
 # Redis Cache Key Generation:
 import hashlib
+
 from flask import current_app, request, session
 
 
@@ -9,9 +10,7 @@ def _make_querystring_hash():
     """
 
     args_as_sorted_tuple = tuple(
-        sorted(
-            (pair for pair in request.args.items(multi=True))
-        )
+        sorted((pair for pair in request.args.items(multi=True)))
     )
     args_as_bytes = str(args_as_sorted_tuple).encode()
     return str(hashlib.md5(args_as_bytes).hexdigest())
@@ -40,8 +39,8 @@ def cache_key_with_lang():
     - o path do request
     """
 
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    default_lang = current_app.config.get("BABEL_DEFAULT_LOCALE")
+    language = session.get("lang", default_lang)
     return _cache_key_format(language, request.path)
 
 
@@ -54,7 +53,7 @@ def cache_key_with_lang_with_qs():
     - o hash gerado a partir dos parametros da querystring
     """
 
-    default_lang = current_app.config.get('BABEL_DEFAULT_LOCALE')
-    language = session.get('lang', default_lang)
+    default_lang = current_app.config.get("BABEL_DEFAULT_LOCALE")
+    language = session.get("lang", default_lang)
     qs_hash = _make_querystring_hash()
     return _cache_key_format(language, request.path, qs_hash)

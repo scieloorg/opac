@@ -3,13 +3,11 @@
 import flask
 from flask import url_for
 
-from .base import BaseTestCase
-
 from . import utils
+from .base import BaseTestCase
 
 
 class TOCTestCase(BaseTestCase):
-
     # TOC
     def test_the_title_of_the_article_list_when_language_pt(self):
         """
@@ -22,35 +20,40 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = [
-                {'name': "Artigo Com Título Em Português", 'language': 'pt'},
-                {'name': "Título Del Artículo En Portugués", 'language': 'es'},
-                {'name': "Article Title In Portuguese", 'language': 'en'}
+                {"name": "Artigo Com Título Em Português", "language": "pt"},
+                {"name": "Título Del Artículo En Portugués", "language": "es"},
+                {"name": "Article Title In Portuguese", "language": "en"},
             ]
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)
+                    url_seg_issue=issue.url_segment,
+                )
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='pt_BR')
+            set_locale_url = url_for("main.set_locale", lang_code="pt_BR")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'pt_BR')
+            self.assertEqual(flask.session["lang"], "pt_BR")
 
-            self.assertIn("Artigo Com Título Em Português", response.data.decode('utf-8'))
+            self.assertIn(
+                "Artigo Com Título Em Português", response.data.decode("utf-8")
+            )
 
     def test_the_title_of_the_article_list_when_language_es(self):
         """
@@ -63,35 +66,40 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = [
-                {'name': "Artigo Com Título Em Português", 'language': 'pt'},
-                {'name': "Título Del Artículo En Portugués", 'language': 'es'},
-                {'name': "Article Title In Portuguese", 'language': 'en'}
+                {"name": "Artigo Com Título Em Português", "language": "pt"},
+                {"name": "Título Del Artículo En Portugués", "language": "es"},
+                {"name": "Article Title In Portuguese", "language": "en"},
             ]
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)}
+                    url_seg_issue=issue.url_segment,
+                )
+            }
 
-            set_locale_url = url_for('main.set_locale', lang_code='es')
+            set_locale_url = url_for("main.set_locale", lang_code="es")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'es')
+            self.assertEqual(flask.session["lang"], "es")
 
-            self.assertIn("Título Del Artículo En Portugués",
-                          response.data.decode('utf-8'))
+            self.assertIn(
+                "Título Del Artículo En Portugués", response.data.decode("utf-8")
+            )
 
     def test_the_title_of_the_article_list_when_language_en(self):
         """
@@ -104,35 +112,38 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = [
-                {'name': "Artigo Com Título Em Português", 'language': 'pt'},
-                {'name': "Título Del Artículo En Portugués", 'language': 'es'},
-                {'name': "Article Title In Portuguese", 'language': 'en'}
+                {"name": "Artigo Com Título Em Português", "language": "pt"},
+                {"name": "Título Del Artículo En Portugués", "language": "es"},
+                {"name": "Article Title In Portuguese", "language": "en"},
             ]
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)
+                    url_seg_issue=issue.url_segment,
+                )
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='en')
+            set_locale_url = url_for("main.set_locale", lang_code="en")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'en')
+            self.assertEqual(flask.session["lang"], "en")
 
-            self.assertIn("Article Title In Portuguese", response.data.decode('utf-8'))
+            self.assertIn("Article Title In Portuguese", response.data.decode("utf-8"))
 
     def test_the_title_of_the_article_list_without_translated(self):
         """
@@ -145,31 +156,34 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = []
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)
+                    url_seg_issue=issue.url_segment,
+                )
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='en')
+            set_locale_url = url_for("main.set_locale", lang_code="en")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'en')
+            self.assertEqual(flask.session["lang"], "en")
 
-            self.assertIn("Article Y", response.data.decode('utf-8'))
+            self.assertIn("Article Y", response.data.decode("utf-8"))
 
     def test_the_title_of_the_article_list_without_unknow_language_for_article(self):
         """
@@ -182,31 +196,34 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = []
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)
+                    url_seg_issue=issue.url_segment,
+                )
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='es')
+            set_locale_url = url_for("main.set_locale", lang_code="es")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'es')
+            self.assertEqual(flask.session["lang"], "es")
 
-            self.assertIn("Article Y", response.data.decode('utf-8'))
+            self.assertIn("Article Y", response.data.decode("utf-8"))
 
     def test_the_title_of_the_article_list_with_and_without_translated(self):
         """
@@ -220,43 +237,46 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             translated_titles = [
-                {'name': "Artigo Com Título Em Português", 'language': 'pt'},
-                {'name': "Título Del Artículo En Portugués", 'language': 'es'},
-                {'name': "Article Title In Portuguese", 'language': 'en'}
+                {"name": "Artigo Com Título Em Português", "language": "pt"},
+                {"name": "Título Del Artículo En Portugués", "language": "es"},
+                {"name": "Article Title In Portuguese", "language": "en"},
             ]
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': translated_titles
-            })
+            utils.makeOneArticle(
+                {
+                    "issue": issue,
+                    "title": "Article Y",
+                    "translated_titles": translated_titles,
+                }
+            )
 
-            utils.makeOneArticle({
-                'issue': issue,
-                'title': 'Article Y',
-                'translated_titles': []
-            })
+            utils.makeOneArticle(
+                {"issue": issue, "title": "Article Y", "translated_titles": []}
+            )
 
             header = {
-                'Referer': url_for(
-                    'main.issue_toc',
+                "Referer": url_for(
+                    "main.issue_toc",
                     url_seg=journal.url_segment,
-                    url_seg_issue=issue.url_segment)
+                    url_seg_issue=issue.url_segment,
+                )
             }
 
-            set_locale_url = url_for('main.set_locale', lang_code='es')
+            set_locale_url = url_for("main.set_locale", lang_code="es")
             response = c.get(set_locale_url, headers=header, follow_redirects=True)
 
             self.assertEqual(200, response.status_code)
 
-            self.assertEqual(flask.session['lang'], 'es')
+            self.assertEqual(flask.session["lang"], "es")
 
-            self.assertIn("Article Y", response.data.decode('utf-8'))
+            self.assertIn("Article Y", response.data.decode("utf-8"))
 
-            self.assertIn("Título Del Artículo En Portugués", response.data.decode('utf-8'))
+            self.assertIn(
+                "Título Del Artículo En Portugués", response.data.decode("utf-8")
+            )
 
     def test_ahead_of_print_is_displayed_at_table_of_contents(self):
         """
@@ -268,13 +288,17 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal, 'type': 'ahead'})
+            issue = utils.makeOneIssue({"journal": journal, "type": "ahead"})
 
-            response = c.get(url_for('main.aop_toc',
-                                     url_seg=journal.url_segment,
-                                     url_seg_issue=issue.url_segment))
+            response = c.get(
+                url_for(
+                    "main.aop_toc",
+                    url_seg=journal.url_segment,
+                    url_seg_issue=issue.url_segment,
+                )
+            )
 
-            self.assertIn("ahead of print", response.data.decode('utf-8'))
+            self.assertIn("ahead of print", response.data.decode("utf-8"))
 
     def test_abstract_links_are_displayed(self):
         """
@@ -287,38 +311,42 @@ class TOCTestCase(BaseTestCase):
             # Criando uma coleção para termos o objeto ``g`` na interface
             utils.makeOneCollection()
 
-            issue = utils.makeOneIssue({'journal': journal})
+            issue = utils.makeOneIssue({"journal": journal})
 
             _article_data = {
-                'title': 'Article Y',
-                'original_language': 'en',
-                'languages': ['es', 'pt', 'en'],
-                'issue': issue,
-                'journal': journal,
-                'abstract_languages': ["en", "es", "pt"],
-                'url_segment': '10-11',
-                'translated_titles': [
-                    {'language': 'es', 'name': u'Artículo en español'},
-                    {'language': 'pt', 'name': u'Artigo en Português'},
+                "title": "Article Y",
+                "original_language": "en",
+                "languages": ["es", "pt", "en"],
+                "issue": issue,
+                "journal": journal,
+                "abstract_languages": ["en", "es", "pt"],
+                "url_segment": "10-11",
+                "translated_titles": [
+                    {"language": "es", "name": "Artículo en español"},
+                    {"language": "pt", "name": "Artigo en Português"},
                 ],
-                'pid': 'pidv2',
+                "pid": "pidv2",
             }
             article = utils.makeOneArticle(_article_data)
 
-            response = c.get(url_for('main.issue_toc',
-                                     url_seg=journal.url_segment,
-                                     url_seg_issue=issue.url_segment))
+            response = c.get(
+                url_for(
+                    "main.issue_toc",
+                    url_seg=journal.url_segment,
+                    url_seg_issue=issue.url_segment,
+                )
+            )
 
             uris = [
                 url_for(
-                    'main.article_detail_v3',
+                    "main.article_detail_v3",
                     url_seg=journal.url_segment,
                     article_pid_v3=article.aid,
-                    part='abstract',
+                    part="abstract",
                     lang=abstract_lang,
                 )
                 for abstract_lang in ["en", "es", "pt"]
             ]
             for uri in uris:
                 with self.subTest(uri):
-                    self.assertIn(uri, response.data.decode('utf-8'))
+                    self.assertIn(uri, response.data.decode("utf-8"))
