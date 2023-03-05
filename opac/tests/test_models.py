@@ -1,12 +1,12 @@
 # coding: utf-8
 
-from .base import BaseTestCase
 from sqlalchemy.exc import IntegrityError
-from webapp import models, dbsql
+from webapp import dbsql, models
+
+from .base import BaseTestCase
 
 
 class UserModelTestCase(BaseTestCase):
-
     def test_create_user_with_valid_email_and_password_is_ok(self):
         """
         Com:
@@ -20,8 +20,8 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
-            '_password': '12345',
+            "email": "foo@bar.com",
+            "_password": "12345",
         }
         # when
         new_user = models.User(**data)
@@ -30,10 +30,11 @@ class UserModelTestCase(BaseTestCase):
 
         # then
         # pegamos o novo registro
-        user_from_db = dbsql.session.query(models.User).filter_by(
-            email=data['email']).first()
+        user_from_db = (
+            dbsql.session.query(models.User).filter_by(email=data["email"]).first()
+        )
         self.assertIsNotNone(user_from_db)
-        self.assertEqual(data['email'], user_from_db.email)
+        self.assertEqual(data["email"], user_from_db.email)
         self.assertIsNotNone(user_from_db.password)
         self.assertFalse(user_from_db.email_confirmed)
 
@@ -49,13 +50,13 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
-            '_password': '12345',
+            "email": "foo@bar.com",
+            "_password": "12345",
         }
         # when
         new_user = models.User(**data)
         # then
-        self.assertEqual(data['email'], new_user.email)
+        self.assertEqual(data["email"], new_user.email)
 
     def test_create_user_with_valid_email_and_password_and_confirm_email_is_ok(self):
         """
@@ -70,9 +71,9 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
-            '_password': '12345',
-            'email_confirmed': True,
+            "email": "foo@bar.com",
+            "_password": "12345",
+            "email_confirmed": True,
         }
         # when
         new_user = models.User(**data)
@@ -81,10 +82,11 @@ class UserModelTestCase(BaseTestCase):
 
         # then
         # pegamos o novo registro
-        user_from_db = dbsql.session.query(models.User).filter_by(
-            email=data['email']).first()
+        user_from_db = (
+            dbsql.session.query(models.User).filter_by(email=data["email"]).first()
+        )
         self.assertIsNotNone(user_from_db)
-        self.assertEqual(data['email'], user_from_db.email)
+        self.assertEqual(data["email"], user_from_db.email)
         self.assertIsNotNone(user_from_db.password)
         self.assertTrue(user_from_db.email_confirmed)
 
@@ -101,7 +103,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
@@ -109,10 +111,11 @@ class UserModelTestCase(BaseTestCase):
         dbsql.session.commit()
 
         # then
-        user_from_db = dbsql.session.query(models.User).filter_by(
-            email=data['email']).first()
+        user_from_db = (
+            dbsql.session.query(models.User).filter_by(email=data["email"]).first()
+        )
         self.assertIsNotNone(user_from_db)
-        self.assertEqual(data['email'], user_from_db.email)
+        self.assertEqual(data["email"], user_from_db.email)
         self.assertIsNone(user_from_db.password)
         self.assertFalse(user_from_db.email_confirmed)
 
@@ -128,7 +131,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            '_password': '12345',
+            "_password": "12345",
         }
         # when
         new_user = models.User(**data)
@@ -149,7 +152,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': None,
+            "email": None,
         }
         # when
         new_user = models.User(**data)
@@ -171,14 +174,14 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
-            '_password': '12345',
+            "email": "foo@bar.com",
+            "_password": "12345",
         }
         # when
         new_user = models.User(**data)
-        new_user.define_password(data['_password'])
+        new_user.define_password(data["_password"])
         # then
-        self.assertTrue(new_user.is_correct_password(data['_password']))
+        self.assertTrue(new_user.is_correct_password(data["_password"]))
 
     def test_is_correct_password_using_different_password_return_false(self):
         """
@@ -193,13 +196,13 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
-            '_password': '12345',
+            "email": "foo@bar.com",
+            "_password": "12345",
         }
         # when
         new_user = models.User(**data)
         # then
-        self.assertFalse(new_user.is_correct_password('54321'))
+        self.assertFalse(new_user.is_correct_password("54321"))
 
     def test_is_correct_password_when_user_has_no_password_return_false(self):
         """
@@ -213,12 +216,12 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
         # then
-        self.assertFalse(new_user.is_correct_password('xyz'))
+        self.assertFalse(new_user.is_correct_password("xyz"))
 
     def test_is_correct_password_with_none_when_user_has_no_password_return_false(self):
         """
@@ -232,7 +235,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
@@ -251,12 +254,12 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
         # then
-        expected_response = (True, '')
+        expected_response = (True, "")
         self.assertEqual(expected_response, new_user.send_confirmation_email())
 
     def test_user_without_email_send_confirmation_email_works(self):
@@ -271,7 +274,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': None,
+            "email": None,
         }
         # when
         new_user = models.User(**data)
@@ -291,12 +294,12 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
         # then
-        expected_response = (True, '')
+        expected_response = (True, "")
         self.assertEqual(expected_response, new_user.send_reset_password_email())
 
     def test_user_without_email_send_reset_password_email_works(self):
@@ -311,7 +314,7 @@ class UserModelTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': None,
+            "email": None,
         }
         # when
         new_user = models.User(**data)
@@ -321,7 +324,6 @@ class UserModelTestCase(BaseTestCase):
 
 
 class LoadUserTestCase(BaseTestCase):
-
     def test_valid_user_return_the_user(self):
         """
         Com:
@@ -335,7 +337,7 @@ class LoadUserTestCase(BaseTestCase):
 
         # with
         data = {
-            'email': 'foo@bar.com',
+            "email": "foo@bar.com",
         }
         # when
         new_user = models.User(**data)
@@ -343,8 +345,9 @@ class LoadUserTestCase(BaseTestCase):
         dbsql.session.commit()
 
         # then
-        user_from_db = dbsql.session.query(models.User).filter_by(
-            email=data['email']).first()
+        user_from_db = (
+            dbsql.session.query(models.User).filter_by(email=data["email"]).first()
+        )
         user_loaded = models.load_user(user_from_db.id)
         self.assertEqual(user_from_db.email, user_loaded.email)
 

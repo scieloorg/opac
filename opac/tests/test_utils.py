@@ -1,16 +1,15 @@
 # coding: utf-8
 
-from .base import BaseTestCase
 from unittest.mock import Mock, patch
 
-from . import utils
-
-from webapp import utils as wutils
 import webapp
+from webapp import utils as wutils
+
+from . import utils
+from .base import BaseTestCase
 
 
 class UtilsTestCase(BaseTestCase):
-
     # Issue
     def test_get_prev_issue(self):
         """
@@ -19,12 +18,30 @@ class UtilsTestCase(BaseTestCase):
         IMPORTANTE: A lista é invertida.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
-        issue2 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '2', 'order': '2', })
-        issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '3', 'order': '3', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
+        issue2 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "2",
+                "order": "2",
+            }
+        )
+        issue3 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "3",
+                "order": "3",
+            }
+        )
 
         # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3]
@@ -40,12 +57,30 @@ class UtilsTestCase(BaseTestCase):
         IMPORTANTE: A lista é invertida.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
-        issue2 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '2', 'order': '2', })
-        issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '3', 'order': '3', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
+        issue2 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "2",
+                "order": "2",
+            }
+        )
+        issue3 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "3",
+                "order": "3",
+            }
+        )
 
         # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3]
@@ -59,8 +94,14 @@ class UtilsTestCase(BaseTestCase):
         Teste da função utils.get_prev_issue() without itens, deve retorna None.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
 
         issue = utils.makeOneIssue()
 
@@ -76,8 +117,14 @@ class UtilsTestCase(BaseTestCase):
         Teste da função utils.get_next_issue() without itens, deve retorna None.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
 
         issue = utils.makeOneIssue()
 
@@ -102,14 +149,38 @@ class UtilsTestCase(BaseTestCase):
         IMPORTANTE: A lista é invertida.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
-        issue2 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '2', 'order': '2', })
-        issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '3', 'order': '3', })
-        issue4 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '4', 'order': '4', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
+        issue2 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "2",
+                "order": "2",
+            }
+        )
+        issue3 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "3",
+                "order": "3",
+            }
+        )
+        issue4 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "4",
+                "order": "4",
+            }
+        )
 
         # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3, issue4]
@@ -128,14 +199,38 @@ class UtilsTestCase(BaseTestCase):
         IMPORTANTE: A lista é invertida.
         """
 
-        issue1 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '1', 'order': '1', })
-        issue2 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '2', 'order': '2', })
-        issue3 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '3', 'order': '3', })
-        issue4 = utils.makeOneIssue({'year': '2016', 'volume': '1',
-                                     'number': '4', 'order': '4', })
+        issue1 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "1",
+                "order": "1",
+            }
+        )
+        issue2 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "2",
+                "order": "2",
+            }
+        )
+        issue3 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "3",
+                "order": "3",
+            }
+        )
+        issue4 = utils.makeOneIssue(
+            {
+                "year": "2016",
+                "volume": "1",
+                "number": "4",
+                "order": "4",
+            }
+        )
 
         # criando uma lista de números ordenada
         issues = [issue1, issue2, issue3, issue4]
@@ -150,9 +245,21 @@ class UtilsTestCase(BaseTestCase):
         Teste da função utils.get_prev_article().
         """
 
-        article1 = utils.makeOneArticle({'order': '1', })
-        article2 = utils.makeOneArticle({'order': '2', })
-        article3 = utils.makeOneArticle({'order': '3', })
+        article1 = utils.makeOneArticle(
+            {
+                "order": "1",
+            }
+        )
+        article2 = utils.makeOneArticle(
+            {
+                "order": "2",
+            }
+        )
+        article3 = utils.makeOneArticle(
+            {
+                "order": "3",
+            }
+        )
 
         # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
@@ -166,9 +273,21 @@ class UtilsTestCase(BaseTestCase):
         Teste da função utils.get_next_article().
         """
 
-        article1 = utils.makeOneArticle({'order': '1', })
-        article2 = utils.makeOneArticle({'order': '2', })
-        article3 = utils.makeOneArticle({'order': '3', })
+        article1 = utils.makeOneArticle(
+            {
+                "order": "1",
+            }
+        )
+        article2 = utils.makeOneArticle(
+            {
+                "order": "2",
+            }
+        )
+        article3 = utils.makeOneArticle(
+            {
+                "order": "3",
+            }
+        )
 
         # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
@@ -183,9 +302,21 @@ class UtilsTestCase(BaseTestCase):
         deve retorna None.
         """
 
-        article1 = utils.makeOneArticle({'order': '1', })
-        article2 = utils.makeOneArticle({'order': '2', })
-        article3 = utils.makeOneArticle({'order': '3', })
+        article1 = utils.makeOneArticle(
+            {
+                "order": "1",
+            }
+        )
+        article2 = utils.makeOneArticle(
+            {
+                "order": "2",
+            }
+        )
+        article3 = utils.makeOneArticle(
+            {
+                "order": "3",
+            }
+        )
 
         # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
@@ -200,9 +331,21 @@ class UtilsTestCase(BaseTestCase):
         deve retorna None.
         """
 
-        article1 = utils.makeOneArticle({'order': '1', })
-        article2 = utils.makeOneArticle({'order': '2', })
-        article3 = utils.makeOneArticle({'order': '3', })
+        article1 = utils.makeOneArticle(
+            {
+                "order": "1",
+            }
+        )
+        article2 = utils.makeOneArticle(
+            {
+                "order": "2",
+            }
+        )
+        article3 = utils.makeOneArticle(
+            {
+                "order": "3",
+            }
+        )
 
         # criando uma lista de artigos ordenada
         articles = [article1, article2, article3]
@@ -212,52 +355,57 @@ class UtilsTestCase(BaseTestCase):
         self.assertIsNone(prev_article)
 
     def test_join_html_files_content(self):
-        files = ['paboutj.htm', 'pedboard.htm', 'pinstruc.htm']
+        files = ["paboutj.htm", "pedboard.htm", "pinstruc.htm"]
         content = wutils.join_html_files_content(
-            'opac/tests/fixtures/pages/revistas', 'rbep', files)
+            "opac/tests/fixtures/pages/revistas", "rbep", files
+        )
 
         self.assertIn(
-            'Red de Revistas Científicas de América Latina y '
-            'el Caribe, España y Portugal',
-            content
-            )
+            "Red de Revistas Científicas de América Latina y "
+            "el Caribe, España y Portugal",
+            content,
+        )
         self.assertIn(
-            'Luiz Antunes Netto Carreira, UDESC - '
-            'Universidade do Estado de Santa Catarina',
-            content
-            )
+            "Luiz Antunes Netto Carreira, UDESC - "
+            "Universidade do Estado de Santa Catarina",
+            content,
+        )
         self.assertIn(
-            '11. O cadastro no sistema e posterior acesso,'
-            ' por meio de login e senha',
-            content
-            )
+            "11. O cadastro no sistema e posterior acesso,"
+            " por meio de login e senha",
+            content,
+        )
 
-    @patch.object(wutils.page_migration, 'delete_file')
-    @patch('requests.get')
-    @patch.object(webapp.utils.utils, 'create_image')
-    @patch.object(webapp.utils.utils, 'create_file')
-    @patch.object(webapp.utils.utils, 'migrate_page_create_image')
-    @patch.object(webapp.utils.utils, 'migrate_page_create_file')
-    @patch.object(webapp.utils.utils, 'create_page')
-    def test_migrate_page(self, mocked_create_page,
-                          mocked_migrate_page_create_file,
-                          mocked_migrate_page_create_image,
-                          mocked_create_file,
-                          mocked_create_image, mocked_requests_get,
-                          mocked_delete_file):
+    @patch.object(wutils.page_migration, "delete_file")
+    @patch("requests.get")
+    @patch.object(webapp.utils.utils, "create_image")
+    @patch.object(webapp.utils.utils, "create_file")
+    @patch.object(webapp.utils.utils, "migrate_page_create_image")
+    @patch.object(webapp.utils.utils, "migrate_page_create_file")
+    @patch.object(webapp.utils.utils, "create_page")
+    def test_migrate_page(
+        self,
+        mocked_create_page,
+        mocked_migrate_page_create_file,
+        mocked_migrate_page_create_image,
+        mocked_create_file,
+        mocked_create_image,
+        mocked_requests_get,
+        mocked_delete_file,
+    ):
         mocked_response = Mock()
         mocked_response.status_code = 200
-        mocked_response.content = b'content'
+        mocked_response.content = b"content"
         mocked_requests_get.return_value = mocked_response
 
         mocked_create_file = Mock()
-        mocked_create_file.get_absolut_url = 'bal'
+        mocked_create_file.get_absolut_url = "bal"
         mocked_migrate_page_create_image.side_effect = [
-            '/media/rbep_abc.jpg', ]
-        mocked_migrate_page_create_file.side_effect = [
-            '/media/rbep_avaliacao_en.htm']
+            "/media/rbep_abc.jpg",
+        ]
+        mocked_migrate_page_create_file.side_effect = ["/media/rbep_avaliacao_en.htm"]
         registered_page = Mock()
-        registered_page.content = ''
+        registered_page.content = ""
         mocked_create_page.side_effect = registered_page
         mocked_delete_file.side_effect = None
         content = (
@@ -265,9 +413,10 @@ class UtilsTestCase(BaseTestCase):
             '<a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"/>'
         )
         new_content = wutils.migrate_page_content(
-            content, acron='rbep', page_name=None, language='pt')
+            content, acron="rbep", page_name=None, language="pt"
+        )
         self.assertEqual(
             '<img src="/media/rbep_abc.jpg"/>'
             '<a href="http://www.scielo.br/avaliacao/avaliacao_en.htm"></a>',
-            new_content
+            new_content,
         )

@@ -1,6 +1,6 @@
 # coding:utf-8
-import time
 import tempfile
+import time
 
 import pymongo
 from flask import current_app
@@ -17,6 +17,7 @@ class MongoInstance(object):
     http://blogs.skicelab.com/maurizio/python-unit-testing-and-mongodb.html
 
     """
+
     _instance = None
 
     @classmethod
@@ -26,9 +27,8 @@ class MongoInstance(object):
         return cls._instance
 
     def __init__(self):
-
         self._tmpdir = tempfile.mkdtemp()
-        self.mongo_settings = current_app.config['MONGODB_SETTINGS']
+        self.mongo_settings = current_app.config["MONGODB_SETTINGS"]
 
         # XXX: wait for the instance to be ready
         #      Mongo is ready in a glance, we just wait to be able to open a
@@ -36,14 +36,15 @@ class MongoInstance(object):
         for _ in range(3):
             time.sleep(0.1)
             try:
-                self._conn = pymongo.MongoClient(self.mongo_settings['host'],
-                                                 self.mongo_settings['port'])
+                self._conn = pymongo.MongoClient(
+                    self.mongo_settings["host"], self.mongo_settings["port"]
+                )
             except pymongo.errors.ConnectionFailure:
                 continue
             else:
                 break
         else:
-            assert False, 'Cannot connect to the mongodb test instance'
+            assert False, "Cannot connect to the mongodb test instance"
 
     @property
     def conn(self):
@@ -51,11 +52,10 @@ class MongoInstance(object):
 
     @property
     def db(self):
-        return self._conn[self.mongo_settings['db']]
+        return self._conn[self.mongo_settings["db"]]
 
 
 class BaseTestCase(TestCase):
-
     def __init__(self, *args, **kwargs):
         super(BaseTestCase, self).__init__(*args, **kwargs)
         self.instance = MongoInstance.get_instance()
@@ -72,5 +72,5 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         dbsql.session.remove()
         dbsql.drop_all()
-        mongo_db_name = current_app.config['MONGODB_SETTINGS']['db']
+        mongo_db_name = current_app.config["MONGODB_SETTINGS"]["db"]
         self.conn.drop_database(mongo_db_name)

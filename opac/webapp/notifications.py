@@ -5,9 +5,9 @@
         Conjunto de funções que enviam as notificações do sistema.
 """
 
-from flask import url_for, render_template
-from webapp.utils import utils
 import six
+from flask import render_template, url_for
+from webapp.utils import utils
 
 
 def send_confirmation_email(recipient_email):
@@ -17,19 +17,22 @@ def send_confirmation_email(recipient_email):
      - (True, '') em caso de sucesso.
      - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(recipient_email):
-        raise ValueError('recipient_email é inválido!')
+    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(
+        recipient_email
+    ):
+        raise ValueError("recipient_email é inválido!")
     try:
         ts = utils.get_timed_serializer()
-        token = ts.dumps(recipient_email, salt='email-confirm-key')
+        token = ts.dumps(recipient_email, salt="email-confirm-key")
     except Exception as e:
-        return (False, 'Token inválido: %s' % str(e))
+        return (False, "Token inválido: %s" % str(e))
     else:
-        confirm_url = url_for('admin.confirm_email', token=token, _external=True)
+        confirm_url = url_for("admin.confirm_email", token=token, _external=True)
         sent_results = utils.send_email(
             recipient_email,
             "Confirmação de email",
-            render_template('email/activate.html', confirm_url=confirm_url))
+            render_template("email/activate.html", confirm_url=confirm_url),
+        )
         return sent_results
 
 
@@ -40,18 +43,21 @@ def send_reset_password_email(recipient_email):
      - (True, '') em caso de sucesso.
      - (False, 'MENSAGEM DE ERRO/EXCEÇÃO') em caso de exceção/erro
     """
-    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(recipient_email):
-        raise ValueError('recipient_email é inválido!')
+    if not isinstance(recipient_email, six.string_types) or not utils.REGEX_EMAIL.match(
+        recipient_email
+    ):
+        raise ValueError("recipient_email é inválido!")
     try:
         ts = utils.get_timed_serializer()
-        token = ts.dumps(recipient_email, salt='recover-key')
+        token = ts.dumps(recipient_email, salt="recover-key")
     except Exception as e:
-        return (False, 'Token inválido: %s' % str(e))
+        return (False, "Token inválido: %s" % str(e))
     else:
-        recover_url = url_for('admin.reset_with_token', token=token, _external=True)
+        recover_url = url_for("admin.reset_with_token", token=token, _external=True)
         sent_results = utils.send_email(
             recipient_email,
             "Instruções para recuperar sua senha",
-            render_template('email/recover.html', recover_url=recover_url))
+            render_template("email/recover.html", recover_url=recover_url),
+        )
 
         return sent_results

@@ -1,40 +1,34 @@
 # coding=utf-8
 
-import os
 import logging
+import os
 
 from bs4 import BeautifulSoup, Comment, element
 
-
-LOGGING_LEVEL = os.environ.get('LOGGING_LEVEL', 'DEBUG')
+LOGGING_LEVEL = os.environ.get("LOGGING_LEVEL", "DEBUG")
 logging.basicConfig(level=LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
-fh = logging.FileHandler('journal_pages.log', mode='w')
+fh = logging.FileHandler("journal_pages.log", mode="w")
 fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 
 
-PAGE_NAMES = ['iaboutj.htm',
-              'iedboard.htm',
-              'iinstruc.htm',
-              'paboutj.htm',
-              'pedboard.htm',
-              'pinstruc.htm',
-              'eaboutj.htm',
-              'eedboard.htm',
-              'einstruc.htm',
-              ]
+PAGE_NAMES = [
+    "iaboutj.htm",
+    "iedboard.htm",
+    "iinstruc.htm",
+    "paboutj.htm",
+    "pedboard.htm",
+    "pinstruc.htm",
+    "eaboutj.htm",
+    "eedboard.htm",
+    "einstruc.htm",
+]
 
 PAGE_NAMES_BY_LANG = {
-    'en': ['iaboutj.htm',
-           'iedboard.htm',
-           'iinstruc.htm'],
-    'pt_BR': ['paboutj.htm',
-              'pedboard.htm',
-              'pinstruc.htm'],
-    'es': ['eaboutj.htm',
-           'eedboard.htm',
-           'einstruc.htm'],
+    "en": ["iaboutj.htm", "iedboard.htm", "iinstruc.htm"],
+    "pt_BR": ["paboutj.htm", "pedboard.htm", "pinstruc.htm"],
+    "es": ["eaboutj.htm", "eedboard.htm", "einstruc.htm"],
 }
 
 
@@ -45,32 +39,36 @@ class OldJournalPageFile(object):
     Sua principal função é retornar o corpo do texto principal,
     excluindo cabeçalho e rodapé, pois só fazem sentido no site antigo
     """
+
     # about, editors, instructions, contact
     # 'iaboutj.htm', 'iedboard.htm', 'iinstruc.htm'
     anchors = {
-        'about': 'aboutj',
-        'editors': 'edboard',
-        'instructions': 'instruc',
+        "about": "aboutj",
+        "editors": "edboard",
+        "instructions": "instruc",
     }
-    versions = {'p': 'português', 'e': 'español', 'i': 'English'}
+    versions = {"p": "português", "e": "español", "i": "English"}
     h1 = {
-        'paboutj.htm': 'Sobre o periódico',
-        'pedboard.htm': 'Corpo Editorial',
-        'pinstruc.htm': 'Instruções aos autores',
-        'eaboutj.htm': 'Acerca de la revista',
-        'eedboard.htm': 'Cuerpo Editorial',
-        'einstruc.htm': 'Instrucciones a los autores',
-        'iaboutj.htm': 'About the journal',
-        'iedboard.htm': 'Editorial Board',
-        'iinstruc.htm': 'Instructions to authors',
+        "paboutj.htm": "Sobre o periódico",
+        "pedboard.htm": "Corpo Editorial",
+        "pinstruc.htm": "Instruções aos autores",
+        "eaboutj.htm": "Acerca de la revista",
+        "eedboard.htm": "Cuerpo Editorial",
+        "einstruc.htm": "Instrucciones a los autores",
+        "iaboutj.htm": "About the journal",
+        "iedboard.htm": "Editorial Board",
+        "iinstruc.htm": "Instructions to authors",
     }
 
-    PT_UNAVAILABLE_MSG = 'Informação não disponível em português. ' + \
-                         'Consultar outra versão. '
-    ES_UNAVAILABLE_MSG = 'Información no disponible en español. ' + \
-                         'Consultar otra versión. '
-    EN_UNAVAILABLE_MSG = 'Information is not available in English. ' + \
-                         'Consult other version. '
+    PT_UNAVAILABLE_MSG = (
+        "Informação não disponível em português. " + "Consultar outra versão. "
+    )
+    ES_UNAVAILABLE_MSG = (
+        "Información no disponible en español. " + "Consultar otra versión. "
+    )
+    EN_UNAVAILABLE_MSG = (
+        "Information is not available in English. " + "Consult other version. "
+    )
 
     def __init__(self, filename):
         self.acron = os.path.basename(os.path.dirname(filename))
@@ -86,13 +84,13 @@ class OldJournalPageFile(object):
         lxml e html.parser. Depedendo do arquivo e/ou parser a árvore é gerada
         incompleta.
         """
-        for parser in ['lxml', 'html.parser']:
+        for parser in ["lxml", "html.parser"]:
             if parser is not None:
                 self.tree = BeautifulSoup(self.file_content, parser)
             if self.middle_end_insertion_position is None:
-                self._info('Not found: end. FAILED {}'.format(parser))
+                self._info("Not found: end. FAILED {}".format(parser))
             elif self.middle_begin_insertion_position is None:
-                self._info('Not found: begin. FAILED {}'.format(parser))
+                self._info("Not found: begin. FAILED {}".format(parser))
             else:
                 break
 
@@ -100,11 +98,10 @@ class OldJournalPageFile(object):
     def anchor_title(self):
         title = self.h1.get(self.name)
         if title is None:
-            alt = [v for k, v in self.h1.items()
-                   if self.name[:5] == k[:5]]
+            alt = [v for k, v in self.h1.items() if self.name[:5] == k[:5]]
             if len(alt) == 1:
                 title = alt[0]
-        return '<h1>{}</h1>'.format(title or '')
+        return "<h1>{}</h1>".format(title or "")
 
     @property
     def _body_tree(self):
@@ -125,39 +122,39 @@ class OldJournalPageFile(object):
             return str(self._body_tree)
 
     def _info(self, msg):
-        logger.debug('%s %s' % (self.filename, msg))
+        logger.debug("%s %s" % (self.filename, msg))
 
     def _read(self):
         _content = None
         try:
-            with open(self.filename, 'r', encoding='utf-8') as f:
+            with open(self.filename, "r", encoding="utf-8") as f:
                 _content = f.read()
         except UnicodeError:
-            with open(self.filename, 'r', encoding='iso-8859-1') as f:
+            with open(self.filename, "r", encoding="iso-8859-1") as f:
                 _content = f.read()
-                self._info('iso-8859-1')
+                self._info("iso-8859-1")
         except Exception as e:
-            self._info(u'%s' % e)
-            logging.error(u'%s' % e)
-        return _content or ''
+            self._info("%s" % e)
+            logging.error("%s" % e)
+        return _content or ""
 
     def _remove_anchors(self):
-        items = self._body_tree.find_all('a')
+        items = self._body_tree.find_all("a")
         for item in items:
-            name = item.get('name')
+            name = item.get("name")
             if name is not None:
                 if item.string:
                     item.insert_after(item.string)
                 item.extract()
 
     def _insert_bold_to_p_subtitulo(self):
-        p_items = self._body_tree.find_all('p')
+        p_items = self._body_tree.find_all("p")
         for p in p_items:
-            style = p.get('class')
+            style = p.get("class")
             if style is not None:
-                if 'subtitulo' in list(style):
-                    if not p.find_all('b'):
-                        del p['class']
+                if "subtitulo" in list(style):
+                    if not p.find_all("b"):
+                        del p["class"]
                         for item in p.children:
                             new_tag = self.tree.new_tag("b")
                             wrap(item, new_tag)
@@ -167,9 +164,11 @@ class OldJournalPageFile(object):
         Localiza no texto <p id="middle_begin"/> que é a posição que indica
         início do bloco de texto principal
         """
-        items = [p
-                 for p in self._body_tree.find_all('p')
-                 if p.get('id', '') == 'middle_begin']
+        items = [
+            p
+            for p in self._body_tree.find_all("p")
+            if p.get("id", "") == "middle_begin"
+        ]
         if len(items) == 1:
             return items[0]
 
@@ -181,7 +180,7 @@ class OldJournalPageFile(object):
         table = self.middle_begin_insertion_position
         if table is not None:
             new_tag = self.tree.new_tag("p")
-            new_tag['id'] = 'middle_begin'
+            new_tag["id"] = "middle_begin"
             table.insert_after(new_tag)
             return new_tag
 
@@ -203,7 +202,7 @@ class OldJournalPageFile(object):
         Identifica a posição de inserção de <p id="middle_begin"/>
         que é a posição que indica início do bloco de texto principal.
         """
-        table = self._body_tree.find('table')
+        table = self._body_tree.find("table")
         if table is not None:
             header = str(table)
             if has_header(header):
@@ -214,9 +213,9 @@ class OldJournalPageFile(object):
         Localiza no texto <p id="middle_end"/> que é a posição que indica
         fim do bloco de texto principal
         """
-        items = [p
-                 for p in self._body_tree.find_all('p')
-                 if p.get('id', '') == 'middle_end']
+        items = [
+            p for p in self._body_tree.find_all("p") if p.get("id", "") == "middle_end"
+        ]
         if len(items) == 1:
             return items[0]
 
@@ -228,7 +227,7 @@ class OldJournalPageFile(object):
         p = self.middle_end_insertion_position
         if p is not None:
             new_tag = self.tree.new_tag("p")
-            new_tag['id'] = 'middle_end'
+            new_tag["id"] = "middle_end"
             p.insert_before(new_tag)
             return new_tag
 
@@ -252,9 +251,9 @@ class OldJournalPageFile(object):
         """
         p = None
         href_items = []
-        a_items = self._body_tree.find_all('a')
+        a_items = self._body_tree.find_all("a")
         for a in a_items:
-            href = a.get('href')
+            href = a.get("href")
             if href is not None:
                 href = str(href).strip()
                 href_items.append((a, href, a.text))
@@ -262,32 +261,32 @@ class OldJournalPageFile(object):
                     p = a.parent
                     break
         if p is None:
-            for hr in self._body_tree.find_all('hr'):
+            for hr in self._body_tree.find_all("hr"):
                 p = hr
             if p is not None:
-                self._info('footer hr')
+                self._info("footer hr")
         if p is not None:
             return p
 
     def _get_middle_children_eval_child(self, child, task):
-        if task == 'find_p_begin':
+        if task == "find_p_begin":
             if child == self.p_middle_begin:
-                task = 'find_p_end'
+                task = "find_p_end"
             return task, None
-        if task == 'find_p_end' and child == self.p_middle_end:
-            return 'stop', None
+        if task == "find_p_end" and child == self.p_middle_end:
+            return "stop", None
         if isinstance(child, Comment):
             return task, None
         return task, child
 
     def _get_middle_children(self):
-        task = 'find_p_begin'
+        task = "find_p_begin"
         items = []
         for child in self._body_tree.children:
             task, item = self._get_middle_children_eval_child(child, task)
             if item is not None:
                 items.append(item)
-            elif task == 'stop':
+            elif task == "stop":
                 break
         return items
 
@@ -302,14 +301,14 @@ class OldJournalPageFile(object):
         _anchor = self.anchor_name
         if _anchor is not None:
             return '<a name="{}"> </a>'.format(_anchor)
-        return ''
+        return ""
 
     def _check_unavailable_message(self, content):
-        if self.version == 'português' and 'não disponível' in content:
+        if self.version == "português" and "não disponível" in content:
             return self.PT_UNAVAILABLE_MSG
-        elif self.version == 'español' and 'no disponible' in content:
+        elif self.version == "español" and "no disponible" in content:
             return self.ES_UNAVAILABLE_MSG
-        elif self.version == 'English' and 'not available' in content:
+        elif self.version == "English" and "not available" in content:
             return self.EN_UNAVAILABLE_MSG
 
     def _get_unavailable_message(self):
@@ -320,7 +319,7 @@ class OldJournalPageFile(object):
             if len((p_items[0][1])) < 300:
                 msg = self._check_unavailable_message(p_items[0][1])
                 if msg is not None:
-                    self._unavailable_message = '<p>{}</p>'.format(msg)
+                    self._unavailable_message = "<p>{}</p>".format(msg)
 
     @property
     def sorted_by_relevance(self):
@@ -328,22 +327,22 @@ class OldJournalPageFile(object):
 
     @property
     def middle_children(self):
-        if not hasattr(self, '_middle_children'):
+        if not hasattr(self, "_middle_children"):
             self._middle_children = self._get_middle_children()
         return self._middle_children
 
     @property
     def middle_items(self):
-        if not hasattr(self, '_middle_items'):
-            self._middle_items = [child_tostring(item).strip()
-                                  for item in self.middle_children]
+        if not hasattr(self, "_middle_items"):
+            self._middle_items = [
+                child_tostring(item).strip() for item in self.middle_children
+            ]
         return self._middle_items
 
     @property
     def middle_text(self):
-        if not hasattr(self, '_middle_text'):
-            self._middle_text = ''.join([str(item)
-                                         for item in self.middle_children])
+        if not hasattr(self, "_middle_text"):
+            self._middle_text = "".join([str(item) for item in self.middle_children])
         return self._middle_text
 
     @property
@@ -353,43 +352,47 @@ class OldJournalPageFile(object):
 
     def get_alternative_middle_text(self):
         _middle = self.file_content
-        for tag_name in ['table', 'p', 'body']:
-            for tag in ['<'+tag_name+' ', '<'+tag_name+'>', '</'+tag_name+'>']:
+        for tag_name in ["table", "p", "body"]:
+            for tag in [
+                "<" + tag_name + " ",
+                "<" + tag_name + ">",
+                "</" + tag_name + ">",
+            ]:
                 _middle = _middle.replace(tag.upper(), tag.lower())
         middle = _middle
-        if '</table>' in middle:
-            middle = middle[middle.find('</table>')+len('</table>'):]
-        if 'Home' in middle:
-            middle = middle[:middle.rfind('Home')]
-            middle = middle[:middle.rfind('<p')]
-        elif 'Volver' in middle:
-            middle = middle[:middle.rfind('Volver')]
-            middle = middle[:middle.rfind('<p')]
-        elif 'Voltar' in middle:
-            middle = middle[:middle.rfind('Voltar')]
-            middle = middle[:middle.rfind('<p')]
+        if "</table>" in middle:
+            middle = middle[middle.find("</table>") + len("</table>") :]
+        if "Home" in middle:
+            middle = middle[: middle.rfind("Home")]
+            middle = middle[: middle.rfind("<p")]
+        elif "Volver" in middle:
+            middle = middle[: middle.rfind("Volver")]
+            middle = middle[: middle.rfind("<p")]
+        elif "Voltar" in middle:
+            middle = middle[: middle.rfind("Voltar")]
+            middle = middle[: middle.rfind("<p")]
         elif '<p class="rodape">' in middle:
-            middle = middle[:middle.rfind('<p class="rodape">')]
-        elif '://creativecommons.org' in middle:
-            middle = middle[:middle.rfind('://creativecommons.org')]
-            middle = middle[:middle.rfind('<p')]
-        if '</body>' in middle:
-            middle = middle[:middle.rfind('</body>')]
+            middle = middle[: middle.rfind('<p class="rodape">')]
+        elif "://creativecommons.org" in middle:
+            middle = middle[: middle.rfind("://creativecommons.org")]
+            middle = middle[: middle.rfind("<p")]
+        if "</body>" in middle:
+            middle = middle[: middle.rfind("</body>")]
         middle = middle.strip()
-        self._info('BEGIN:')
+        self._info("BEGIN:")
         self._info(middle[:100])
-        self._info('END:')
+        self._info("END:")
         self._info(middle[-100:])
-        self._info('REMOVED BEGIN:')
-        self._info(_middle[:_middle.find(middle)])
-        self._info('REMOVED END:')
-        self._info(_middle[_middle.find(middle)+len(middle):])
+        self._info("REMOVED BEGIN:")
+        self._info(_middle[: _middle.find(middle)])
+        self._info("REMOVED END:")
+        self._info(_middle[_middle.find(middle) + len(middle) :])
 
         return middle
 
     def remove_p_in_li(self):
-        for li in self._body_tree.find_all('li'):
-            p = li.find('p')
+        for li in self._body_tree.find_all("li"):
+            p = li.find("p")
             if p is not None:
                 p.unwrap()
 
@@ -404,35 +407,54 @@ class OldJournalPageFile(object):
 
     @property
     def body(self):
-        return '<!-- inicio {} -->'.format(self.filename) + \
-               self.anchor + self.anchor_title + \
-               self.middle + '<hr noshade="" size="1"/>' + \
-               '<!-- fim {} -->'.format(self.filename)
+        return (
+            "<!-- inicio {} -->".format(self.filename)
+            + self.anchor
+            + self.anchor_title
+            + self.middle
+            + '<hr noshade="" size="1"/>'
+            + "<!-- fim {} -->".format(self.filename)
+        )
 
 
 def has_header(content):
-    return 'Editable' in content and '<!--' in content and '-->' in content or\
-           'href="#0' in content or \
-           'script=sci_serial' in content or \
-           '/scielo.php?lng=' in content
+    return (
+        "Editable" in content
+        and "<!--" in content
+        and "-->" in content
+        or 'href="#0' in content
+        or "script=sci_serial" in content
+        or "/scielo.php?lng=" in content
+    )
 
 
 def has_footer(href, a=None):
     if a is not None:
-        return '#' == href and a.text.strip() == 'Home' or \
-               'script=sci_serial' in href and a.text.strip() == 'Home' or \
-               'script=sci_serial' in href and a.text.strip() == 'Voltar' or \
-               'script=sci_serial' in href and a.text.strip() == 'Volver' or \
-               'javascript:history.back()' == href
-    return 'script=sci_serial' in href and 'Home' in href or \
-           'script=sci_serial' in href and 'Voltar' in href or \
-           'script=sci_serial' in href and 'Volver' in href or \
-           'javascript:history.back()' in href
+        return (
+            "#" == href
+            and a.text.strip() == "Home"
+            or "script=sci_serial" in href
+            and a.text.strip() == "Home"
+            or "script=sci_serial" in href
+            and a.text.strip() == "Voltar"
+            or "script=sci_serial" in href
+            and a.text.strip() == "Volver"
+            or "javascript:history.back()" == href
+        )
+    return (
+        "script=sci_serial" in href
+        and "Home" in href
+        or "script=sci_serial" in href
+        and "Voltar" in href
+        or "script=sci_serial" in href
+        and "Volver" in href
+        or "javascript:history.back()" in href
+    )
 
 
 def remove_exceding_space_chars(content):
     parts = content.split()
-    return ' '.join([p for p in parts if len(p) > 0])
+    return " ".join([p for p in parts if len(p) > 0])
 
 
 def child_tostring(child):

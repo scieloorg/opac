@@ -1,30 +1,32 @@
 # coding: utf-8
 
-import unittest
 import re
+import unittest
 from unittest.mock import patch
-from flask import current_app, url_for, g
+
+from flask import current_app, g, url_for
 from flask_login import current_user
+from tests.utils import (
+    makeOneArticle,
+    makeOneCollection,
+    makeOneIssue,
+    makeOneJournal,
+    makeOnePage,
+    makeOneSponsor,
+)
 from webapp import dbsql, mail
-from webapp.utils import create_user
 from webapp.admin import forms
 from webapp.controllers import get_user_by_email
 from webapp.notifications import send_confirmation_email
+from webapp.utils import create_user
+
 from .base import BaseTestCase
-from tests.utils import (
-    makeOnePage,
-    makeOneJournal,
-    makeOneIssue,
-    makeOneArticle,
-    makeOneCollection, makeOneSponsor
-)
 
 reset_pwd_url_pattern = re.compile('href="(.*)">')
 email_confirm_url_pattern = re.compile('href="(.*)">')
 
 
 class AdminViewsTestCase(BaseTestCase):
-
     def test_unauthorized_access_to_admin_index_must_redirect(self):
         """
         Quando:
@@ -38,13 +40,13 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    admin_index_url = url_for('admin.index')
-                    expected_login_url = url_for('admin.login_view')
+                    admin_index_url = url_for("admin.index")
+                    expected_login_url = url_for("admin.login_view")
                     # when
                     response = c.get(admin_index_url, follow_redirects=False)
                     # then
                     self.assertStatus(response, 302)
-                    self.assertEqual('text/html; charset=utf-8', response.content_type)
+                    self.assertEqual("text/html; charset=utf-8", response.content_type)
                     self.assertRedirects(response, expected_login_url)
 
     def test_access_to_admin_index_must_redirect_to_login_form(self):
@@ -60,13 +62,13 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    admin_index_url = url_for('admin.index')
+                    admin_index_url = url_for("admin.index")
                     # when
                     response = c.get(admin_index_url, follow_redirects=True)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertEqual('text/html; charset=utf-8', response.content_type)
-                    self.assertTemplateUsed('admin/auth/login.html')
+                    self.assertEqual("text/html; charset=utf-8", response.content_type)
+                    self.assertTemplateUsed("admin/auth/login.html")
 
     def test_invalid_credentials_login_must_show_validation_error(self):
         """
@@ -84,20 +86,19 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
-                    login_credentials = {
-                        'email': 'foo@example.com',
-                        'password': '123'
-                    }
+                    login_url = url_for("admin.login_view")
+                    login_credentials = {"email": "foo@example.com", "password": "123"}
                     expected_errors_msg = {
-                        'password': u'<span class="help-block">Usuário inválido</span>',
+                        "password": '<span class="help-block">Usuário inválido</span>',
                     }
                     # when
                     response = c.post(login_url, data=login_credentials)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertIn(expected_errors_msg['password'], response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertIn(
+                        expected_errors_msg["password"], response.data.decode("utf-8")
+                    )
 
     def test_invalid_user_login_must_show_validation_error(self):
         """
@@ -116,22 +117,26 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
+                    login_url = url_for("admin.login_view")
                     login_credentials = {
-                        'email': 'foo',  # email inválido
-                        'password': '123'
+                        "email": "foo",  # email inválido
+                        "password": "123",
                     }
                     expected_errors_msg = {
-                        'email': u'<span class="help-block">Invalid email address.</span>',
-                        'password': u'<span class="help-block">Usuário inválido</span>',
+                        "email": '<span class="help-block">Invalid email address.</span>',
+                        "password": '<span class="help-block">Usuário inválido</span>',
                     }
                     # when
                     response = c.post(login_url, data=login_credentials)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertIn(expected_errors_msg['email'], response.data.decode('utf-8'))
-                    self.assertIn(expected_errors_msg['password'], response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertIn(
+                        expected_errors_msg["email"], response.data.decode("utf-8")
+                    )
+                    self.assertIn(
+                        expected_errors_msg["password"], response.data.decode("utf-8")
+                    )
 
     def test_invalid_password_login_must_show_validation_error(self):
         """
@@ -149,20 +154,22 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
+                    login_url = url_for("admin.login_view")
                     login_credentials = {
-                        'email': 'foo@example.com',
-                        'password': '',  # senha inválida
+                        "email": "foo@example.com",
+                        "password": "",  # senha inválida
                     }
                     expected_errors_msg = {
-                        'password': u'<span class="help-block">This field is required.</span>',
+                        "password": '<span class="help-block">This field is required.</span>',
                     }
                     # when
                     response = c.post(login_url, data=login_credentials)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertIn(expected_errors_msg['password'], response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertIn(
+                        expected_errors_msg["password"], response.data.decode("utf-8")
+                    )
 
     def test_login_successfully(self):
         """
@@ -180,27 +187,28 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
+                    login_url = url_for("admin.login_view")
                     credentials = {
-                        'email': 'foo@example.com',
-                        'password': '123',
+                        "email": "foo@example.com",
+                        "password": "123",
                     }
-                    expected_page_header = u'<h1>OPAC Admin <small>da coleção: %s</small></h1>' % \
-                        current_app.config['OPAC_COLLECTION'].upper()
+                    expected_page_header = (
+                        "<h1>OPAC Admin <small>da coleção: %s</small></h1>"
+                        % current_app.config["OPAC_COLLECTION"].upper()
+                    )
 
-                    expected_logout_url = url_for('admin.logout_view')
+                    expected_logout_url = url_for("admin.logout_view")
                     # when
-                    create_user(
-                        credentials['email'],
-                        credentials['password'],
-                        True)
+                    create_user(credentials["email"], credentials["password"], True)
                     # create new user:
-                    response = c.post(login_url, data=credentials, follow_redirects=True)
+                    response = c.post(
+                        login_url, data=credentials, follow_redirects=True
+                    )
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/index.html')
-                    self.assertIn(expected_page_header, response.data.decode('utf-8'))
-                    self.assertIn(expected_logout_url, response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/index.html")
+                    self.assertIn(expected_page_header, response.data.decode("utf-8"))
+                    self.assertIn(expected_logout_url, response.data.decode("utf-8"))
 
     def test_login_valid_user_with_invalid_password_raise_error_msg(self):
         """
@@ -218,33 +226,33 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
+                    login_url = url_for("admin.login_view")
                     credentials = {
-                        'email': 'foo@example.com',
-                        'password': '123',
+                        "email": "foo@example.com",
+                        "password": "123",
                     }
-                    logged_page_header = u'<h1>OPAC Admin <small>da coleção: %s</small></h1>' % \
-                        current_app.config['OPAC_COLLECTION'].upper()
+                    logged_page_header = (
+                        "<h1>OPAC Admin <small>da coleção: %s</small></h1>"
+                        % current_app.config["OPAC_COLLECTION"].upper()
+                    )
 
-                    logout_url = url_for('admin.logout_view')
+                    logout_url = url_for("admin.logout_view")
                     # when
-                    create_user(
-                        credentials['email'],
-                        credentials['password'],
-                        True)
+                    create_user(credentials["email"], credentials["password"], True)
                     # create new user:
                     response = c.post(
                         login_url,
                         data={
-                            'email': credentials['email'],
-                            'password': 'foo.bar',
+                            "email": credentials["email"],
+                            "password": "foo.bar",
                         },
-                        follow_redirects=True)
+                        follow_redirects=True,
+                    )
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertNotIn(logged_page_header, response.data.decode('utf-8'))
-                    self.assertNotIn(logout_url, response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertNotIn(logged_page_header, response.data.decode("utf-8"))
+                    self.assertNotIn(logout_url, response.data.decode("utf-8"))
 
     def test_login_page_must_have_link_to_password_reset(self):
         """
@@ -259,14 +267,16 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
-                    expected_reset_pwd_link = url_for('admin.reset')
+                    login_url = url_for("admin.login_view")
+                    expected_reset_pwd_link = url_for("admin.reset")
                     # when
                     response = c.get(login_url, follow_redirects=True)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertIn(expected_reset_pwd_link, response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertIn(
+                        expected_reset_pwd_link, response.data.decode("utf-8")
+                    )
 
     def test_login_page_must_have_set_language_links(self):
         """
@@ -283,13 +293,13 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
-                    languages = current_app.config['LANGUAGES']
+                    login_url = url_for("admin.login_view")
+                    languages = current_app.config["LANGUAGES"]
                     lang_urls = {}
                     for lang_code, lang_name in languages.items():
                         lang_urls[lang_code] = {
-                            'url': url_for('main.set_locale', lang_code=lang_code),
-                            'name': lang_name,
+                            "url": url_for("main.set_locale", lang_code=lang_code),
+                            "name": lang_name,
                         }
 
                     # when
@@ -297,14 +307,16 @@ class AdminViewsTestCase(BaseTestCase):
 
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
+                    self.assertTemplateUsed("admin/auth/login.html")
                     for lang_code, lang_data in lang_urls.items():
-                        lang_url = lang_data['url']
-                        lang_name = lang_data['name']
-                        self.assertIn(lang_url, response.data.decode('utf-8'))
-                        self.assertIn(lang_name, response.data.decode('utf-8'))
+                        lang_url = lang_data["url"]
+                        lang_name = lang_data["name"]
+                        self.assertIn(lang_url, response.data.decode("utf-8"))
+                        self.assertIn(lang_name, response.data.decode("utf-8"))
 
-    @unittest.skip("Falhou na chamada: get_context_variable depois de adicionar os withs")
+    @unittest.skip(
+        "Falhou na chamada: get_context_variable depois de adicionar os withs"
+    )
     def test_login_with_unconfirmed_user_must_not_proceed(self):
         """
         Com:
@@ -321,33 +333,30 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
+                    login_url = url_for("admin.login_view")
                     credentials = {
-                        'email': 'foo@example.com',
-                        'password': '123',
+                        "email": "foo@example.com",
+                        "password": "123",
                     }
-                    expected_form_error = {'password': [u'Senha inválida']}
+                    expected_form_error = {"password": ["Senha inválida"]}
                     expected_error_msgs = [
-                        u"Email não confirmado!",
-                        u"Você <strong>deve</strong> confirmar seu email.<br>",
-                        u"<strong>Por favor entre em contato com o administrador.</strong>"]
-                    create_user(
-                        credentials['email'],
-                        credentials['password'],
-                        False)
+                        "Email não confirmado!",
+                        "Você <strong>deve</strong> confirmar seu email.<br>",
+                        "<strong>Por favor entre em contato com o administrador.</strong>",
+                    ]
+                    create_user(credentials["email"], credentials["password"], False)
                     # when
                     # create new user:
                     response = c.post(
-                        login_url,
-                        data=credentials,
-                        follow_redirects=True)
+                        login_url, data=credentials, follow_redirects=True
+                    )
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/unconfirm_email.html')
+                    self.assertTemplateUsed("admin/auth/unconfirm_email.html")
                     for msg in expected_error_msgs:
-                        self.assertIn(msg, response.data.decode('utf-8'))
+                        self.assertIn(msg, response.data.decode("utf-8"))
 
-                    context_form = self.get_context_variable('form')
+                    context_form = self.get_context_variable("form")
                     self.assertIsInstance(context_form, forms.LoginForm)
                     self.assertEqual(expected_form_error, context_form.errors)
 
@@ -366,21 +375,23 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    login_url = url_for('admin.login_view')
-                    logout_url = url_for('admin.logout_view')
+                    login_url = url_for("admin.login_view")
+                    logout_url = url_for("admin.logout_view")
                     credentials = {
-                        'email': 'foo@example.com',
-                        'password': '123',
+                        "email": "foo@example.com",
+                        "password": "123",
                     }
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
-                    login_response = c.post(login_url, data=credentials, follow_redirects=True)
+                    create_user(credentials["email"], credentials["password"], True)
+                    login_response = c.post(
+                        login_url, data=credentials, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     logout_response = c.get(logout_url, follow_redirects=True)
                     # then
                     self.assertStatus(logout_response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
+                    self.assertTemplateUsed("admin/auth/login.html")
 
     def test_reset_password_has_form_as_expected(self):
         """
@@ -397,15 +408,15 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
+                    reset_pwd_url = url_for("admin.reset")
                     # when
                     response = c.get(reset_pwd_url)
                     # then
                     self.assertStatus(response, 200)
-                    self.assertEqual('text/html; charset=utf-8', response.content_type)
-                    self.assertTemplateUsed('admin/auth/reset.html')
+                    self.assertEqual("text/html; charset=utf-8", response.content_type)
+                    self.assertTemplateUsed("admin/auth/reset.html")
 
-                    context_form = self.get_context_variable('form')
+                    context_form = self.get_context_variable("form")
                     self.assertIsInstance(context_form, forms.EmailForm)
 
     def test_reset_password_of_invalid_user_raise_404(self):
@@ -424,16 +435,16 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    user_email = 'foo@example.com'
-                    expected_errors_msg = u'<p>Usuário não encontrado</p>'
+                    reset_pwd_url = url_for("admin.reset")
+                    user_email = "foo@example.com"
+                    expected_errors_msg = "<p>Usuário não encontrado</p>"
                     # when
-                    response = c.post(reset_pwd_url, data={'email': user_email})
+                    response = c.post(reset_pwd_url, data={"email": user_email})
                     # then
                     self.assertStatus(response, 404)
-                    self.assertEqual('text/html; charset=utf-8', response.content_type)
-                    self.assertTemplateUsed('errors/404.html')
-                    error_msg = self.get_context_variable('message')
+                    self.assertEqual("text/html; charset=utf-8", response.content_type)
+                    self.assertTemplateUsed("errors/404.html")
+                    error_msg = self.get_context_variable("message")
                     self.assertEqual(error_msg, expected_errors_msg)
 
     def test_reset_password_of_valid_user_proceed_ok(self):
@@ -451,24 +462,24 @@ class AdminViewsTestCase(BaseTestCase):
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    credentials = {"email": "foo@bar.com", "password": "123"}
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    expected_msg = u'Enviamos as instruções para recuperar a senha para: %s' % \
-                        credentials['email']
+                    reset_pwd_url = url_for("admin.reset")
+                    expected_msg = (
+                        "Enviamos as instruções para recuperar a senha para: %s"
+                        % credentials["email"]
+                    )
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials["email"], credentials["password"], True)
                     response = c.post(
                         reset_pwd_url,
-                        data={'email': credentials['email']},
-                        follow_redirects=True)
+                        data={"email": credentials["email"]},
+                        follow_redirects=True,
+                    )
                     # then
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/login.html')
-                    self.assertIn(expected_msg, response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/auth/login.html")
+                    self.assertIn(expected_msg, response.data.decode("utf-8"))
 
     def test_reset_password_of_valid_user_email_sent(self):
         """
@@ -486,36 +497,40 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
-                    with patch.dict(current_app.config, {'SERVER_NAME': 'localhost'}):
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
+                    with patch.dict(current_app.config, {"SERVER_NAME": "localhost"}):
                         expected_email = {
-                            'subject': u'Instruções para recuperar sua senha',
-                            'recipients': [credentials['email'], ],
-                            'body_has_link': u'<a href="http://%s%s' % (
-                                current_app.config['SERVER_NAME'],
-                                reset_pwd_url
-                            )
+                            "subject": "Instruções para recuperar sua senha",
+                            "recipients": [
+                                credentials["email"],
+                            ],
+                            "body_has_link": '<a href="http://%s%s'
+                            % (current_app.config["SERVER_NAME"], reset_pwd_url),
                         }
 
                         # when
-                        create_user(credentials['email'], credentials['password'], True)
+                        create_user(credentials["email"], credentials["password"], True)
                         with mail.record_messages() as outbox:
                             response = c.post(
                                 reset_pwd_url,
-                                data={'email': credentials['email']},
-                                follow_redirects=True)
+                                data={"email": credentials["email"]},
+                                follow_redirects=True,
+                            )
                             # then
                             self.assertStatus(response, 200)
 
                             self.assertEqual(1, len(outbox))
                             email_msg = outbox[0]
-                            self.assertEqual(expected_email['subject'], email_msg.subject)
-                            self.assertEqual(expected_email['recipients'], email_msg.recipients)
-                            self.assertIn(expected_email['body_has_link'], email_msg.html)
+                            self.assertEqual(
+                                expected_email["subject"], email_msg.subject
+                            )
+                            self.assertEqual(
+                                expected_email["recipients"], email_msg.recipients
+                            )
+                            self.assertIn(
+                                expected_email["body_has_link"], email_msg.html
+                            )
 
     def test_reset_password_send_valid_link_via_email(self):
         """
@@ -534,19 +549,17 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials["email"], credentials["password"], True)
                     with mail.record_messages() as outbox:
                         c.post(
                             reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
+                            data={"email": credentials["email"]},
+                            follow_redirects=True,
+                        )
 
                         # then
                         self.assertEqual(1, len(outbox))
@@ -555,17 +568,19 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = reset_pwd_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        resert_url_with_token = [url for url in links_found if reset_pwd_url in url]
+                        resert_url_with_token = [
+                            url for url in links_found if reset_pwd_url in url
+                        ]
                         self.assertEqual(1, len(resert_url_with_token))
                         resert_url_with_token = resert_url_with_token[0]
 
                     # requisição de reset passoword com token
                     reset_pwd_response = c.get(
-                        resert_url_with_token,
-                        follow_redirects=True)
+                        resert_url_with_token, follow_redirects=True
+                    )
                     self.assertStatus(reset_pwd_response, 200)
-                    self.assertTemplateUsed('admin/auth/reset_with_token.html')
-                    context_form = self.get_context_variable('form')
+                    self.assertTemplateUsed("admin/auth/reset_with_token.html")
+                    context_form = self.get_context_variable("form")
                     self.assertIsInstance(context_form, forms.PasswordForm)
 
     def test_link_sent_via_email_to_reset_password_works_fine(self):
@@ -587,21 +602,18 @@ class AdminViewsTestCase(BaseTestCase):
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
-
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials["email"], credentials["password"], True)
                     with mail.record_messages() as outbox:
                         response = c.post(
                             reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
+                            data={"email": credentials["email"]},
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertEqual(1, len(outbox))
                         email_msg = outbox[0]
@@ -609,16 +621,19 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = reset_pwd_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        resert_url_with_token = [url for url in links_found if reset_pwd_url in url][0]
+                        resert_url_with_token = [
+                            url for url in links_found if reset_pwd_url in url
+                        ][0]
 
-                    new_password = 'blaus'
+                    new_password = "blaus"
                     response = c.post(
                         resert_url_with_token,
-                        data={'password': new_password},
-                        follow_redirects=True)
+                        data={"password": new_password},
+                        follow_redirects=True,
+                    )
                     self.assertStatus(response, 200)
                     # verificação da nova senha do usuario
-                    user = get_user_by_email(credentials['email'])
+                    user = get_user_by_email(credentials["email"])
                     self.assertTrue(user.is_correct_password(new_password))
 
     def test_reset_password_with_invalid_password_raise_validation_error(self):
@@ -640,19 +655,17 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials["email"], credentials["password"], True)
                     with mail.record_messages() as outbox:
                         response = c.post(
                             reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
+                            data={"email": credentials["email"]},
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertEqual(1, len(outbox))
                         email_msg = outbox[0]
@@ -660,19 +673,25 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = reset_pwd_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        resert_url_with_token = [url for url in links_found if reset_pwd_url in url][0]
+                        resert_url_with_token = [
+                            url for url in links_found if reset_pwd_url in url
+                        ][0]
 
-                    invalid_password = ''
+                    invalid_password = ""
                     response = c.post(
                         resert_url_with_token,
-                        data={'password': invalid_password},
-                        follow_redirects=True)
+                        data={"password": invalid_password},
+                        follow_redirects=True,
+                    )
                     self.assertStatus(response, 200)
-                    context_form = self.get_context_variable('form')
-                    expected_form_error = {'password': [u'This field is required.']}
+                    context_form = self.get_context_variable("form")
+                    expected_form_error = {"password": ["This field is required."]}
                     self.assertEqual(expected_form_error, context_form.errors)
-                    self.assertIn(expected_form_error['password'][0], response.data.decode('utf-8'))
-                    user = get_user_by_email(credentials['email'])
+                    self.assertIn(
+                        expected_form_error["password"][0],
+                        response.data.decode("utf-8"),
+                    )
+                    user = get_user_by_email(credentials["email"])
                     self.assertFalse(user.is_correct_password(invalid_password))
 
     def test_reset_password_with_unconfirmed_email_shows_unconfirm_email_error(self):
@@ -694,26 +713,26 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
 
                     # when
-                    create_user(credentials['email'], credentials['password'], False)
+                    create_user(credentials["email"], credentials["password"], False)
                     with mail.record_messages() as outbox:
                         response = c.post(
                             reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
+                            data={"email": credentials["email"]},
+                            follow_redirects=True,
+                        )
                         # then
                         # no foi enviado nenhum email
                         self.assertEqual(0, len(outbox))
                         self.assertStatus(response, 200)
-                        self.assertTemplateUsed('admin/auth/unconfirm_email.html')
-                        user = get_user_by_email(credentials['email'])
-                        self.assertTrue(user.is_correct_password(credentials['password']))
+                        self.assertTemplateUsed("admin/auth/unconfirm_email.html")
+                        user = get_user_by_email(credentials["email"])
+                        self.assertTrue(
+                            user.is_correct_password(credentials["password"])
+                        )
 
     def test_reset_password_with_unconfirmed_email_raise_validation_error_2(self):
         """
@@ -735,19 +754,17 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    reset_pwd_url = url_for('admin.reset')
-                    credentials = {
-                        'email': 'foo@bar.com',
-                        'password': '123'
-                    }
+                    reset_pwd_url = url_for("admin.reset")
+                    credentials = {"email": "foo@bar.com", "password": "123"}
 
                     # when
-                    create_user(credentials['email'], credentials['password'], True)
+                    create_user(credentials["email"], credentials["password"], True)
                     with mail.record_messages() as outbox:
                         response = c.post(
                             reset_pwd_url,
-                            data={'email': credentials['email']},
-                            follow_redirects=True)
+                            data={"email": credentials["email"]},
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertEqual(1, len(outbox))
                         email_msg = outbox[0]
@@ -755,23 +772,26 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = reset_pwd_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        resert_url_with_token = [url for url in links_found if reset_pwd_url in url][0]
+                        resert_url_with_token = [
+                            url for url in links_found if reset_pwd_url in url
+                        ][0]
 
                     # agora o usuário tem o email NÃO confirmado.
-                    user = get_user_by_email(credentials['email'])
+                    user = get_user_by_email(credentials["email"])
                     user.email_confirmed = False
                     dbsql.session.add(user)
                     dbsql.session.commit()
                     # tentamos recuperar a senha com o link/token do email
-                    new_password = '321'
+                    new_password = "321"
                     response = c.post(
                         resert_url_with_token,
-                        data={'password': new_password},
-                        follow_redirects=True)
+                        data={"password": new_password},
+                        follow_redirects=True,
+                    )
                     self.assertStatus(response, 200)
-                    self.assertTemplateUsed('admin/auth/unconfirm_email.html')
-                    user = get_user_by_email(credentials['email'])
-                    self.assertTrue(user.is_correct_password(credentials['password']))
+                    self.assertTemplateUsed("admin/auth/unconfirm_email.html")
+                    user = get_user_by_email(credentials["email"])
+                    self.assertTrue(user.is_correct_password(credentials["password"]))
 
     def test_reset_password_with_invalid_token_raise_404_error_page(self):
         """
@@ -788,15 +808,17 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    invalid_token = 'foo.123.faketoken'
-                    reset_with_token_url = url_for('admin.reset_with_token', token=invalid_token)
-                    expected_errors_msg = u'<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>'
+                    invalid_token = "foo.123.faketoken"
+                    reset_with_token_url = url_for(
+                        "admin.reset_with_token", token=invalid_token
+                    )
+                    expected_errors_msg = "<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>"
                     # when
                     response = c.get(reset_with_token_url, follow_redirects=True)
                     # then
                     self.assertStatus(response, 404)
-                    self.assertTemplateUsed('errors/404.html')
-                    error_message = self.get_context_variable('message')
+                    self.assertTemplateUsed("errors/404.html")
+                    error_message = self.get_context_variable("message")
                     self.assertEqual(expected_errors_msg, error_message)
 
     def test_confirm_email_with_invalid_token_raise_404_message(self):
@@ -814,15 +836,17 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 with self.client as c:
                     # with
-                    invalid_token = 'foo.123.faketoken'
-                    confirm_email_url = url_for('admin.confirm_email', token=invalid_token)
-                    expected_errors_msg = u'<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>'
+                    invalid_token = "foo.123.faketoken"
+                    confirm_email_url = url_for(
+                        "admin.confirm_email", token=invalid_token
+                    )
+                    expected_errors_msg = "<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>"
                     # when
                     response = c.get(confirm_email_url, follow_redirects=True)
                     # then
                     self.assertStatus(response, 404)
-                    self.assertTemplateUsed('errors/404.html')
-                    error_message = self.get_context_variable('message')
+                    self.assertTemplateUsed("errors/404.html")
+                    error_message = self.get_context_variable("message")
                     self.assertEqual(expected_errors_msg, error_message)
 
     def test_confirmation_email_send_email_with_token(self):
@@ -842,28 +866,27 @@ class AdminViewsTestCase(BaseTestCase):
 
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        normal_user = {
-            'email': 'foo@bar.com',
-            'password': '123'
-        }
-        create_user(normal_user['email'], normal_user['password'], False)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        normal_user = {"email": "foo@bar.com", "password": "123"}
+        create_user(normal_user["email"], normal_user["password"], False)
+        login_url = url_for("admin.login_view")
         action_payload = {
-            'action': 'confirm_email',
-            'rowid': get_user_by_email(normal_user['email']).id,
-            'url': '/admin/user/'
+            "action": "confirm_email",
+            "rowid": get_user_by_email(normal_user["email"]).id,
+            "url": "/admin/user/",
         }
         expected_email_sent_notifications = [
-            u"Enviamos o email de confirmação para: %s" % normal_user['email'],
-            u"1 usuários foram notificados com sucesso!",
+            "Enviamos o email de confirmação para: %s" % normal_user["email"],
+            "1 usuários foram notificados com sucesso!",
         ]
         expected_email = {
-            'subject': u'Confirmação de email',
-            'recipients': [normal_user['email'], ],
+            "subject": "Confirmação de email",
+            "recipients": [
+                normal_user["email"],
+            ],
         }
         # when
         with current_app.app_context():
@@ -873,41 +896,47 @@ class AdminViewsTestCase(BaseTestCase):
                 with self.client as c:
                     # login do usuario admin
                     login_response = c.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
-                    self.assertTemplateUsed('admin/index.html')
+                    self.assertTemplateUsed("admin/index.html")
                     # requisição da ação para enviar email de confirmação
                     with mail.record_messages() as outbox:
                         action_response = c.post(
-                            '/admin/user/action/',
+                            "/admin/user/action/",
                             data=action_payload,
-                            follow_redirects=True)
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertStatus(action_response, 200)
-                        self.assertTemplateUsed('admin/model/list.html')
+                        self.assertTemplateUsed("admin/model/list.html")
                         for msg in expected_email_sent_notifications:
-                            self.assertIn(msg, action_response.data.decode('utf-8'))
+                            self.assertIn(msg, action_response.data.decode("utf-8"))
 
                         # temos um email
                         self.assertEqual(1, len(outbox))
                         email_msg = outbox[0]
                         # email enviado ao destinatario certo, com assunto certo
-                        self.assertEqual(expected_email['recipients'], email_msg.recipients)
+                        self.assertEqual(
+                            expected_email["recipients"], email_msg.recipients
+                        )
                         # print "expected_email['subject']: ", expected_email['subject']
                         # print "email_msg.subject.decode('utf-8')", email_msg.subject
-                        self.assertEqual(expected_email['subject'], email_msg.subject)
+                        self.assertEqual(expected_email["subject"], email_msg.subject)
                         # pegamos o link com token
                         links_found = email_confirm_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        email_confirmation_url_with_token = [url for url in links_found if '/admin/confirm/' in url]
+                        email_confirmation_url_with_token = [
+                            url for url in links_found if "/admin/confirm/" in url
+                        ]
                         # temos a url com o token
                         self.assertEqual(1, len(email_confirmation_url_with_token))
-                        email_confirmation_url_with_token = email_confirmation_url_with_token[0]
+                        email_confirmation_url_with_token = (
+                            email_confirmation_url_with_token[0]
+                        )
                         self.assertIsNotNone(email_confirmation_url_with_token)
-                        self.assertFalse(email_confirmation_url_with_token == '')
+                        self.assertFalse(email_confirmation_url_with_token == "")
 
     def test_open_confirm_url_with_token_sent_via_email_open_the_correct_page(self):
         """
@@ -926,22 +955,19 @@ class AdminViewsTestCase(BaseTestCase):
 
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        normal_user = {
-            'email': 'foo@bar.com',
-            'password': '123'
-        }
-        create_user(normal_user['email'], normal_user['password'], False)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        normal_user = {"email": "foo@bar.com", "password": "123"}
+        create_user(normal_user["email"], normal_user["password"], False)
+        login_url = url_for("admin.login_view")
         action_payload = {
-            'action': 'confirm_email',
-            'rowid': get_user_by_email(normal_user['email']).id,
-            'url': '/admin/user/'
+            "action": "confirm_email",
+            "rowid": get_user_by_email(normal_user["email"]).id,
+            "url": "/admin/user/",
         }
-        expected_msg = u'Email: %s confirmado com sucesso!' % normal_user['email']
+        expected_msg = "Email: %s confirmado com sucesso!" % normal_user["email"]
         # when
         with current_app.app_context():
             collection = makeOneCollection()
@@ -950,16 +976,16 @@ class AdminViewsTestCase(BaseTestCase):
                 with self.client as c:
                     # login do usuario admin
                     login_response = c.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # requisição da ação para enviar email de confirmação
                     with mail.record_messages() as outbox:
                         action_response = c.post(
-                            '/admin/user/action/',
+                            "/admin/user/action/",
                             data=action_payload,
-                            follow_redirects=True)
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertStatus(action_response, 200)
                         # temos um email
@@ -969,18 +995,26 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = email_confirm_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        email_confirmation_url_with_token = [url for url in links_found if '/admin/confirm/' in url]
+                        email_confirmation_url_with_token = [
+                            url for url in links_found if "/admin/confirm/" in url
+                        ]
                         # temos a url com o token
                         self.assertEqual(1, len(email_confirmation_url_with_token))
-                        email_confirmation_url_with_token = email_confirmation_url_with_token[0]
+                        email_confirmation_url_with_token = (
+                            email_confirmation_url_with_token[0]
+                        )
                     # acessamos o link do email
-                    confirmation_response = c.get(email_confirmation_url_with_token, follow_redirects=True)
+                    confirmation_response = c.get(
+                        email_confirmation_url_with_token, follow_redirects=True
+                    )
                     self.assertStatus(confirmation_response, 200)
-                    self.assertTemplateUsed('admin/index.html')
+                    self.assertTemplateUsed("admin/index.html")
                     # confirmação com sucesso
-                    self.assertIn(expected_msg, confirmation_response.data.decode('utf-8'))
+                    self.assertIn(
+                        expected_msg, confirmation_response.data.decode("utf-8")
+                    )
                     # confirmamos alteração do usuário
-                    user = get_user_by_email(normal_user['email'])
+                    user = get_user_by_email(normal_user["email"])
                     self.assertTrue(user.email_confirmed)
 
     def test_email_confimation_token_of_invalid_user_raise_404_error_message(self):
@@ -1000,7 +1034,7 @@ class AdminViewsTestCase(BaseTestCase):
             g.collection = collection
             with current_app.test_request_context():
                 with self.client as c:
-                    fake_user_email = u'foo@bar.com'
+                    fake_user_email = "foo@bar.com"
                     # when
                     with mail.record_messages() as outbox:
                         send_confirmation_email(fake_user_email)
@@ -1012,15 +1046,21 @@ class AdminViewsTestCase(BaseTestCase):
                         links_found = email_confirm_url_pattern.findall(email_msg.html)
                         # tem pelo menos 1 link, e tem só um link para o reset/password com token
                         self.assertGreaterEqual(1, len(links_found))
-                        email_confirmation_url_with_token = [url for url in links_found if '/admin/confirm/' in url]
+                        email_confirmation_url_with_token = [
+                            url for url in links_found if "/admin/confirm/" in url
+                        ]
                         # temos a url com o token
                         self.assertEqual(1, len(email_confirmation_url_with_token))
-                        email_confirmation_url_with_token = email_confirmation_url_with_token[0]
+                        email_confirmation_url_with_token = (
+                            email_confirmation_url_with_token[0]
+                        )
                     # acessamos o link do email
-                    confirmation_response = c.get(email_confirmation_url_with_token, follow_redirects=True)
+                    confirmation_response = c.get(
+                        email_confirmation_url_with_token, follow_redirects=True
+                    )
                     self.assertStatus(confirmation_response, 404)
-                    self.assertTemplateUsed('errors/404.html')
-                    error_msg = self.get_context_variable('message')
+                    self.assertTemplateUsed("errors/404.html")
+                    error_msg = self.get_context_variable("message")
                     self.assertEqual(error_msg, error_msg)
 
     @unittest.skip("Login form no lugar de um UserForm, pq?")
@@ -1040,16 +1080,13 @@ class AdminViewsTestCase(BaseTestCase):
 
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        new_user = {
-            'email': 'foo@bar.com',
-            'password': '123'
-        }
-        login_url = url_for('admin.login_view')
-        create_user_url = '/admin/user/new/'
+        create_user(admin_user["email"], admin_user["password"], True)
+        new_user = {"email": "foo@bar.com", "password": "123"}
+        login_url = url_for("admin.login_view")
+        create_user_url = "/admin/user/new/"
         # expected_msgs = [
         #     u'Enviamos o email de confirmação para: %s' % new_user['email'],
         #     u'Registro criado com sucesso.',
@@ -1060,24 +1097,23 @@ class AdminViewsTestCase(BaseTestCase):
             with current_app.test_request_context():
                 # when
                 with mail.record_messages() as outbox:
-
                     with self.client as client:
                         # login do usuario admin
                         login_response = client.post(
-                            login_url,
-                            data=admin_user,
-                            follow_redirects=True)
+                            login_url, data=admin_user, follow_redirects=True
+                        )
                         self.assertStatus(login_response, 200)
-                        self.assertTemplateUsed('admin/index.html')
+                        self.assertTemplateUsed("admin/index.html")
                         self.assertTrue(current_user.is_authenticated)
                         # requisição da ação para enviar email de confirmação
                         create_user_response = client.post(
                             create_user_url,
-                            data={'email': new_user['email']},
-                            follow_redirects=True)
+                            data={"email": new_user["email"]},
+                            follow_redirects=True,
+                        )
                         # then
                         self.assertStatus(create_user_response, 200)
-                        self.assertTemplateUsed('admin/model/list.html')
+                        self.assertTemplateUsed("admin/model/list.html")
                         # for msg in expected_msgs:
                         #     self.assertIn(msg, action_response.data.decode('utf-8'))
                         # temos um email
@@ -1087,17 +1123,23 @@ class AdminViewsTestCase(BaseTestCase):
                     links_found = email_confirm_url_pattern.findall(email_msg.html)
                     # tem pelo menos 1 link, e tem só um link para o reset/password com token
                     self.assertGreaterEqual(1, len(links_found))
-                    email_confirmation_url_with_token = [url for url in links_found if '/admin/confirm/' in url]
+                    email_confirmation_url_with_token = [
+                        url for url in links_found if "/admin/confirm/" in url
+                    ]
                     # temos a url com o token
                     self.assertEqual(1, len(email_confirmation_url_with_token))
-                    email_confirmation_url_with_token = email_confirmation_url_with_token[0]
+                    email_confirmation_url_with_token = (
+                        email_confirmation_url_with_token[0]
+                    )
                     self.assertIsNotNone(email_confirmation_url_with_token)
-                    self.assertFalse(email_confirmation_url_with_token == '')
+                    self.assertFalse(email_confirmation_url_with_token == "")
                 # acessamos o link do email
-                user = get_user_by_email(new_user['email'])
-                confirmation_response = self.client.get(email_confirmation_url_with_token, follow_redirects=True)
+                user = get_user_by_email(new_user["email"])
+                confirmation_response = self.client.get(
+                    email_confirmation_url_with_token, follow_redirects=True
+                )
                 self.assertStatus(confirmation_response, 200)
-                self.assertTemplateUsed('admin/index.html')
+                self.assertTemplateUsed("admin/index.html")
                 # confirmação com sucesso
                 # self.assertIn(expected_msg, confirmation_response.data.decode('utf-8'))
                 # confirmamos alteração do usuário
@@ -1118,45 +1160,41 @@ class AdminViewsTestCase(BaseTestCase):
 
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
+        create_user(admin_user["email"], admin_user["password"], True)
         # new_user = {
         #     'email': 'foo@bar.com',
         #     'password': '123'
         # }
-        login_url = url_for('admin.login_view')
-        create_user_url = '/admin/user/new/'
-        expected_form_error = {'email': [u'This field is required.']}
+        login_url = url_for("admin.login_view")
+        create_user_url = "/admin/user/new/"
+        expected_form_error = {"email": ["This field is required."]}
         # when
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
-
                 with mail.record_messages() as outbox:
-
                     with self.client as client:
                         # login do usuario admin
                         login_response = client.post(
-                            login_url,
-                            data=admin_user,
-                            follow_redirects=True)
+                            login_url, data=admin_user, follow_redirects=True
+                        )
                         self.assertStatus(login_response, 200)
-                        self.assertTemplateUsed('admin/index.html')
+                        self.assertTemplateUsed("admin/index.html")
                         self.assertTrue(current_user.is_authenticated)
 
                         # "preencher" from sem o email do novo usuário
                         create_user_response = client.post(
-                            create_user_url,
-                            data={'email': ''},
-                            follow_redirects=True)
+                            create_user_url, data={"email": ""}, follow_redirects=True
+                        )
                         # then
                         self.assertStatus(create_user_response, 200)
-                        self.assertTemplateUsed('admin/model/create.html')
+                        self.assertTemplateUsed("admin/model/create.html")
                         # tem erro no formulario
-                        context_form = self.get_context_variable('form')
+                        context_form = self.get_context_variable("form")
                         self.assertEqual(expected_form_error, context_form.errors)
                     # não temos email
                     self.assertEqual(0, len(outbox))
@@ -1174,21 +1212,21 @@ class AdminViewsTestCase(BaseTestCase):
             - que a contagem de documentos (periódicos, números e artigos) publicadas esta certa.
         """
         # with
-        j_pub = makeOneJournal({'is_public': True})
-        makeOneJournal({'is_public': False})
+        j_pub = makeOneJournal({"is_public": True})
+        makeOneJournal({"is_public": False})
 
-        i_pub = makeOneIssue({'is_public': True, 'journal': j_pub})
-        makeOneIssue({'is_public': False, 'journal': j_pub})
+        i_pub = makeOneIssue({"is_public": True, "journal": j_pub})
+        makeOneIssue({"is_public": False, "journal": j_pub})
 
-        makeOneArticle({'is_public': True, 'journal': j_pub, 'issue': i_pub})
-        makeOneArticle({'is_public': False, 'journal': j_pub, 'issue': i_pub})
+        makeOneArticle({"is_public": True, "journal": j_pub, "issue": i_pub})
+        makeOneArticle({"is_public": False, "journal": j_pub, "issue": i_pub})
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1197,44 +1235,42 @@ class AdminViewsTestCase(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
-                    self.assertTemplateUsed('admin/index.html')
+                    self.assertTemplateUsed("admin/index.html")
                     self.assertTrue(current_user.is_authenticated)
                     # then
-                    counts = self.get_context_variable('counts')
+                    counts = self.get_context_variable("counts")
                     count_keys = [
-                        'journals_total_count',
-                        'journals_public_count',
-                        'issues_total_count',
-                        'issues_public_count',
-                        'articles_total_count',
-                        'articles_public_count',
+                        "journals_total_count",
+                        "journals_public_count",
+                        "issues_total_count",
+                        "issues_public_count",
+                        "articles_total_count",
+                        "articles_public_count",
                     ]
                     for k in count_keys:
                         self.assertIn(k, count_keys)
 
                     # contagem de periódicos
-                    journals_total_count = counts['journals_total_count']
+                    journals_total_count = counts["journals_total_count"]
                     self.assertEqual(2, journals_total_count)
-                    journals_public_count = counts['journals_public_count']
+                    journals_public_count = counts["journals_public_count"]
                     self.assertEqual(1, journals_public_count)
                     # contagem de números
-                    issues_total_count = counts['issues_total_count']
+                    issues_total_count = counts["issues_total_count"]
                     self.assertEqual(2, issues_total_count)
-                    issues_public_count = counts['issues_public_count']
+                    issues_public_count = counts["issues_public_count"]
                     self.assertEqual(1, issues_public_count)
                     # contagem de artigos
-                    articles_total_count = counts['articles_total_count']
+                    articles_total_count = counts["articles_total_count"]
                     self.assertEqual(2, articles_total_count)
-                    articles_public_count = counts['articles_public_count']
+                    articles_public_count = counts["articles_public_count"]
                     self.assertEqual(1, articles_public_count)
 
 
 class JournalAdminViewTests(BaseTestCase):
-
     def test_admin_journal_list_records(self):
         """
         Com:
@@ -1251,11 +1287,11 @@ class JournalAdminViewTests(BaseTestCase):
         journal = makeOneJournal()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1264,20 +1300,21 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
-                    self.assertTemplateUsed('admin/index.html')
+                    self.assertTemplateUsed("admin/index.html")
                     self.assertTrue(current_user.is_authenticated)
                     # acesso a aba de periódicos
-                    journal_list_response = client.get(url_for('journal.index_view'))
+                    journal_list_response = client.get(url_for("journal.index_view"))
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # then
                     # verificamos a resposta
                     # que tem a id para acessar ao periódico
-                    self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
+                    self.assertIn(
+                        journal.id, journal_list_response.data.decode("utf-8")
+                    )
 
     def test_admin_journal_details(self):
         """
@@ -1294,12 +1331,12 @@ class JournalAdminViewTests(BaseTestCase):
         journal = makeOneJournal()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_detail_url = url_for('journal.details_view', id=journal.id)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_detail_url = url_for("journal.details_view", id=journal.id)
         # when
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1308,20 +1345,21 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
-                    self.assertTemplateUsed('admin/index.html')
+                    self.assertTemplateUsed("admin/index.html")
                     self.assertTrue(current_user.is_authenticated)
                     # acesso a aba de periódicos
                     journal_detail_response = client.get(journal_detail_url)
                     self.assertStatus(journal_detail_response, 200)
-                    self.assertTemplateUsed('admin/model/details.html')
+                    self.assertTemplateUsed("admin/model/details.html")
                     # then
                     # verificamos a resposta
                     # que tem a id para acessar ao periódico
-                    self.assertIn(journal.id, journal_detail_response.data.decode('utf-8'))
+                    self.assertIn(
+                        journal.id, journal_detail_response.data.decode("utf-8")
+                    )
 
     def test_admin_journal_search_by_id(self):
         """
@@ -1339,12 +1377,12 @@ class JournalAdminViewTests(BaseTestCase):
         journal = makeOneJournal()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         # when
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1353,19 +1391,22 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    journal_search_response = client.get(journal_index_url, data={'search': journal.id})
+                    self.assertTemplateUsed("admin/model/list.html")
+                    journal_search_response = client.get(
+                        journal_index_url, data={"search": journal.id}
+                    )
                     self.assertStatus(journal_search_response, 200)
 
                     # que tem a id para acessar ao periódico
-                    self.assertIn(journal.id, journal_list_response.data.decode('utf-8'))
+                    self.assertIn(
+                        journal.id, journal_list_response.data.decode("utf-8")
+                    )
 
     def test_admin_journal_check_column_filters(self):
         """
@@ -1379,18 +1420,18 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_col_filters = [
-            'current_status',
-            'index_at',
-            'is_public',
-            'unpublish_reason',
-            'scimago_id',
+            "current_status",
+            "index_at",
+            "is_public",
+            "unpublish_reason",
+            "scimago_id",
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1400,16 +1441,17 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    column_filters = self.get_context_variable('admin_view').column_filters
+                    column_filters = self.get_context_variable(
+                        "admin_view"
+                    ).column_filters
                     self.assertEqual(len(expected_col_filters), len(column_filters))
                     for expected_col_filter in expected_col_filters:
                         self.assertIn(expected_col_filter, column_filters)
@@ -1426,15 +1468,20 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_column_searchable_list = [
-            '_id', 'title', 'title_iso', 'short_title',
-            'print_issn', 'eletronic_issn', 'acronym',
+            "_id",
+            "title",
+            "title_iso",
+            "short_title",
+            "print_issn",
+            "eletronic_issn",
+            "acronym",
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1444,16 +1491,17 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    column_searchable_list = self.get_context_variable('admin_view').column_searchable_list
+                    column_searchable_list = self.get_context_variable(
+                        "admin_view"
+                    ).column_searchable_list
                     for expected_searchable_field in expected_column_searchable_list:
                         self.assertIn(expected_searchable_field, column_searchable_list)
 
@@ -1469,21 +1517,43 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_column_exclude_list = [
-            '_id', 'jid', 'title_slug', 'timeline', 'subject_categories',
-            'study_areas', 'social_networks', 'title_iso', 'short_title',
-            'subject_descriptors', 'copyrighter', 'online_submission_url',
-            'cover_url', 'logo_url', 'previous_journal_ref',
-            'publisher_name', 'publisher_country', 'publisher_state',
-            'publisher_city', 'publisher_address', 'publisher_telephone',
-            'mission', 'index_at', 'sponsors', 'issue_count', 'other_titles',
-            'print_issn', 'eletronic_issn', 'unpublish_reason', 'url_segment',
+            "_id",
+            "jid",
+            "title_slug",
+            "timeline",
+            "subject_categories",
+            "study_areas",
+            "social_networks",
+            "title_iso",
+            "short_title",
+            "subject_descriptors",
+            "copyrighter",
+            "online_submission_url",
+            "cover_url",
+            "logo_url",
+            "previous_journal_ref",
+            "publisher_name",
+            "publisher_country",
+            "publisher_state",
+            "publisher_city",
+            "publisher_address",
+            "publisher_telephone",
+            "mission",
+            "index_at",
+            "sponsors",
+            "issue_count",
+            "other_titles",
+            "print_issn",
+            "eletronic_issn",
+            "unpublish_reason",
+            "url_segment",
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1493,16 +1563,17 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
+                    column_exclude_list = self.get_context_variable(
+                        "admin_view"
+                    ).column_exclude_list
                     for expected_excluded_field in expected_column_exclude_list:
                         self.assertIn(expected_excluded_field, column_exclude_list)
 
@@ -1518,37 +1589,39 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_column_formatters = [
-            'created',
-            'updated',
+            "created",
+            "updated",
         ]
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
             with current_app.test_request_context():
-
                 # when
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    column_formatters = self.get_context_variable('admin_view').column_formatters
+                    column_formatters = self.get_context_variable(
+                        "admin_view"
+                    ).column_formatters
                     for expected_column_formatter in expected_column_formatters:
-                        self.assertIn(expected_column_formatter, column_formatters.keys())
+                        self.assertIn(
+                            expected_column_formatter, column_formatters.keys()
+                        )
 
     def test_admin_journal_check_column_labels_defined(self):
         """
@@ -1562,48 +1635,48 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_column_labels = [
-            'jid',
-            'collection',
-            'timeline',
-            'subject_categories',
-            'study_areas',
-            'social_networks',
-            'title',
-            'title_iso',
-            'short_title',
-            'created',
-            'updated',
-            'acronym',
-            'scielo_issn',
-            'print_issn',
-            'eletronic_issn',
-            'subject_descriptors',
-            'online_submission_url',
-            'cover_url',
-            'logo_url',
-            'other_titles',
-            'publisher_name',
-            'publisher_country',
-            'publisher_state',
-            'publisher_city',
-            'publisher_address',
-            'publisher_telephone',
-            'mission',
-            'index_at',
-            'sponsors',
-            'previous_journal_ref',
-            'current_status',
-            'issue_count',
-            'is_public',
-            'unpublish_reason',
-            'url_segment',
+            "jid",
+            "collection",
+            "timeline",
+            "subject_categories",
+            "study_areas",
+            "social_networks",
+            "title",
+            "title_iso",
+            "short_title",
+            "created",
+            "updated",
+            "acronym",
+            "scielo_issn",
+            "print_issn",
+            "eletronic_issn",
+            "subject_descriptors",
+            "online_submission_url",
+            "cover_url",
+            "logo_url",
+            "other_titles",
+            "publisher_name",
+            "publisher_country",
+            "publisher_state",
+            "publisher_city",
+            "publisher_address",
+            "publisher_telephone",
+            "mission",
+            "index_at",
+            "sponsors",
+            "previous_journal_ref",
+            "current_status",
+            "issue_count",
+            "is_public",
+            "unpublish_reason",
+            "url_segment",
         ]
 
         with current_app.app_context():
@@ -1614,16 +1687,17 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    column_labels = self.get_context_variable('admin_view').column_labels
+                    column_labels = self.get_context_variable(
+                        "admin_view"
+                    ).column_labels
                     for expected_column_label in expected_column_labels:
                         self.assertIn(expected_column_label, column_labels.keys())
 
@@ -1639,12 +1713,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
 
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1654,16 +1728,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    can_create = self.get_context_variable('admin_view').can_create
+                    can_create = self.get_context_variable("admin_view").can_create
                     self.assertFalse(can_create)
 
     def test_admin_journal_check_can_edit_is_false(self):
@@ -1678,12 +1751,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
 
         # when
         with current_app.app_context():
@@ -1693,16 +1766,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    can_edit = self.get_context_variable('admin_view').can_edit
+                    can_edit = self.get_context_variable("admin_view").can_edit
                     self.assertTrue(can_edit)
 
     def test_admin_journal_check_can_delete_is_false(self):
@@ -1717,12 +1789,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1731,16 +1803,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    can_delete = self.get_context_variable('admin_view').can_delete
+                    can_delete = self.get_context_variable("admin_view").can_delete
                     self.assertFalse(can_delete)
 
     def test_admin_journal_check_create_modal_is_true(self):
@@ -1755,12 +1826,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1769,16 +1840,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    create_modal = self.get_context_variable('admin_view').create_modal
+                    create_modal = self.get_context_variable("admin_view").create_modal
                     self.assertTrue(create_modal)
 
     def test_admin_journal_check_edit_modal_is_true(self):
@@ -1793,12 +1863,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1807,16 +1877,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    edit_modal = self.get_context_variable('admin_view').edit_modal
+                    edit_modal = self.get_context_variable("admin_view").edit_modal
                     self.assertTrue(edit_modal)
 
     def test_admin_journal_check_can_view_details_is_true(self):
@@ -1831,12 +1900,12 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1845,16 +1914,17 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    can_view_details = self.get_context_variable('admin_view').can_view_details
+                    can_view_details = self.get_context_variable(
+                        "admin_view"
+                    ).can_view_details
                     self.assertTrue(can_view_details)
 
     def test_admin_journal_check_actions_defined(self):
@@ -1869,15 +1939,15 @@ class JournalAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
         expected_actions = [
-            'publish',
-            'unpublish_default',
+            "publish",
+            "unpublish_default",
         ]
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1887,16 +1957,15 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acesso a aba de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # verificamos os filtros da view
-                    actions = [a[0] for a in self.get_context_variable('actions')]
+                    actions = [a[0] for a in self.get_context_variable("actions")]
                     self.assertEqual(len(expected_actions), len(actions))
                     for expected_action in expected_actions:
                         self.assertIn(expected_action, actions)
@@ -1915,17 +1984,17 @@ class JournalAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        journal = makeOneJournal({'is_public': False})
+        journal = makeOneJournal({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
 
-        publish_action_url = '%saction/' % journal_index_url
-        expected_msg = u'Periódico(s) publicado(s) com sucesso!!'
+        publish_action_url = "%saction/" % journal_index_url
+        expected_msg = "Periódico(s) publicado(s) com sucesso!!"
         # when
         with current_app.app_context():
             collection = makeOneCollection()
@@ -1934,28 +2003,27 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acessamos a listagem de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
 
                     # executamos ação publicar:
                     action_response = client.post(
                         publish_action_url,
                         data={
-                            'url': journal_index_url,
-                            'action': 'publish',
-                            'rowid': journal.id,
+                            "url": journal_index_url,
+                            "action": "publish",
+                            "rowid": journal.id,
                         },
-                        follow_redirects=True
+                        follow_redirects=True,
                     )
                     self.assertStatus(action_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/model/list.html")
+                    self.assertIn(expected_msg, action_response.data.decode("utf-8"))
                     journal.reload()
                     self.assertTrue(journal.is_public)
 
@@ -1973,16 +2041,16 @@ class JournalAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        journal = makeOneJournal({'is_public': True})
+        journal = makeOneJournal({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = u'Periódico(s) publicado(s) com sucesso!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
+        action_url = "%saction/" % journal_index_url
+        expected_msg = "Periódico(s) publicado(s) com sucesso!!"
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -1991,28 +2059,27 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acessamos a listagem de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # then
                     # executamos ação publicar:
                     action_response = client.post(
                         action_url,
                         data={
-                            'url': journal_index_url,
-                            'action': 'publish',
-                            'rowid': journal.id,
+                            "url": journal_index_url,
+                            "action": "publish",
+                            "rowid": journal.id,
                         },
-                        follow_redirects=True
+                        follow_redirects=True,
                     )
                     self.assertStatus(action_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/model/list.html")
+                    self.assertIn(expected_msg, action_response.data.decode("utf-8"))
                     journal.reload()
                     self.assertTrue(journal.is_public)
 
@@ -2031,17 +2098,17 @@ class JournalAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        journal = makeOneJournal({'is_public': True})
+        journal = makeOneJournal({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = 'Periódico(s) despublicado com sucesso!!'
-        expected_reason = 'Conteúdo temporariamente indisponível'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
+        action_url = "%saction/" % journal_index_url
+        expected_msg = "Periódico(s) despublicado com sucesso!!"
+        expected_reason = "Conteúdo temporariamente indisponível"
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -2050,33 +2117,34 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acessamos a listagem de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # then
                     # executamos ação publicar:
                     action_response = client.post(
                         action_url,
                         data={
-                            'url': journal_index_url,
-                            'action': 'unpublish_default',
-                            'rowid': journal.id,
+                            "url": journal_index_url,
+                            "action": "unpublish_default",
+                            "rowid": journal.id,
                         },
-                        follow_redirects=True
+                        follow_redirects=True,
                     )
                     self.assertStatus(action_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
-                    self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                    self.assertTemplateUsed("admin/model/list.html")
+                    self.assertIn(expected_msg, action_response.data.decode("utf-8"))
                     journal.reload()
                     self.assertFalse(journal.is_public)
                     self.assertEqual(expected_reason, journal.unpublish_reason)
 
-    def test_admin_journal_action_publish_with_exception_raised_must_be_consistent(self):
+    def test_admin_journal_action_publish_with_exception_raised_must_be_consistent(
+        self,
+    ):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -2090,16 +2158,16 @@ class JournalAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        journal = makeOneJournal({'is_public': False})
+        journal = makeOneJournal({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = u'Ocorreu um erro tentando publicar o(s) periódico(s)!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
+        action_url = "%saction/" % journal_index_url
+        expected_msg = "Ocorreu um erro tentando publicar o(s) periódico(s)!!"
         with current_app.app_context():
             collection = makeOneCollection()
             g.collection = collection
@@ -2108,33 +2176,36 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acessamos a listagem de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # then
                     # executamos ação publicar:
                     with self.assertRaises(Exception):
                         action_response = client.post(
                             action_url,
                             data={
-                                'url': journal_index_url,
-                                'action': 'publish',
-                                'rowid': None,  # sem rowid deveria gerar uma exeção
+                                "url": journal_index_url,
+                                "action": "publish",
+                                "rowid": None,  # sem rowid deveria gerar uma exeção
                             },
-                            follow_redirects=True
+                            follow_redirects=True,
                         )
                         self.assertStatus(action_response, 200)
-                        self.assertTemplateUsed('admin/model/list.html')
-                        self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                        self.assertTemplateUsed("admin/model/list.html")
+                        self.assertIn(
+                            expected_msg, action_response.data.decode("utf-8")
+                        )
                         journal.reload()
                         self.assertTrue(journal.is_public)
 
-    def test_admin_journal_action_unpublish_default_with_exception_raised_must_be_consistent(self):
+    def test_admin_journal_action_unpublish_default_with_exception_raised_must_be_consistent(
+        self,
+    ):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -2148,16 +2219,16 @@ class JournalAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        journal = makeOneJournal({'is_public': True})
+        journal = makeOneJournal({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        journal_index_url = url_for('journal.index_view')
-        action_url = '%saction/' % journal_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) periódico(s)!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        journal_index_url = url_for("journal.index_view")
+        action_url = "%saction/" % journal_index_url
+        expected_msg = "Ocorreu um erro tentando despublicar o(s) periódico(s)!!"
 
         with current_app.app_context():
             collection = makeOneCollection()
@@ -2167,35 +2238,33 @@ class JournalAdminViewTests(BaseTestCase):
                 with self.client as client:
                     # login do usuario admin
                     login_response = client.post(
-                        login_url,
-                        data=admin_user,
-                        follow_redirects=True)
+                        login_url, data=admin_user, follow_redirects=True
+                    )
                     self.assertStatus(login_response, 200)
                     # acessamos a listagem de periódicos
                     journal_list_response = client.get(journal_index_url)
                     self.assertStatus(journal_list_response, 200)
-                    self.assertTemplateUsed('admin/model/list.html')
+                    self.assertTemplateUsed("admin/model/list.html")
                     # then
                     # executamos ação publicar:
                     with self.assertRaises(Exception):
                         action_response = client.post(
                             action_url,
                             data={
-                                'url': journal_index_url,
-                                'action': 'unpublish_default',
-                                'rowid': None,  # sem rowid deveria gerar uma exeção
+                                "url": journal_index_url,
+                                "action": "unpublish_default",
+                                "rowid": None,  # sem rowid deveria gerar uma exeção
                             },
-                            follow_redirects=True
+                            follow_redirects=True,
                         )
                         self.assertStatus(action_response, 200)
-                        self.assertTemplateUsed('admin/model/list.html')
+                        self.assertTemplateUsed("admin/model/list.html")
                         self.assertIn(expected_msg, action_response.data)
                         journal.reload()
                         self.assertTrue(journal.is_public)
 
 
 class IssueAdminViewTests(BaseTestCase):
-
     def test_admin_issue_list_records(self):
         """
         Com:
@@ -2211,30 +2280,29 @@ class IssueAdminViewTests(BaseTestCase):
         issue = makeOneIssue()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de números
-            issue_list_response = client.get(url_for('issue.index_view'))
+            issue_list_response = client.get(url_for("issue.index_view"))
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao números
-            self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
+            self.assertIn(issue.id, issue_list_response.data.decode("utf-8"))
 
     def test_admin_issue_details(self):
         """
@@ -2251,30 +2319,29 @@ class IssueAdminViewTests(BaseTestCase):
         issue = makeOneIssue()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_detail_url = url_for('issue.details_view', id=issue.id)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_detail_url = url_for("issue.details_view", id=issue.id)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de periódicos
             issue_detail_response = client.get(issue_detail_url)
             self.assertStatus(issue_detail_response, 200)
-            self.assertTemplateUsed('admin/model/details.html')
+            self.assertTemplateUsed("admin/model/details.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao números
-            self.assertIn(issue.id, issue_detail_response.data.decode('utf-8'))
+            self.assertIn(issue.id, issue_detail_response.data.decode("utf-8"))
 
     def test_admin_issue_search_by_id(self):
         """
@@ -2292,29 +2359,30 @@ class IssueAdminViewTests(BaseTestCase):
         issue = makeOneIssue()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de issues
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            issue_search_response = client.get(issue_index_url, data={'search': issue.id})
+            self.assertTemplateUsed("admin/model/list.html")
+            issue_search_response = client.get(
+                issue_index_url, data={"search": issue.id}
+            )
             self.assertStatus(issue_search_response, 200)
 
             # que tem a id para acessar ao periódico
-            self.assertIn(issue.id, issue_list_response.data.decode('utf-8'))
+            self.assertIn(issue.id, issue_list_response.data.decode("utf-8"))
 
     def test_admin_issue_check_column_filters(self):
         """
@@ -2328,37 +2396,36 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_col_filters = [
-            'journal',
-            'volume',
-            'number',
-            'type',
-            'start_month',
-            'end_month',
-            'year',
-            'is_public',
-            'unpublish_reason',
+            "journal",
+            "volume",
+            "number",
+            "type",
+            "start_month",
+            "end_month",
+            "year",
+            "is_public",
+            "unpublish_reason",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_filters = self.get_context_variable('admin_view').column_filters
+            column_filters = self.get_context_variable("admin_view").column_filters
             self.assertEqual(len(expected_col_filters), len(column_filters))
             for expected_col_filter in expected_col_filters:
                 self.assertIn(expected_col_filter, column_filters)
@@ -2375,30 +2442,34 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_column_searchable_list = [
-            'iid', 'journal', 'volume', 'number',
-            'label'
+            "iid",
+            "journal",
+            "volume",
+            "number",
+            "label",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_searchable_list = self.get_context_variable('admin_view').column_searchable_list
+            column_searchable_list = self.get_context_variable(
+                "admin_view"
+            ).column_searchable_list
             for expected_searchable_field in expected_column_searchable_list:
                 self.assertIn(expected_searchable_field, column_searchable_list)
 
@@ -2414,31 +2485,40 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_column_exclude_list = [
-            '_id', 'sections', 'cover_url', 'suppl_text',
-            'spe_text', 'start_month', 'end_month', 'order', 'label', 'order',
-            'unpublish_reason'
+            "_id",
+            "sections",
+            "cover_url",
+            "suppl_text",
+            "spe_text",
+            "start_month",
+            "end_month",
+            "order",
+            "label",
+            "order",
+            "unpublish_reason",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
+            column_exclude_list = self.get_context_variable(
+                "admin_view"
+            ).column_exclude_list
             for expected_excluded_field in expected_column_exclude_list:
                 self.assertIn(expected_excluded_field, column_exclude_list)
 
@@ -2454,30 +2534,31 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_column_formatters = [
-            'created',
-            'updated',
+            "created",
+            "updated",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_formatters = self.get_context_variable('admin_view').column_formatters
+            column_formatters = self.get_context_variable(
+                "admin_view"
+            ).column_formatters
             for expected_column_formatter in expected_column_formatters:
                 self.assertIn(expected_column_formatter, column_formatters.keys())
 
@@ -2493,47 +2574,46 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_column_labels = [
-            'iid',
-            'journal',
-            'sections',
-            'cover_url',
-            'volume',
-            'number',
-            'created',
-            'updated',
-            'type',
-            'suppl_text',
-            'spe_text',
-            'start_month',
-            'end_month',
-            'year',
-            'label',
-            'order',
-            'is_public',
-            'unpublish_reason',
+            "iid",
+            "journal",
+            "sections",
+            "cover_url",
+            "volume",
+            "number",
+            "created",
+            "updated",
+            "type",
+            "suppl_text",
+            "spe_text",
+            "start_month",
+            "end_month",
+            "year",
+            "label",
+            "order",
+            "is_public",
+            "unpublish_reason",
         ]
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_labels = self.get_context_variable('admin_view').column_labels
+            column_labels = self.get_context_variable("admin_view").column_labels
             for expected_column_label in expected_column_labels:
                 self.assertIn(expected_column_label, column_labels.keys())
 
@@ -2549,27 +2629,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_create = self.get_context_variable('admin_view').can_create
+            can_create = self.get_context_variable("admin_view").can_create
             self.assertFalse(can_create)
 
     def test_admin_issue_check_can_edit_is_false(self):
@@ -2584,27 +2663,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_edit = self.get_context_variable('admin_view').can_edit
+            can_edit = self.get_context_variable("admin_view").can_edit
             self.assertFalse(can_edit)
 
     def test_admin_issue_check_can_delete_is_false(self):
@@ -2619,27 +2697,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_delete = self.get_context_variable('admin_view').can_delete
+            can_delete = self.get_context_variable("admin_view").can_delete
             self.assertFalse(can_delete)
 
     def test_admin_issue_check_create_modal_is_true(self):
@@ -2654,27 +2731,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            create_modal = self.get_context_variable('admin_view').create_modal
+            create_modal = self.get_context_variable("admin_view").create_modal
             self.assertTrue(create_modal)
 
     def test_admin_issue_check_edit_modal_is_true(self):
@@ -2689,27 +2765,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            edit_modal = self.get_context_variable('admin_view').edit_modal
+            edit_modal = self.get_context_variable("admin_view").edit_modal
             self.assertTrue(edit_modal)
 
     def test_admin_issue_check_can_view_details_is_true(self):
@@ -2724,27 +2799,26 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_view_details = self.get_context_variable('admin_view').can_view_details
+            can_view_details = self.get_context_variable("admin_view").can_view_details
             self.assertTrue(can_view_details)
 
     def test_admin_issue_check_actions_defined(self):
@@ -2759,31 +2833,30 @@ class IssueAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
         expected_actions = [
-            'publish',
-            'unpublish_default',
+            "publish",
+            "unpublish_default",
         ]
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            actions = [a[0] for a in self.get_context_variable('actions')]
+            actions = [a[0] for a in self.get_context_variable("actions")]
             self.assertEqual(len(expected_actions), len(actions))
             for expected_action in expected_actions:
                 self.assertIn(expected_action, actions)
@@ -2802,44 +2875,43 @@ class IssueAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        issue = makeOneIssue({'is_public': False})
+        issue = makeOneIssue({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
 
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
 
-        publish_action_url = '%saction/' % issue_index_url
-        expected_msg = u'Número(s) publicado(s) com sucesso!!'
+        publish_action_url = "%saction/" % issue_index_url
+        expected_msg = "Número(s) publicado(s) com sucesso!!"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
 
             # executamos ação publicar:
             action_response = client.post(
                 publish_action_url,
                 data={
-                    'url': issue_index_url,
-                    'action': 'publish',
-                    'rowid': issue.id,
+                    "url": issue_index_url,
+                    "action": "publish",
+                    "rowid": issue.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             issue.reload()
             self.assertTrue(issue.is_public)
 
@@ -2857,42 +2929,41 @@ class IssueAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        issue = makeOneIssue({'is_public': True})
+        issue = makeOneIssue({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = u'Número(s) publicado(s) com sucesso!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
+        action_url = "%saction/" % issue_index_url
+        expected_msg = "Número(s) publicado(s) com sucesso!!"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             action_response = client.post(
                 action_url,
                 data={
-                    'url': issue_index_url,
-                    'action': 'publish',
-                    'rowid': issue.id,
+                    "url": issue_index_url,
+                    "action": "publish",
+                    "rowid": issue.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             issue.reload()
             self.assertTrue(issue.is_public)
 
@@ -2911,43 +2982,42 @@ class IssueAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        issue = makeOneIssue({'is_public': True})
+        issue = makeOneIssue({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = 'Número(s) despublicado(s) com sucesso!!'
-        expected_reason = 'Conteúdo temporariamente indisponível'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
+        action_url = "%saction/" % issue_index_url
+        expected_msg = "Número(s) despublicado(s) com sucesso!!"
+        expected_reason = "Conteúdo temporariamente indisponível"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             action_response = client.post(
                 action_url,
                 data={
-                    'url': issue_index_url,
-                    'action': 'unpublish_default',
-                    'rowid': issue.id,
+                    "url": issue_index_url,
+                    "action": "unpublish_default",
+                    "rowid": issue.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             issue.reload()
             self.assertFalse(issue.is_public)
             self.assertEqual(expected_reason, issue.unpublish_reason)
@@ -2966,47 +3036,48 @@ class IssueAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        issue = makeOneIssue({'is_public': False})
+        issue = makeOneIssue({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
+        action_url = "%saction/" % issue_index_url
+        expected_msg = "Ocorreu um erro tentando despublicar o(s) número(s)!!."
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             with self.assertRaises(Exception):
                 action_response = client.post(
                     action_url,
                     data={
-                        'url': issue_index_url,
-                        'action': 'publish',
-                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                        "url": issue_index_url,
+                        "action": "publish",
+                        "rowid": None,  # sem rowid deveria gerar uma exeção
                     },
-                    follow_redirects=True
+                    follow_redirects=True,
                 )
                 self.assertStatus(action_response, 200)
-                self.assertTemplateUsed('admin/model/list.html')
-                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                self.assertTemplateUsed("admin/model/list.html")
+                self.assertIn(expected_msg, action_response.data.decode("utf-8"))
                 issue.reload()
                 self.assertTrue(issue.is_public)
 
-    def test_admin_issue_action_unpublish_default_with_exception_raised_must_be_consistent(self):
+    def test_admin_issue_action_unpublish_default_with_exception_raised_must_be_consistent(
+        self,
+    ):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -3020,49 +3091,47 @@ class IssueAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        issue = makeOneIssue({'is_public': True})
+        issue = makeOneIssue({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        issue_index_url = url_for('issue.index_view')
-        action_url = '%saction/' % issue_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        issue_index_url = url_for("issue.index_view")
+        action_url = "%saction/" % issue_index_url
+        expected_msg = "Ocorreu um erro tentando despublicar o(s) número(s)!!."
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de Issues
             issue_list_response = client.get(issue_index_url)
             self.assertStatus(issue_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             with self.assertRaises(Exception):
                 action_response = client.post(
                     action_url,
                     data={
-                        'url': issue_index_url,
-                        'action': 'unpublish_default',
-                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                        "url": issue_index_url,
+                        "action": "unpublish_default",
+                        "rowid": None,  # sem rowid deveria gerar uma exeção
                     },
-                    follow_redirects=True
+                    follow_redirects=True,
                 )
                 self.assertStatus(action_response, 200)
-                self.assertTemplateUsed('admin/model/list.html')
+                self.assertTemplateUsed("admin/model/list.html")
                 self.assertIn(expected_msg, action_response.data)
                 issue.reload()
                 self.assertTrue(issue.is_public)
 
 
 class ArticleAdminViewTests(BaseTestCase):
-
     def test_admin_article_list_records(self):
         """
         Com:
@@ -3075,33 +3144,32 @@ class ArticleAdminViewTests(BaseTestCase):
             - o Article criado deve esta listado nessa página
         """
         # with
-        article = makeOneArticle({'title': u'foo bar baz'})
+        article = makeOneArticle({"title": "foo bar baz"})
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de números
-            article_list_response = client.get(url_for('article.index_view'))
+            article_list_response = client.get(url_for("article.index_view"))
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao número
-            self.assertIn(article.id, article_list_response.data.decode('utf-8'))
+            self.assertIn(article.id, article_list_response.data.decode("utf-8"))
 
     def test_admin_article_details(self):
         """
@@ -3118,30 +3186,29 @@ class ArticleAdminViewTests(BaseTestCase):
         article = makeOneArticle()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_detail_url = url_for('article.details_view', id=article.id)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_detail_url = url_for("article.details_view", id=article.id)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de periódicos
             article_detail_response = client.get(article_detail_url)
             self.assertStatus(article_detail_response, 200)
-            self.assertTemplateUsed('admin/model/details.html')
+            self.assertTemplateUsed("admin/model/details.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao número
-            self.assertIn(article.id, article_detail_response.data.decode('utf-8'))
+            self.assertIn(article.id, article_detail_response.data.decode("utf-8"))
 
     def test_admin_article_search_by_id(self):
         """
@@ -3159,29 +3226,30 @@ class ArticleAdminViewTests(BaseTestCase):
         article = makeOneArticle()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de articles
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            article_search_response = client.get(article_index_url, data={'search': article.id})
+            self.assertTemplateUsed("admin/model/list.html")
+            article_search_response = client.get(
+                article_index_url, data={"search": article.id}
+            )
             self.assertStatus(article_search_response, 200)
 
             # que tem a id para acessar ao periódico
-            self.assertIn(article.id, article_list_response.data.decode('utf-8'))
+            self.assertIn(article.id, article_list_response.data.decode("utf-8"))
 
     def test_admin_article_check_column_filters(self):
         """
@@ -3195,29 +3263,33 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_col_filters = [
-                'issue', 'journal', 'is_aop', 'is_public', 'unpublish_reason', 'display_full_text'
-            ]
+            "issue",
+            "journal",
+            "is_aop",
+            "is_public",
+            "unpublish_reason",
+            "display_full_text",
+        ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_filters = self.get_context_variable('admin_view').column_filters
+            column_filters = self.get_context_variable("admin_view").column_filters
             self.assertEqual(len(expected_col_filters), len(column_filters))
             for expected_col_filter in expected_col_filters:
                 self.assertIn(expected_col_filter, column_filters)
@@ -3234,30 +3306,37 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_column_searchable_list = [
-            'aid', 'issue', 'journal', 'title', 'domain_key'
+            "aid",
+            "issue",
+            "journal",
+            "title",
+            "domain_key",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_searchable_list = self.get_context_variable('admin_view').column_searchable_list
-            self.assertEqual(len(expected_column_searchable_list), len(column_searchable_list))
+            column_searchable_list = self.get_context_variable(
+                "admin_view"
+            ).column_searchable_list
+            self.assertEqual(
+                len(expected_column_searchable_list), len(column_searchable_list)
+            )
             for expected_searchable_field in expected_column_searchable_list:
                 self.assertIn(expected_searchable_field, column_searchable_list)
 
@@ -3273,33 +3352,54 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_column_exclude_list = [
-            '_id', 'aid', 'section', 'is_aop', 'htmls', 'domain_key', 'xml',
-            'unpublish_reason', 'translated_titles', 'sections', 'pdfs', 'languages',
-            'original_language', 'created', 'abstract', 'authors', 'order',
-            'abstract_languages', 'elocation', 'fpage', 'lpage', 'url_segment'
+            "_id",
+            "aid",
+            "section",
+            "is_aop",
+            "htmls",
+            "domain_key",
+            "xml",
+            "unpublish_reason",
+            "translated_titles",
+            "sections",
+            "pdfs",
+            "languages",
+            "original_language",
+            "created",
+            "abstract",
+            "authors",
+            "order",
+            "abstract_languages",
+            "elocation",
+            "fpage",
+            "lpage",
+            "url_segment",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
-            self.assertEqual(len(expected_column_exclude_list), len(column_exclude_list))
+            column_exclude_list = self.get_context_variable(
+                "admin_view"
+            ).column_exclude_list
+            self.assertEqual(
+                len(expected_column_exclude_list), len(column_exclude_list)
+            )
             for expected_excluded_field in expected_column_exclude_list:
                 self.assertIn(expected_excluded_field, column_exclude_list)
 
@@ -3315,30 +3415,31 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_column_formatters = [
-            'created',
-            'updated',
+            "created",
+            "updated",
         ]
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_formatters = self.get_context_variable('admin_view').column_formatters
+            column_formatters = self.get_context_variable(
+                "admin_view"
+            ).column_formatters
             self.assertEqual(len(expected_column_formatters), len(column_formatters))
             for expected_column_formatter in expected_column_formatters:
                 self.assertIn(expected_column_formatter, column_formatters.keys())
@@ -3355,53 +3456,52 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_column_labels = [
-            'aid',
-            'issue',
-            'journal',
-            'title',
-            'section',
-            'is_aop',
-            'created',
-            'updated',
-            'htmls',
-            'domain_key',
-            'is_public',
-            'unpublish_reason',
-            'url_segment',
-            'pid',
-            'original_language',
-            'translated_titles',
-            'sections',
-            'authors',
-            'abstract',
-            'order',
-            'doi',
-            'languages',
-            'abstract_languages',
-            'display_full_text'
+            "aid",
+            "issue",
+            "journal",
+            "title",
+            "section",
+            "is_aop",
+            "created",
+            "updated",
+            "htmls",
+            "domain_key",
+            "is_public",
+            "unpublish_reason",
+            "url_segment",
+            "pid",
+            "original_language",
+            "translated_titles",
+            "sections",
+            "authors",
+            "abstract",
+            "order",
+            "doi",
+            "languages",
+            "abstract_languages",
+            "display_full_text",
         ]
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_labels = self.get_context_variable('admin_view').column_labels
+            column_labels = self.get_context_variable("admin_view").column_labels
             self.assertEqual(len(expected_column_labels), len(column_labels))
             for expected_column_label in expected_column_labels:
                 self.assertIn(expected_column_label, column_labels.keys())
@@ -3418,27 +3518,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_create = self.get_context_variable('admin_view').can_create
+            can_create = self.get_context_variable("admin_view").can_create
             self.assertFalse(can_create)
 
     def test_admin_article_check_can_edit_is_false(self):
@@ -3453,27 +3552,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_edit = self.get_context_variable('admin_view').can_edit
+            can_edit = self.get_context_variable("admin_view").can_edit
             self.assertFalse(can_edit)
 
     def test_admin_article_check_can_delete_is_false(self):
@@ -3488,27 +3586,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_delete = self.get_context_variable('admin_view').can_delete
+            can_delete = self.get_context_variable("admin_view").can_delete
             self.assertFalse(can_delete)
 
     def test_admin_article_check_create_modal_is_true(self):
@@ -3523,27 +3620,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            create_modal = self.get_context_variable('admin_view').create_modal
+            create_modal = self.get_context_variable("admin_view").create_modal
             self.assertTrue(create_modal)
 
     def test_admin_article_check_edit_modal_is_true(self):
@@ -3558,27 +3654,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            edit_modal = self.get_context_variable('admin_view').edit_modal
+            edit_modal = self.get_context_variable("admin_view").edit_modal
             self.assertTrue(edit_modal)
 
     def test_admin_article_check_can_view_details_is_true(self):
@@ -3593,27 +3688,26 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_view_details = self.get_context_variable('admin_view').can_view_details
+            can_view_details = self.get_context_variable("admin_view").can_view_details
             self.assertTrue(can_view_details)
 
     def test_admin_article_check_actions_defined(self):
@@ -3628,33 +3722,32 @@ class ArticleAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
         expected_actions = [
-            'publish',
-            'unpublish_default',
-            'set_full_text_unavailable',
-            'set_full_text_available',
+            "publish",
+            "unpublish_default",
+            "set_full_text_unavailable",
+            "set_full_text_available",
         ]
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            actions = [a[0] for a in self.get_context_variable('actions')]
+            actions = [a[0] for a in self.get_context_variable("actions")]
             self.assertEqual(len(expected_actions), len(actions))
             for expected_action in expected_actions:
                 self.assertIn(expected_action, actions)
@@ -3673,42 +3766,41 @@ class ArticleAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        article = makeOneArticle({'is_public': False})
+        article = makeOneArticle({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        publish_action_url = '%saction/' % article_index_url
-        expected_msg = u'Artigo(s) publicado com sucesso!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
+        publish_action_url = "%saction/" % article_index_url
+        expected_msg = "Artigo(s) publicado com sucesso!!"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de artigos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
 
             # executamos ação publicar:
             action_response = client.post(
                 publish_action_url,
                 data={
-                    'url': article_index_url,
-                    'action': 'publish',
-                    'rowid': article.id,
+                    "url": article_index_url,
+                    "action": "publish",
+                    "rowid": article.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             article.reload()
             self.assertTrue(article.is_public)
 
@@ -3726,42 +3818,41 @@ class ArticleAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        article = makeOneArticle({'is_public': True})
+        article = makeOneArticle({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = u'Artigo(s) publicado com sucesso!!'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
+        action_url = "%saction/" % article_index_url
+        expected_msg = "Artigo(s) publicado com sucesso!!"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de artigos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             action_response = client.post(
                 action_url,
                 data={
-                    'url': article_index_url,
-                    'action': 'publish',
-                    'rowid': article.id,
+                    "url": article_index_url,
+                    "action": "publish",
+                    "rowid": article.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             article.reload()
             self.assertTrue(article.is_public)
 
@@ -3780,48 +3871,49 @@ class ArticleAdminViewTests(BaseTestCase):
             - o usuario é notificado do resultado da operação
         """
         # with
-        article = makeOneArticle({'is_public': True})
+        article = makeOneArticle({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = 'Artigo(s) despublicado com sucesso!!'
-        expected_reason = 'Conteúdo temporariamente indisponível'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
+        action_url = "%saction/" % article_index_url
+        expected_msg = "Artigo(s) despublicado com sucesso!!"
+        expected_reason = "Conteúdo temporariamente indisponível"
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             action_response = client.post(
                 action_url,
                 data={
-                    'url': article_index_url,
-                    'action': 'unpublish_default',
-                    'rowid': article.id,
+                    "url": article_index_url,
+                    "action": "unpublish_default",
+                    "rowid": article.id,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
             self.assertStatus(action_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
-            self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+            self.assertTemplateUsed("admin/model/list.html")
+            self.assertIn(expected_msg, action_response.data.decode("utf-8"))
             article.reload()
             self.assertFalse(article.is_public)
             self.assertEqual(expected_reason, article.unpublish_reason)
 
-    def test_admin_article_action_publish_with_exception_raised_must_be_consistent(self):
+    def test_admin_article_action_publish_with_exception_raised_must_be_consistent(
+        self,
+    ):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -3835,47 +3927,48 @@ class ArticleAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        article = makeOneArticle({'is_public': False})
+        article = makeOneArticle({"is_public": False})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
+        action_url = "%saction/" % article_index_url
+        expected_msg = "Ocorreu um erro tentando despublicar o(s) número(s)!!."
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de periódicos
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             with self.assertRaises(Exception):
                 action_response = client.post(
                     action_url,
                     data={
-                        'url': article_index_url,
-                        'action': 'publish',
-                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                        "url": article_index_url,
+                        "action": "publish",
+                        "rowid": None,  # sem rowid deveria gerar uma exeção
                     },
-                    follow_redirects=True
+                    follow_redirects=True,
                 )
                 self.assertStatus(action_response, 200)
-                self.assertTemplateUsed('admin/model/list.html')
-                self.assertIn(expected_msg, action_response.data.decode('utf-8'))
+                self.assertTemplateUsed("admin/model/list.html")
+                self.assertIn(expected_msg, action_response.data.decode("utf-8"))
                 article.reload()
                 self.assertTrue(article.is_public)
 
-    def test_admin_article_action_unpublish_default_with_exception_raised_must_be_consistent(self):
+    def test_admin_article_action_unpublish_default_with_exception_raised_must_be_consistent(
+        self,
+    ):
         """
         Com:
             - usuário administrador cadastrado (com email confirmado)
@@ -3889,49 +3982,47 @@ class ArticleAdminViewTests(BaseTestCase):
             - o usuario é notificado que houve um erro na operação
         """
         # with
-        article = makeOneArticle({'is_public': True})
+        article = makeOneArticle({"is_public": True})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        article_index_url = url_for('article.index_view')
-        action_url = '%saction/' % article_index_url
-        expected_msg = u'Ocorreu um erro tentando despublicar o(s) número(s)!!.'
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        article_index_url = url_for("article.index_view")
+        action_url = "%saction/" % article_index_url
+        expected_msg = "Ocorreu um erro tentando despublicar o(s) número(s)!!."
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acessamos a listagem de Issues
             article_list_response = client.get(article_index_url)
             self.assertStatus(article_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # executamos ação publicar:
             with self.assertRaises(Exception):
                 action_response = client.post(
                     action_url,
                     data={
-                        'url': article_index_url,
-                        'action': 'unpublish_default',
-                        'rowid': None,  # sem rowid deveria gerar uma exeção
+                        "url": article_index_url,
+                        "action": "unpublish_default",
+                        "rowid": None,  # sem rowid deveria gerar uma exeção
                     },
-                    follow_redirects=True
+                    follow_redirects=True,
                 )
                 self.assertStatus(action_response, 200)
-                self.assertTemplateUsed('admin/model/list.html')
+                self.assertTemplateUsed("admin/model/list.html")
                 self.assertIn(expected_msg, action_response.data)
                 article.reload()
                 self.assertTrue(article.is_public)
 
 
 class CollectionAdminViewTests(BaseTestCase):
-
     def test_admin_collection_list_records(self):
         """
         Com:
@@ -3948,30 +4039,29 @@ class CollectionAdminViewTests(BaseTestCase):
         collection = makeOneCollection()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de collection
-            collection_list_response = client.get(url_for('collection.index_view'))
+            collection_list_response = client.get(url_for("collection.index_view"))
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao collection
-            self.assertIn(collection.id, collection_list_response.data.decode('utf-8'))
+            self.assertIn(collection.id, collection_list_response.data.decode("utf-8"))
 
     def test_admin_collection_details(self):
         """
@@ -3988,30 +4078,31 @@ class CollectionAdminViewTests(BaseTestCase):
         collection = makeOneCollection()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_detail_url = url_for('collection.details_view', id=collection.id)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_detail_url = url_for("collection.details_view", id=collection.id)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de Collection
             collection_detail_response = client.get(collection_detail_url)
             self.assertStatus(collection_detail_response, 200)
-            self.assertTemplateUsed('admin/model/details.html')
+            self.assertTemplateUsed("admin/model/details.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao Collection
-            self.assertIn(collection.id, collection_detail_response.data.decode('utf-8'))
+            self.assertIn(
+                collection.id, collection_detail_response.data.decode("utf-8")
+            )
 
     def test_admin_collection_check_column_exclude_list(self):
         """
@@ -4025,34 +4116,46 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
         expected_column_exclude_list = [
-            '_id', 'about', 'home_logo_pt', 'home_logo_es', 'home_logo_en',
-            'header_logo_pt', 'header_logo_es', 'header_logo_en',
-            'menu_logo_pt', 'menu_logo_es', 'menu_logo_en',
-            'logo_footer', 'logo_drop_menu'
+            "_id",
+            "about",
+            "home_logo_pt",
+            "home_logo_es",
+            "home_logo_en",
+            "header_logo_pt",
+            "header_logo_es",
+            "header_logo_en",
+            "menu_logo_pt",
+            "menu_logo_es",
+            "menu_logo_en",
+            "logo_footer",
+            "logo_drop_menu",
         ]
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de collections
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
-            self.assertEqual(len(expected_column_exclude_list), len(column_exclude_list))
+            column_exclude_list = self.get_context_variable(
+                "admin_view"
+            ).column_exclude_list
+            self.assertEqual(
+                len(expected_column_exclude_list), len(column_exclude_list)
+            )
             for expected_excluded_field in expected_column_exclude_list:
                 self.assertIn(expected_excluded_field, column_exclude_list)
 
@@ -4068,28 +4171,31 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
-        expected_form_excluded_columns = ('acronym', 'metrics')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
+        expected_form_excluded_columns = ("acronym", "metrics")
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de collections
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            form_excluded_columns = self.get_context_variable('admin_view').form_excluded_columns
-            self.assertEqual(len(expected_form_excluded_columns), len(form_excluded_columns))
+            form_excluded_columns = self.get_context_variable(
+                "admin_view"
+            ).form_excluded_columns
+            self.assertEqual(
+                len(expected_form_excluded_columns), len(form_excluded_columns)
+            )
             for expected_form_excluded_column in expected_form_excluded_columns:
                 self.assertIn(expected_form_excluded_column, form_excluded_columns)
 
@@ -4105,27 +4211,26 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_create = self.get_context_variable('admin_view').can_create
+            can_create = self.get_context_variable("admin_view").can_create
             self.assertFalse(can_create)
 
     def test_admin_collection_check_can_edit_is_true(self):
@@ -4140,27 +4245,26 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_edit = self.get_context_variable('admin_view').can_edit
+            can_edit = self.get_context_variable("admin_view").can_edit
             self.assertTrue(can_edit)
 
     def test_admin_collection_check_can_delete_is_false(self):
@@ -4175,27 +4279,26 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_delete = self.get_context_variable('admin_view').can_delete
+            can_delete = self.get_context_variable("admin_view").can_delete
             self.assertFalse(can_delete)
 
     def test_admin_collection_check_create_modal_is_true(self):
@@ -4210,27 +4313,26 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            create_modal = self.get_context_variable('admin_view').create_modal
+            create_modal = self.get_context_variable("admin_view").create_modal
             self.assertTrue(create_modal)
 
     def test_admin_collection_check_edit_modal_is_true(self):
@@ -4245,27 +4347,26 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            edit_modal = self.get_context_variable('admin_view').edit_modal
+            edit_modal = self.get_context_variable("admin_view").edit_modal
             self.assertTrue(edit_modal)
 
     def test_admin_collection_check_can_view_details_is_true(self):
@@ -4280,32 +4381,30 @@ class CollectionAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        collection_index_url = url_for('collection.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        collection_index_url = url_for("collection.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             collection_list_response = client.get(collection_index_url)
             self.assertStatus(collection_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_view_details = self.get_context_variable('admin_view').can_view_details
+            can_view_details = self.get_context_variable("admin_view").can_view_details
             self.assertTrue(can_view_details)
 
 
 class SponsorAdminViewTests(BaseTestCase):
-
     def test_admin_sponsor_list_records(self):
         """
         Com:
@@ -4322,30 +4421,29 @@ class SponsorAdminViewTests(BaseTestCase):
         sponsor = makeOneSponsor()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de Sponsor
-            sponsor_list_response = client.get(url_for('sponsor.index_view'))
+            sponsor_list_response = client.get(url_for("sponsor.index_view"))
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao sponsor
-            self.assertIn(sponsor.id, sponsor_list_response.data.decode('utf-8'))
+            self.assertIn(sponsor.id, sponsor_list_response.data.decode("utf-8"))
 
     def test_admin_sponsor_details(self):
         """
@@ -4362,30 +4460,29 @@ class SponsorAdminViewTests(BaseTestCase):
         sponsor = makeOneSponsor()
 
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_detail_url = url_for('sponsor.details_view', id=sponsor.id)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_detail_url = url_for("sponsor.details_view", id=sponsor.id)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
-            self.assertTemplateUsed('admin/index.html')
+            self.assertTemplateUsed("admin/index.html")
             self.assertTrue(current_user.is_authenticated)
             # acesso a aba de Sponsor
             sponsor_detail_response = client.get(sponsor_detail_url)
             self.assertStatus(sponsor_detail_response, 200)
-            self.assertTemplateUsed('admin/model/details.html')
+            self.assertTemplateUsed("admin/model/details.html")
             # then
             # verificamos a resposta
             # que tem a id para acessar ao Sponsor
-            self.assertIn(sponsor.id, sponsor_detail_response.data.decode('utf-8'))
+            self.assertIn(sponsor.id, sponsor_detail_response.data.decode("utf-8"))
 
     def test_admin_sponsor_check_column_exclude_list(self):
         """
@@ -4399,28 +4496,31 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
-        expected_column_exclude_list = ('_id', )
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
+        expected_column_exclude_list = ("_id",)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de Sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_exclude_list = self.get_context_variable('admin_view').column_exclude_list
-            self.assertEqual(len(expected_column_exclude_list), len(column_exclude_list))
+            column_exclude_list = self.get_context_variable(
+                "admin_view"
+            ).column_exclude_list
+            self.assertEqual(
+                len(expected_column_exclude_list), len(column_exclude_list)
+            )
             for expected_excluded_field in expected_column_exclude_list:
                 self.assertIn(expected_excluded_field, column_exclude_list)
 
@@ -4436,26 +4536,27 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de Sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            form_excluded_columns = self.get_context_variable('admin_view').form_excluded_columns
+            form_excluded_columns = self.get_context_variable(
+                "admin_view"
+            ).form_excluded_columns
             self.assertEqual(None, form_excluded_columns)
 
     def test_admin_sponsor_check_can_create_is_true(self):
@@ -4470,27 +4571,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de Sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_create = self.get_context_variable('admin_view').can_create
+            can_create = self.get_context_variable("admin_view").can_create
             self.assertTrue(can_create)
 
     def test_admin_sponsor_check_can_edit_is_true(self):
@@ -4505,27 +4605,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de Sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_edit = self.get_context_variable('admin_view').can_edit
+            can_edit = self.get_context_variable("admin_view").can_edit
             self.assertTrue(can_edit)
 
     def test_admin_sponsor_check_can_delete_is_true(self):
@@ -4540,27 +4639,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_delete = self.get_context_variable('admin_view').can_delete
+            can_delete = self.get_context_variable("admin_view").can_delete
             self.assertTrue(can_delete)
 
     def test_admin_sponsor_check_create_modal_is_false(self):
@@ -4575,27 +4673,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            create_modal = self.get_context_variable('admin_view').create_modal
+            create_modal = self.get_context_variable("admin_view").create_modal
             self.assertFalse(create_modal)
 
     def test_admin_sponsor_check_edit_modal_is_false(self):
@@ -4610,27 +4707,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            edit_modal = self.get_context_variable('admin_view').edit_modal
+            edit_modal = self.get_context_variable("admin_view").edit_modal
             self.assertFalse(edit_modal)
 
     def test_admin_sponsor_check_can_view_details_is_true(self):
@@ -4645,27 +4741,26 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
 
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de periódicos
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            can_view_details = self.get_context_variable('admin_view').can_view_details
+            can_view_details = self.get_context_variable("admin_view").can_view_details
             self.assertTrue(can_view_details)
 
     def test_admin_sponsor_check_searchable_columns(self):
@@ -4680,34 +4775,36 @@ class SponsorAdminViewTests(BaseTestCase):
         """
         # with
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
-        sponsor_index_url = url_for('sponsor.index_view')
-        expected_column_searchable_list = ('name',)
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
+        sponsor_index_url = url_for("sponsor.index_view")
+        expected_column_searchable_list = ("name",)
         # when
         with self.client as client:
             # login do usuario admin
             login_response = client.post(
-                login_url,
-                data=admin_user,
-                follow_redirects=True)
+                login_url, data=admin_user, follow_redirects=True
+            )
             self.assertStatus(login_response, 200)
             # acesso a aba de sponsor
             sponsor_list_response = client.get(sponsor_index_url)
             self.assertStatus(sponsor_list_response, 200)
-            self.assertTemplateUsed('admin/model/list.html')
+            self.assertTemplateUsed("admin/model/list.html")
             # verificamos os filtros da view
-            column_searchable_list = self.get_context_variable('admin_view').column_searchable_list
-            self.assertEqual(len(expected_column_searchable_list), len(column_searchable_list))
+            column_searchable_list = self.get_context_variable(
+                "admin_view"
+            ).column_searchable_list
+            self.assertEqual(
+                len(expected_column_searchable_list), len(column_searchable_list)
+            )
             for expected_searchable_field in expected_column_searchable_list:
                 self.assertIn(expected_searchable_field, column_searchable_list)
 
 
 class PagesAdminViewTests(BaseTestCase):
-
     def test_admin_page_details(self):
         """
         Com:
@@ -4720,61 +4817,50 @@ class PagesAdminViewTests(BaseTestCase):
             - a pagina mostra o periódico certo
         """
         content = '<a href="http://www.scielo.br/avaliacao/faq_avaliacao_en.htm"><img src="http://www.scielo.br/img/revistas/abcd/glogo.gif">'
-        page = makeOnePage({'_id': 'xxxxx', 'content': content})
+        page = makeOnePage({"_id": "xxxxx", "content": content})
         admin_user = {
-            'email': 'admin@opac.org',
-            'password': 'foobarbaz',
+            "email": "admin@opac.org",
+            "password": "foobarbaz",
         }
-        create_user(admin_user['email'], admin_user['password'], True)
-        login_url = url_for('admin.login_view')
+        create_user(admin_user["email"], admin_user["password"], True)
+        login_url = url_for("admin.login_view")
         # when
         with current_app.app_context():
             with self.client as client:
                 # login do usuario admin
                 login_response = client.post(
-                    login_url,
-                    data=admin_user,
-                    follow_redirects=True)
+                    login_url, data=admin_user, follow_redirects=True
+                )
                 self.assertStatus(login_response, 200)
-                self.assertTemplateUsed('admin/index.html')
+                self.assertTemplateUsed("admin/index.html")
                 self.assertTrue(current_user.is_authenticated)
 
                 # edit pages
                 sent = {
-                    'content': content * 2,
-                    'slug_name': 'criterios',
-                    'name': 'criterios',
-                    'language': 'pt_BR',
-                    'description': 'DESCRIIIIIIII',
+                    "content": content * 2,
+                    "slug_name": "criterios",
+                    "name": "criterios",
+                    "language": "pt_BR",
+                    "description": "DESCRIIIIIIII",
                 }
                 response = client.post(
-                    '/admin/pages/edit/?id={}'.format(page.id),
+                    "/admin/pages/edit/?id={}".format(page.id),
                     data=sent,
-                    follow_redirects=True
+                    follow_redirects=True,
                 )
-                self.assertTemplateUsed('admin/model/list.html')
+                self.assertTemplateUsed("admin/model/list.html")
                 self.assertStatus(response, 200)
-                self.assertIn(
-                    'DESCRIIIIIIII', response.data.decode('utf-8'))
-                self.assertIn(
-                    'success', response.data.decode('utf-8'))
-                url = url_for('pages.details_view', id=page.id)
+                self.assertIn("DESCRIIIIIIII", response.data.decode("utf-8"))
+                self.assertIn("success", response.data.decode("utf-8"))
+                url = url_for("pages.details_view", id=page.id)
                 response = client.get(url)
                 self.assertStatus(response, 200)
-                self.assertTemplateUsed('admin/model/details.html')
-                response_data = response.data.decode('utf-8')
+                self.assertTemplateUsed("admin/model/details.html")
+                response_data = response.data.decode("utf-8")
                 self.assertIn(page.id, response_data)
-                self.assertIn(
-                    "/avaliacao/faq_avaliacao_en.htm",
-                    response_data)
-                self.assertIn(
-                    "/img/revistas/abcd/glogo.gif",
-                    response_data)
+                self.assertIn("/avaliacao/faq_avaliacao_en.htm", response_data)
+                self.assertIn("/img/revistas/abcd/glogo.gif", response_data)
                 self.assertEqual(
-                    response_data.count(
-                        "/avaliacao/faq_avaliacao_en.htm"),
-                    2)
-                self.assertEqual(
-                    response_data.count(
-                        "/img/revistas/abcd/glogo.gif"),
-                    2)
+                    response_data.count("/avaliacao/faq_avaliacao_en.htm"), 2
+                )
+                self.assertEqual(response_data.count("/img/revistas/abcd/glogo.gif"), 2)

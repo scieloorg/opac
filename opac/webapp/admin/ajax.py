@@ -4,12 +4,11 @@ from flask_admin.contrib.mongoengine.ajax import QueryAjaxModelLoader
 
 
 class CustomQueryAjaxModelLoader(QueryAjaxModelLoader):
-
     def __init__(self, name, model, **options):
         """
-            Constructor.
-            :param fields:
-                Fields to run query against
+        Constructor.
+        :param fields:
+            Fields to run query against
         """
         super(CustomQueryAjaxModelLoader, self).__init__(name, model, **options)
 

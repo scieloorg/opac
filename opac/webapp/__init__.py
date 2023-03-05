@@ -1,35 +1,33 @@
 # coding: utf-8
 
 import logging
-from raven.contrib.flask import Sentry
 
+import flask_admin
 import rq_dashboard
 import rq_scheduler_dashboard
-
-from flask import Flask, flash, redirect, url_for, request
-from flask_htmlmin import HTMLMIN
-from flask_mongoengine import MongoEngine
-from flask_login import LoginManager, current_user
-from flask_sqlalchemy import SQLAlchemy
-import flask_admin
-from flask_mail import Mail
-from flask_babelex import Babel
-from flask_babelex import lazy_gettext
-from werkzeug.middleware.proxy_fix import ProxyFix
-from werkzeug.routing import BaseConverter
-from flask_caching import Cache
 from elasticapm.contrib.flask import ElasticAPM
-
+from flask import Flask, flash, redirect, request, url_for
+from flask_babelex import Babel, lazy_gettext
+from flask_caching import Cache
+from flask_htmlmin import HTMLMIN
+from flask_login import LoginManager, current_user
+from flask_mail import Mail
+from flask_mongoengine import MongoEngine
+from flask_sqlalchemy import SQLAlchemy
 from opac_schema.v1.models import (
-    Collection,
-    Sponsor,
-    Journal,
-    Issue,
     Article,
+    AuditLogEntry,
+    Collection,
+    Issue,
+    Journal,
     News,
     Pages,
     PressRelease,
-    AuditLogEntry)
+    Sponsor,
+)
+from raven.contrib.flask import Sentry
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.routing import BaseConverter
 
 login_manager = LoginManager()
 dbmongo = MongoEngine()
@@ -42,7 +40,6 @@ cache = Cache()
 
 from .main import custom_filters  # noqa
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -50,7 +47,6 @@ class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
         super(RegexConverter, self).__init__(url_map)
         self.regex = items[0]
-
 
 
 def configure_apm_agent(app):
@@ -113,13 +109,16 @@ def configure_apm_agent(app):
 
     return ElasticAPM(app)
 
-def create_app():
-    app = Flask(__name__,
-                static_url_path='/static',
-                static_folder='static',
-                instance_relative_config=False)
 
-    app.url_map.converters['regex'] = RegexConverter
+def create_app():
+    app = Flask(
+        __name__,
+        static_url_path="/static",
+        static_folder="static",
+        instance_relative_config=False,
+    )
+
+    app.url_map.converters["regex"] = RegexConverter
 
     # Remove strict slash from Werkzeug
     app.url_map.strict_slashes = False
@@ -127,37 +126,38 @@ def create_app():
     # Configurações
     app.config.from_object(rq_dashboard.default_settings)
     app.config.from_object(rq_scheduler_dashboard.default_settings)
-    app.config.from_object('webapp.config.default')  # Configuração basica
-    app.config.from_envvar('OPAC_CONFIG', silent=True)  # configuração do ambiente
+    app.config.from_object("webapp.config.default")  # Configuração basica
+    app.config.from_envvar("OPAC_CONFIG", silent=True)  # configuração do ambiente
     app.logger.root.setLevel(app.config.get("LOG_LEVEL"))
 
     configure_apm_agent(app)
 
     # Sentry:
-    if app.config['USE_SENTRY']:
-        dsn = app.config['SENTRY_DSN']
+    if app.config["USE_SENTRY"]:
+        dsn = app.config["SENTRY_DSN"]
         sentry.init_app(app, dsn=dsn, logging=True, level=logging.ERROR)
 
     # login
-    login_manager.session_protection = 'strong'
-    login_manager.login_view = 'admin.login_view'
+    login_manager.session_protection = "strong"
+    login_manager.login_view = "admin.login_view"
     login_manager.init_app(app)
 
     # Minificando o HTML
-    if app.config['MINIFY_PAGE']:
+    if app.config["MINIFY_PAGE"]:
         HTMLMIN(app)
-        logger.info('HTML minification has been activated.')
+        logger.info("HTML minification has been activated.")
 
     # Registrando os filtros
-    app.jinja_env.filters['trans_alpha2'] = custom_filters.trans_alpha2
-    app.jinja_env.filters['datetimefilter'] = custom_filters.datetimefilter
+    app.jinja_env.filters["trans_alpha2"] = custom_filters.trans_alpha2
+    app.jinja_env.filters["datetimefilter"] = custom_filters.datetimefilter
 
     # i18n
     babel.init_app(app)
     # Debug Toolbar
-    if app.config['DEBUG']:
+    if app.config["DEBUG"]:
         # Toolbar
         from flask_debugtoolbar import DebugToolbarExtension
+
         toolbar = DebugToolbarExtension()
         toolbar.init_app(app)
     # Mongo
@@ -167,49 +167,98 @@ def create_app():
     # Emails
     mail.init_app(app)
     # Cache:
-    if app.config['CACHE_ENABLED']:
+    if app.config["CACHE_ENABLED"]:
         cache.init_app(app, config=app.config)
     else:
-        app.config['CACHE_TYPE'] = 'null'
+        app.config["CACHE_TYPE"] = "null"
         cache.init_app(app, config=app.config)
 
     # Interface do admin
-    from .models import User, File, Image
     # from .admin import views
     from webapp.admin import views
 
-    admin = flask_admin.Admin(
-        app, 'OPAC admin',
-        index_view=views.AdminIndexView(),
-        template_mode='bootstrap3',
-        base_template="admin/opac_base.html")
+    from .models import File, Image, User
 
-    admin.add_view(views.CollectionAdminView(Collection, category=lazy_gettext('Catálogo'), name=lazy_gettext('Coleção')))
-    admin.add_view(views.JournalAdminView(Journal, category=lazy_gettext('Catálogo'), name=lazy_gettext('Periódico')))
-    admin.add_view(views.IssueAdminView(Issue, category=lazy_gettext('Catálogo'), name=lazy_gettext('Número')))
-    admin.add_view(views.ArticleAdminView(Article, category=lazy_gettext('Catálogo'), name=lazy_gettext('Artigo')))
-    admin.add_view(views.SponsorAdminView(Sponsor, category=lazy_gettext('Catálogo'), name=lazy_gettext('Financiador')))
-    admin.add_view(views.PressReleaseAdminView(PressRelease, category=lazy_gettext('Catálogo'), name=lazy_gettext('Press Release')))
-    admin.add_view(views.NewsAdminView(News, name=lazy_gettext('Notícias')))
-    admin.add_view(views.FileAdminView(File, dbsql.session, category=lazy_gettext('Ativos')))
-    admin.add_view(views.ImageAdminView(Image, dbsql.session, category=lazy_gettext('Ativos')))
-    admin.add_view(views.PagesAdminView(Pages, name=lazy_gettext('Páginas')))
-    admin.add_view(views.AuditLogEntryAdminView(AuditLogEntry, category=lazy_gettext('Gestão'), name=lazy_gettext('Auditoria: Páginas')))
-    admin.add_view(views.UserAdminView(User, dbsql.session, category=lazy_gettext('Gestão'), name=lazy_gettext('Usuário')))
+    admin = flask_admin.Admin(
+        app,
+        "OPAC admin",
+        index_view=views.AdminIndexView(),
+        template_mode="bootstrap3",
+        base_template="admin/opac_base.html",
+    )
+
+    admin.add_view(
+        views.CollectionAdminView(
+            Collection, category=lazy_gettext("Catálogo"), name=lazy_gettext("Coleção")
+        )
+    )
+    admin.add_view(
+        views.JournalAdminView(
+            Journal, category=lazy_gettext("Catálogo"), name=lazy_gettext("Periódico")
+        )
+    )
+    admin.add_view(
+        views.IssueAdminView(
+            Issue, category=lazy_gettext("Catálogo"), name=lazy_gettext("Número")
+        )
+    )
+    admin.add_view(
+        views.ArticleAdminView(
+            Article, category=lazy_gettext("Catálogo"), name=lazy_gettext("Artigo")
+        )
+    )
+    admin.add_view(
+        views.SponsorAdminView(
+            Sponsor, category=lazy_gettext("Catálogo"), name=lazy_gettext("Financiador")
+        )
+    )
+    admin.add_view(
+        views.PressReleaseAdminView(
+            PressRelease,
+            category=lazy_gettext("Catálogo"),
+            name=lazy_gettext("Press Release"),
+        )
+    )
+    admin.add_view(views.NewsAdminView(News, name=lazy_gettext("Notícias")))
+    admin.add_view(
+        views.FileAdminView(File, dbsql.session, category=lazy_gettext("Ativos"))
+    )
+    admin.add_view(
+        views.ImageAdminView(Image, dbsql.session, category=lazy_gettext("Ativos"))
+    )
+    admin.add_view(views.PagesAdminView(Pages, name=lazy_gettext("Páginas")))
+    admin.add_view(
+        views.AuditLogEntryAdminView(
+            AuditLogEntry,
+            category=lazy_gettext("Gestão"),
+            name=lazy_gettext("Auditoria: Páginas"),
+        )
+    )
+    admin.add_view(
+        views.UserAdminView(
+            User,
+            dbsql.session,
+            category=lazy_gettext("Gestão"),
+            name=lazy_gettext("Usuário"),
+        )
+    )
 
     from .main import main as main_bp
+
     app.register_blueprint(main_bp)
 
     # Setup RQ Dashboard e Scheduler: - mover para um modulo proprio
     def check_user_logged_in_or_redirect():
         if not current_user.is_authenticated:
-            flash(u'Please log in to access this page.')
-            return redirect(url_for('admin.login_view', next=request.path or '/'))
+            flash("Please log in to access this page.")
+            return redirect(url_for("admin.login_view", next=request.path or "/"))
 
     rq_scheduler_dashboard.blueprint.before_request(check_user_logged_in_or_redirect)
     rq_dashboard.blueprint.before_request(check_user_logged_in_or_redirect)
-    app.register_blueprint(rq_scheduler_dashboard.blueprint, url_prefix='/admin/scheduler')
-    app.register_blueprint(rq_dashboard.blueprint, url_prefix='/admin/workers')
+    app.register_blueprint(
+        rq_scheduler_dashboard.blueprint, url_prefix="/admin/scheduler"
+    )
+    app.register_blueprint(rq_dashboard.blueprint, url_prefix="/admin/workers")
 
     # FIM do setup RQ Dashboard e Scheduler: - mover para um modulo proprio
 

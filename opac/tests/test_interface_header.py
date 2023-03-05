@@ -1,14 +1,12 @@
 # coding: utf-8
 
-from flask import url_for
-from .base import BaseTestCase
-from flask import current_app
+from flask import current_app, url_for
 
 from . import utils
+from .base import BaseTestCase
 
 
 class HeaderTestCase(BaseTestCase):
-
     def test_current_language_when_set_pt_br(self):
         """
         Teste para alterar o idioma da interface, nesse teste a URL:
@@ -19,15 +17,17 @@ class HeaderTestCase(BaseTestCase):
         with current_app.app_context():
             utils.makeOneCollection()
             with self.client as c:
-                response = c.get(url_for('main.set_locale', lang_code='pt_BR'),
-                                 headers={'Referer': '/'},
-                                 follow_redirects=True)
+                response = c.get(
+                    url_for("main.set_locale", lang_code="pt_BR"),
+                    headers={"Referer": "/"},
+                    follow_redirects=True,
+                )
                 self.assertStatus(response, 200)
 
-                self.assertTemplateUsed('collection/index.html')
-                self.assertIn(b'lang-en', response.data)
-                self.assertIn(b'lang-es', response.data)
-                self.assertNotIn(b'lang-pt', response.data)
+                self.assertTemplateUsed("collection/index.html")
+                self.assertIn(b"lang-en", response.data)
+                self.assertIn(b"lang-es", response.data)
+                self.assertNotIn(b"lang-pt", response.data)
 
     def test_current_language_when_set_en(self):
         """
@@ -39,15 +39,17 @@ class HeaderTestCase(BaseTestCase):
         with current_app.app_context():
             utils.makeOneCollection()
             with self.client as c:
-                response = c.get(url_for('main.set_locale', lang_code='en'),
-                                 headers={'Referer': '/'},
-                                 follow_redirects=True)
+                response = c.get(
+                    url_for("main.set_locale", lang_code="en"),
+                    headers={"Referer": "/"},
+                    follow_redirects=True,
+                )
                 self.assertStatus(response, 200)
 
-                self.assertTemplateUsed('collection/index.html')
-                self.assertIn(b'lang-pt', response.data)
-                self.assertIn(b'lang-es', response.data)
-                self.assertNotIn(b'lang-en', response.data)
+                self.assertTemplateUsed("collection/index.html")
+                self.assertIn(b"lang-pt", response.data)
+                self.assertIn(b"lang-es", response.data)
+                self.assertNotIn(b"lang-en", response.data)
 
     def test_current_language_when_set_es(self):
         """
@@ -59,12 +61,14 @@ class HeaderTestCase(BaseTestCase):
         with current_app.app_context():
             utils.makeOneCollection()
             with self.client as c:
-                response = c.get(url_for('main.set_locale', lang_code='es'),
-                                 headers={'Referer': '/'},
-                                 follow_redirects=True)
+                response = c.get(
+                    url_for("main.set_locale", lang_code="es"),
+                    headers={"Referer": "/"},
+                    follow_redirects=True,
+                )
                 self.assertStatus(response, 200)
 
-                self.assertTemplateUsed('collection/index.html')
-                self.assertIn(b'lang-pt', response.data)
-                self.assertIn(b'lang-en', response.data)
-                self.assertNotIn(b'lang-es', response.data)
+                self.assertTemplateUsed("collection/index.html")
+                self.assertIn(b"lang-pt", response.data)
+                self.assertIn(b"lang-en", response.data)
+                self.assertNotIn(b"lang-es", response.data)
