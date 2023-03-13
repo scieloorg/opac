@@ -1168,7 +1168,7 @@ def get_articles_by_iid(iid, **kwargs):
     # poderia ser chamado uma única vez
     # No entanto, há um issue relacionado: #1435
     articles = Article.objects(issue=iid, **kwargs).order_by("order")
-    if is_aop_issue(articles):        
+    if is_aop_issue(articles):
         return articles.order_by("-publication_date")
     return articles
 
@@ -1577,6 +1577,8 @@ def send_email_error(
         _type = __("aplicação")
     elif error_type == "content":
         _type = __("conteúdo")
+    elif error_type == "acessibility":
+        _type = __("acessibilidade")
 
     msg = __(
         "O usuário <b>%s</b> com e-mail: <b>%s</b>,"
