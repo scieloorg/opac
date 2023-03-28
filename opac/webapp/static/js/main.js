@@ -1022,6 +1022,9 @@ var Portal = {
 
 			$("#sortBy").change(function(){
 				$("#sortBy option:selected" ).each(function() {
+					if ($(this).val() == "0"){
+						window.location.reload();
+					}
       				Journal.publicationSort($(this).val());
     			});
 			})
@@ -1046,7 +1049,6 @@ var Portal = {
 			if(typeof ctn == "undefined") ctn = ".journal";
 		},
 		publicationSort: function(valor) {
-
 			var listas = $(".issueIndent>ul.articles");
 			var qtdlista = listas.length;
 
