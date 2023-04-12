@@ -1298,9 +1298,8 @@ def get_article_by_pid_v2(v2, **kwargs):
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    articles = Article.objects(
-        Q(pid=v2) | Q(aop_pid=v2) | Q(scielo_pids__other=v2),
-        is_public=True, **kwargs)
+    q = Q(pid=v2) | Q(aop_pid=v2) | Q(scielo_pids__other=v2)
+    articles = Article.objects(q, is_public=True, **kwargs)
     if articles:
         return articles[0]
     return None
