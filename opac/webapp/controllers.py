@@ -59,6 +59,13 @@ _PIDS_FIXES = (
 )
 
 
+def _fix_pid(pid):
+    for found, replace in _PIDS_FIXES:
+        if found in pid:
+            return pid.replace(found, replace)
+    return pid
+
+
 class ArticleAbstractNotFoundError(Exception):
     ...
 
