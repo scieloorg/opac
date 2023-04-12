@@ -40,6 +40,7 @@ from .choices import INDEX_NAME, JOURNAL_STATUS, STUDY_AREAS
 from .models import User
 from .utils import utils
 
+
 HIGHLIGHTED_TYPES = (
     "article-commentary",
     "brief-report",
@@ -47,6 +48,14 @@ HIGHLIGHTED_TYPES = (
     "rapid-communication",
     "research-article",
     "review-article",
+)
+
+
+_PIDS_FIXES = (
+    ('0102-7638', '1678-9741'),
+    ('1807-0302', '0101-8205'),
+    ('1806-1117', '0102-4744'),
+    ('1678-4510', '0100-879X'),
 )
 
 
