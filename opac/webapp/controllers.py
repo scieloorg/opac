@@ -912,9 +912,9 @@ def get_article_by_aid(
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    articles = Article.objects(pk=aid, is_public=True, **kwargs)
-    if not articles:
-        articles = Article.objects(scielo_pids__other=aid, is_public=True, **kwargs)
+    articles = Article.objects(
+        Q(pk=aid) | Q(scielo_pids__other=aid),
+        is_public=True, **kwargs)
 
     if articles:
         article = articles[0]
