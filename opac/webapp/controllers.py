@@ -1256,7 +1256,9 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    return Article.objects(aop_pid=aop_pid, **kwargs).first()
+    return Article.objects(
+        Q(aop_pid=aop_pid) | Q(aop_pid=_fix_pid(aop_pid)),
+        **kwargs).first()
 
 
 def get_article_by_scielo_pid(scielo_pid, **kwargs):
