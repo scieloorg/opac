@@ -40,7 +40,6 @@ from .choices import INDEX_NAME, JOURNAL_STATUS, STUDY_AREAS
 from .models import User
 from .utils import utils
 
-
 HIGHLIGHTED_TYPES = (
     "article-commentary",
     "brief-report",
@@ -52,14 +51,14 @@ HIGHLIGHTED_TYPES = (
 
 
 _PIDS_FIXES = (
-    ('0102-7638', '1678-9741'),
-    ('1807-0302', '0101-8205'),
-    ('1806-1117', '0102-4744'),
-    ('1678-4510', '0100-879X'),
-    ('1678-9741', '0102-7638'),
-    ('0101-8205', '1807-0302'),
-    ('0102-4744', '1806-1117'),
-    ('0100-879X', '1678-4510'),
+    ("0102-7638", "1678-9741"),
+    ("1807-0302", "0101-8205"),
+    ("1806-1117", "0102-4744"),
+    ("1678-4510", "0100-879X"),
+    ("1678-9741", "0102-7638"),
+    ("0101-8205", "1807-0302"),
+    ("0102-4744", "1806-1117"),
+    ("0100-879X", "1678-4510"),
 )
 
 
@@ -917,8 +916,8 @@ def get_article_by_aid(
     kwargs = add_filter_without_embargo(kwargs)
 
     articles = Article.objects(
-        Q(pk=aid) | Q(scielo_pids__other=aid),
-        is_public=True, **kwargs)
+        Q(pk=aid) | Q(scielo_pids__other=aid), is_public=True, **kwargs
+    )
 
     if articles:
         article = articles[0]
@@ -1261,8 +1260,8 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     kwargs = add_filter_without_embargo(kwargs)
 
     return Article.objects(
-        Q(aop_pid=aop_pid) | Q(aop_pid=_fix_pid(aop_pid)),
-        **kwargs).first()
+        Q(aop_pid=aop_pid) | Q(aop_pid=_fix_pid(aop_pid)), **kwargs
+    ).first()
 
 
 def get_article_by_scielo_pid(scielo_pid, **kwargs):
