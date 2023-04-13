@@ -50,6 +50,25 @@ HIGHLIGHTED_TYPES = (
 )
 
 
+_PIDS_FIXES = (
+    ("0102-7638", "1678-9741"),
+    ("1807-0302", "0101-8205"),
+    ("1806-1117", "0102-4744"),
+    ("1678-4510", "0100-879X"),
+    ("1678-9741", "0102-7638"),
+    ("0101-8205", "1807-0302"),
+    ("0102-4744", "1806-1117"),
+    ("0100-879X", "1678-4510"),
+)
+
+
+def _fix_pid(pid):
+    for found, replace in _PIDS_FIXES:
+        if found in pid:
+            return pid.replace(found, replace)
+    return pid
+
+
 class ArticleAbstractNotFoundError(Exception):
     ...
 
@@ -896,9 +915,9 @@ def get_article_by_aid(
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    articles = Article.objects(pk=aid, is_public=True, **kwargs)
-    if not articles:
-        articles = Article.objects(scielo_pids__other=aid, is_public=True, **kwargs)
+    articles = Article.objects(
+        Q(pk=aid) | Q(scielo_pids__other=aid), is_public=True, **kwargs
+    )
 
     if articles:
         article = articles[0]
@@ -1224,7 +1243,7 @@ def get_article_by_pid(pid, **kwargs):
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    return Article.objects(pid=pid, **kwargs).first()
+    return Article.objects(Q(pid=pid) | Q(pid=_fix_pid(pid)), **kwargs).first()
 
 
 def get_article_by_oap_pid(aop_pid, **kwargs):
@@ -1240,7 +1259,9 @@ def get_article_by_oap_pid(aop_pid, **kwargs):
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    return Article.objects(aop_pid=aop_pid, **kwargs).first()
+    return Article.objects(
+        Q(aop_pid=aop_pid) | Q(aop_pid=_fix_pid(aop_pid)), **kwargs
+    ).first()
 
 
 def get_article_by_scielo_pid(scielo_pid, **kwargs):
@@ -1282,18 +1303,13 @@ def get_article_by_pid_v2(v2, **kwargs):
     # add filter publication_date__lte_today_date
     kwargs = add_filter_without_embargo(kwargs)
 
-    articles = Article.objects(pid=v2, is_public=True, **kwargs)
+    fixed = _fix_pid(v2)
+    q = Q(pid=v2) | Q(aop_pid=v2) | Q(scielo_pids__other=v2)
+    if fixed != v2:
+        q = Q(pid=fixed) | Q(aop_pid=fixed) | Q(scielo_pids__other=fixed) | q
+    articles = Article.objects(q, is_public=True, **kwargs)
     if articles:
         return articles[0]
-
-    articles = Article.objects(aop_pid=v2, is_public=True, **kwargs)
-    if articles:
-        return articles[0]
-
-    articles = Article.objects(scielo_pids__other=v2, is_public=True, **kwargs)
-    if articles:
-        return articles[0]
-
     return None
 
 
