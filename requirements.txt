@@ -9,7 +9,7 @@ click==7.1.2
 croniter==0.3.34
 dnspython==1.16.0
 elastic-apm==5.5.2
-email-validator==1.0.5
+email-validator==2.0.0
 feedparser==5.2.1
 Flask==2.0.2
 Flask-Admin==1.5.8
