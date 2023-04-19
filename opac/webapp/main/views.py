@@ -1288,10 +1288,9 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
                 code=301,
             )
     except controllers.PreviousOrNextArticleNotFoundError as e:
+        # No contexto de navegação, não existe o próximo ou anterior 
         if gs_abstract:
-            # ABSTRACTNOTFOUND
             abort(404, _("Resumo inexistente"))
-        # ARTICLENOTFOUND
         abort(404, _("Artigo inexistente"))
     except (controllers.ArticleNotFoundError, controllers.ArticleJournalNotFoundError):
         # ARTICLENOTFOUND
