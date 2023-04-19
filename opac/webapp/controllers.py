@@ -69,6 +69,10 @@ def _fix_pid(pid):
     return pid
 
 
+class ArticleWillBePublishedError(Exception):
+    ...
+
+
 class ArticleAbstractNotFoundError(Exception):
     ...
 
