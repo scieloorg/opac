@@ -1125,7 +1125,11 @@ def issue_feed(url_seg, url_seg_issue):
 @main.route('/article/<regex("S\d{4}-\d{3}[0-9xX][0-2][0-9]{3}\d{4}\d{5}"):pid>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pid(pid):
-    article = controllers.get_article_by_pid_v2(pid)
+
+    try:
+        article = controllers.get_article_by_pid_v2(pid)
+    except controllers.ArticleWillBePublishedError as exc:
+        abort(404, _("Artigo estará disponível em {} (ano-mes-dia)").format(exc))
 
     if not article:
         # ARTICLENOTFOUND
