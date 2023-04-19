@@ -1125,10 +1125,7 @@ def issue_feed(url_seg, url_seg_issue):
 @main.route('/article/<regex("S\d{4}-\d{3}[0-9xX][0-2][0-9]{3}\d{4}\d{5}"):pid>/')
 @cache.cached(key_prefix=cache_key_with_lang)
 def article_detail_pid(pid):
-    article = controllers.get_article_by_pid(pid)
-
-    if not article:
-        article = controllers.get_article_by_oap_pid(pid)
+    article = controllers.get_article_by_pid_v2(pid)
 
     if not article:
         # ARTICLENOTFOUND
