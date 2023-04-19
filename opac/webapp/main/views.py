@@ -424,6 +424,7 @@ def router_legacy():
         elif script_php == "sci_arttext" or script_php == "sci_abstract":
             article = controllers.get_article_by_pid_v2(pid)
             if not article:
+                # ARTICLENOTFOUND
                 abort(404, _("Artigo não encontrado"))
 
             # 'abstract' or None (not False, porque False converterá a string 'False')
@@ -460,6 +461,7 @@ def router_legacy():
             # accesso ao pdf do artigo:
             article = controllers.get_article_by_pid_v2(pid)
             if not article:
+                # ARTICLENOTFOUND
                 abort(404, _("Artigo não encontrado"))
 
             return redirect(
@@ -1121,6 +1123,7 @@ def article_detail_pid(pid):
         article = controllers.get_article_by_oap_pid(pid)
 
     if not article:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
 
     return redirect(
@@ -1232,6 +1235,7 @@ def article_detail(url_seg, url_seg_issue, url_seg_article, lang_code=""):
             issue.journal, url_seg_issue, url_seg_article
         )
     if article is None:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
 
     req_params = {
@@ -1276,9 +1280,12 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             )
     except controllers.PreviousOrNextArticleNotFoundError as e:
         if gs_abstract:
+            # ABSTRACTNOTFOUND
             abort(404, _("Resumo inexistente"))
+        # ARTICLENOTFOUND
         abort(404, _("Artigo inexistente"))
     except (controllers.ArticleNotFoundError, controllers.ArticleJournalNotFoundError):
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
     except controllers.ArticleLangNotFoundError:
         return redirect(
@@ -1291,8 +1298,10 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
             code=301,
         )
     except controllers.ArticleAbstractNotFoundError:
+        # ABSTRACTNOTFOUND
         abort(404, _("Recurso não encontrado"))
     except controllers.ArticleIsNotPublishedError as e:
+        # exceção não está sendo levantada
         abort(404, "{}{}".format(ARTICLE_UNPUBLISH, e))
     except controllers.IssueIsNotPublishedError as e:
         abort(404, "{}{}".format(ISSUE_UNPUBLISH, e))
@@ -1374,15 +1383,18 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
 
     def _handle_pdf():
         if not article.pdfs:
+            # PDFNOTFOUND
             abort(404, _("PDF do Artigo não encontrado"))
 
         pdf_info = [pdf for pdf in article.pdfs if pdf["lang"] == qs_lang]
         if len(pdf_info) != 1:
+            # PDFNOTFOUND
             abort(404, _("PDF do Artigo não encontrado"))
 
         try:
             pdf_url = pdf_info[0]["url"]
         except (IndexError, KeyError, ValueError, TypeError):
+            # PDFNOTFOUND
             abort(404, _("PDF do Artigo não encontrado"))
 
         if pdf_url:
@@ -1444,6 +1456,7 @@ def get_pdf_content(url):
     try:
         response = fetch_data(url)
     except NonRetryableError:
+        # PDFNOTFOUND
         abort(404, _("PDF não encontrado"))
     except RetryableError:
         abort(500, _("Erro inesperado"))
@@ -1515,6 +1528,7 @@ def article_detail_pdf(url_seg, url_seg_issue, url_seg_article, lang_code=""):
 
     article = controllers.get_article_by_issue_article_seg(issue.iid, url_seg_article)
     if not article:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
 
     req_params = {
@@ -1559,6 +1573,7 @@ def router_legacy_pdf(journal_acron, issue_info, pdf_filename):
         )
 
     if not article:
+        # PDFNOTFOUND
         abort(404, _("PDF do artigo não foi encontrado"))
 
     return redirect(
@@ -1584,6 +1599,7 @@ def router_legacy_article(text_or_abstract):
 
     article = controllers.get_article_by_pid_v1(pid)
     if not article:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
 
     return redirect(
@@ -1612,6 +1628,7 @@ def article_cite_csl(article_id):
     ) or controllers.get_article_by_pid(article_id)
 
     if article is None:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado"))
 
     if csl:
@@ -1714,6 +1731,7 @@ def article_cite_export_format(article_id):
     ) or controllers.get_article_by_pid(article_id)
 
     if article is None:
+        # ARTICLENOTFOUND
         abort(404, _("Artigo não encontrado."))
 
     csl_json = article.csl_json(site_domain=current_app.config.get("OPAC_BASE_URI"))
