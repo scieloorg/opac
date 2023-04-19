@@ -916,9 +916,6 @@ def get_article_by_aid(
     if not aid:
         raise ValueError(__("Obrigatório um aid."))
 
-    # add filter publication_date__lte_today_date
-    kwargs = add_filter_without_embargo(kwargs)
-
     articles = Article.objects(
         Q(pk=aid) | Q(scielo_pids__other=aid), is_public=True, **kwargs
     )
@@ -927,6 +924,9 @@ def get_article_by_aid(
         raise ArticleNotFoundError(aid)
 
     article = articles[0]
+    if article.publication_date > now():
+        # data de publicação no futuro
+        raise ArticleWillBePublishedError(str(article.publication_date))
 
     if not article.issue.is_public:
         raise IssueIsNotPublishedError(article.issue.unpublish_reason)

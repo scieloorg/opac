@@ -1301,7 +1301,7 @@ def article_detail_v3(url_seg, article_pid_v3, part=None):
         # ABSTRACTNOTFOUND
         abort(404, _("Recurso não encontrado"))
     except controllers.ArticleWillBePublishedError as e:
-        abort(404, _("Artigo estará disponível a partir de {}").format(e))
+        abort(404, _("Artigo estará disponível em {} (ano-mes-dia)").format(e))
     except controllers.ArticleIsNotPublishedError as e:
         # exceção não está sendo levantada
         abort(404, "{}{}".format(ARTICLE_UNPUBLISH, e))
