@@ -923,10 +923,10 @@ def get_article_by_aid(
         Q(pk=aid) | Q(scielo_pids__other=aid), is_public=True, **kwargs
     )
 
-    if articles:
-        article = articles[0]
-    else:
+    if not articles:
         raise ArticleNotFoundError(aid)
+
+    article = articles[0]
 
     if not article.issue.is_public:
         raise IssueIsNotPublishedError(article.issue.unpublish_reason)
