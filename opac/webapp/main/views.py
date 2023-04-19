@@ -422,7 +422,11 @@ def router_legacy():
             )
 
         elif script_php == "sci_arttext" or script_php == "sci_abstract":
-            article = controllers.get_article_by_pid_v2(pid)
+            try:
+                article = controllers.get_article_by_pid_v2(pid)
+            except controllers.ArticleWillBePublishedError as exc:
+                abort(404, _("Artigo estará disponível em {} (ano-mes-dia)").format(exc))
+
             if not article:
                 # ARTICLENOTFOUND
                 abort(404, _("Artigo não encontrado"))
@@ -459,7 +463,11 @@ def router_legacy():
 
         elif script_php == "sci_pdf":
             # accesso ao pdf do artigo:
-            article = controllers.get_article_by_pid_v2(pid)
+            try:
+                article = controllers.get_article_by_pid_v2(pid)
+            except controllers.ArticleWillBePublishedError as exc:
+                abort(404, _("Artigo estará disponível em {} (ano-mes-dia)").format(exc))
+
             if not article:
                 # ARTICLENOTFOUND
                 abort(404, _("Artigo não encontrado"))
