@@ -925,8 +925,8 @@ def issue_toc(url_seg, url_seg_issue):
     # obtém PDF e TEXT de cada documento
     has_math_content = False
     for article in articles:
-        article_text_languages = [doc["lang"] for doc in article.htmls]
-        article_pdf_languages = [(doc["lang"], doc["url"]) for doc in article.pdfs]
+        article_text_languages = set([doc["lang"] for doc in article.htmls])
+        article_pdf_languages = set([(doc["lang"], doc["url"]) for doc in article.pdfs])
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
         if "mml:" in article.title:
@@ -1034,8 +1034,8 @@ def aop_toc(url_seg):
         articles = [a for a in articles if a.section.upper() == section_filter]
 
     for article in articles:
-        article_text_languages = [doc["lang"] for doc in article.htmls]
-        article_pdf_languages = [(doc["lang"], doc["url"]) for doc in article.pdfs]
+        article_text_languages = set([doc["lang"] for doc in article.htmls])
+        article_pdf_languages = set([(doc["lang"], doc["url"]) for doc in article.pdfs])
 
         setattr(article, "article_text_languages", article_text_languages)
         setattr(article, "article_pdf_languages", article_pdf_languages)
