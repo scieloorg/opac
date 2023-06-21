@@ -112,20 +112,24 @@
   affiliations = {};
 
   function add_scimago_image(){
-    $('.tutors').each(
+    
+    $('#ModalScimago .info div').each(
 
     function () {
 
-      $(this).find('div').not(".clearfix").each(function () {
+      $(this).find("br").remove()
+
+      $(this).not(".clearfix").each(function () { 
         self = $(this);
 
         affiliation_name = $('span:first', self).text();
         if (affiliation_name){
             scimago_link = ' <a href="#" target="_blank" class="scimago_link" data-affiliation="' + affiliation_name + '" ><img src="/static/img/scimago.svg" alt="{% trans %} SCImago image{% endtrans %}" height="12" data-toggle="tooltip" data-placement="top" title="{% trans %}Link to SCImago Institutions Rankings{% endtrans %}"></a>';
             self.append(scimago_link);
-
         }
       });
+
+      $(this).after("<br />")
 
     });
 
