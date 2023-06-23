@@ -111,14 +111,16 @@
 
   affiliations = {};
 
-  function add_scimago_image(){
+  function add_scimago_image(selector, remove_br=true, add_br_after=true){
     
-    $('#ModalScimago .info div').each(
+    $(selector).each(
 
     function () {
 
-      $(this).find("br").remove()
-
+      if (remove_br){
+        $(this).find("br").remove()
+      }
+      
       $(this).not(".clearfix").each(function () { 
         self = $(this);
 
@@ -129,13 +131,16 @@
         }
       });
 
-      $(this).after("<br />")
+      if (add_br_after){
+        $(this).after("<br />")
+      }
 
     });
 
   }
 
-  add_scimago_image()
+  add_scimago_image('#ModalScimago .info div')
+  add_scimago_image('.tutors', remove_br=false, add_br_after=false)
 
   $(".scimago_link").click(function(e){
     e.preventDefault();
