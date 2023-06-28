@@ -6,6 +6,7 @@
     ou outras camadas superiores, evitando assim que as camadas superiores
     acessem diretamente a camada inferior de modelos.
 """
+import os
 import io
 import re
 from collections import OrderedDict
@@ -1727,3 +1728,51 @@ def get_journal_metrics(journal):
         "h5_metric_year": int(scielo_metrics.get("year", 0)) if scielo_metrics else 0,
     }
     return metrics
+
+
+# TODO add LegacyPage to opac_schema
+class LegacyPage(Document):
+    legacy_path = StringField(max_length=256, primary_key=True, required=True)
+    article_pid_v3 = StringField(max_length=23, required=True)
+    anchor = StringField(max_length=23)
+    part = StringField(max_length=23)
+    journal_acron = StringField(max_length=23)
+
+    meta = {
+        'collection': 'legacy_page',
+        'indexes': [
+            'legacy_path',
+            'scielo_pid_v3',
+        ]
+    }
+
+    @classmethod
+    def page_redirect_params(cls, legacy_path):
+        try:
+            page = cls.objects.get(legacy_path=legacy_path)
+        except cls.DoesNotExist:
+            return {}
+        params = {
+            "article_pid_v3": page.scielo_pid_v3,
+            "url_seg": page.journal_acron
+        }
+        if page.anchor:
+            params["_anchor"] = page.anchor
+        if page.part:
+            params["part"] = page.part
+        return params
+
+
+def legacy_page_redirect_params(root_path, journal_acron, subdir, filename):
+    legacy_path = f"/{root_path}/{journal_acron}/{subdir}/{filename}"
+    try:
+        return LegacyPage.page_redirect_params(legacy_path)
+    except NameError:
+        if legacy_path.startswith("/videos/bjmbr/leptospira/"):
+            anchor, ext = os.path.splitext(filename)
+            return {
+                "url_seg": "bjmbr",
+                "article_pid_v3": "xmYbTZ54zRtJXJCQws3WMtH",
+                "_anchor": anchor,
+            }
+    return {}
