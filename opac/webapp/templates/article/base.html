@@ -111,7 +111,7 @@
 
   affiliations = {};
 
-  function add_scimago_image(selector, remove_br=true, add_br_after=true){
+  function add_scimago_image(selector, remove_br=true, add_br_after=true, find_div=false){
     
     $(selector).each(
 
@@ -121,7 +121,9 @@
         $(this).find("br").remove()
       }
       
-      $(this).not(".clearfix").each(function () { 
+      internal_items = find_div ? $(this).find('div').not(".clearfix") : $(this).not(".clearfix")
+
+      internal_items.each(function () { 
         self = $(this);
 
         affiliation_name = $('span:first', self).text();
@@ -140,7 +142,7 @@
   }
 
   add_scimago_image('#ModalScimago .info div')
-  add_scimago_image('.tutors', remove_br=false, add_br_after=false)
+  add_scimago_image('.tutors', remove_br=false, add_br_after=false, find_div=true) 
 
   $(".scimago_link").click(function(e){
     e.preventDefault();
