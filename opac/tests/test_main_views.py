@@ -2369,6 +2369,54 @@ class TestJournalGrid(BaseTestCase):
                 response.data.decode("utf-8"),
             )
 
+    def test_issue_grid_ahead_with_articles(self):
+        """
+        Teste da ``view function`` ``issue_grid`` acessando a grade de números
+        de um periódico. Em caso de artigos no fasciculo de ``ahead`` o botão de ahead
+        deve ser apresentado.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            issue = utils.makeOneIssue(attrib={"journal": journal.id, "type": "ahead"})
+
+            utils.makeAnyArticle(attrib={"issue": issue})
+
+            response = self.client.get(
+                url_for("main.issue_grid", url_seg=journal.url_segment)
+            )
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed("issue/grid.html")
+
+            self.assertIn("ahead", response.data.decode("utf-8"))
+
+    def test_issue_grid_ahead_without_articles(self):
+        """
+        Teste da ``view function`` ``issue_grid`` acessando a grade de números
+        de um periódico. Em caso de artigos no fasciculo de ``ahead`` o botão de ahead
+        não deve ser apresentado.
+        """
+
+        with current_app.app_context():
+            utils.makeOneCollection()
+
+            journal = utils.makeOneJournal()
+
+            utils.makeOneIssue(attrib={"journal": journal.id, "type": "ahead"})
+
+            response = self.client.get(
+                url_for("main.issue_grid", url_seg=journal.url_segment)
+            )
+
+            self.assertStatus(response, 200)
+            self.assertTemplateUsed("issue/grid.html")
+
+            self.assertNotIn("ahead", response.data.decode("utf-8"))
+
 
 class TestIssueToc(BaseTestCase):
     def test_issue_toc(self):

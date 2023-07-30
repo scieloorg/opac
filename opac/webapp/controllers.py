@@ -702,6 +702,12 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
             **kwargs,
         ).order_by(*order_by)
         issue_ahead = issues.filter(type="ahead").first()
+
+        if issue_ahead:
+            # Verifica que contém artigos no issue de ahead
+            if not get_articles_by_iid(issue_ahead.id, is_public=True):
+                issue_ahead = None
+
         issues_without_ahead = issues.filter(type__ne="ahead")
 
     volume_issue = {}
