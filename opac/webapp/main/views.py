@@ -91,6 +91,43 @@ def fetch_data(url: str, timeout: float = 2) -> bytes:
     return response.content
 
 
+@main.route("/videos/<string:journal_acron>/<string:subdir>/<string:filename>")
+def legacy_video_page(filename):
+    """
+    /videos/rbccv/v23n3/video.html
+    /videos/bjmbr/leptospira/5500_02.html
+    /videos/bjmbr/leptospira/interviews.html
+    /videos/bjmbr/leptospira/5500_03.html
+    /videos/bjmbr/leptospira/5500_01.html
+    /videos/jvatitd/v11n3/25003vd4.htm
+    /videos/jvatitd/v11n3/25003vd3.htm
+    /videos/jvatitd/v11n3/25003vd2.htm
+    /videos/jvatitd/v11n3/25003vd1.htm
+    /videos/acb/v19n5/a16f2vd.htm
+    /videos/acb/v19n5/a16f2vdi.htm
+    /videos/acb/v17n6/teste.htm
+    /videos/acb/v17n6/n6a05vd.htm
+    """
+    params = controllers.legacy_page_redirect_params(
+        "videos", journal_acron, subdir, filename)
+    if not params:
+        abort(404, _("Página não encontrada"))
+
+    if not params.get("article_pid_v3"):
+        abort(404, _("Página não encontrada"))
+
+    if not params.get("url_seg"):
+        abort(404, _("Página não encontrada"))
+
+    return redirect(
+        url_for(
+            "main.article_detail_v3",
+            **params
+        ),
+        code=301,
+    )
+
+
 @main.before_app_request
 def add_collection_to_g():
     if not hasattr(g, "collection"):
