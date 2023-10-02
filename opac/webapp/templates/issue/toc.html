@@ -97,7 +97,7 @@
                     <!-- Cabeçalho do Issue Toc -->
 
                     <ul>
-                      {% if config['FILTER_SECTION_ENABLE'] %}
+                      {% if config['FILTER_SECTION_ENABLE'] or journal_study_areas|length > number_show_section %}
 
                         {% if sections %}
                           <li>
