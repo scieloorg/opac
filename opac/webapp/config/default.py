@@ -641,6 +641,8 @@ FORCE_USE_HTTPS_GOOGLE_TAGS = os.environ.get("OPAC_FORCE_USE_HTTPS_GOOGLE_TAGS",
 # Filtro por seção no TOC
 FILTER_SECTION_ENABLE = os.environ.get("OPAC_FILTER_SECTION_ENABLE", False)
 
+NUMBER_AREAS_TO_SHOW_SECTION = os.environ.get("OPAC_NUMBER_AREAS_TO_SHOW_SECTION", 5)
+
 # Linguagens suportados
 ACCESSIBILITY_BY_LANGUAGE = {
     "pt_BR": os.environ.get(
