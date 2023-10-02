@@ -30,12 +30,13 @@ from flask_babelex import gettext as _
 from legendarium.formatter import descriptive_short_format
 from lxml import etree
 from opac_schema.v1.models import Article, Collection, Issue, Journal
-from packtools import HTMLGenerator
 from webapp import babel, cache, controllers, forms
 from webapp.choices import STUDY_AREAS
 from webapp.config.lang_names import display_original_lang_name
 from webapp.utils import utils
 from webapp.utils.caching import cache_key_with_lang, cache_key_with_lang_with_qs
+
+from packtools import HTMLGenerator
 
 from . import main
 
@@ -883,10 +884,6 @@ def issue_toc(url_seg, url_seg_issue):
     # idioma da sessão
     language = session.get("lang", get_locale())
 
-    if current_app.config["FILTER_SECTION_ENABLE"]:
-        # seção dos documentos, se selecionada
-        section_filter = request.args.get("section", "", type=str).upper()
-
     # obtém o issue
     issue = controllers.get_issue_by_url_seg(url_seg, url_seg_issue)
     if not issue:
@@ -918,8 +915,23 @@ def issue_toc(url_seg, url_seg_issue):
         # obtém as seções dos documentos deste sumário
         sections = []
 
-    if current_app.config["FILTER_SECTION_ENABLE"] and section_filter != "":
-        # obtém somente os documentos da seção selecionada
+    areas = [STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas]
+
+    if (
+        current_app.config["FILTER_SECTION_ENABLE"]
+        or len(areas) > current_app.config["NUMBER_AREAS_TO_SHOW_SECTION"]
+    ):
+        # seção dos documentos, se selecionada
+        section_filter = request.args.get("section", "", type=str).upper()
+
+    number_show_section = current_app.config["NUMBER_AREAS_TO_SHOW_SECTION"]
+
+    # obtém somente os documentos da seção selecionada
+    if (
+        current_app.config["FILTER_SECTION_ENABLE"]
+        or len(areas) > current_app.config["NUMBER_AREAS_TO_SHOW_SECTION"]
+    ) and section_filter:
+        print(section_filter)
         articles = [a for a in articles if a.section.upper() == section_filter]
 
     # obtém PDF e TEXT de cada documento
@@ -954,10 +966,9 @@ def issue_toc(url_seg, url_seg_issue):
         "articles": articles,
         "sections": sections,
         "section_filter": section_filter,
-        "journal_study_areas": [
-            STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
-        ],
+        "journal_study_areas": areas,
         "last_issue": journal.last_issue,
+        "number_show_section": number_show_section,
     }
     return render_template("issue/toc.html", **context)
 
