@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.11.0rc1-alpine
 ENV PYTHONUNBUFFERED 1
 
 # Build-time metadata as defined at http://label-schema.org
