@@ -40,7 +40,7 @@ mongoengine==0.16.3
 natsort==7.0.1
 oauthlib==3.1.0
 -e git+https://git@github.com/scieloorg/opac_schema@v2.69#egg=Opac_Schema
--e git+https://github.com/scieloorg/packtools@96481062cf03a6c30a4dfcf1ef0356eefdc46cc3#egg=packtools
+-e git+https://github.com/scieloorg/packtools@8075968622111b7e46691627235955e02953b69c#egg=packtools
 passlib==1.7.2
 pbr==5.4.5
 picles.plumber==0.11
