@@ -177,7 +177,7 @@ Procedimento para popular a instância de desenvolvimento a partir de fixtures d
 3. Extraia o conteúdo, execute: ``unzip opac_br.zip``
 4. Repare que uma pasta chamada opac_br foi criada e dentro dela há arquivos .bson, .json, .sqlite e outra pasta chamada media que contém os ativos dos periódicos e da coleção.
 5. Acesse a pasta **opac_br**, execute: ``cd opac_br``
-6. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 --db=opac --dir .``
+6. Utilizando **mongorestore** realize a recuperação do banco de dados apontando para o endereço que está rodando o seu mongo local, exemplo: ``mongorestore --host=localhost --port=27017 -d=opac --dir .``
 7. Realize a cópia da pasta **media** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
 8. Realize a cópia da pasta **opac.sqlite** para a pasta data. A pasta data está na raiz deste repositório e é, por padrão, mapeada à aplicação OPAC.
 9. Os seguintes parâmetros devem está configurados no arquivo ``docker-compose-dev.yml``:
