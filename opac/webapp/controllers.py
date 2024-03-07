@@ -6,6 +6,7 @@
     ou outras camadas superiores, evitando assim que as camadas superiores
     acessem diretamente a camada inferior de modelos.
 """
+import logging
 import io
 import re
 from collections import OrderedDict
@@ -31,6 +32,7 @@ from opac_schema.v1.models import (
     Pages,
     PressRelease,
     Sponsor,
+    LastIssue,
 )
 from scieloh5m5 import h5m5
 from slugify import slugify
@@ -429,6 +431,9 @@ def get_journal_generator_for_csv(
     extension="xls",
 ):
     def format_csv_row(list_type, journal):
+        if not journal.last_issue or journal.last_issue.type not in ("volume_issue", "regular"):
+            set_last_issue_and_issue_count(journal)
+
         if not journal.last_issue:
             last_issue_volume = ""
             last_issue_number = ""
@@ -738,7 +743,7 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
 
     # o primiero item da lista é o último número.
     # condicional para verificar se issues contém itens
-    last_issue = issues[0] if issues else None
+    last_issue = issues[0].journal.last_issue
 
     return {
         "ahead": issue_ahead,  # ahead of print
@@ -747,6 +752,115 @@ def get_issues_for_grid_by_jid(jid, **kwargs):
         "previous_issue": previous_issue,
         "last_issue": last_issue,
     }
+
+
+def get_issue_nav_bar_data(journal=None, issue=None):
+    """
+    Retorna quanto à navegação os itens anterior e posterior,
+    a um dado issue, e o último issue regular de um periódico.
+    Caso issue não é informado, considera-se que o issue em questão
+    é o último issue regular odendo ter como item posterior
+    um suplemento, um número especial, um ahead ou nenhum item
+    """
+    if issue:
+        journal = issue.journal
+        last_issue = None
+
+    elif journal:
+        if not journal.last_issue or journal.last_issue.type not in ("volume_issue", "regular") or journal.last_issue.type not in ("volume_issue", "regular"):
+            set_last_issue_and_issue_count(journal)
+
+        last_issue = get_issue_by_iid(journal.last_issue.iid)
+
+    item = issue or last_issue
+
+    if item.type == "ahead" or item.number == "ahead":
+        previous = Issue.objects(
+            journal=journal,
+            number__ne="ahead",
+        ).order_by("-year", "-order").first()
+        next_ = None
+    else:
+        try:
+            previous = Issue.objects(
+                journal=journal,
+                year__lte=item.year,
+                order__lte=item.order,
+                number__ne="ahead",
+            ).order_by("-year", "-order")[1]
+        except IndexError:
+            previous = None
+
+        try:
+            next_ = Issue.objects(
+                journal=journal,
+                year__gte=item.year,
+                order__gte=item.order,
+                number__ne="ahead",
+            ).order_by("year", "order")[1]
+        except IndexError:
+            # aop
+            next_ = Issue.objects(
+                journal=journal,
+                number="ahead",
+            ).order_by("-year", "-order").first()
+
+    return {
+        "previous_item": previous,
+        "next_item": next_,
+        "issue": issue,
+        "last_issue": last_issue,
+    }
+
+
+def set_last_issue_and_issue_count(journal):
+    """
+    O último issue tem que ser um issue regular, não pode ser aop, nem suppl, nem especial
+    """
+    try:
+        order_by = ["-year", "-order"]
+        issues = Issue.objects(
+            journal=journal,
+            type__in=["regular", "volume_issue"],
+            is_public=True,
+        )
+        journal.issue_count = issues.count()
+        journal.save()
+    except Exception as e:
+        logging.exception(f"Unable to set_last_issue_and_issue_count for {jid}: {e} {type(e)}")
+
+    try:
+        last_issue = issues.order_by(*order_by).first()
+
+        journal.last_issue = LastIssue(
+            volume=last_issue.volume,
+            number=last_issue.number,
+            year=last_issue.year,
+            label=last_issue.label,
+            type=last_issue.type,
+            suppl_text=last_issue.suppl_text,
+            start_month=last_issue.start_month,
+            end_month=last_issue.end_month,
+            iid=last_issue.iid,
+            url_segment=last_issue.url_segment,
+            sections=last_issue.sections,
+        )
+        journal.save()
+    except Exception as e:
+        logging.exception(f"Unable to set_last_issue_and_issue_count for {jid}: {e} {type(e)}")
+    return j
+
+
+def journal_last_issues():
+    for j in Journal.objects.filter(last_issue=None):
+        set_last_issue_and_issue_count(j)
+        if j.last_issue and j.last_issue.url_segment:
+            yield {"journal": j.jid, "last_issue": j.last_issue.url_segment}
+
+    for j in Journal.objects.filter(last_issue__type__nin=["regular", "volume_issue"]):
+        set_last_issue_and_issue_count(j)
+        if j.last_issue and j.last_issue.url_segment:
+            yield {"journal": j.jid, "last_issue": j.last_issue.url_segment}
 
 
 def get_issue_by_iid(iid, **kwargs):
