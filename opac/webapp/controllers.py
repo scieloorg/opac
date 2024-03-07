@@ -843,7 +843,6 @@ def set_last_issue_and_issue_count(journal):
             end_month=last_issue.end_month,
             iid=last_issue.iid,
             url_segment=last_issue.url_segment,
-            sections=last_issue.sections,
         )
         journal.save()
     except Exception as e:
