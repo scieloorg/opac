@@ -342,8 +342,14 @@ def collection_list_feed():
         feed.add("Nenhum periódico encontrado", url=request.url, updated=datetime.now())
 
     for journal in journals.items:
-        issues = controllers.get_issues_by_jid(journal.jid, is_public=True)
-        last_issue = issues[0] if issues else None
+        if (
+            not journal.last_issue
+            or journal.last_issue.type not in ("volume_issue", "regular")
+            or not journal.last_issue.url_segment
+        ):
+            controllers.set_last_issue_and_issue_count(journal)
+        # Note: journal.last_issue (is instance of LastIssue, not Issue)
+        last_issue = journal.last_issue
 
         articles = []
         if last_issue:
@@ -535,7 +541,12 @@ def journal_detail(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    utils.fix_journal_last_issue(journal)
+    if (
+        not journal.last_issue
+        or journal.last_issue.type not in ("volume_issue", "regular")
+        or not journal.last_issue.url_segment
+    ):
+        controllers.set_last_issue_and_issue_count(journal)
 
     # todo: ajustar para que seja só noticias relacionadas ao periódico
     language = session.get("lang", get_locale())
@@ -561,6 +572,7 @@ def journal_detail(url_seg):
         sections = []
         recent_articles = []
 
+    # Note: journal.last_issue (is instance of LastIssue, not Issue)
     latest_issue = journal.last_issue
 
     if latest_issue:
@@ -593,7 +605,7 @@ def journal_detail(url_seg):
         "news": news,
         "journal_metrics": journal_metrics,
     }
-
+    context.update(controllers.get_issue_nav_bar_data(journal=journal))
     return render_template("journal/detail.html", **context)
 
 
@@ -608,10 +620,22 @@ def journal_feed(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    issues = controllers.get_issues_by_jid(journal.jid, is_public=True)
-    last_issue = issues[0] if issues else None
-    articles = controllers.get_articles_by_iid(last_issue.iid, is_public=True)
+    if (
+        not journal.last_issue
+        or journal.last_issue.type not in ("volume_issue", "regular")
+        or not journal.last_issue.url_segment
+    ):
+        controllers.set_last_issue_and_issue_count(journal)
 
+    # Note: journal.last_issue (is instance of LastIssue, not Issue)
+    last_issue = journal.last_issue
+
+    if last_issue:
+        articles = controllers.get_articles_by_iid(last_issue.iid, is_public=True)
+        if articles:
+            last_issue = articles[0].issue
+    else:
+        articles = []
     feed = AtomFeed(
         journal.title,
         feed_url=request.url,
@@ -660,7 +684,15 @@ def about_journal(url_seg):
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
 
-    latest_issue = utils.fix_journal_last_issue(journal)
+    if (
+        not journal.last_issue
+        or journal.last_issue.type not in ("volume_issue", "regular")
+        or not journal.last_issue.url_segment
+    ):
+        controllers.set_last_issue_and_issue_count(journal)
+
+    # Note: journal.last_issue (is instance of LastIssue, not Issue)
+    latest_issue = journal.last_issue
 
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
@@ -691,6 +723,7 @@ def about_journal(url_seg):
         if page.updated_at:
             context["page_updated_at"] = page.updated_at
 
+    context.update(controllers.get_issue_nav_bar_data(journal))
     return render_template("journal/about.html", **context)
 
 
@@ -863,7 +896,15 @@ def issue_grid(url_seg):
 
     # A ordenação padrão da função ``get_issues_by_jid``: "-year", "-volume", "-order"
     issues_data = controllers.get_issues_for_grid_by_jid(journal.id, is_public=True)
-    latest_issue = issues_data["last_issue"]
+    if (
+        not journal.last_issue
+        or journal.last_issue.type not in ("volume_issue", "regular")
+        or not journal.last_issue.url_segment
+    ):
+        controllers.set_last_issue_and_issue_count(journal)
+
+    # Note: journal.last_issue (is instance of LastIssue, not Issue)
+    latest_issue = journal.last_issue
     if latest_issue:
         latest_issue_legend = descriptive_short_format(
             title=journal.title,
@@ -879,7 +920,7 @@ def issue_grid(url_seg):
 
     context = {
         "journal": journal,
-        "last_issue": issues_data["last_issue"],
+        "last_issue": latest_issue,
         "latest_issue_legend": latest_issue_legend,
         "volume_issue": issues_data["volume_issue"],
         "ahead": issues_data["ahead"],
@@ -888,7 +929,7 @@ def issue_grid(url_seg):
             STUDY_AREAS.get(study_area.upper()) for study_area in journal.study_areas
         ],
     }
-
+    context.update(controllers.get_issue_nav_bar_data(journal=journal))
     return render_template("issue/grid.html", **context)
 
 
@@ -933,9 +974,6 @@ def issue_toc(url_seg, url_seg_issue):
     journal = issue.journal
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
-
-    # completa url_segment do last_issue
-    utils.fix_journal_last_issue(journal)
 
     # goto_next_or_previous_issue (redireciona)
     goto_url = goto_next_or_previous_issue(
@@ -994,6 +1032,7 @@ def issue_toc(url_seg, url_seg_issue):
         ],
         "last_issue": journal.last_issue,
     }
+    context.update(controllers.get_issue_nav_bar_data(journal=journal, issue=issue))
     return render_template("issue/toc.html", **context)
 
 
@@ -1053,9 +1092,6 @@ def aop_toc(url_seg):
     journal = aop_issues[0].journal
     if not journal.is_public:
         abort(404, JOURNAL_UNPUBLISH + _(journal.unpublish_reason))
-
-    utils.fix_journal_last_issue(journal)
-
     articles = []
     for aop_issue in aop_issues:
         _articles = controllers.get_articles_by_iid(aop_issue.iid, is_public=True)
@@ -1089,7 +1125,9 @@ def aop_toc(url_seg):
         # o primeiro item da lista é o último número.
         "last_issue": journal.last_issue,
     }
-
+    context.update(
+        controllers.get_issue_nav_bar_data(journal=journal, issue=aop_issues[0])
+    )
     return render_template("issue/toc.html", **context)
 
 
