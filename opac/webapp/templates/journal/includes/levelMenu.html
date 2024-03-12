@@ -19,56 +19,41 @@
           {% trans %}todos os números{% endtrans %}
         </a>
 
-        {# Anterior #}
-        {% if not issue and not last_issue %}
-          <a title="{% trans %}número anterior{% endtrans %}" href="#" class="btn group disabled">
-          &laquo; {% trans %}número anterior{% endtrans %}
-          </a>
-        {% elif issue %}
-          {# página do sumário #}
-          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='previous') }}" class="btn group">
-            &laquo; {% trans %}número anterior{% endtrans %}
-          </a>
-        {% elif last_issue %}
-          {# página inicial do periódico ou grid #}
-          <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment, goto='previous') }}" class="btn group">
-            &laquo; {% trans %}número anterior{% endtrans %}
-          </a>
-        {% endif %}
-
-        {# Atual #}
-        {% if not last_issue %}
-          <a title="{% trans %}número atual{% endtrans %}" href="#" class="btn group disabled">
-            {% trans %}número atual{% endtrans %}
-          </a>
-        {% elif issue and last_issue.url_segment == issue.url_segment %}
-          {# página do sumário #}
-          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group selected">
-            {% trans %}número atual{% endtrans %}
-          </a>
-        {% else %}
-          {# página do periódico #}
-          <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn group">
-            {% trans %}número atual{% endtrans %}
-          </a>
-        {% endif %}
-
-        {# Próximo #}
-        {% if not issue and not last_issue %}
-          <a title="{% trans %}número seguinte{% endtrans %}" href="#" class="btn group disabled">
-            {% trans %}número seguinte{% endtrans %} &raquo;
-          </a>
-        {% elif issue and last_issue.url_segment != issue.url_segment %}
-          {# página do sumário #}
-          <a title="{% trans %}número seguinte{% endtrans %}" href="{{ url_for('main.issue_toc', url_seg=journal.url_segment, url_seg_issue=issue.url_segment, goto='next') }}" class="btn group">
-            {% trans %}número seguinte{% endtrans %} &raquo;
-          </a>
-        {% elif last_issue %}
-          {# página do periódico #}
-          <a title="{% trans %}número seguinte{% endtrans %}" href="#" class="btn group disabled">
-            {% trans %}número seguinte{% endtrans %} &raquo;
-          </a>
-        {% endif %}
+          {# Anterior #}
+          {% if previous_item %}
+            {# página do sumário #}
+            <a title="{% trans %}número anterior{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=previous_item.url_segment) }}" class="btn">
+              &laquo; {% trans %}Número anterior{% endtrans %}
+            </a>
+          {% else %}
+            <a title="{% trans %}número anterior{% endtrans %}" href="#" class="btn disabled">
+              &laquo; {% trans %}Número anterior{% endtrans %}
+            </a>          
+          {% endif %}
+  
+          {# Atual #}
+          {% if issue %}
+            <a title="{% trans %}número atual{% endtrans %}" href="#" class="btn disabled">
+              {% trans %}Número atual{% endtrans %}
+            </a>
+          {% elif last_issue %}
+            <a title="{% trans %}número atual{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=last_issue.url_segment) }}" class="btn active">
+              {% trans %}Número atual{% endtrans %}
+            </a>
+          {% endif %}
+  
+          {# Próximo #}
+          {% if next_item %}
+            {# página do sumário #}
+            <a title="{% trans %}número seguinte{% endtrans %}" href="{{ url_for('.issue_toc', url_seg=journal.url_segment, url_seg_issue=next_item.url_segment) }}" class="btn">
+              {% trans %}Número seguinte{% endtrans %} &raquo;
+            </a>
+          {% else %}
+            {# página do periódico #}
+            <a title="{% trans %}número seguinte{% endtrans %}" href="#" class="btn disabled">
+               {% trans %}Número seguinte{% endtrans %} &raquo;
+            </a>
+          {% endif %}
 
       </div>
     </div>
