@@ -22,7 +22,7 @@ Flask-Migrate==2.2.1
 flask-mongoengine==0.9.5
 Flask-Principal==0.4.0
 Flask-Script==2.0.5
-Flask-Security==3.0.0
+Flask-Security==5.5.2
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==1.0.0
 gunicorn==20.1.0
