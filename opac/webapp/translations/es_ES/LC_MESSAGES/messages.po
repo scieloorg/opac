@@ -13,11 +13,11 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es_ES\n"
 "Language-Team: es_ES <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.14.0\n"
 
 #: opac/tests/test_admin_custom_filters.py:100
 #: opac/tests/test_admin_custom_filters.py:114
@@ -1917,7 +1917,9 @@ msgstr "accesibilidad (por favor, considere responder a"
 msgid ""
 "nosso questionário para mapear o perfil dos usuários do site SciELO - "
 "link externo"
-msgstr "nuestro cuestionario para trazar el perfil de los usuarios del sitio SciELO - enlace externo"
+msgstr ""
+"nuestro cuestionario para trazar el perfil de los usuarios del sitio "
+"SciELO - enlace externo"
 
 #: opac/webapp/templates/includes/error_form.html:38
 msgid "outro tipo de erro"
@@ -1929,7 +1931,11 @@ msgid ""
 "versão em PDF do mesmo documento, por favor não utilize este formulário. "
 "Entre em contato com o periódico que publicou o documento e reporte o "
 "erro diretamente a ele."
-msgstr "Si el error está en el contenido y también se presenta en la versión PDF del documento, no utilice este formulario. Póngase en contacto con la revista que ha publicado el documento y comuníquele directamente el error."
+msgstr ""
+"Si el error está en el contenido y también se presenta en la versión PDF "
+"del documento, no utilice este formulario. Póngase en contacto con la "
+"revista que ha publicado el documento y comuníquele directamente el "
+"error."
 
 #: opac/webapp/templates/includes/error_form.html:47
 msgid "ao conteúdo"
