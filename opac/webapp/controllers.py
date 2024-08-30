@@ -71,6 +71,10 @@ def _fix_pid(pid):
     return pid
 
 
+class ArticleWillBePublishedError(Exception):
+    ...
+
+
 class ArticleAbstractNotFoundError(Exception):
     ...
 
@@ -1031,17 +1035,17 @@ def get_article_by_aid(
     if not aid:
         raise ValueError(__("Obrigatório um aid."))
 
-    # add filter publication_date__lte_today_date
-    kwargs = add_filter_without_embargo(kwargs)
-
     articles = Article.objects(
         Q(pk=aid) | Q(scielo_pids__other=aid), is_public=True, **kwargs
     )
 
-    if articles:
-        article = articles[0]
-    else:
+    if not articles:
         raise ArticleNotFoundError(aid)
+
+    article = articles[0]
+    if article.publication_date > now():
+        # data de publicação no futuro
+        raise ArticleWillBePublishedError(str(article.publication_date))
 
     if not article.issue.is_public:
         raise IssueIsNotPublishedError(article.issue.unpublish_reason)
@@ -1419,17 +1423,20 @@ def get_article_by_pid_v2(v2, **kwargs):
 
     v2 = v2.upper()
 
-    # add filter publication_date__lte_today_date
-    kwargs = add_filter_without_embargo(kwargs)
-
     fixed = _fix_pid(v2)
     q = Q(pid=v2) | Q(aop_pid=v2) | Q(scielo_pids__other=v2)
     if fixed != v2:
         q = Q(pid=fixed) | Q(aop_pid=fixed) | Q(scielo_pids__other=fixed) | q
+
     articles = Article.objects(q, is_public=True, **kwargs)
-    if articles:
-        return articles[0]
-    return None
+    try:
+        article = articles[0]
+    except IndexError:
+        return None
+    else:
+        if article.publication_date > now():
+            raise ArticleWillBePublishedError(article.publication_date)
+        return article
 
 
 def get_recent_articles_of_issue(issue_iid, is_public=True):
