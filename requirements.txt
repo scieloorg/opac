@@ -39,7 +39,7 @@ MarkupSafe==2.0.1
 mongoengine==0.16.3
 natsort==7.0.1
 oauthlib==3.1.0
--e git+https://git@github.com/scieloorg/opac_schema@v2.8.0#egg=Opac_Schema
+-e git+https://git@github.com/scieloorg/opac_schema@v2.8.1#egg=Opac_Schema
 -e git+https://github.com/scieloorg/packtools@dd8bb00c08ce5285a4dc00aa7fdb1f3af6b708cb#egg=packtools
 passlib==1.7.2
 pbr==5.4.5
