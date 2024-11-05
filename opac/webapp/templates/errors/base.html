@@ -24,7 +24,23 @@
                 {% trans %}Erro{% endtrans %}
               {% endblock %}
             </h2>
-            <p>{% trans %}Qualquer dúvida, por favor entre em contato com o administrador{% endtrans %}. <a href="mailto:{{config.WEBMASTER_EMAIL}}">{{config.WEBMASTER_EMAIL}}</a>.</p>
+            <p>
+                <ul>
+                    <li>{% trans %}Certifique-se de ter o endereço correto{% endtrans %}.</li>
+                    <li>{% trans %}Certifique-se de ter obtido o endereço de fontes especializadas em publicações científicas{% endtrans %}.</li>
+                    <li>{% trans %}Para localizar um artigo científico, consulte <a href="//search.scielo.org">search.scielo.org</a>{% endtrans %}.</li>
+                </ul>
+            </p>
+            <p>{% trans %}Se o problema persistir, entre em contato com o administrador{% endtrans %} <a href="mailto:{{config.WEBMASTER_EMAIL}}">{{config.WEBMASTER_EMAIL}}</a>, {% trans %}informando{% endtrans %}:</p>
+            <p>
+                <ul>
+                    <li>{% trans %}imagem da tela de onde o endereço foi obtido{% endtrans %}</li>
+                    <li>{% trans %}título do periódico{% endtrans %}</li>
+                    <li>{% trans %}título do artigo{% endtrans %}</li>
+                    <li>{% trans %}nomes dos autores{% endtrans %}</li>
+                    <li>{% trans %}outros dados que julgar relevantes{% endtrans %}</li>
+                </ul>
+            </p>
           </div>
         </div>
       </div>
