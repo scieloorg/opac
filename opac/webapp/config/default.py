@@ -186,7 +186,13 @@ import os
         - OPAC_FILTER_SECTION_ENABLE: ativa/desativa o filtro por seção na página do issue.
 
       - Common Style List
-        - OAPC_COMMON_STYLE_LIST: Caminho para um arquivo .json com as CSL.
+        - OPAC_COMMON_STYLE_LIST: Caminho para um arquivo .json com as CSL.
+
+      - Site License
+        - OPAC_SITE_LICENSE_ENABLE: ativa/desativa a exibição do logo do creative commons no rodapé do site
+        - OPAC_SITE_LICENSE_NAME: Nome da licença (default: "Creative Common - by 4.0")
+        - OPAC_SITE_LICENSE_URL: URL da licença (default: https://creativecommons.org/licenses/by-nc/4.0/)
+        - OPAC_SITE_LICENSE_IMG_URL: Imagem da licença (default: https://licensebuttons.net/l/by/4.0/88x31.png)
 """
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -662,3 +668,8 @@ COMMON_STYLE_LIST = os.environ.get(
 
 # Citation Export Format
 CITATION_EXPORT_FORMATS = {"bib": "BibTex", "ris": "Reference Manager"}
+
+SITE_LICENSE_ENABLE = os.environ.get("OPAC_SITE_LICENSE_ENABLE", "True") == "True"
+SITE_LICENSE_NAME = os.environ.get("OPAC_SITE_LICENSE_NAME", "Creative Common - by 4.0")
+SITE_LICENSE_URL = os.environ.get("OPAC_SITE_LICENSE_URL", "https://creativecommons.org/licenses/by-nc/4.0/")
+SITE_LICENSE_IMG_URL = os.environ.get("OPAC_SITE_LICENSE_IMG_URL", "https://licensebuttons.net/l/by/4.0/88x31.png")
