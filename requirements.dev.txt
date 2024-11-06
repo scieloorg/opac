@@ -4,3 +4,4 @@ mock==2.0.0
 coverage==4.5.1
 pyinstrument==3.2.0
 pre-commit
+werkzeug>=3.0.6 # not directly required, pinned by Snyk to avoid a vulnerability
