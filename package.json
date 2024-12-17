@@ -34,7 +34,7 @@
     "gulp-util": "^3.0.8"
   },
   "dependencies": {
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^5.0.0",
     "jquery": "^3.6.0",
     "jquery-typeahead": "^2.11.1"
   }
