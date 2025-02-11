@@ -11,7 +11,7 @@ dnspython==1.16.0
 elastic-apm==5.5.2
 email-validator==1.0.5
 feedparser==5.2.1
-Flask==2.0.2
+Flask==2.2.5
 Flask-Admin==1.5.8
 Flask-BabelEx==0.9.4
 Flask-Caching==1.10.1
@@ -31,7 +31,7 @@ greenlet==0.4.17
 htmlmin==0.1.12
 idna==2.10
 itsdangerous==2.0.1
-Jinja2==3.0.3
+Jinja2==3.1.5
 legendarium==2.0.2
 lxml==4.7.1
 Mako==1.1.3
@@ -45,7 +45,7 @@ passlib==1.7.2
 pbr==5.4.5
 picles.plumber==0.11
 Pillow~=6.2
-pymongo==3.11.2
+pymongo==4.6.3
 PySocks==1.7.1
 python-dateutil==2.8.1
 python-editor==1.0.4
@@ -68,7 +68,7 @@ tweepy==3.7.0
 unicodecsv==0.14.1
 Unidecode==1.1.1
 urllib3==1.26.7
-Werkzeug==2.0.3
+Werkzeug==3.0.6
 WTForms==2.3.3
 XlsxWriter==1.1.0
 feedwerk==1.0.0
