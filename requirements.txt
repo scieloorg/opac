@@ -30,7 +30,7 @@ gevent==1.4.0
 greenlet==0.4.17
 htmlmin==0.1.12
 idna==2.10
-itsdangerous==2.0.1
+itsdangerous==2.2.0
 Jinja2==3.0.3
 legendarium==2.0.2
 lxml==4.7.1
